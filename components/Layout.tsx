@@ -11,8 +11,8 @@ const Container = styled.div`
     background-color: #CCC;
 `
 
-const Layout = ({children}) => {
-    return <Root><Container><TopBar/>{children}</Container></Root>
+const Layout = ({children,onSearch}) => {
+    return <Root><Container><TopBar onSearch={onSearch}/>{children}</Container></Root>
 }
 
 export default Layout

@@ -48,14 +48,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const TopBar = () => {
+const TopBar = ({onSearch}) => {
     const router = useRouter();
     
-    const [searchStr, setSearchStr] = useState("");
-
-    const { steps } = useGetPostsByString(searchStr);
-    console.log("steps",steps)
-
   return (
     <AppBar>
       <Toolbar>
@@ -75,12 +70,13 @@ const TopBar = () => {
         >
           Create
         </Button>
-        <Search>
+        {onSearch && <Search>
           <SearchIconWrapper>
             <SearchIcon />
           </SearchIconWrapper>
-          <StyledInputBase onChange={(e) => setSearchStr(e.currentTarget.value) } value={searchStr} placeholder="Search…" inputProps={{ "aria-label": "search" }} />
-        </Search>
+          <StyledInputBase onChange={(e) => onSearch(e.currentTarget.value) } placeholder="Search…" inputProps={{ "aria-label": "search" }} />
+        </Search>}
+        
       </Toolbar>
     </AppBar>
   );
