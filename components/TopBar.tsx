@@ -1,12 +1,9 @@
 import { AppBar, Toolbar, Button } from "@mui/material";
 import { useRouter } from "next/router";
 import { styled, alpha } from "@mui/material/styles";
-
 import InputBase from "@mui/material/InputBase";
-
 import SearchIcon from "@mui/icons-material/Search";
-import { useState } from "react";
-import { useGetPostsByString } from "../utils/firebase";
+
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -49,8 +46,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const TopBar = ({onSearch}) => {
-    const router = useRouter();
-    
+  const router = useRouter();
+
+  
+
   return (
     <AppBar>
       <Toolbar>

@@ -5,8 +5,8 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { v4 as uuidv4 } from "uuid";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
-
 import { query, collection, doc, getDocs, setDoc, addDoc, deleteDoc } from "firebase/firestore";
+
 import _ from "lodash";
 
 const firebaseConfig = {
@@ -126,6 +126,7 @@ export const setSteps = async (data) => {
 
 export const getPostsByTags = async (tags = []) => {
   const stepsRef = collection(_db, "posts");
+
   const queryBuild = query(stepsRef, where("tags", "array-contains-any", tags));
   let data = [];
   try {
@@ -160,4 +161,15 @@ export const useGetPostsByString = (string = "", minChar = 2, debounceWait = 500
   }, [string]);
 
   return { steps, isLoading, error, getPostsByTags, debouncedGetPostsByTags };
+};
+
+export const getPostsByString = async (string = "", minChar = 2, debounceWait = 500) => {
+  let result = null;
+  const debouncedGetPostsByTags = _.debounce(async (str) => {
+    const tags = str.split(" ");
+    result = await getPostsByTags(tags);
+    return result;
+  }, debounceWait);
+
+  return await debouncedGetPostsByTags(string);
 };
