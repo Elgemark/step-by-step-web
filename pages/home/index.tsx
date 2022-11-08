@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Layout from "../../components/Layout";
 import { useGetPostsByString } from "../../utils/firebase";
+import Splash from "../../components/splashes/Splash";
 
 const Home = () => {
   const [searchStr, setSearchStr] = useState("");
@@ -9,7 +10,7 @@ const Home = () => {
   
   return (
     <Layout onSearch={(value) => setSearchStr(value)}>
-      <h3>Home</h3>
+      {steps.map(() => <Splash />)}
     </Layout>
   );
 };

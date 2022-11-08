@@ -57,7 +57,7 @@ const TopBar = ({onSearch}) => {
         <Button
           color="inherit"
           onClick={() => {
-            router.push("/home");
+            router.push("/");
           }}
         >
           Home

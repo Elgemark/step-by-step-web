@@ -1,18 +1,14 @@
 import TopBar from "./TopBar"
-import styled from "styled-components"
+import { styled } from "@mui/material/styles";
+import { Container } from "@mui/material";
 
-const Root = styled.div`
-    display:flex;
-    justify-content: center;
-`
+const Root = styled("div")(() => ({ display: "flex", justifyContent: "center" }));
+const Content = styled(Container)(() => ({ marginTop:"70px"}));
 
-const Container = styled.div`
-    max-width: 800px;
-    background-color: #CCC;
-`
+
 
 const Layout = ({children,onSearch}) => {
-    return <Root><Container><TopBar onSearch={onSearch}/>{children}</Container></Root>
+    return <Root><TopBar onSearch={onSearch}/><Content>{children}</Content></Root>
 }
 
 export default Layout
