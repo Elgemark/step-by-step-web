@@ -48,11 +48,13 @@ export const init = () => {
 
 export const useInit = () => {
   const [isInitialized, setIsInitialized] = useState(false);
+  const [resp, setResp] = useState({});
   useEffect(() => {
-    init();
+    const initResp = init();
+    setResp(initResp);
     setIsInitialized(true);
   }, []);
-  return { isInitialized };
+  return { isInitialized, ...resp };
 };
 
 // export const getDocs = async ({ collection, query = [] }) => {
@@ -127,7 +129,7 @@ export const getPostsByTags = async (tags = []) => {
   const queryBuild = query(stepsRef, where("tags", "array-contains-any", tags));
   let data = [];
   try {
-    querySnapshot = await getDocs(queryBuild);
+    const querySnapshot = await getDocs(queryBuild);
     querySnapshot.forEach((doc) => {
       data.push(doc.data());
     });
@@ -137,7 +139,7 @@ export const getPostsByTags = async (tags = []) => {
   return data;
 };
 
-export const useGetPostsByString = (string = "", debounceWait = 500) => {
+export const useGetPostsByString = (string = "", minChar = 2, debounceWait = 500) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState();
   const [steps, setSteps] = React.useState([]);
@@ -147,12 +149,14 @@ export const useGetPostsByString = (string = "", debounceWait = 500) => {
     const tags = str.split(" ");
     setIsLoading(true);
     const resp = await getPostsByTags(tags);
-    console.log("resp", resp);
+    setSteps(resp);
     setIsLoading(false);
   }, debounceWait);
   //
   React.useEffect(() => {
-    debouncedGetPostsByTags(string);
+    if (string.length >= minChar) {
+      debouncedGetPostsByTags(string);
+    }
   }, [string]);
 
   return { steps, isLoading, error, getPostsByTags, debouncedGetPostsByTags };

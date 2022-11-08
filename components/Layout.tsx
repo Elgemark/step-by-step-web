@@ -1,6 +1,5 @@
 import TopBar from "./TopBar"
 import styled from "styled-components"
-import Head from "next/head"
 
 const Root = styled.div`
     display:flex;

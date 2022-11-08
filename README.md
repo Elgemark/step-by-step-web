@@ -1,6 +1,11 @@
-# Hello World example
+# Resource links
 
-This example shows the most basic idea behind Next. We have 2 pages: `pages/index.tsx` and `pages/about.tsx`. The former responds to `/` requests and the latter to `/about`. Using `next/link` you can add hyperlinks between them with universal routing capabilities. The `day` directory shows that you can have subdirectories.
+- https://medium.com/nextjs/how-to-use-material-ui-with-nextjs-and-react-18-6c054ceacf77
+- https://mui.com/material-ui/material-icons/
+
+### Rich Text
+
+- https://www.npmjs.com/package/react-quill
 
 ## Deploy your own
 

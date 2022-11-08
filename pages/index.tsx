@@ -6,10 +6,12 @@ import CssBaseline from '@mui/material/CssBaseline';
 import theme from '../config/theme';
 import Head from "next/head";
 
-export default function IndexPage(props) {
+export default function IndexPage() {
   
-  const { isInitialized: isFirebaseInitialized } = useInit()
+  const { isInitialized: isFirebaseInitialized,app,db } = useInit()
   const content = isFirebaseInitialized ? <Layout /> : <div/>
+
+  console.log("isInitialized",isFirebaseInitialized,app,db)
   
   return (<>
     <Head>
