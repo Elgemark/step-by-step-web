@@ -2,12 +2,13 @@
 import Layout from '../components/Layout'
 import Head from "next/head";
 import { useDebouncedQuery } from "../utils/queryUtils"
-import { getPostsByTags,getPosts } from '../utils/firebase/api';
+import { getPostsByTags, getPosts } from '../utils/firebase/api';
+import Splash from '../components/splashes/Splash';
 
 export default function IndexPage({posts = []}) {
   
   const {set:setQuery} =  useDebouncedQuery(1000)
-  
+  console.log(posts);  
 
   return (<>
     <Head>
@@ -15,9 +16,8 @@ export default function IndexPage({posts = []}) {
     </Head>
     
       <Layout onSearch={(value) => { setQuery({search:value}) }}>
-        {posts.map((data, index) => <h3 key={index}>{data.title}</h3>)}
+      {posts.map((data, index) => <Splash key={index} {...data} />)}
         </Layout>
-    
   </>);
 }
 

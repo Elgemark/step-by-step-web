@@ -1,6 +1,4 @@
 import { Card } from "@mui/material";
-import { styled } from "@mui/material/styles";
-
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
@@ -12,10 +10,11 @@ import { red } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import TextField from "@mui/material/TextField";
 
-const Splash = ({  title = "Title", body = "Body", media = {} }) => {
+const SplashEditable = ({  title = "Title", body = "Body", media = {} }) => {
   return (
-    <Card sx={{ maxWidth: 345 }} onClick={() => {}}>
+    <Card sx={{ maxWidth: 345 }}>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="post">
@@ -27,14 +26,12 @@ const Splash = ({  title = "Title", body = "Body", media = {} }) => {
             <MoreVertIcon />
           </IconButton>
         }
-        title={title}
-        subheader="September 14, 2016"
+        title={<TextField fullWidth label="Title" placeholder="Title"/>}
+        // subheader="September 14, 2016"
       />
       <CardMedia component="img" height="194" image={media.imageURI} />
       <CardContent>
-        <Typography variant="body2" color="text.secondary">
-         {body}
-        </Typography>
+        <TextField fullWidth multiline label="body" placeholder="body"/>              
       </CardContent>
       <CardActions disableSpacing>
         <IconButton aria-label="add to favorites">
@@ -48,4 +45,4 @@ const Splash = ({  title = "Title", body = "Body", media = {} }) => {
   );
 };
 
-export default Splash;
+export default SplashEditable;
