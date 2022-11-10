@@ -63,7 +63,7 @@ const PostEditable = ({
 
   useEffect(() => {
     if (blob) {
-      upload(blob).then(() => {
+      upload(blob).then((e) => {
         onChangeImage(downloadURL);
       });
     }
@@ -113,16 +113,18 @@ const PostEditable = ({
               onChangeBody(e.target.value);
             }}
           />
-          <Stack spacing={1} direction="row">
+          <Stack spacing={1} direction="row" flexWrap={"wrap"}>
             {tags.map((tag) => (
               <Chip label={tag} onDelete={() => onRemoveTag(tag)} />
             ))}
+          </Stack>
+          <Stack direction="row" spacing={2}>
             <TextField
               variant="standard"
               size="small"
-              multiline
+              fullWidth
               value={tags.join(" ")}
-              placeholder="Tag"
+              placeholder="Tags"
               value={tag}
               onChange={(e) => {
                 setTag(e.target.value);

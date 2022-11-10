@@ -9,6 +9,10 @@ import { Button, Divider } from "@mui/material";
 import styled from "styled-components";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { setPost, setSteps } from "../../utils/firebase/api";
+import _ from "lodash";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+import { useState } from "react";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -35,6 +39,7 @@ const StyledBottomBar = styled.div`
 `;
 
 const Create = () => {
+  const [successMessage, setSuccessMessage] = useState();
   // post object:
   const { object: dataPost, setValue: setPostValue } = useStateObject({
     title: "Title",
@@ -59,11 +64,10 @@ const Create = () => {
   };
 
   const onClickSaveHandler = async () => {
-    debugger;
     const resultSteps = await setSteps(dataSteps);
     setPostValue("steps", "/steps/" + resultSteps.id);
-    const resultPost = await setPost(dataPost);
-    console.log("resultSteps", resultSteps, "resultPost", resultPost);
+    await setPost(dataPost);
+    setSuccessMessage("Post saved!");
   };
 
   return (
@@ -77,14 +81,11 @@ const Create = () => {
           onChangeBody={(value) => setPostValue("descr", value)}
           onChangeImage={(value) => setPostValue("media.imageURI", value)}
           onAddTag={(value) => {
-            const newTags = _.union(dataPost.tags, value.split(" "));
-            console.log("newTags", newTags);
-            setPostValue("tags", newTags);
+            setPostValue("tags", _.union(dataPost.tags, value.split(" ")));
           }}
           onRemoveTag={(value) => {
             const tagsCopy = [...dataPost.tags];
             _.remove(tagsCopy, (tag) => tag === value);
-            console.log("tagsCopy", tagsCopy);
             setPostValue("tags", tagsCopy);
           }}
           {...dataPost}
@@ -112,6 +113,12 @@ const Create = () => {
             </Button>
           </ButtonGroup>
         </StyledBottomBar>
+        {/* SNACKBAR */}
+        <Snackbar open={successMessage} autoHideDuration={6000} onClose={() => setSuccessMessage()}>
+          <Alert onClose={() => setSuccessMessage()} severity="success" sx={{ width: "100%" }}>
+            {successMessage}
+          </Alert>
+        </Snackbar>
       </StyledLayout>
     </>
   );

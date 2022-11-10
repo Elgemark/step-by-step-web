@@ -129,6 +129,7 @@ export const useUploadFileAsBlob = () => {
     const url = await getDownloadURL(fileRef);
     setResult(_result);
     setDownloadURL(url);
+    return { url, downloadURL };
   };
 
   return { upload, result, downloadURL };
