@@ -7,10 +7,9 @@ export const useStateObject = (obj = {}) => {
   return {
     object,
     setValue: (path, value) => {
-      const updatedObject = {};
+      const updatedObject = _.cloneDeep(object);
       _.set(updatedObject, path, value);
-      const mergedObject = _.merge(object, updatedObject);
-      setObject(_.cloneDeep(mergedObject));
+      setObject(updatedObject);
     },
     getValue: (path, defaultValue) => _.get(object, path) || defaultValue,
   };
