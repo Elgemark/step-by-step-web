@@ -28,7 +28,7 @@ const StyledCardMedia = styled(CardMedia)`
   position: absolute;
 `;
 
-const SplashEditable = ({ title, description, media = {}, onChangeTitle, onChangeBody, onChangeImage }) => {
+const StepEditable = ({ index, title, description, media = {}, onChangeTitle, onChangeDescription, onChangeImage }) => {
   const { imageURI, blob, onPaste } = usePaste();
   const { upload, downloadURL } = useUploadFileAsBlob();
 
@@ -45,7 +45,7 @@ const SplashEditable = ({ title, description, media = {}, onChangeTitle, onChang
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="post">
-            R
+            {index + 1}
           </Avatar>
         }
         title={<TextField fullWidth label="Title" placeholder="Title" value={title} onChange={() => onChangeTitle} />}
@@ -68,10 +68,10 @@ const SplashEditable = ({ title, description, media = {}, onChangeTitle, onChang
         <TextField
           fullWidth
           multiline
-          label="Description"
+          label="body"
           value={description}
           placeholder="Description"
-          onChange={onChangeBody}
+          onChange={onChangeDescription}
         />
       </CardContent>
       <CardActions disableSpacing>
@@ -83,4 +83,4 @@ const SplashEditable = ({ title, description, media = {}, onChangeTitle, onChang
   );
 };
 
-export default SplashEditable;
+export default StepEditable;

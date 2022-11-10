@@ -6,7 +6,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import theme from "../config/theme";
 
 const Root = styled("div")(() => ({ display: "flex", justifyContent: "center" }));
-const Content = styled(Container)(() => ({ marginTop: "70px" }));
+const Content = styled("div")(() => ({ marginTop: "70px" }));
 
 const Layout = ({ children, onSearch, propsTopbar, propsContent, ...rest }) => {
   return (

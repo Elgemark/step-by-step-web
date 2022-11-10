@@ -1,21 +1,25 @@
 import Head from "next/head";
 import Layout from "../../components/Layout";
 import SplashEditable from "../../components/splashes/SplashEditable";
+import StepEditable from "../../components/steps/StepEditable";
 import { useStateObject } from "../../utils/object";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
-import { Divider } from "@mui/material";
+import { Button, Divider } from "@mui/material";
 import styled from "styled-components";
 
 const StyledLayout = styled(Layout)`
   display: flex;
   justify-content: center;
   .content {
-    background-color: red;
-    max-width: 500px;
+    width: 500px;
     display: flex;
     justify-content: center;
     flex-direction: column;
+  }
+  section {
+    display: flex;
+    justify-content: center;
   }
 `;
 
@@ -51,12 +55,25 @@ const Create = () => {
       <StyledLayout>
         <SplashEditable
           onChangeTitle={(value) => setPostValue("title", value)}
-          onChangeDescription={(value) => setPostValue("description", value)}
+          onChangeBody={(value) => setPostValue("description", value)}
         />
         <StyledDivider />
-        <IconButton size="large">
-          <AddIcon fontSize="inherit" />
-        </IconButton>
+        {dataSteps.steps.map((dataStep, index) => (
+          <>
+            <StepEditable
+              index={index}
+              onChangeBody={(value) => setStepsValue("steps." + index + ".body", value)}
+              onChangeTitle={(value) => setStepsValue("steps." + index + ".title", value)}
+              {...dataStep}
+            />
+            <StyledDivider />
+          </>
+        ))}
+        <section>
+          <IconButton size="large" onClick={onPressAddStep}>
+            <AddIcon fontSize="inherit" />
+          </IconButton>
+        </section>
       </StyledLayout>
     </>
   );
