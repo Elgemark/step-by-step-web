@@ -28,7 +28,7 @@ const StyledCardMedia = styled(CardMedia)`
   position: absolute;
 `;
 
-const SplashEditable = ({ title, description, media = {}, onChangeTitle, onChangeBody, onChangeImage }) => {
+const PostEditable = ({ title, descr, media = {}, onChangeTitle, onChangeBody, onChangeImage }) => {
   const { imageURI, blob, onPaste } = usePaste();
   const { upload, downloadURL } = useUploadFileAsBlob();
 
@@ -45,10 +45,18 @@ const SplashEditable = ({ title, description, media = {}, onChangeTitle, onChang
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="post">
-            R
+            A
           </Avatar>
         }
-        title={<TextField fullWidth label="Title" placeholder="Title" value={title} onChange={() => onChangeTitle} />}
+        title={
+          <TextField
+            fullWidth
+            label="Title"
+            placeholder="Title"
+            value={title}
+            onChange={(e) => onChangeTitle(e.target.value)}
+          />
+        }
         // subheader="September 14, 2016"
       />
       <StyledCardMediaContainer onPaste={onPaste}>
@@ -69,18 +77,20 @@ const SplashEditable = ({ title, description, media = {}, onChangeTitle, onChang
           fullWidth
           multiline
           label="Description"
-          value={description}
+          value={descr}
           placeholder="Description"
-          onChange={onChangeBody}
+          onChange={(e) => {
+            onChangeBody(e.target.value);
+          }}
         />
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="share">
+        {/* <IconButton aria-label="save">
           <SaveIcon />
-        </IconButton>
+        </IconButton> */}
       </CardActions>
     </Card>
   );
 };
 
-export default SplashEditable;
+export default PostEditable;

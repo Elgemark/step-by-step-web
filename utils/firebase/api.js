@@ -46,6 +46,32 @@ export const getPostsByTags = async (tags = []) => {
   return data;
 };
 
+export const setPost = async (data) => {
+  const firebase = getFirestore();
+  const result = {};
+  try {
+    id = uuidv4();
+    result.response = await setDoc(doc(firebase, "posts", id), data);
+    result.id = id;
+  } catch (error) {
+    result.error = error;
+  }
+  return result;
+};
+
+export const setSteps = async (data) => {
+  const firebase = getFirestore();
+  const result = {};
+  try {
+    id = uuidv4();
+    result.response = await setDoc(doc(firebase, "steps", id), data);
+    result.id = id;
+  } catch (error) {
+    result.error = error;
+  }
+  return result;
+};
+
 export const useUploadImage = () => {
   const [result, setResult] = useState();
   const [error, setError] = useState();

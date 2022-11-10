@@ -2,7 +2,7 @@ import Layout from "../components/Layout";
 import Head from "next/head";
 import { useDebouncedQuery } from "../utils/queryUtils";
 import { getPostsByTags, getPosts } from "../utils/firebase/api";
-import Splash from "../components/splashes/Splash";
+import Splash from "../components/posts/Post";
 
 export default function IndexPage({ posts = [] }) {
   const { set: setQuery } = useDebouncedQuery(1000);

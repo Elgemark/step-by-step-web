@@ -1,12 +1,14 @@
 import Head from "next/head";
 import Layout from "../../components/Layout";
-import SplashEditable from "../../components/splashes/SplashEditable";
+import PostEditable from "../../components/posts/PostEditable";
 import StepEditable from "../../components/steps/StepEditable";
 import { useStateObject } from "../../utils/object";
-import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
+import SaveIcon from "@mui/icons-material/Save";
 import { Button, Divider } from "@mui/material";
 import styled from "styled-components";
+import ButtonGroup from "@mui/material/ButtonGroup";
+import { setPost, setSteps } from "../../utils/firebase/api";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -27,6 +29,11 @@ const StyledDivider = styled(Divider)`
   margin: 20px 0;
 `;
 
+const StyledBottomBar = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
 const Create = () => {
   // post object:
   const { object: dataPost, setValue: setPostValue } = useStateObject({
@@ -36,15 +43,24 @@ const Create = () => {
     steps: "ref",
   });
 
+  console.log(dataPost);
+
   // step object: {title: "Title",body: "Description",media: { imageURI: "" }}
   const { object: dataSteps, setValue: setStepsValue } = useStateObject({
     steps: [],
   });
 
-  const onPressAddStep = () => {
+  const onClickAddStepHandler = () => {
     const steps = [...dataSteps.steps];
     steps.push({});
     setStepsValue("steps", steps);
+  };
+
+  const onClickSaveHandler = async () => {
+    const resultSteps = await setSteps(dataSteps);
+    setPostValue("steps", "/steps/" + resultSteps.id);
+    const resultPost = await setPost(dataPost);
+    console.log("resultSteps", resultSteps, "resultPost", resultPost);
   };
 
   return (
@@ -53,9 +69,11 @@ const Create = () => {
         <title>create</title>
       </Head>
       <StyledLayout>
-        <SplashEditable
+        <PostEditable
           onChangeTitle={(value) => setPostValue("title", value)}
-          onChangeBody={(value) => setPostValue("description", value)}
+          onChangeBody={(value) => setPostValue("descr", value)}
+          onChangeImage={(value) => setPostValue("media.imageURI", value)}
+          {...dataPost}
         />
         <StyledDivider />
         {dataSteps.steps.map((dataStep, index) => (
@@ -64,16 +82,22 @@ const Create = () => {
               index={index}
               onChangeBody={(value) => setStepsValue("steps." + index + ".body", value)}
               onChangeTitle={(value) => setStepsValue("steps." + index + ".title", value)}
+              onChangeImage={(value) => setStepsValue("steps." + index + ".media.imageURI", value)}
               {...dataStep}
             />
             <StyledDivider />
           </>
         ))}
-        <section>
-          <IconButton size="large" onClick={onPressAddStep}>
-            <AddIcon fontSize="inherit" />
-          </IconButton>
-        </section>
+        <StyledBottomBar>
+          <ButtonGroup variant="text" aria-label="text button group">
+            <Button endIcon={<SaveIcon />} onClick={onClickSaveHandler}>
+              Save
+            </Button>
+            <Button endIcon={<AddIcon />} onClick={onClickAddStepHandler}>
+              Step
+            </Button>
+          </ButtonGroup>
+        </StyledBottomBar>
       </StyledLayout>
     </>
   );

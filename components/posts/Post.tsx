@@ -13,7 +13,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
-const Splash = ({  title = "Title", body = "Body", media = {} }) => {
+const Post = ({ title = "Title", descr = "Body", media = {} }) => {
   return (
     <Card sx={{ maxWidth: 345 }} onClick={() => {}}>
       <CardHeader
@@ -33,12 +33,12 @@ const Splash = ({  title = "Title", body = "Body", media = {} }) => {
       <CardMedia component="img" height="194" image={media.imageURI} />
       <CardContent>
         <Typography variant="body2" color="text.secondary">
-         {body}
+          {descr}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
         <IconButton aria-label="add to favorites">
-            <FavoriteIcon />
+          <FavoriteIcon />
         </IconButton>
         <IconButton aria-label="share">
           <ShareIcon />
@@ -48,4 +48,4 @@ const Splash = ({  title = "Title", body = "Body", media = {} }) => {
   );
 };
 
-export default Splash;
+export default Post;

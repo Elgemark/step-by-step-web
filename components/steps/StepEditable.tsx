@@ -48,7 +48,15 @@ const StepEditable = ({ index, title, description, media = {}, onChangeTitle, on
             {index + 1}
           </Avatar>
         }
-        title={<TextField fullWidth label="Title" placeholder="Title" value={title} onChange={() => onChangeTitle} />}
+        title={
+          <TextField
+            fullWidth
+            label="Title"
+            placeholder="Title"
+            value={title}
+            onChange={(e) => onChangeTitle(e.target.value)}
+          />
+        }
         // subheader="September 14, 2016"
       />
       <StyledCardMediaContainer onPaste={onPaste}>
@@ -71,13 +79,13 @@ const StepEditable = ({ index, title, description, media = {}, onChangeTitle, on
           label="body"
           value={description}
           placeholder="Description"
-          onChange={onChangeDescription}
+          onChange={(e) => onChangeDescription(e.target.value)}
         />
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="share">
+        {/* <IconButton aria-label="save">
           <SaveIcon />
-        </IconButton>
+        </IconButton> */}
       </CardActions>
     </Card>
   );
