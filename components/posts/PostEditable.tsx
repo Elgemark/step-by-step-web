@@ -1,4 +1,4 @@
-import { Button, Card } from "@mui/material";
+import { Card, Chip } from "@mui/material";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
@@ -6,13 +6,15 @@ import CardActions from "@mui/material/CardActions";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import { red } from "@mui/material/colors";
-import SaveIcon from "@mui/icons-material/Save";
 import DriveFolderUploadIcon from "@mui/icons-material/DriveFolderUpload";
 import TextField from "@mui/material/TextField";
 import { useEffect, useState } from "react";
 import { usePaste } from "../../utils/imageUtils";
 import { useUploadFileAsBlob } from "../../utils/firebase/api";
 import styled from "styled-components";
+import Fab from "@mui/material/Fab";
+import Stack from "@mui/material/Stack";
+import AddIcon from "@mui/icons-material/Add";
 
 const StyledCardMediaContainer = styled.div`
   position: relative;
@@ -27,22 +29,35 @@ const StyledCardMediaContainer = styled.div`
     transition: 0.2s opacity;
   }
   .paste,
-  .select-file
-  {
+  .select-file {
     opacity: ${({ hasImage }) => (hasImage ? 0 : 1)};
-  };
+  }
   &:hover .paste,
-  &:hover .select-file
-  {
+  &:hover .select-file {
     opacity: 1;
-  };
+  }
 `;
 
 const StyledCardMedia = styled(CardMedia)`
   position: absolute;
 `;
 
-const PostEditable = ({ title, descr, media = {}, onChangeTitle, onChangeBody, onChangeImage }) => {
+const StyledTags = styled.div`
+  margin: 16px 0;
+`;
+
+const PostEditable = ({
+  title,
+  descr,
+  media = {},
+  tags = [],
+  onChangeTitle,
+  onChangeBody,
+  onAddTag,
+  onRemoveTag,
+  onChangeImage,
+}) => {
+  const [tag, setTag] = useState();
   const { imageURI, blob, onPaste } = usePaste();
   const { upload, downloadURL } = useUploadFileAsBlob();
 
@@ -87,16 +102,44 @@ const PostEditable = ({ title, descr, media = {}, onChangeTitle, onChangeBody, o
         </IconButton>
       </StyledCardMediaContainer>
       <CardContent>
-        <TextField
-          fullWidth
-          multiline
-          label="Description"
-          value={descr}
-          placeholder="Description"
-          onChange={(e) => {
-            onChangeBody(e.target.value);
-          }}
-        />
+        <Stack spacing={2}>
+          <TextField
+            fullWidth
+            multiline
+            label="Description"
+            value={descr}
+            placeholder="Description"
+            onChange={(e) => {
+              onChangeBody(e.target.value);
+            }}
+          />
+          <Stack spacing={1} direction="row">
+            {tags.map((tag) => (
+              <Chip label={tag} onDelete={() => onRemoveTag(tag)} />
+            ))}
+            <TextField
+              variant="standard"
+              size="small"
+              multiline
+              value={tags.join(" ")}
+              placeholder="Tag"
+              value={tag}
+              onChange={(e) => {
+                setTag(e.target.value);
+              }}
+            />
+            <Fab
+              size="small"
+              disabled={!tag}
+              onClick={() => {
+                onAddTag(tag);
+                setTag("");
+              }}
+            >
+              <AddIcon />
+            </Fab>
+          </Stack>
+        </Stack>
       </CardContent>
       <CardActions disableSpacing>
         {/* <IconButton aria-label="save">

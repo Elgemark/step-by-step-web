@@ -41,10 +41,11 @@ const Create = () => {
     descr: "Description",
     media: { imageURI: "" },
     steps: "ref",
+    tags: [],
     likes: 0,
   });
 
-  console.log(dataPost);
+  console.log("dataPost", dataPost);
 
   // step object: {title: "Title",body: "Description",media: { imageURI: "" }}
   const { object: dataSteps, setValue: setStepsValue } = useStateObject({
@@ -75,6 +76,17 @@ const Create = () => {
           onChangeTitle={(value) => setPostValue("title", value)}
           onChangeBody={(value) => setPostValue("descr", value)}
           onChangeImage={(value) => setPostValue("media.imageURI", value)}
+          onAddTag={(value) => {
+            const newTags = _.union(dataPost.tags, value.split(" "));
+            console.log("newTags", newTags);
+            setPostValue("tags", newTags);
+          }}
+          onRemoveTag={(value) => {
+            const tagsCopy = [...dataPost.tags];
+            _.remove(tagsCopy, (tag) => tag === value);
+            console.log("tagsCopy", tagsCopy);
+            setPostValue("tags", tagsCopy);
+          }}
           {...dataPost}
         />
         <StyledDivider />
