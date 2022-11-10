@@ -3,7 +3,9 @@ import {
   collection,
   where,
   query,
+  doc,
   getDocs,
+  setDoc,
   orderBy as fsOrderBy,
   startAt as fsStartAt,
   endAt as fsEndAt,
@@ -50,7 +52,7 @@ export const setPost = async (data) => {
   const firebase = getFirestore();
   const result = {};
   try {
-    id = uuidv4();
+    const id = uuidv4();
     result.response = await setDoc(doc(firebase, "posts", id), data);
     result.id = id;
   } catch (error) {
@@ -63,7 +65,7 @@ export const setSteps = async (data) => {
   const firebase = getFirestore();
   const result = {};
   try {
-    id = uuidv4();
+    const id = uuidv4();
     result.response = await setDoc(doc(firebase, "steps", id), data);
     result.id = id;
   } catch (error) {

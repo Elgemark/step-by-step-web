@@ -41,6 +41,7 @@ const Create = () => {
     descr: "Description",
     media: { imageURI: "" },
     steps: "ref",
+    likes: 0,
   });
 
   console.log(dataPost);
@@ -57,6 +58,7 @@ const Create = () => {
   };
 
   const onClickSaveHandler = async () => {
+    debugger;
     const resultSteps = await setSteps(dataSteps);
     setPostValue("steps", "/steps/" + resultSteps.id);
     const resultPost = await setPost(dataPost);

@@ -22,13 +22,25 @@ const StyledCardMediaContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  &:hover img {
+    opacity: ${({ hasImage }) => (hasImage ? 0.2 : 1)};
+    transition: 0.2s opacity;
+  }
+  .paste,
+  .select-file {
+    opacity: ${({ hasImage }) => (hasImage ? 0 : 1)};
+  }
+  &:hover .paste,
+  &:hover .select-file {
+    opacity: 1;
+  }
 `;
 
 const StyledCardMedia = styled(CardMedia)`
   position: absolute;
 `;
 
-const StepEditable = ({ index, title, description, media = {}, onChangeTitle, onChangeDescription, onChangeImage }) => {
+const StepEditable = ({ index, title, body, media = {}, onChangeTitle, onChangeBody, onChangeImage }) => {
   const { imageURI, blob, onPaste } = usePaste();
   const { upload, downloadURL } = useUploadFileAsBlob();
 
@@ -68,7 +80,7 @@ const StepEditable = ({ index, title, description, media = {}, onChangeTitle, on
           placeholder="Paste image here..."
           onPaste={onPaste}
         />
-        <IconButton aria-label="browse">
+        <IconButton className="select-file" aria-label="browse">
           <DriveFolderUploadIcon />
         </IconButton>
       </StyledCardMediaContainer>
@@ -77,9 +89,9 @@ const StepEditable = ({ index, title, description, media = {}, onChangeTitle, on
           fullWidth
           multiline
           label="body"
-          value={description}
+          value={body}
           placeholder="Description"
-          onChange={(e) => onChangeDescription(e.target.value)}
+          onChange={(e) => onChangeBody(e.target.value)}
         />
       </CardContent>
       <CardActions disableSpacing>
