@@ -12,21 +12,18 @@ import { red } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import PostMoreMenu from "../PostMoreMenu";
 
-const Post = ({ title = "Title", descr = "Body", media = {} }) => {
+const Post = ({ title = "Title", descr = "Body", media = {}, onEdit, onDelete, onReport }) => {
   return (
-    <Card sx={{ maxWidth: 345 }} onClick={() => {}}>
+    <Card sx={{ maxWidth: 400 }} onClick={() => {}}>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="post">
             R
           </Avatar>
         }
-        action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
-        }
+        action={<PostMoreMenu onEdit={onEdit} onDelete={onDelete} onReport={onReport} />}
         title={title}
         subheader="September 14, 2016"
       />

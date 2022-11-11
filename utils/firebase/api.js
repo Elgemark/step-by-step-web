@@ -23,7 +23,7 @@ export const getPosts = async (orderBy = "likes", startAt = 0, endAt = 10) => {
   try {
     const querySnapshot = await getDocs(queryBuild);
     querySnapshot.forEach((doc) => {
-      data.push(doc.data());
+      data.push({ ...doc.data(), id: doc.id });
     });
   } catch (error) {
     console.log("error", error);
@@ -41,7 +41,7 @@ export const getPostsByTags = async (tags = []) => {
     const querySnapshot = await getDocs(queryBuild);
     console.count("query");
     querySnapshot.forEach((doc) => {
-      data.push(doc.data());
+      data.push({ ...doc.data(), id: doc.id });
     });
   } catch (error) {
     console.log("error", error);

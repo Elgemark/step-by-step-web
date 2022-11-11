@@ -135,7 +135,7 @@ export async function getServerSideProps({ query }) {
   const id = query.id;
   const post = await getPost(id);
   const steps = {};
-  return { props: { post: post.data, steps } };
+  return { props: { post: post?.data || null, steps } };
 }
 
 export default Create;

@@ -2,10 +2,17 @@ import Layout from "../components/Layout";
 import Head from "next/head";
 import { useDebouncedQuery } from "../utils/queryUtils";
 import { getPostsByTags, getPosts } from "../utils/firebase/api";
-import Splash from "../components/posts/Post";
+import Post from "../components/posts/Post";
+import { useRouter } from "next/router";
 
 export default function IndexPage({ posts = [] }) {
   const { set: setQuery } = useDebouncedQuery(1000);
+  const router = useRouter();
+
+  const onEditHandler = ({ id }) => {
+    // console.log("data", data);
+    router.push("/create?id=" + id);
+  };
 
   return (
     <>
@@ -19,7 +26,13 @@ export default function IndexPage({ posts = [] }) {
         }}
       >
         {posts.map((data, index) => (
-          <Splash key={index} {...data} />
+          <Post
+            key={index}
+            onEdit={() => {
+              onEditHandler(data);
+            }}
+            {...data}
+          />
         ))}
       </Layout>
     </>
