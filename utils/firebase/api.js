@@ -4,6 +4,7 @@ import {
   where,
   query,
   doc,
+  getDoc,
   getDocs,
   setDoc,
   orderBy as fsOrderBy,
@@ -55,6 +56,19 @@ export const setPost = async (data) => {
     const id = uuidv4();
     result.response = await setDoc(doc(firebase, "posts", id), data);
     result.id = id;
+  } catch (error) {
+    result.error = error;
+  }
+  return result;
+};
+
+export const getPost = async (id) => {
+  const firebase = getFirestore();
+  const result = {};
+  try {
+    const docRef = doc(firebase, "posts", id);
+    const docSnap = await getDoc(docRef);
+    result.data = docSnap.exists() ? docSnap.data() : null;
   } catch (error) {
     result.error = error;
   }

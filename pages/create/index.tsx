@@ -8,11 +8,12 @@ import SaveIcon from "@mui/icons-material/Save";
 import { Button, Divider } from "@mui/material";
 import styled from "styled-components";
 import ButtonGroup from "@mui/material/ButtonGroup";
-import { setPost, setSteps } from "../../utils/firebase/api";
+import { getPost, setPost, setSteps } from "../../utils/firebase/api";
 import _ from "lodash";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { useState } from "react";
+import { useRouter } from "next/router";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -38,19 +39,24 @@ const StyledBottomBar = styled.div`
   justify-content: center;
 `;
 
-const Create = () => {
-  const [successMessage, setSuccessMessage] = useState();
-  // post object:
-  const { object: dataPost, setValue: setPostValue } = useStateObject({
+const Create = ({
+  post = {
     title: "Title",
     descr: "Description",
     media: { imageURI: "" },
     steps: "ref",
     tags: [],
     likes: 0,
-  });
+  },
+  steps,
+}) => {
+  const router = useRouter();
+  const { id } = router.query;
+  const [successMessage, setSuccessMessage] = useState();
+  // post object:
+  const { object: dataPost, setValue: setPostValue } = useStateObject(post);
 
-  console.log("imageURI", dataPost.media.imageURI);
+  console.log("post", post);
 
   // step object: {title: "Title",body: "Description",media: { imageURI: "" }}
   const { object: dataSteps, setValue: setStepsValue } = useStateObject({
@@ -68,6 +74,7 @@ const Create = () => {
     setPostValue("steps", "/steps/" + resultSteps.id);
     await setPost(dataPost);
     setSuccessMessage("Post saved!");
+    router.replace("/create", { query: { id: resultSteps.id } });
   };
 
   return (
@@ -123,5 +130,12 @@ const Create = () => {
     </>
   );
 };
+
+export async function getServerSideProps({ query }) {
+  const id = query.id;
+  const post = await getPost(id);
+  const steps = {};
+  return { props: { post: post.data, steps } };
+}
 
 export default Create;
