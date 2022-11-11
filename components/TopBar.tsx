@@ -4,7 +4,6 @@ import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 
-
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -45,10 +44,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const TopBar = ({onSearch}) => {
+const TopBar = ({ onSearch }) => {
   const router = useRouter();
-
-  
 
   return (
     <AppBar>
@@ -69,13 +66,18 @@ const TopBar = ({onSearch}) => {
         >
           Create
         </Button>
-        {onSearch && <Search>
-          <SearchIconWrapper>
-            <SearchIcon />
-          </SearchIconWrapper>
-          <StyledInputBase onChange={(e) => onSearch(e.currentTarget.value) } placeholder="Search…" inputProps={{ "aria-label": "search" }} />
-        </Search>}
-        
+        {onSearch && (
+          <Search>
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+              onChange={(e) => onSearch(e.currentTarget.value.toLowerCase())}
+              placeholder="Search…"
+              inputProps={{ "aria-label": "search" }}
+            />
+          </Search>
+        )}
       </Toolbar>
     </AppBar>
   );

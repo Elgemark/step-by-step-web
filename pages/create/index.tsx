@@ -50,7 +50,7 @@ const Create = () => {
     likes: 0,
   });
 
-  console.log("dataPost", dataPost);
+  console.log("imageURI", dataPost.media.imageURI);
 
   // step object: {title: "Title",body: "Description",media: { imageURI: "" }}
   const { object: dataSteps, setValue: setStepsValue } = useStateObject({

@@ -42,7 +42,7 @@ const MediaEditable = ({ media = {}, onChangeImage }) => {
   useEffect(() => {
     if (blob) {
       upload(blob).then((e) => {
-        onChangeImage(downloadURL);
+        onChangeImage(e.url);
       });
     }
   }, [blob]);
