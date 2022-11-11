@@ -7,6 +7,7 @@ import {
   getDoc,
   getDocs,
   setDoc,
+  deleteDoc,
   orderBy as fsOrderBy,
   startAt as fsStartAt,
   endAt as fsEndAt,
@@ -15,6 +16,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
+// ::: POSTS
 export const getPosts = async (orderBy = "likes", startAt = 0, endAt = 10) => {
   const firebase = getFirestore();
   const stepsRef = collection(firebase, "posts");
@@ -39,7 +41,6 @@ export const getPostsByTags = async (tags = []) => {
   let data = [];
   try {
     const querySnapshot = await getDocs(queryBuild);
-    console.count("query");
     querySnapshot.forEach((doc) => {
       data.push({ ...doc.data(), id: doc.id });
     });
@@ -53,8 +54,9 @@ export const setPost = async (data) => {
   const firebase = getFirestore();
   const result = {};
   try {
-    const id = uuidv4();
+    const id = data.id || uuidv4();
     result.response = await setDoc(doc(firebase, "posts", id), data);
+    result.data = { ...data, id };
     result.id = id;
   } catch (error) {
     result.error = error;
@@ -68,25 +70,47 @@ export const getPost = async (id) => {
   try {
     const docRef = doc(firebase, "posts", id);
     const docSnap = await getDoc(docRef);
-    result.data = docSnap.exists() ? docSnap.data() : null;
+    result.data = docSnap.exists() ? { ...docSnap.data(), id } : null;
   } catch (error) {
     result.error = error;
   }
   return result;
 };
 
+export const deletePost = async (id) => {
+  const firebase = getFirestore();
+  await deleteDoc(doc(firebase, "posts", id));
+};
+
+// ::: STEPS
 export const setSteps = async (data) => {
   const firebase = getFirestore();
   const result = {};
   try {
-    const id = uuidv4();
+    const id = data.id || uuidv4();
     result.response = await setDoc(doc(firebase, "steps", id), data);
+    result.data = { ...data, id };
     result.id = id;
   } catch (error) {
     result.error = error;
   }
   return result;
 };
+
+export const getSteps = async (id) => {
+  const firebase = getFirestore();
+  const result = {};
+  try {
+    const docRef = doc(firebase, "steps", id);
+    const docSnap = await getDoc(docRef);
+    result.data = docSnap.exists() ? { ...docSnap.data(), id } : null;
+  } catch (error) {
+    result.error = error;
+  }
+  return result;
+};
+
+// ::: MISC
 
 export const useUploadImage = () => {
   const [result, setResult] = useState();

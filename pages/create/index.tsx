@@ -8,7 +8,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import { Button, Divider } from "@mui/material";
 import styled from "styled-components";
 import ButtonGroup from "@mui/material/ButtonGroup";
-import { getPost, setPost, setSteps } from "../../utils/firebase/api";
+import { getPost, getSteps, setPost, setSteps } from "../../utils/firebase/api";
 import _ from "lodash";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
@@ -51,17 +51,19 @@ const Create = ({
   steps,
 }) => {
   const router = useRouter();
-  const { id } = router.query;
   const [successMessage, setSuccessMessage] = useState();
   // post object:
-  const { object: dataPost, setValue: setPostValue } = useStateObject(post);
-
-  console.log("post", post);
-
+  const { object: dataPost, setValue: setPostValue, replace: replacePost } = useStateObject(post);
   // step object: {title: "Title",body: "Description",media: { imageURI: "" }}
-  const { object: dataSteps, setValue: setStepsValue } = useStateObject({
+  const {
+    object: dataSteps,
+    setValue: setStepsValue,
+    replace: replaceSteps,
+  } = useStateObject({
     steps: [],
   });
+
+  console.log("post", post);
 
   const onClickAddStepHandler = () => {
     const steps = [...dataSteps.steps];
@@ -71,10 +73,15 @@ const Create = ({
 
   const onClickSaveHandler = async () => {
     const resultSteps = await setSteps(dataSteps);
-    setPostValue("steps", "/steps/" + resultSteps.id);
-    await setPost(dataPost);
+    const resultPost = await setPost({ ...dataPost, steps: "/steps/" + resultSteps.id });
+    console.log("resultPost", resultPost);
+    // Update internal values...
+    replacePost(resultPost.data);
+    replaceSteps(resultSteps.data);
+    // Success...
     setSuccessMessage("Post saved!");
-    router.replace("/create", { query: { id: resultSteps.id } });
+    // Update route...
+    router.replace("/create", { query: { id: resultPost.id } });
   };
 
   return (
@@ -134,8 +141,8 @@ const Create = ({
 export async function getServerSideProps({ query }) {
   const id = query.id;
   const post = await getPost(id);
-  const steps = {};
-  return { props: { post: post?.data || null, steps } };
+  const steps = await getSteps(post?.data?.id);
+  return { props: { post: post?.data || null, steps: steps?.data || null } };
 }
 
 export default Create;

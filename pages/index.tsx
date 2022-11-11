@@ -1,7 +1,7 @@
 import Layout from "../components/Layout";
 import Head from "next/head";
 import { useDebouncedQuery } from "../utils/queryUtils";
-import { getPostsByTags, getPosts } from "../utils/firebase/api";
+import { getPostsByTags, getPosts, deletePost } from "../utils/firebase/api";
 import Post from "../components/posts/Post";
 import { useRouter } from "next/router";
 
@@ -10,8 +10,11 @@ export default function IndexPage({ posts = [] }) {
   const router = useRouter();
 
   const onEditHandler = ({ id }) => {
-    // console.log("data", data);
     router.push("/create?id=" + id);
+  };
+
+  const onDeleteHandler = async ({ id }) => {
+    await deletePost(id);
   };
 
   return (
@@ -30,6 +33,9 @@ export default function IndexPage({ posts = [] }) {
             key={index}
             onEdit={() => {
               onEditHandler(data);
+            }}
+            onDelete={() => {
+              onDeleteHandler(data);
             }}
             {...data}
           />

@@ -11,6 +11,9 @@ export const useStateObject = (obj = {}) => {
       _.set(updatedObject, path, value);
       setObject(updatedObject);
     },
+    replace: (object) => {
+      setObject(object);
+    },
     getValue: (path, defaultValue) => _.get(object, path) || defaultValue,
   };
 };
