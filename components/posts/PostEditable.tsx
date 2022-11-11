@@ -15,36 +15,7 @@ import styled from "styled-components";
 import Fab from "@mui/material/Fab";
 import Stack from "@mui/material/Stack";
 import AddIcon from "@mui/icons-material/Add";
-
-const StyledCardMediaContainer = styled.div`
-  position: relative;
-  user-select: initial;
-  width: 100%;
-  min-height: 300px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  &:hover img {
-    opacity: ${({ hasImage }) => (hasImage ? 0.2 : 1)};
-    transition: 0.2s opacity;
-  }
-  .paste,
-  .select-file {
-    opacity: ${({ hasImage }) => (hasImage ? 0 : 1)};
-  }
-  &:hover .paste,
-  &:hover .select-file {
-    opacity: 1;
-  }
-`;
-
-const StyledCardMedia = styled(CardMedia)`
-  position: absolute;
-`;
-
-const StyledTags = styled.div`
-  margin: 16px 0;
-`;
+import MediaEditable from "../primitives/MediaEditable";
 
 const PostEditable = ({
   title,
@@ -58,16 +29,6 @@ const PostEditable = ({
   onChangeImage,
 }) => {
   const [tag, setTag] = useState();
-  const { imageURI, blob, onPaste } = usePaste();
-  const { upload, downloadURL } = useUploadFileAsBlob();
-
-  useEffect(() => {
-    if (blob) {
-      upload(blob).then((e) => {
-        onChangeImage(downloadURL);
-      });
-    }
-  }, [blob]);
 
   return (
     <Card>
@@ -88,19 +49,7 @@ const PostEditable = ({
         }
         // subheader="September 14, 2016"
       />
-      <StyledCardMediaContainer onPaste={onPaste} hasImage={downloadURL || imageURI || media.imageURI}>
-        <StyledCardMedia component="img" height="300" image={downloadURL || imageURI || media.imageURI} />
-        <TextField
-          size="small"
-          className="paste"
-          label="Paste image here..."
-          placeholder="Paste image here..."
-          onPaste={onPaste}
-        />
-        <IconButton className="select-file" aria-label="browse">
-          <DriveFolderUploadIcon />
-        </IconButton>
-      </StyledCardMediaContainer>
+      <MediaEditable onChangeImage={onChangeImage} media={media} />
       <CardContent>
         <Stack spacing={2}>
           <TextField

@@ -13,45 +13,9 @@ import { useEffect, useState } from "react";
 import { usePaste } from "../../utils/imageUtils";
 import { useUploadFileAsBlob } from "../../utils/firebase/api";
 import styled from "styled-components";
-
-const StyledCardMediaContainer = styled.div`
-  position: relative;
-  user-select: initial;
-  width: 100%;
-  height: 300px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  &:hover img {
-    opacity: ${({ hasImage }) => (hasImage ? 0.2 : 1)};
-    transition: 0.2s opacity;
-  }
-  .paste,
-  .select-file {
-    opacity: ${({ hasImage }) => (hasImage ? 0 : 1)};
-  }
-  &:hover .paste,
-  &:hover .select-file {
-    opacity: 1;
-  }
-`;
-
-const StyledCardMedia = styled(CardMedia)`
-  position: absolute;
-`;
+import MediaEditable from "../primitives/MediaEditable";
 
 const StepEditable = ({ index, title, body, media = {}, onChangeTitle, onChangeBody, onChangeImage }) => {
-  const { imageURI, blob, onPaste } = usePaste();
-  const { upload, downloadURL } = useUploadFileAsBlob();
-
-  useEffect(() => {
-    if (blob) {
-      upload(blob).then(() => {
-        onChangeImage(downloadURL);
-      });
-    }
-  }, [blob]);
-
   return (
     <Card>
       <CardHeader
@@ -71,19 +35,7 @@ const StepEditable = ({ index, title, body, media = {}, onChangeTitle, onChangeB
         }
         // subheader="September 14, 2016"
       />
-      <StyledCardMediaContainer onPaste={onPaste}>
-        <StyledCardMedia component="img" height="300" image={downloadURL || imageURI || media.imageURI} />
-        <TextField
-          size="small"
-          className="paste"
-          label="Paste image here..."
-          placeholder="Paste image here..."
-          onPaste={onPaste}
-        />
-        <IconButton className="select-file" aria-label="browse">
-          <DriveFolderUploadIcon />
-        </IconButton>
-      </StyledCardMediaContainer>
+      <MediaEditable onChangeImage={onChangeImage} media={media} />
       <CardContent>
         <TextField
           fullWidth

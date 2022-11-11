@@ -92,7 +92,7 @@ const Create = () => {
         />
         <StyledDivider />
         {dataSteps.steps.map((dataStep, index) => (
-          <>
+          <div key={"step-" + index}>
             <StepEditable
               index={index}
               onChangeBody={(value) => setStepsValue("steps." + index + ".body", value)}
@@ -101,7 +101,7 @@ const Create = () => {
               {...dataStep}
             />
             <StyledDivider />
-          </>
+          </div>
         ))}
         <StyledBottomBar>
           <ButtonGroup variant="text" aria-label="text button group">
