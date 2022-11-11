@@ -1,6 +1,7 @@
 import CardMedia from "@mui/material/CardMedia";
 import IconButton from "@mui/material/IconButton";
-import DriveFolderUploadIcon from "@mui/icons-material/DriveFolderUpload";
+
+import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import TextField from "@mui/material/TextField";
 import { useEffect, useState } from "react";
 import { usePaste } from "../../utils/imageUtils";
@@ -36,6 +37,7 @@ const StyledCardMedia = styled(CardMedia)`
 const MediaEditable = ({ media = {}, onChangeImage }) => {
   const { imageURI, blob, onPaste } = usePaste();
   const { upload, downloadURL } = useUploadFileAsBlob();
+  const [emptyrStr, setEmptyStr] = useState("");
 
   useEffect(() => {
     if (blob) {
@@ -45,8 +47,6 @@ const MediaEditable = ({ media = {}, onChangeImage }) => {
     }
   }, [blob]);
 
-  console.log("downloadURL", downloadURL);
-
   return (
     <StyledCardMediaContainer onPaste={onPaste} hasImage={downloadURL || imageURI || media.imageURI}>
       <StyledCardMedia component="img" height="300" image={downloadURL || imageURI || media.imageURI} />
@@ -54,11 +54,12 @@ const MediaEditable = ({ media = {}, onChangeImage }) => {
         size="small"
         className="paste"
         label="Paste image here..."
-        placeholder="Paste image here..."
+        value={emptyrStr}
+        onChange={() => setEmptyStr("")}
         onPaste={onPaste}
       />
       <IconButton className="select-file" aria-label="browse">
-        <DriveFolderUploadIcon />
+        <FolderOpenIcon />
       </IconButton>
     </StyledCardMediaContainer>
   );

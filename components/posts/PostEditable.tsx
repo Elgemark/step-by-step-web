@@ -38,15 +38,7 @@ const PostEditable = ({
             A
           </Avatar>
         }
-        title={
-          <TextField
-            fullWidth
-            label="Title"
-            placeholder="Title"
-            value={title}
-            onChange={(e) => onChangeTitle(e.target.value)}
-          />
-        }
+        title={<TextField fullWidth label="Title" value={title} onChange={(e) => onChangeTitle(e.target.value)} />}
         // subheader="September 14, 2016"
       />
       <MediaEditable onChangeImage={onChangeImage} media={media} />
@@ -57,7 +49,6 @@ const PostEditable = ({
             multiline
             label="Description"
             value={descr}
-            placeholder="Description"
             onChange={(e) => {
               onChangeBody(e.target.value);
             }}
@@ -76,7 +67,7 @@ const PostEditable = ({
               placeholder="Tags"
               value={tag}
               onChange={(e) => {
-                setTag(e.target.value);
+                setTag(e.target.value.toLowerCase());
               }}
             />
             <Fab
