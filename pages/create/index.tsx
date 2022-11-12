@@ -8,7 +8,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import { Button, Divider } from "@mui/material";
 import styled from "styled-components";
 import ButtonGroup from "@mui/material/ButtonGroup";
-import { getPost, getSteps, setPost, setSteps } from "../../utils/firebase/api";
+import { getPost, getSteps, setPost, setSteps, setPostAndSteps } from "../../utils/firebase/api";
 import _ from "lodash";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
@@ -39,17 +39,7 @@ const StyledBottomBar = styled.div`
   justify-content: center;
 `;
 
-const Create = ({
-  post = {
-    title: "Title",
-    descr: "Description",
-    media: { imageURI: "" },
-    steps: "ref",
-    tags: [],
-    likes: 0,
-  },
-  steps,
-}) => {
+const Create = ({ post, steps, error }) => {
   const router = useRouter();
   const [successMessage, setSuccessMessage] = useState();
   // post object:
@@ -59,11 +49,9 @@ const Create = ({
     object: dataSteps,
     setValue: setStepsValue,
     replace: replaceSteps,
-  } = useStateObject({
-    steps: [],
-  });
+  } = useStateObject(steps);
 
-  console.log("post", post);
+  console.log("post", post, "steps", steps);
 
   const onClickAddStepHandler = () => {
     const steps = [...dataSteps.steps];
@@ -71,7 +59,7 @@ const Create = ({
     setStepsValue("steps", steps);
   };
 
-  const onClickSaveHandler = async () => {
+  const _onClickSaveHandler = async () => {
     const resultSteps = await setSteps(dataSteps);
     const resultPost = await setPost({ ...dataPost, steps: "/steps/" + resultSteps.id });
     console.log("resultPost", resultPost);
@@ -82,6 +70,12 @@ const Create = ({
     setSuccessMessage("Post saved!");
     // Update route...
     router.replace("/create", { query: { id: resultPost.id } });
+  };
+
+  const onClickSaveHandler = async () => {
+    const resp = await setPostAndSteps(dataPost, dataSteps);
+    resp.postData && replacePost(resp.postData);
+    resp.stepsData && replaceSteps(resp.stepsData);
   };
 
   return (
@@ -139,10 +133,21 @@ const Create = ({
 };
 
 export async function getServerSideProps({ query }) {
-  const id = query.id;
-  const post = await getPost(id);
-  const steps = await getSteps(post?.data?.id);
-  return { props: { post: post?.data || null, steps: steps?.data || null } };
+  const postId = query.id;
+  const post = await getPost(postId);
+  const steps = await getSteps(post?.data?.stepsId);
+  return {
+    props: {
+      post: post?.data || {
+        title: "Title",
+        descr: "Description",
+        media: { imageURI: "" },
+        tags: [],
+        likes: 0,
+      },
+      steps: steps?.data || [],
+    },
+  };
 }
 
 export default Create;

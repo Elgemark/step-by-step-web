@@ -1,5 +1,6 @@
 import {
   getFirestore,
+  writeBatch,
   collection,
   where,
   query,
@@ -62,6 +63,31 @@ export const setPost = async (data) => {
     result.error = error;
   }
   return result;
+};
+
+export const setPostAndSteps = async (post, steps) => {
+  const firebase = getFirestore();
+  const batch = writeBatch(firebase);
+  // Set the value of 'steps'
+  const stepsId = steps.id || uuidv4();
+  const stepsRef = doc(firebase, "steps", stepsId);
+  const stepsData = { ...steps, id: stepsId };
+  batch.set(stepsRef, stepsData);
+  // Set the value of 'posts'
+  const postId = post.id || uuidv4();
+  const postsRef = doc(firebase, "posts", postId);
+  const postData = { ...post, id: postId, stepsId };
+  batch.set(postsRef, postData);
+  //
+  let resp = {};
+  try {
+    resp.response = await batch.commit();
+    resp.stepsData = stepsData;
+    resp.postData = postData;
+  } catch (error) {
+    resp.error = error;
+  }
+  return resp;
 };
 
 export const getPost = async (id) => {
