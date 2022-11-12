@@ -39,19 +39,13 @@ const StyledBottomBar = styled.div`
   justify-content: center;
 `;
 
-const Create = ({ post, steps, error }) => {
+const Create = ({ post, steps }) => {
   const router = useRouter();
   const [successMessage, setSuccessMessage] = useState();
   // post object:
   const { object: dataPost, setValue: setPostValue, replace: replacePost } = useStateObject(post);
   // step object: {title: "Title",body: "Description",media: { imageURI: "" }}
-  const {
-    object: dataSteps,
-    setValue: setStepsValue,
-    replace: replaceSteps,
-  } = useStateObject(steps);
-
-  console.log("post", post, "steps", steps);
+  const { object: dataSteps, setValue: setStepsValue, replace: replaceSteps } = useStateObject(steps);
 
   const onClickAddStepHandler = () => {
     const steps = [...dataSteps.steps];
@@ -59,23 +53,16 @@ const Create = ({ post, steps, error }) => {
     setStepsValue("steps", steps);
   };
 
-  const _onClickSaveHandler = async () => {
-    const resultSteps = await setSteps(dataSteps);
-    const resultPost = await setPost({ ...dataPost, steps: "/steps/" + resultSteps.id });
-    console.log("resultPost", resultPost);
-    // Update internal values...
-    replacePost(resultPost.data);
-    replaceSteps(resultSteps.data);
-    // Success...
-    setSuccessMessage("Post saved!");
-    // Update route...
-    router.replace("/create", { query: { id: resultPost.id } });
-  };
-
   const onClickSaveHandler = async () => {
     const resp = await setPostAndSteps(dataPost, dataSteps);
     resp.postData && replacePost(resp.postData);
     resp.stepsData && replaceSteps(resp.stepsData);
+    if (!resp.error) {
+      // Success...
+      setSuccessMessage("Post saved!");
+      // Update route...
+      router.replace("/create", { query: { id: resp.postData.id } });
+    }
   };
 
   return (
@@ -145,7 +132,7 @@ export async function getServerSideProps({ query }) {
         tags: [],
         likes: 0,
       },
-      steps: steps?.data || [],
+      steps: steps?.data || { steps: [] },
     },
   };
 }
