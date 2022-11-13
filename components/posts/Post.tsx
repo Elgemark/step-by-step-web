@@ -14,9 +14,9 @@ import ShareIcon from "@mui/icons-material/Share";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import PostMoreMenu from "../PostMoreMenu";
 
-const Post = ({ title = "Title", descr = "Body", media = {}, onEdit, onDelete, onReport }) => {
+const Post = ({ title = "Title", descr = "Body", media = {}, minWidth = 320, onEdit, onDelete, onReport }) => {
   return (
-    <Card sx={{ maxWidth: 400 }} onClick={() => {}}>
+    <Card sx={{ minWidth: minWidth }} onClick={() => {}}>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="post">

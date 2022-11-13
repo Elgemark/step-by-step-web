@@ -4,6 +4,12 @@ import { useDebouncedQuery } from "../utils/queryUtils";
 import { getPostsByTags, getPosts, deletePost } from "../utils/firebase/api";
 import Post from "../components/posts/Post";
 import { useRouter } from "next/router";
+import Masonry from "@mui/lab/Masonry";
+import styled from "styled-components";
+
+const StyledMasonry = styled(Masonry)`
+  width: 100%;
+`;
 
 export default function IndexPage({ posts = [] }) {
   const { set: setQuery } = useDebouncedQuery(1000);
@@ -28,18 +34,20 @@ export default function IndexPage({ posts = [] }) {
           setQuery({ search: value });
         }}
       >
-        {posts.map((data, index) => (
-          <Post
-            key={index}
-            onEdit={() => {
-              onEditHandler(data);
-            }}
-            onDelete={() => {
-              onDeleteHandler(data);
-            }}
-            {...data}
-          />
-        ))}
+        <StyledMasonry columns={4} spacing={2}>
+          {posts.map((data, index) => (
+            <Post
+              key={index}
+              onEdit={() => {
+                onEditHandler(data);
+              }}
+              onDelete={() => {
+                onDeleteHandler(data);
+              }}
+              {...data}
+            />
+          ))}
+        </StyledMasonry>
       </Layout>
     </>
   );

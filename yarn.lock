@@ -716,6 +716,20 @@
   dependencies:
     "@babel/runtime" "^7.19.0"
 
+"@mui/lab@^5.0.0-alpha.107":
+  version "5.0.0-alpha.107"
+  resolved "https://registry.yarnpkg.com/@mui/lab/-/lab-5.0.0-alpha.107.tgz#1443c3c9a5abd7ada96df73e216dea289701c391"
+  integrity sha512-5lq0tSewkjUHBAuuAVikifM+IeOk33jcMSDgS5ouwi0VDXZjgWij+V/Nhz/8vIyBKwYv1bvhQGyDiUcPiCLX+Q==
+  dependencies:
+    "@babel/runtime" "^7.19.0"
+    "@mui/base" "5.0.0-alpha.105"
+    "@mui/system" "^5.10.13"
+    "@mui/types" "^7.2.0"
+    "@mui/utils" "^5.10.9"
+    clsx "^1.2.1"
+    prop-types "^15.8.1"
+    react-is "^18.2.0"
+
 "@mui/material@^5.10.13":
   version "5.10.13"
   resolved "https://registry.yarnpkg.com/@mui/material/-/material-5.10.13.tgz#49c505ed99bc97e573d0cc15bec074b080aacee1"
@@ -1839,7 +1853,7 @@ strip-ansi@^6.0.0, strip-ansi@^6.0.1:
   dependencies:
     ansi-regex "^5.0.1"
 
-styled-components@^5.3.6:
+styled-components@^5, styled-components@^5.3.6:
   version "5.3.6"
   resolved "https://registry.yarnpkg.com/styled-components/-/styled-components-5.3.6.tgz#27753c8c27c650bee9358e343fc927966bfd00d1"
   integrity sha512-hGTZquGAaTqhGWldX7hhfzjnIYBZ0IXQXkCYdvF1Sq3DsUaLx6+NTHC5Jj1ooM2F68sBiVz3lvhfwQs/S3l6qg==

@@ -1,11 +1,17 @@
 import TopBar from "./TopBar";
-import { styled } from "@mui/material/styles";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import theme from "../config/theme";
+import styled from "styled-components";
 
-const Root = styled("div")(() => ({ display: "flex", justifyContent: "center" }));
-const Content = styled("div")(() => ({ marginTop: "70px" }));
+const Root = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+const Content = styled.div`
+  margin-top: 70px;
+  min-width: 800px;
+`;
 
 const Layout = ({ children, onSearch, propsTopbar, propsContent, ...rest }) => {
   return (
