@@ -8,7 +8,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import { Button, Divider } from "@mui/material";
 import styled from "styled-components";
 import ButtonGroup from "@mui/material/ButtonGroup";
-import { getPost, getSteps, setPost, setSteps, setPostAndSteps } from "../../utils/firebase/api";
+import { getPost, getSteps, setPostAndSteps } from "../../utils/firebase/api";
 import _ from "lodash";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";

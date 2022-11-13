@@ -13,8 +13,9 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import PostMoreMenu from "../PostMoreMenu";
+import Link from "next/link";
 
-const Post = ({ title = "Title", descr = "Body", media = {}, minWidth = 320, onEdit, onDelete, onReport }) => {
+const Post = ({ title = "Title", descr = "Body", media = {}, id, minWidth = 320, onEdit, onDelete, onReport }) => {
   return (
     <Card sx={{ minWidth: minWidth }} onClick={() => {}}>
       <CardHeader
@@ -27,7 +28,14 @@ const Post = ({ title = "Title", descr = "Body", media = {}, minWidth = 320, onE
         title={title}
         subheader="September 14, 2016"
       />
-      <CardMedia component="img" height="194" image={media.imageURI} />
+      <Link
+        href={{
+          pathname: "/steps/[slug]",
+          query: { slug: id },
+        }}
+      >
+        <CardMedia component="img" height="194" image={media.imageURI} />
+      </Link>
       <CardContent>
         <Typography variant="body2" color="text.secondary">
           {descr}

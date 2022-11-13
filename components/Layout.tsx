@@ -9,8 +9,8 @@ const Root = styled.div`
   justify-content: center;
 `;
 const Content = styled.div`
-  margin-top: 70px;
-  min-width: 800px;
+  margin-top: 80px;
+  max-width: 800px;
 `;
 
 const Layout = ({ children, onSearch, propsTopbar, propsContent, ...rest }) => {
