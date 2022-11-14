@@ -1,8 +1,9 @@
-import { AppBar, Toolbar, Button } from "@mui/material";
+import { AppBar, Toolbar, Button, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
+import StepsLogo from "./primitives/StepsLogo";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -56,16 +57,9 @@ const TopBar = ({ onSearch }) => {
             router.push("/");
           }}
         >
-          Home
+          <StepsLogo width={100}></StepsLogo>
         </Button>
-        <Button
-          color="inherit"
-          onClick={() => {
-            router.push("/create");
-          }}
-        >
-          Create
-        </Button>
+
         {onSearch && (
           <Search>
             <SearchIconWrapper>
@@ -78,6 +72,15 @@ const TopBar = ({ onSearch }) => {
             />
           </Search>
         )}
+        <Typography component="div" sx={{ flexGrow: 1 }} />
+        <Button
+          color="inherit"
+          onClick={() => {
+            router.push("/create");
+          }}
+        >
+          Create
+        </Button>
       </Toolbar>
     </AppBar>
   );

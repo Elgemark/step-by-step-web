@@ -30,9 +30,9 @@ const Steps = ({ post, steps, stepsData }) => {
       </Head>
       <StyledLayout>
         <Post {...post} />
-        <RevealNext open />
+        <RevealNext open label="Start" />
         {steps.map((step, index) => (
-          <RevealNext key={"step-" + index} >
+          <RevealNext key={"step-" + index}>
             <Step {...step} />
           </RevealNext>
         ))}
