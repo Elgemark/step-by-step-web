@@ -10,3 +10,5 @@ const RevealNext = ({ children, open, onClickNext }) => {
     </Collapse>
   );
 };
+
+export default RevealNext;

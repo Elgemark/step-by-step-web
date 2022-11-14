@@ -5,9 +5,9 @@ import CardActions from "@mui/material/CardActions";
 import Avatar from "@mui/material/Avatar";
 import { red } from "@mui/material/colors";
 import TextField from "@mui/material/TextField";
-import MediaEditable from "../primitives/MediaEditable";
+import CardMedia from "@mui/material/CardMedia";
 
-const StepEditable = ({ index, title, body, media = {}, onChangeTitle, onChangeBody, onChangeImage }) => {
+const Step = ({ index, title, body, media = {}, onChangeTitle, onChangeBody, onChangeImage }) => {
   return (
     <Card>
       <CardHeader
@@ -27,7 +27,7 @@ const StepEditable = ({ index, title, body, media = {}, onChangeTitle, onChangeB
         }
         // subheader="September 14, 2016"
       />
-      <MediaEditable onChangeImage={onChangeImage} media={media} />
+      <CardMedia component="img" height="300" image={media.imageURI} />
       <CardContent>
         <TextField
           fullWidth
@@ -47,4 +47,4 @@ const StepEditable = ({ index, title, body, media = {}, onChangeTitle, onChangeB
   );
 };
 
-export default StepEditable;
+export default Step;

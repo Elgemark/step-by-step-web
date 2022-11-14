@@ -1,19 +1,10 @@
 import Head from "next/head";
 import Layout from "../../components/Layout";
-import PostEditable from "../../components/posts/PostEditable";
-import StepEditable from "../../components/steps/StepEditable";
-import { useStateObject } from "../../utils/object";
-import AddIcon from "@mui/icons-material/Add";
-import SaveIcon from "@mui/icons-material/Save";
-import { Button, Divider } from "@mui/material";
 import styled from "styled-components";
-import ButtonGroup from "@mui/material/ButtonGroup";
-import _ from "lodash";
-import Snackbar from "@mui/material/Snackbar";
-import Alert from "@mui/material/Alert";
-import { useState } from "react";
-import { useRouter } from "next/router";
-import { getPost, getSteps, setPostAndSteps } from "../../utils/firebase/api";
+import { getPost, getSteps } from "../../utils/firebase/api";
+import RevealNext from "../../components/RevealNext";
+import Step from "../../components/steps/Step";
+import Post from "../../components/posts/Post";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -30,14 +21,22 @@ const StyledLayout = styled(Layout)`
   }
 `;
 
-const Steps = ({ post, steps }) => {
+const Steps = ({ post, steps, stepsData }) => {
+  console.log("stepsData", stepsData);
   return (
     <>
-      {" "}
       <Head>
-        <title>{post?.title}</title>
+        <title>{"STEPS | " + post?.title}</title>
       </Head>
-      <StyledLayout></StyledLayout>
+      <StyledLayout>
+        <Post {...post} />
+        <RevealNext open />
+        {steps.map((step, index) => (
+          <RevealNext key={"step-" + index} >
+            <Step {...step} />
+          </RevealNext>
+        ))}
+      </StyledLayout>
     </>
   );
 };
@@ -55,7 +54,8 @@ export async function getServerSideProps({ query }) {
         tags: [],
         likes: 0,
       },
-      steps: steps?.data || { steps: [] },
+      steps: steps?.data?.steps || [],
+      stepsData: steps?.data,
     },
   };
 }
