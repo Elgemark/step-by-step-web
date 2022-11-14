@@ -2,6 +2,13 @@
 
 - https://medium.com/nextjs/how-to-use-material-ui-with-nextjs-and-react-18-6c054ceacf77
 - https://mui.com/material-ui/material-icons/
+- https://www.npmjs.com/package/re-position
+- https://dev.to/menard_codes/next-js-sign-in-page-with-firebase-ui-and-firebase-auth-5375
+
+### Image editors:
+
+- https://pqina.nl/pintura/
+- https://konvajs.org/
 
 ### Rich Text
 
