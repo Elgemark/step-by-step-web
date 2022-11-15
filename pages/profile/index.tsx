@@ -7,6 +7,7 @@ import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
 import { getAuth, updateProfile } from "firebase/auth";
 
 import Layout from "../../components/Layout";
+import UserAvatar from "../../components/UserAvatar";
 import { useState } from "react";
 
 const Loading = () => {
@@ -34,9 +35,7 @@ const Profile = ({ user, onChangeAlias }) => {
       </Head>
       <Layout>
         <Stack direction="column" gap={2}>
-          <Avatar alt={user?.displayName} src={user?.photoURL}>
-            {user?.displayName.charAt(0) || "A"}
-          </Avatar>
+          <UserAvatar />
           <Stack gap={2} direction="row">
             <TextField
               dense

@@ -1,4 +1,5 @@
-import { AppBar, Toolbar, Button, Typography } from "@mui/material";
+import { AppBar, Toolbar, Button, Typography, IconButton } from "@mui/material";
+import AccountCircle from "@mui/icons-material/AccountCircle";
 import { useRouter } from "next/router";
 import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
@@ -6,6 +7,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import StepsLogo from "./primitives/StepsLogo";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
+import UserAvatar from "./UserAvatar";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -88,7 +90,6 @@ const TopBar = ({ onSearch }) => {
           </Button>
         )}
         {/* LOGIN */}
-
         {!user && (
           <Button
             color="inherit"
@@ -98,6 +99,20 @@ const TopBar = ({ onSearch }) => {
           >
             Login
           </Button>
+        )}
+        {/* PROFILE */}
+        {user && (
+          <IconButton
+            size="large"
+            aria-label="account of current user"
+            aria-controls="menu-appbar"
+            onClick={() => {
+              router.push("/profile");
+            }}
+            color="inherit"
+          >
+            <UserAvatar size={32} />
+          </IconButton>
         )}
       </Toolbar>
     </AppBar>
