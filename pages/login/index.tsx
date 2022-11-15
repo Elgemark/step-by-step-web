@@ -7,8 +7,7 @@ import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import { getAuth } from "firebase/auth";
-//import { auth, firebase } from "../../utils/firebase";
-import {config as uiConfig} from "../../config/firebaseAuthUI"
+import { config as uiConfig } from "../../config/firebaseAuthUI";
 
 import Layout from "../../components/Layout";
 
@@ -21,7 +20,9 @@ const LogIn = ({ res }) => {
       <Head>
         <title>STEPS | LogIn</title>
       </Head>
-      <Layout><StyledFirebaseAuth uiConfig={uiConfig(firebase)} firebaseAuth={getAuth()} /></Layout>
+      <Layout>
+        <StyledFirebaseAuth uiConfig={uiConfig(firebase)} firebaseAuth={getAuth()} />
+      </Layout>
     </>
   );
 };

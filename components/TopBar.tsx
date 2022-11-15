@@ -4,6 +4,8 @@ import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import StepsLogo from "./primitives/StepsLogo";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { getAuth } from "firebase/auth";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -46,6 +48,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const TopBar = ({ onSearch }) => {
+  const [user, loading, error] = useAuthState(getAuth());
   const router = useRouter();
 
   return (
@@ -73,14 +76,29 @@ const TopBar = ({ onSearch }) => {
           </Search>
         )}
         <Typography component="div" sx={{ flexGrow: 1 }} />
-        <Button
-          color="inherit"
-          onClick={() => {
-            router.push("/create");
-          }}
-        >
-          Create
-        </Button>
+        {/* CREATE */}
+        {user && (
+          <Button
+            color="inherit"
+            onClick={() => {
+              router.push("/create");
+            }}
+          >
+            Create
+          </Button>
+        )}
+        {/* LOGIN */}
+
+        {!user && (
+          <Button
+            color="inherit"
+            onClick={() => {
+              router.push("/login");
+            }}
+          >
+            Login
+          </Button>
+        )}
       </Toolbar>
     </AppBar>
   );
