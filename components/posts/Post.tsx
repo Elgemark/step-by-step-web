@@ -1,17 +1,13 @@
 import { Card } from "@mui/material";
-import { styled } from "@mui/material/styles";
 
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
-import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import { red } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import PostMoreMenu from "../PostMoreMenu";
 import Link from "next/link";
 import UserAvatar from "../UserAvatar";
@@ -41,7 +37,7 @@ const Post = ({
           query: { slug: id },
         }}
       >
-        <CardMedia component="img" height="194" image={media.imageURI} />
+        {media?.imageURI && <CardMedia component="img" height="194" image={media?.imageURI} />}
       </Link>
       <CardContent>
         <Typography variant="body2" color="text.secondary">
