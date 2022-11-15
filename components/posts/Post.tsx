@@ -14,16 +14,23 @@ import ShareIcon from "@mui/icons-material/Share";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import PostMoreMenu from "../PostMoreMenu";
 import Link from "next/link";
+import UserAvatar from "../UserAvatar";
 
-const Post = ({ title = "Title", descr = "Body", media = {}, id, minWidth = 320, onEdit, onDelete, onReport }) => {
+const Post = ({
+  title = "Title",
+  descr = "Body",
+  media = {},
+  userId,
+  id,
+  minWidth = 320,
+  onEdit,
+  onDelete,
+  onReport,
+}) => {
   return (
     <Card sx={{ minWidth: minWidth }} onClick={() => {}}>
       <CardHeader
-        avatar={
-          <Avatar sx={{ bgcolor: red[500] }} aria-label="post">
-            R
-          </Avatar>
-        }
+        avatar={<UserAvatar userId={userId} />}
         action={<PostMoreMenu onEdit={onEdit} onDelete={onDelete} onReport={onReport} />}
         title={title}
         subheader="September 14, 2016"

@@ -66,26 +66,32 @@ const PostMoreMenu = ({ onEdit, onDelete, onReport }) => {
         <MoreVertIcon />
       </IconButton>
       <StyledMenu anchorEl={anchorEl} open={open} onClose={handleClose}>
-        <MenuItem
-          onClick={() => {
-            onEdit();
-            handleClose();
-          }}
-          disableRipple
-        >
-          <EditIcon />
-          Edit
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            onDelete();
-            handleClose();
-          }}
-          disableRipple
-        >
-          <DeleteIcon />
-          Delete
-        </MenuItem>
+        {/* EDIT */}
+        {onEdit && (
+          <MenuItem
+            onClick={() => {
+              onEdit();
+              handleClose();
+            }}
+            disableRipple
+          >
+            <EditIcon />
+            Edit
+          </MenuItem>
+        )}
+        {/* DELETE */}
+        {onDelete && (
+          <MenuItem
+            onClick={() => {
+              onDelete();
+              handleClose();
+            }}
+            disableRipple
+          >
+            <DeleteIcon />
+            Delete
+          </MenuItem>
+        )}
         <Divider sx={{ my: 0.5 }} />
         <MenuItem
           onClick={() => {

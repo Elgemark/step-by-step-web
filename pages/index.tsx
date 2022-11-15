@@ -6,14 +6,20 @@ import Post from "../components/posts/Post";
 import { useRouter } from "next/router";
 import Masonry from "@mui/lab/Masonry";
 import styled from "styled-components";
+// Firebase related
+import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
+import { getAuth, updateProfile } from "firebase/auth";
 
 const StyledMasonry = styled(Masonry)`
   width: 100%;
 `;
 
 export default function IndexPage({ posts = [] }) {
+  const [user] = useAuthState(getAuth());
   const { set: setQuery } = useDebouncedQuery(1000);
   const router = useRouter();
+
+  console.log("user", user);
 
   const onEditHandler = ({ id }) => {
     router.push("/create?id=" + id);
@@ -38,12 +44,20 @@ export default function IndexPage({ posts = [] }) {
           {posts.map((data, index) => (
             <Post
               key={index}
-              onEdit={() => {
-                onEditHandler(data);
-              }}
-              onDelete={() => {
-                onDeleteHandler(data);
-              }}
+              onEdit={
+                user?.uid === data.userId
+                  ? () => {
+                      onEditHandler(data);
+                    }
+                  : undefined
+              }
+              onDelete={
+                user?.uid === data.userId
+                  ? () => {
+                      onDeleteHandler(data);
+                    }
+                  : undefined
+              }
               {...data}
             />
           ))}
