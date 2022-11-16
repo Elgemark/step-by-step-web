@@ -1,10 +1,13 @@
 import Head from "next/head";
 import Layout from "../../components/Layout";
 import styled from "styled-components";
-import { getPost, getSteps } from "../../utils/firebase/api";
+import { getPost, getSteps, useUserStepsProgress } from "../../utils/firebase/api";
 import RevealNext from "../../components/RevealNext";
 import Step from "../../components/steps/Step";
 import Post from "../../components/posts/Post";
+// Firebase related
+import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
+import { getAuth } from "firebase/auth";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -21,8 +24,10 @@ const StyledLayout = styled(Layout)`
   }
 `;
 
-const Steps = ({ post, steps, stepsData }) => {
-  console.log("stepsData", stepsData);
+const Steps = ({ post, steps }) => {
+  const [user] = useAuthState(getAuth());
+  const { step: stepIndex, setStep } = useUserStepsProgress(user?.uid, steps?.id);
+
   return (
     <>
       <Head>
@@ -30,12 +35,26 @@ const Steps = ({ post, steps, stepsData }) => {
       </Head>
       <StyledLayout>
         <Post {...post} />
-        <RevealNext open label="Start" />
-        {steps.map((step, index) => (
-          <RevealNext key={"step-" + index}>
-            <Step {...step} />
-          </RevealNext>
-        ))}
+        <RevealNext
+          open
+          showButton={stepIndex === 0}
+          label="Start"
+          onClick={() => {
+            stepIndex < 1 && setStep(1);
+          }}
+        />
+        {steps.steps.map((step, index) => {
+          return (
+            <RevealNext
+              key={"step-" + index}
+              open={index < stepIndex}
+              showButton={index == stepIndex - 1 && index != steps.steps.length - 1}
+              onClick={() => setStep(index + 2)}
+            >
+              <Step {...step} index={index} />
+            </RevealNext>
+          );
+        })}
       </StyledLayout>
     </>
   );
@@ -54,8 +73,7 @@ export async function getServerSideProps({ query }) {
         tags: [],
         likes: 0,
       },
-      steps: steps?.data?.steps || [],
-      stepsData: steps?.data,
+      steps: steps.data,
     },
   };
 }

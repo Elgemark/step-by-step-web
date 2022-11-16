@@ -1,1 +1,12 @@
-export const userStepsProgress = { step: 0, completed: false };
+export const post = {
+  title: "",
+  descr: "",
+  media: { imageURI: "" },
+  tags: [],
+  likes: 0,
+  stepsCompleted: 0,
+  userId: null,
+  stepsId: null,
+};
+export const steps = { steps: [] };
+export const userDataStepsProgress = { userId: null, step: 0, completed: false };

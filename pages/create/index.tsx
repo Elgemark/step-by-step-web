@@ -14,6 +14,7 @@ import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import * as dataModels from "../../utils/firebase/models";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -125,14 +126,8 @@ export async function getServerSideProps({ query }) {
   const steps = await getSteps(post?.data?.stepsId);
   return {
     props: {
-      post: post?.data || {
-        title: "Title",
-        descr: "Description",
-        media: { imageURI: "" },
-        tags: [],
-        likes: 0,
-      },
-      steps: steps?.data || { steps: [] },
+      post: post?.data || dataModels.post,
+      steps: steps?.data || dataModels.steps,
     },
   };
 }

@@ -54,8 +54,8 @@ const PostEditable = ({
             }}
           />
           <Stack spacing={1} direction="row" flexWrap={"wrap"}>
-            {tags.map((tag) => (
-              <Chip label={tag} onDelete={() => onRemoveTag(tag)} />
+            {tags.map((tag, index) => (
+              <Chip key={"key-" + tag + index} label={tag} onDelete={() => onRemoveTag(tag)} />
             ))}
           </Stack>
           <Stack direction="row" spacing={2}>

@@ -14,8 +14,10 @@ import {
   endAt as fsEndAt,
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { useStateObject } from "../object";
+import * as dataModels from "./models";
 
 // ::: POSTS
 export const getPosts = async (orderBy = "likes", startAt = 0, endAt = 10) => {
@@ -129,11 +131,70 @@ export const getSteps = async (id) => {
   try {
     const docRef = doc(firebase, "steps", id);
     const docSnap = await getDoc(docRef);
-    result.data = docSnap.exists() ? { ...docSnap.data(), id } : null;
+    result.data = docSnap.exists() ? { ...docSnap.data(), id } : dataModels.steps;
   } catch (error) {
     result.error = error;
   }
   return result;
+};
+
+// ::: USER DATA
+
+export const setUserStepsProgress = async (uid, stepsId, data) => {
+  const firebase = getFirestore();
+  const result = {};
+  try {
+    result.response = await setDoc(doc(firebase, "user-data", uid, "progress", stepsId), data);
+    result.data = { ...data, uid };
+    result.id = uid;
+  } catch (error) {
+    result.error = error;
+  }
+  return result;
+};
+
+export const getUserStepsProgress = async (uid, stepsId) => {
+  const firebase = getFirestore();
+  const result = {};
+  try {
+    const docRef = doc(firebase, "user-data", uid, "progress", stepsId);
+    const docSnap = await getDoc(docRef);
+    result.data = docSnap.exists()
+      ? { ...docSnap.data(), uid }
+      : { ...dataModels.userDataStepsProgress, userId: uid, stepsId };
+  } catch (error) {
+    result.error = error;
+  }
+  return result;
+};
+
+export const useUserStepsProgress = (uid, stepsId) => {
+  const [isLoading, setIsLoading] = useState();
+  const { object: data, setValue, replace: setData } = useStateObject();
+  const [error, setError] = useState();
+
+  useEffect(() => {
+    if (uid && stepsId) {
+      setIsLoading(true);
+      getUserStepsProgress(uid, stepsId)
+        .then((res) => {
+          setData(res.data);
+        })
+        .catch((err) => {
+          setError(err);
+        });
+    }
+  }, [uid, stepsId]);
+
+  return {
+    ...data,
+    isLoading,
+    error,
+    setStep: async (index) => {
+      setValue("step", index);
+      return await setUserStepsProgress(uid, stepsId, { ...data, step: index });
+    },
+  };
 };
 
 // ::: MISC

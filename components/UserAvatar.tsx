@@ -8,7 +8,7 @@ const UserAvatar = ({ size = 32, userId, ...props }) => {
   const [user, userLoading, userError] = useAuthState(getAuth());
   return (
     <Avatar alt={user?.displayName} src={user?.photoURL} sx={{ width: size, height: size }} {...props}>
-      {user?.displayName.charAt(0) || "A"}
+      {user?.displayName?.charAt(0) || "A"}
     </Avatar>
   );
 };
