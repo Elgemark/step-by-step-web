@@ -24,6 +24,10 @@ const StyledLayout = styled(Layout)`
   }
 `;
 
+const StyledStep = styled(Step)`
+  margin: 10px 0;
+`;
+
 const Steps = ({ post, steps }) => {
   const [user] = useAuthState(getAuth());
   const { step: stepIndex, setStep } = useUserStepsProgress(user?.uid, steps?.id);
@@ -51,7 +55,7 @@ const Steps = ({ post, steps }) => {
               showButton={index == stepIndex - 1 && index != steps.steps.length - 1}
               onClick={() => setStep(index + 2)}
             >
-              <Step {...step} index={index} />
+              <StyledStep {...step} index={index} />
             </RevealNext>
           );
         })}
