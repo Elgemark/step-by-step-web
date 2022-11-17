@@ -14,6 +14,7 @@ import {
   endAt as fsEndAt,
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useStateObject } from "../object";
@@ -68,17 +69,19 @@ export const setPost = async (data) => {
 };
 
 export const setPostAndSteps = async (post, steps) => {
+  const auth = getAuth();
+  const userId = auth.currentUser.uid;
   const firebase = getFirestore();
   const batch = writeBatch(firebase);
   // Set the value of 'steps'
   const stepsId = steps.id || uuidv4();
   const stepsRef = doc(firebase, "steps", stepsId);
-  const stepsData = { ...steps, id: stepsId };
+  const stepsData = { ...steps, id: stepsId, userId };
   batch.set(stepsRef, stepsData);
   // Set the value of 'posts'
   const postId = post.id || uuidv4();
   const postsRef = doc(firebase, "posts", postId);
-  const postData = { ...post, id: postId, stepsId };
+  const postData = { ...post, id: postId, stepsId, userId };
   batch.set(postsRef, postData);
   //
   let resp = {};

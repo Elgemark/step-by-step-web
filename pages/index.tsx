@@ -5,21 +5,14 @@ import { getPostsByTags, getPosts, deletePost } from "../utils/firebase/api";
 import Post from "../components/posts/Post";
 import { useRouter } from "next/router";
 import Masonry from "@mui/lab/Masonry";
-import styled from "styled-components";
 // Firebase related
-import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
-import { getAuth, updateProfile } from "firebase/auth";
-
-const StyledMasonry = styled(Masonry)`
-  width: 100%;
-`;
+import { useAuthState } from "react-firebase-hooks/auth";
+import { getAuth } from "firebase/auth";
 
 export default function IndexPage({ posts = [] }) {
   const [user] = useAuthState(getAuth());
   const { set: setQuery } = useDebouncedQuery(1000);
   const router = useRouter();
-
-  console.log("user", user);
 
   const onEditHandler = ({ id }) => {
     router.push("/create?id=" + id);
@@ -40,10 +33,11 @@ export default function IndexPage({ posts = [] }) {
           setQuery({ search: value });
         }}
       >
-        <StyledMasonry columns={4} spacing={2}>
+        <Masonry spacing={2} columns={{ lg: 4, md: 3, sm: 2, xs: 1 }}>
           {posts.map((data, index) => (
             <Post
               key={index}
+              style={{ width: "100%" }}
               onEdit={
                 user?.uid === data.userId
                   ? () => {
@@ -61,7 +55,7 @@ export default function IndexPage({ posts = [] }) {
               {...data}
             />
           ))}
-        </StyledMasonry>
+        </Masonry>
       </Layout>
     </>
   );
