@@ -10,7 +10,7 @@ const Root = styled.div`
   justify-content: center;
 `;
 const Content = styled(Box)`
-  margin-top: 80px;
+  margin: 80px 10px 0;
   /* max-width: 800px;
   width: 100%; */
 `;
