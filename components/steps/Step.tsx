@@ -6,9 +6,9 @@ import Avatar from "@mui/material/Avatar";
 import { red } from "@mui/material/colors";
 import CardMedia from "@mui/material/CardMedia";
 
-const Step = ({ index, title, body, media = {}, ...props }) => {
+const Step = ({ index, title, body, media = {}, className, ...props }) => {
   return (
-    <Card {...props}>
+    <Card {...props} className={className}>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="post">

@@ -1,4 +1,4 @@
-import { AppBar, Toolbar, Button, Typography, IconButton } from "@mui/material";
+import { AppBar, Toolbar, Button, Typography, IconButton, Box } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { useRouter } from "next/router";
 import { styled, alpha } from "@mui/material/styles";
@@ -49,7 +49,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const TopBar = ({ onSearch }) => {
+const TopBar = ({ onSearch, actions }) => {
   const [user, loading, error] = useAuthState(getAuth());
   const router = useRouter();
 
@@ -64,7 +64,6 @@ const TopBar = ({ onSearch }) => {
         >
           <StepsLogo width={100}></StepsLogo>
         </Button>
-
         {onSearch && (
           <Search>
             <SearchIconWrapper>
@@ -77,7 +76,9 @@ const TopBar = ({ onSearch }) => {
             />
           </Search>
         )}
-        <Typography component="div" sx={{ flexGrow: 1 }} />
+        <Typography component="div" />
+        {/* Actions */}
+        <Box sx={{ flexGrow: 1 }}>{actions}</Box>
         {/* CREATE */}
         {user && (
           <Button

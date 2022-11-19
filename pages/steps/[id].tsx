@@ -8,6 +8,7 @@ import Post from "../../components/posts/Post";
 // Firebase related
 import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
+import StepsProgress from "../../components/StepsProgress";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -28,6 +29,10 @@ const StyledStep = styled(Step)`
   margin: 10px 0;
 `;
 
+const StyledStepsProgress = styled(StepsProgress)`
+  margin: 0, 40px;
+`;
+
 const Steps = ({ post, steps }) => {
   const [user] = useAuthState(getAuth());
   const { step: stepIndex, setStep } = useUserStepsProgress(user?.uid, steps?.id);
@@ -37,7 +42,7 @@ const Steps = ({ post, steps }) => {
       <Head>
         <title>{"STEPS | " + post?.title}</title>
       </Head>
-      <StyledLayout>
+      <StyledLayout propsTopbar={{ actions: <StyledStepsProgress label={`${stepIndex}/${steps.steps.length}`} /> }}>
         <Post {...post} />
         <RevealNext
           open

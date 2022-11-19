@@ -25,7 +25,6 @@ const StepEditable = ({ index, title, body, media = {}, onChangeTitle, onChangeB
             onChange={(e) => onChangeTitle(e.target.value)}
           />
         }
-        // subheader="September 14, 2016"
       />
       <MediaEditable onChangeImage={onChangeImage} media={media} />
       <CardContent>
