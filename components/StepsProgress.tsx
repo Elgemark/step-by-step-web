@@ -4,8 +4,8 @@ import Box from "@mui/material/Box";
 
 const StepsProgress = ({ label, value, propsProgress, ...props }) => {
   return (
-    <Box sx={{ display: "flex", alignItems: "center" }}>
-      <Box sx={{ width: "100%", mr: 1 }}>
+    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <Box sx={{ maxWidth: 140, width: "100%", mr: 1 }}>
         <LinearProgress variant="determinate" value={value} {...props} />
       </Box>
       <Box sx={{ minWidth: 35 }}>

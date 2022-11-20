@@ -82,7 +82,7 @@ export async function getServerSideProps({ query }) {
         tags: [],
         likes: 0,
       },
-      steps: steps.data,
+      steps: steps?.data || {},
     },
   };
 }
