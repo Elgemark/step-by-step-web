@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Layout from "../../components/Layout";
 import styled from "styled-components";
-import { getPost, getSteps, useUserStepsProgress } from "../../utils/firebase/api";
+import { getPost, getSteps, useUserStepsProgress, deletePost, likePost } from "../../utils/firebase/api";
 import RevealNext from "../../components/RevealNext";
 import Step from "../../components/steps/Step";
 import Post from "../../components/posts/Post";
@@ -10,6 +10,7 @@ import { post as postModel, steps as stepsModel } from "../../utils/firebase/mod
 import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
 import StepsProgress from "../../components/StepsProgress";
+import { useRouter } from "next/router";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -35,17 +36,47 @@ const StyledStepsProgress = styled(StepsProgress)`
 `;
 
 const Steps = ({ post, steps }) => {
+  const router = useRouter();
   const [user] = useAuthState(getAuth());
   const { step: stepIndex, setStep } = useUserStepsProgress(user?.uid, steps?.id);
   const showButton = (index) => index == stepIndex - 1 && index != steps.steps.length - 1;
   const showDone = (index) => index === steps.steps.length - 1;
+
+  const onEditHandler = ({ id }) => {
+    router.push("/create?id=" + id);
+  };
+
+  const onDeleteHandler = async ({ id }) => {
+    await deletePost(id);
+  };
+
+  const onLikeHandler = async ({ id }) => {
+    await likePost(id);
+  };
   return (
     <>
       <Head>
-        <title>{"STEPS | " + post?.title}</title>
+        <title>{"STEPS | " + (post?.title || "untitled")}</title>
       </Head>
       <StyledLayout propsTopbar={{ actions: <StyledStepsProgress label={`${stepIndex}/${steps.steps.length}`} /> }}>
-        <Post {...post} />
+        <Post
+          {...post}
+          onEdit={
+            user?.uid === post.userId
+              ? () => {
+                  onEditHandler(post);
+                }
+              : undefined
+          }
+          onDelete={
+            user?.uid === post.userId
+              ? () => {
+                  onDeleteHandler(post);
+                }
+              : undefined
+          }
+          onLike={() => onLikeHandler(post)}
+        />
         <RevealNext
           open
           showButton={stepIndex === 0}

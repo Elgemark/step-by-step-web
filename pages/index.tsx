@@ -23,7 +23,7 @@ export default function IndexPage({ posts = [] }) {
   };
 
   const onLikeHandler = async ({ id }) => {
-    const response = await likePost(id);
+    await likePost(id);
   };
 
   return (
