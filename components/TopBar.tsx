@@ -1,5 +1,4 @@
 import { AppBar, Toolbar, Button, Typography, IconButton, Box } from "@mui/material";
-import AccountCircle from "@mui/icons-material/AccountCircle";
 import { useRouter } from "next/router";
 import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";

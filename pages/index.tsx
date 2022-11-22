@@ -1,7 +1,7 @@
 import Layout from "../components/Layout";
 import Head from "next/head";
 import { useDebouncedQuery } from "../utils/queryUtils";
-import { getPostsByTags, getPosts, deletePost } from "../utils/firebase/api";
+import { getPostsByTags, getPosts, deletePost, likePost } from "../utils/firebase/api";
 import Post from "../components/posts/Post";
 import { useRouter } from "next/router";
 import Masonry from "@mui/lab/Masonry";
@@ -20,6 +20,10 @@ export default function IndexPage({ posts = [] }) {
 
   const onDeleteHandler = async ({ id }) => {
     await deletePost(id);
+  };
+
+  const onLikeHandler = async ({ id }) => {
+    const response = await likePost(id);
   };
 
   return (
@@ -52,6 +56,7 @@ export default function IndexPage({ posts = [] }) {
                     }
                   : undefined
               }
+              onLike={() => onLikeHandler(data)}
               {...data}
             />
           ))}

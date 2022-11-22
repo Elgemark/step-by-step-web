@@ -12,6 +12,7 @@ import {
   orderBy as fsOrderBy,
   startAt as fsStartAt,
   endAt as fsEndAt,
+  increment,
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { getAuth } from "firebase/auth";
@@ -198,6 +199,58 @@ export const useUserStepsProgress = (uid, stepsId) => {
       return await setUserStepsProgress(uid, stepsId, { ...data, step: index });
     },
   };
+};
+
+// ::: LIKES POST
+
+export const likePost = async (postId) => {
+  const auth = getAuth();
+  const userId = auth.currentUser.uid;
+  const firebase = getFirestore();
+  // setup batch write
+  const batch = writeBatch(firebase);
+  // See if post was liked
+  const likeRef = doc(firebase, "user-data", userId, "likes", postId);
+  const likeSnap = await getDoc(likeRef);
+  // get new like value...
+  const userNewLikeValue = likeSnap.exists() && likeSnap.data().value === 1 ? 0 : 1;
+  // update user like value
+  await batch.set(likeRef, { value: userNewLikeValue });
+  // update total likes on post...
+  const incrementLikes = increment(likeSnap.exists() && userNewLikeValue === 0 ? -1 : 1);
+  const postRef = doc(firebase, "posts", postId);
+  await batch.update(postRef, { likes: incrementLikes });
+  let resp = {};
+  try {
+    // commit batch
+    resp.response = await batch.commit();
+  } catch (error) {
+    resp.error = error;
+  }
+  return resp;
+};
+
+export const isPostLikedByUser = async (postId) => {
+  const auth = getAuth();
+  const userId = auth.currentUser.uid;
+  const firebase = getFirestore();
+  const likeRef = doc(firebase, "user-data", userId, "likes", postId);
+  const likeSnap = await getDoc(likeRef);
+  const isLiked = likeSnap.exists() && likeSnap.data().value > 0;
+  return { isLiked };
+};
+
+export const useIsPostLikedByUser = (postId) => {
+  const [isLiked, setIsLiked] = useState(false);
+
+  useEffect(() => {
+    isPostLikedByUser(postId)
+      .then((resp) => {
+        setIsLiked(resp.isLiked);
+      })
+      .catch((error) => {});
+  }, [postId]);
+  return isLiked;
 };
 
 // ::: MISC

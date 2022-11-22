@@ -11,6 +11,8 @@ import ShareIcon from "@mui/icons-material/Share";
 import PostMoreMenu from "../PostMoreMenu";
 import Link from "next/link";
 import UserAvatar from "../UserAvatar";
+import Badge from "@mui/material/Badge";
+import { useIsPostLikedByUser } from "../../utils/firebase/api";
 
 const Post = ({
   title = "Title",
@@ -19,10 +21,14 @@ const Post = ({
   userId,
   id,
   minWidth = 320,
+  likes = 0,
   onEdit,
   onDelete,
   onReport,
+  onLike,
 }) => {
+  const isLikedByUser = useIsPostLikedByUser(id);
+
   return (
     <Card sx={{ minWidth: minWidth }} onClick={() => {}}>
       <CardHeader
@@ -45,8 +51,10 @@ const Post = ({
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
+        <IconButton aria-label="like" onClick={onLike}>
+          <Badge badgeContent={likes} color="success">
+            <FavoriteIcon color={isLikedByUser ? "warning" : ""} />
+          </Badge>
         </IconButton>
         <IconButton aria-label="share">
           <ShareIcon />

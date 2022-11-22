@@ -9,7 +9,7 @@ const StepsProgress = ({ label, value, propsProgress, ...props }) => {
         <LinearProgress variant="determinate" value={value} {...props} />
       </Box>
       <Box sx={{ minWidth: 35 }}>
-        <Typography variant="body2" color="text.secondary">{`${label}`}</Typography>
+        <Typography variant="bod2" color="text.secondary">{`${label}`}</Typography>
       </Box>
     </Box>
   );

@@ -5,6 +5,7 @@ import { getPost, getSteps, useUserStepsProgress } from "../../utils/firebase/ap
 import RevealNext from "../../components/RevealNext";
 import Step from "../../components/steps/Step";
 import Post from "../../components/posts/Post";
+import { post as postModel, steps as stepsModel } from "../../utils/firebase/models";
 // Firebase related
 import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
@@ -36,7 +37,8 @@ const StyledStepsProgress = styled(StepsProgress)`
 const Steps = ({ post, steps }) => {
   const [user] = useAuthState(getAuth());
   const { step: stepIndex, setStep } = useUserStepsProgress(user?.uid, steps?.id);
-
+  const showButton = (index) => index == stepIndex - 1 && index != steps.steps.length - 1;
+  const showDone = (index) => index === steps.steps.length - 1;
   return (
     <>
       <Head>
@@ -57,7 +59,8 @@ const Steps = ({ post, steps }) => {
             <RevealNext
               key={"step-" + index}
               open={index < stepIndex}
-              showButton={index == stepIndex - 1 && index != steps.steps.length - 1}
+              showButton={showButton(index)}
+              showDone={showDone(index)}
               onClick={() => setStep(index + 2)}
             >
               <StyledStep {...step} index={index} />
@@ -75,14 +78,8 @@ export async function getServerSideProps({ query }) {
   const steps = await getSteps(post?.data?.stepsId);
   return {
     props: {
-      post: post?.data || {
-        title: "Title",
-        descr: "Description",
-        media: { imageURI: "" },
-        tags: [],
-        likes: 0,
-      },
-      steps: steps?.data || {},
+      post: post?.data || postModel,
+      steps: steps?.data || stepsModel,
     },
   };
 }
