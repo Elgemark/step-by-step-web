@@ -32,6 +32,7 @@ const StyledCardMediaContainer = styled.div`
 
 const StyledCardMedia = styled(CardMedia)`
   position: absolute;
+  object-fit: contain;
 `;
 
 const MediaEditable = ({ media = {}, onChangeImage }) => {

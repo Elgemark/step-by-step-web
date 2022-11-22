@@ -1,21 +1,15 @@
 import { Card, Chip } from "@mui/material";
 import CardHeader from "@mui/material/CardHeader";
-import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import Avatar from "@mui/material/Avatar";
-import IconButton from "@mui/material/IconButton";
 import { red } from "@mui/material/colors";
-import DriveFolderUploadIcon from "@mui/icons-material/DriveFolderUpload";
 import TextField from "@mui/material/TextField";
-import { useEffect, useState } from "react";
-import { usePaste } from "../../utils/imageUtils";
-import { useUploadFileAsBlob } from "../../utils/firebase/api";
-import styled from "styled-components";
 import Fab from "@mui/material/Fab";
 import Stack from "@mui/material/Stack";
 import AddIcon from "@mui/icons-material/Add";
 import MediaEditable from "../primitives/MediaEditable";
+import { useState } from "react";
 
 const PostEditable = ({
   title,

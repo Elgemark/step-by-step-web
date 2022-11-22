@@ -1,5 +1,4 @@
 import { Card } from "@mui/material";
-
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
@@ -13,6 +12,11 @@ import Link from "next/link";
 import UserAvatar from "../UserAvatar";
 import Badge from "@mui/material/Badge";
 import { useIsPostLikedByUser } from "../../utils/firebase/api";
+import styled from "styled-components";
+
+const StyledCardMedia = styled(CardMedia)`
+  object-fit: contain;
+`;
 
 const Post = ({
   title = "Title",
@@ -43,7 +47,7 @@ const Post = ({
           query: { slug: id },
         }}
       >
-        {media?.imageURI && <CardMedia component="img" height="194" image={media?.imageURI} />}
+        {media?.imageURI && <StyledCardMedia height="300" component="img" image={media?.imageURI} />}
       </Link>
       <CardContent>
         <Typography variant="body2" color="text.secondary">
