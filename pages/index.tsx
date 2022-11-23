@@ -30,6 +30,7 @@ export default function IndexPage({ posts = [] }) {
     <>
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
+        <title>{"STEPS"}</title>
       </Head>
 
       <Layout

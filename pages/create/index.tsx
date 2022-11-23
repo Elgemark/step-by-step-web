@@ -15,6 +15,7 @@ import Alert from "@mui/material/Alert";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import * as dataModels from "../../utils/firebase/models";
+import { toTags } from "../../utils/stringUtils";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -66,6 +67,11 @@ const Create = ({ post, steps }) => {
     }
   };
 
+  const onAddTagHandler = (value) => {
+    setPostValue("tags", toTags(value, dataPost.tags));
+    // setPostValue("tags", _.union(dataPost.tags, value.split(" ")));
+  };
+
   return (
     <>
       <Head>
@@ -76,9 +82,7 @@ const Create = ({ post, steps }) => {
           onChangeTitle={(value) => setPostValue("title", value)}
           onChangeBody={(value) => setPostValue("descr", value)}
           onChangeImage={(value) => setPostValue("media.imageURI", value)}
-          onAddTag={(value) => {
-            setPostValue("tags", _.union(dataPost.tags, value.split(" ")));
-          }}
+          onAddTag={onAddTagHandler}
           onRemoveTag={(value) => {
             const tagsCopy = [...dataPost.tags];
             _.remove(tagsCopy, (tag) => tag === value);

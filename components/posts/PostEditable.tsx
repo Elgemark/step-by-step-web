@@ -63,6 +63,12 @@ const PostEditable = ({
               onChange={(e) => {
                 setTag(e.target.value.toLowerCase());
               }}
+              onKeyDown={(e) => {
+                if (e.code === "Enter") {
+                  onAddTag(tag);
+                  setTag("");
+                }
+              }}
             />
             <Fab
               size="small"
