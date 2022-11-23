@@ -49,72 +49,8 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
   justifyContent: "center",
 }));
 
-export default function IndexPage({ posts = [] }) {
-  const [user] = useAuthState(getAuth());
-  const { set: setQuery } = useDebouncedQuery(1000);
-  const router = useRouter();
-
-  const onEditHandler = ({ id }) => {
-    router.push("/create?id=" + id);
-  };
-
-  const onDeleteHandler = async ({ id }) => {
-    await deletePost(id);
-  };
-
-  const onLikeHandler = async ({ id }) => {
-    await likePost(id);
-  };
-
-  const onSearchHandler = (value) => {
-    setQuery({ search: value });
-  };
-
-  return (
-    <>
-      <Head>
-        <meta name="viewport" content="initial-scale=1, width=device-width" />
-        <title>{"STEPS"}</title>
-      </Head>
-
-      <Layout>
-        <Search>
-          <SearchIconWrapper>
-            <SearchIcon />
-          </SearchIconWrapper>
-          <StyledInputBase
-            onChange={(e) => onSearchHandler(e.currentTarget.value.toLowerCase())}
-            placeholder="Search…"
-            inputProps={{ "aria-label": "search" }}
-          />
-        </Search>
-        <Masonry spacing={2} columns={{ lg: 4, md: 3, sm: 2, xs: 1 }}>
-          {posts.map((data, index) => (
-            <Post
-              key={index}
-              style={{ width: "100%" }}
-              onEdit={
-                user?.uid === data.userId
-                  ? () => {
-                      onEditHandler(data);
-                    }
-                  : undefined
-              }
-              onDelete={
-                user?.uid === data.userId
-                  ? () => {
-                      onDeleteHandler(data);
-                    }
-                  : undefined
-              }
-              onLike={() => onLikeHandler(data)}
-              {...data}
-            />
-          ))}
-        </Masonry>
-      </Layout>
-    </>
-  );
+export default function IndexPage(props) {
+  return <PageMain {...props} title="STEPS" />;
 }
 
 export async function getServerSideProps({ query }) {
