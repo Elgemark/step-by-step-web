@@ -5,9 +5,48 @@ import { getPostsByTags, getPosts, deletePost, likePost } from "../utils/firebas
 import Post from "../components/posts/Post";
 import { useRouter } from "next/router";
 import Masonry from "@mui/lab/Masonry";
+import InputBase from "@mui/material/InputBase";
+import SearchIcon from "@mui/icons-material/Search";
+import { styled, alpha } from "@mui/material/styles";
 // Firebase related
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
+import { toTags } from "../utils/stringUtils";
+
+const Search = styled("div")(({ theme }) => ({
+  position: "relative",
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  "&:hover": {
+    backgroundColor: alpha(theme.palette.common.white, 0.25),
+  },
+  width: "100%",
+  marginBottom: theme.spacing(2),
+}));
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: "inherit",
+  "& .MuiInputBase-input": {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    transition: theme.transitions.create("width"),
+    width: "100%",
+    [theme.breakpoints.up("md")]: {
+      width: "20ch",
+    },
+  },
+}));
+
+const SearchIconWrapper = styled("div")(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: "100%",
+  position: "absolute",
+  pointerEvents: "none",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+}));
 
 export default function IndexPage({ posts = [] }) {
   const [user] = useAuthState(getAuth());
@@ -26,6 +65,10 @@ export default function IndexPage({ posts = [] }) {
     await likePost(id);
   };
 
+  const onSearchHandler = (value) => {
+    setQuery({ search: value });
+  };
+
   return (
     <>
       <Head>
@@ -33,11 +76,17 @@ export default function IndexPage({ posts = [] }) {
         <title>{"STEPS"}</title>
       </Head>
 
-      <Layout
-        onSearch={(value) => {
-          setQuery({ search: value });
-        }}
-      >
+      <Layout>
+        <Search>
+          <SearchIconWrapper>
+            <SearchIcon />
+          </SearchIconWrapper>
+          <StyledInputBase
+            onChange={(e) => onSearchHandler(e.currentTarget.value.toLowerCase())}
+            placeholder="Search…"
+            inputProps={{ "aria-label": "search" }}
+          />
+        </Search>
         <Masonry spacing={2} columns={{ lg: 4, md: 3, sm: 2, xs: 1 }}>
           {posts.map((data, index) => (
             <Post
@@ -68,7 +117,7 @@ export default function IndexPage({ posts = [] }) {
 }
 
 export async function getServerSideProps({ query }) {
-  const tags = query.search?.split(" ");
-  const posts = tags ? await getPostsByTags(tags) : await getPosts();
+  const tags = toTags(query.search);
+  const posts = tags.length ? await getPostsByTags(tags) : await getPosts();
   return { props: { posts } };
 }
