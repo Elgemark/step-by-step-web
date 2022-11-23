@@ -11,6 +11,7 @@ import MediaEditable from "../primitives/MediaEditable";
 import { useState } from "react";
 import SelectCategory from "../primitives/SelectCategory";
 import SettingsIcon from "@mui/icons-material/Settings";
+import AddText from "../primitives/AddText";
 
 const PostEditable = ({
   title,
@@ -48,7 +49,6 @@ const PostEditable = ({
             </Stack>
             <Stack direction="row" spacing={2}>
               <TextField
-                variant="standard"
                 size="small"
                 fullWidth
                 value={tags.join(" ")}
@@ -105,6 +105,7 @@ const PostEditable = ({
                 }}
                 size="small"
               />
+              <AddText />
             </Stack>
           </CardContent>
         </Card>

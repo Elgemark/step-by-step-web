@@ -5,6 +5,10 @@
 - https://www.npmjs.com/package/re-position
 - https://dev.to/menard_codes/next-js-sign-in-page-with-firebase-ui-and-firebase-auth-5375
 
+### Inspirations:
+
+https://homewithkelsey.com/diy-shelf/
+
 ### Image editors:
 
 - https://pqina.nl/pintura/
