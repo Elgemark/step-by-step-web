@@ -1,6 +1,10 @@
 import _ from "lodash";
 
-export const toTags = (str: string, tags = [], maxLength = 5) => {
+export const toSanitizedArray = (str: string, tags = [], maxLength = 5) => {
+  if (!str) {
+    return [];
+  }
+  //
   let newTags = str.split(/,| |;|\+|\-/);
   // Removes leading and trailing whitespace
   newTags = newTags.map((tag: string) => _.trim(tag));

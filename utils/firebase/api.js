@@ -13,6 +13,8 @@ import {
   startAt as fsStartAt,
   endAt as fsEndAt,
   increment,
+  orderBy,
+  limit as fsLimit,
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { getAuth } from "firebase/auth";
@@ -38,11 +40,18 @@ export const getPosts = async (orderBy = "likes", startAt = 0, endAt = 10) => {
   return data;
 };
 
-export const getPostsByTags = async (tags = []) => {
+export const searchPosts = async (tags = [], category, limit = 10) => {
   const firebase = getFirestore();
   const stepsRef = collection(firebase, "posts");
-  const queryBuild = query(stepsRef, where("tags", "array-contains-any", tags));
-
+  const tagsQuery = where("tags", "array-contains-any", tags);
+  const categoryQuery = where("category", "==", category);
+  // push queries
+  const queries = [];
+  tags.length && queries.push(tagsQuery);
+  category && queries.push(categoryQuery);
+  // build query
+  const queryBuild = query(stepsRef, ...queries, fsLimit(limit));
+  //
   let data = [];
   try {
     const querySnapshot = await getDocs(queryBuild);

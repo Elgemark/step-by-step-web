@@ -1,7 +1,7 @@
 import Layout from "../components/Layout";
 import Head from "next/head";
 import { useDebouncedQuery } from "../utils/queryUtils";
-import { searchPosts, getPosts, deletePost, likePost } from "../utils/firebase/api";
+import { deletePost, likePost } from "../utils/firebase/api";
 import Post from "../components/posts/Post";
 import { useRouter } from "next/router";
 import Masonry from "@mui/lab/Masonry";
@@ -11,8 +11,6 @@ import { styled, alpha } from "@mui/material/styles";
 // Firebase related
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
-import { toSanitizedArray } from "../utils/stringUtils";
-import PageMain from "../components/PageMain";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -49,7 +47,7 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
   justifyContent: "center",
 }));
 
-export default function IndexPage({ posts = [] }) {
+const PageMain = ({ posts = [], title }) => {
   const [user] = useAuthState(getAuth());
   const { set: setQuery } = useDebouncedQuery(1000);
   const router = useRouter();
@@ -74,9 +72,8 @@ export default function IndexPage({ posts = [] }) {
     <>
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
-        <title>{"STEPS"}</title>
+        <title>{title}</title>
       </Head>
-
       <Layout>
         <Search>
           <SearchIconWrapper>
@@ -115,11 +112,6 @@ export default function IndexPage({ posts = [] }) {
       </Layout>
     </>
   );
-}
+};
 
-export async function getServerSideProps({ query }) {
-  const tags = toSanitizedArray(query.search);
-  const category = query.category;
-  const posts = tags.length ? await searchPosts(tags, category) : await getPosts();
-  return { props: { posts } };
-}
+export default PageMain;

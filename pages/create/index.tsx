@@ -15,7 +15,7 @@ import Alert from "@mui/material/Alert";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import * as dataModels from "../../utils/firebase/models";
-import { toTags } from "../../utils/stringUtils";
+import { toSanitizedArray } from "../../utils/stringUtils";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -68,7 +68,7 @@ const Create = ({ post, steps }) => {
   };
 
   const onAddTagHandler = (value) => {
-    setPostValue("tags", toTags(value, dataPost.tags));
+    setPostValue("tags", toSanitizedArray(value, dataPost.tags));
     // setPostValue("tags", _.union(dataPost.tags, value.split(" ")));
   };
 
