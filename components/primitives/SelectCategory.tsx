@@ -4,13 +4,13 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { useGetCategories } from "../../utils/firebase/api";
 
-const SelectCategory = ({ onCategoryChange, category, ...props }) => {
+const SelectCategory = ({ onChange, value, ...props }) => {
   const categories = useGetCategories();
 
   return (
     <FormControl sx={{ minWidth: 200 }} size="small" {...props}>
-      <InputLabel id="select-category-label">Category</InputLabel>
-      <Select value={category} label="Category" onChange={onCategoryChange}>
+      <InputLabel id="select-value-label">Category</InputLabel>
+      <Select value={value} label="Category" onChange={(e) => onChange(e.target.value)}>
         {categories.map((category) => (
           <MenuItem value={category}>{category}</MenuItem>
         ))}

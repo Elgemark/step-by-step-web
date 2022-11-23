@@ -70,8 +70,8 @@ const PageMain = ({ posts = [], category, title }) => {
     setQuery({ search: value });
   };
 
-  const onCategoryChangeHandler = (e) => {
-    router.push("/category/" + e.target.value);
+  const onCategoryChangeHandler = (value) => {
+    router.push("/category/" + value);
   };
   return (
     <>
@@ -91,7 +91,7 @@ const PageMain = ({ posts = [], category, title }) => {
               inputProps={{ "aria-label": "search" }}
             />
           </Search>
-          <SelectCategory onCategoryChange={onCategoryChangeHandler} category={category} />
+          <SelectCategory onChange={onCategoryChangeHandler} value={category} />
         </Stack>
         <Masonry spacing={2} columns={{ lg: 4, md: 3, sm: 2, xs: 1 }}>
           {posts.map((data, index) => (

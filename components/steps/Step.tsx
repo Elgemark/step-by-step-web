@@ -23,7 +23,7 @@ const Step = ({ index, title, body, media = {}, className, ...props }) => {
         title={<Typography variant="h5">{title}</Typography>}
         // subheader="September 14, 2016"
       />
-      <StyledCardMedia component="img" height="300" image={media.imageURI} />
+      {media.imageURI && <StyledCardMedia component="img" height="300" image={media.imageURI} />}
       <CardContent>
         <Typography>{body}</Typography>
       </CardContent>
