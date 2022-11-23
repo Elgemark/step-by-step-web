@@ -262,6 +262,32 @@ export const useIsPostLikedByUser = (postId) => {
   return isLiked;
 };
 
+// ::: CATEGORIES
+
+export const getCategories = async () => {
+  const firebase = getFirestore();
+  const result = {};
+  try {
+    const docRef = doc(firebase, "config", "categories");
+    const docSnap = await getDoc(docRef);
+    result.data = docSnap.exists() ? docSnap.data().list : [];
+  } catch (error) {
+    result.error = error;
+  }
+  return result;
+};
+
+export const useGetCategories = () => {
+  const [categories, setCategories] = useState([]);
+  useEffect(() => {
+    getCategories().then((resp) => {
+      setCategories(resp.data);
+    });
+  }, []);
+
+  return categories;
+};
+
 // ::: MISC
 
 export const useUploadImage = () => {

@@ -3,6 +3,7 @@ export const post = {
   descr: "",
   media: { imageURI: "" },
   tags: [],
+  category: "other",
   likes: 0,
   stepsCompleted: 0,
   userId: null,
