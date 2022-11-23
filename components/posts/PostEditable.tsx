@@ -9,9 +9,10 @@ import Stack from "@mui/material/Stack";
 import AddIcon from "@mui/icons-material/Add";
 import MediaEditable from "../primitives/MediaEditable";
 import { useState } from "react";
-import SelectCategory from "../primitives/SelectCategory";
+import SelectCategory from "../SelectCategory";
 import SettingsIcon from "@mui/icons-material/Settings";
 import AddText from "../primitives/AddText";
+import SelectDropDown from "../primitives/SelectDropDown";
 
 const PostEditable = ({
   title,
@@ -105,7 +106,7 @@ const PostEditable = ({
                 }}
                 size="small"
               />
-              <AddText />
+              <AddText placeholder="prerequisites" />
             </Stack>
           </CardContent>
         </Card>

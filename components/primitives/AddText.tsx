@@ -4,7 +4,7 @@ import Stack from "@mui/material/Stack";
 import AddIcon from "@mui/icons-material/Add";
 import { useState } from "react";
 
-const AddText = ({ onAdd, units = [], placeholder, disabled }) => {
+const AddText = ({ onAdd, placeholder, disabled, children }) => {
   const [text, setText] = useState("");
 
   const onTextChangeHandler = (e) => {
@@ -26,6 +26,7 @@ const AddText = ({ onAdd, units = [], placeholder, disabled }) => {
           }
         }}
       />
+      {children}
       <Fab
         sx={{ flexShrink: 0 }}
         size="small"

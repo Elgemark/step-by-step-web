@@ -12,7 +12,7 @@ import { styled, alpha } from "@mui/material/styles";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
 import { Stack } from "@mui/material";
-import SelectCategory from "./primitives/SelectCategory";
+import SelectCategory from "./SelectCategory";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
