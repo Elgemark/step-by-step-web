@@ -39,10 +39,12 @@ const PostEditable = ({
               <SettingsIcon />
             </Avatar>
           }
-          subheader="Settings"
+          title="Settings"
+          subheader="Choose category and add at least one tag. You can add upp to 5 tags."
         />
         <CardContent>
           <Stack spacing={2}>
+            <SelectCategory fullWidth onChange={onChangeCategory} value={category} />
             <Stack spacing={1} direction="row" flexWrap={"wrap"}>
               {tags.map((tag, index) => (
                 <Chip key={"key-" + tag + index} label={tag} onDelete={() => onRemoveTag(tag)} />
@@ -77,12 +79,11 @@ const PostEditable = ({
                 <AddIcon />
               </Fab>
             </Stack>
-            <SelectCategory fullWidth onChange={onChangeCategory} value={category} />
           </Stack>
         </CardContent>
       </Card>
       {/* POST */}
-      <Collapse in={category}>
+      <Collapse in={category && tags.length}>
         <Card>
           <CardHeader
             avatar={
