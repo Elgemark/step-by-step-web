@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { usePaste } from "../../utils/imageUtils";
 import { useUploadFileAsBlob } from "../../utils/firebase/api";
 import styled from "styled-components";
+import OpenDialog from "./OpenDialog";
 
 const StyledCardMediaContainer = styled.div`
   position: relative;
@@ -48,6 +49,16 @@ const MediaEditable = ({ media = {}, onChangeImage }) => {
     }
   }, [blob]);
 
+  const onFileSelectedHandler = (file) => {
+    upload(file)
+      .then((e) => {
+        onChangeImage(e.url);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
     <StyledCardMediaContainer onPaste={onPaste} hasImage={downloadURL || imageURI || media.imageURI}>
       <StyledCardMedia component="img" height="300" image={downloadURL || imageURI || media.imageURI} />
@@ -59,9 +70,11 @@ const MediaEditable = ({ media = {}, onChangeImage }) => {
         onChange={() => setEmptyStr("")}
         onPaste={onPaste}
       />
-      <IconButton className="select-file" aria-label="browse">
-        <FolderOpenIcon />
-      </IconButton>
+      <OpenDialog onFileSelected={onFileSelectedHandler}>
+        <IconButton className="select-file" aria-label="browse">
+          <FolderOpenIcon />
+        </IconButton>
+      </OpenDialog>
     </StyledCardMediaContainer>
   );
 };

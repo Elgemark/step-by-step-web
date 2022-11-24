@@ -19,7 +19,6 @@ export const usePaste = () => {
         progress: 0,
       };
       setFile(file);
-      console.log("file", file);
       var blob = file.getRawFile();
       setBlob(blob);
       var reader = new FileReader();
