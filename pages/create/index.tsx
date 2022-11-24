@@ -69,7 +69,13 @@ const Create = ({ post, steps }) => {
 
   const onAddTagHandler = (value) => {
     setPostValue("tags", toSanitizedArray(value, dataPost.tags));
-    // setPostValue("tags", _.union(dataPost.tags, value.split(" ")));
+  };
+
+  const onAddPrerequisitesHandler = (value) => {
+    const prerequisites = [...dataPost.prerequisites];
+    prerequisites.push(value);
+    setPostValue("prerequisites", prerequisites);
+    //setPostValue("tags", toSanitizedArray(value, dataPost.tags));
   };
 
   console.log("dataPost", dataPost);
@@ -86,6 +92,7 @@ const Create = ({ post, steps }) => {
           onChangeBody={(value) => setPostValue("descr", value)}
           onChangeImage={(value) => setPostValue("media.imageURI", value)}
           onChangeCategory={(value) => setPostValue("category", value)}
+          onAddPrerequisites={onAddPrerequisitesHandler}
           onAddTag={onAddTagHandler}
           onRemoveTag={(value) => {
             const tagsCopy = [...dataPost.tags];

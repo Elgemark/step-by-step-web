@@ -12,13 +12,15 @@ import { useState } from "react";
 import SelectCategory from "../SelectCategory";
 import SettingsIcon from "@mui/icons-material/Settings";
 import AddText from "../primitives/AddText";
-import SelectDropDown from "../primitives/SelectDropDown";
+import ListPrerequisites from "../ListPrerequisites";
+import GridPrerequisites from "../GridPrerequisites";
 
 const PostEditable = ({
   title,
   descr,
   media = {},
   tags = [],
+  prerequisites = [],
   category,
   onChangeTitle,
   onChangeBody,
@@ -26,6 +28,7 @@ const PostEditable = ({
   onRemoveTag,
   onChangeImage,
   onChangeCategory,
+  onAddPrerequisites,
 }) => {
   const [tag, setTag] = useState();
 
@@ -107,7 +110,8 @@ const PostEditable = ({
                 }}
                 size="small"
               />
-              <AddText placeholder="prerequisites" />
+              <GridPrerequisites items={prerequisites} editable />
+              <AddText placeholder="Prerequisites" onAdd={onAddPrerequisites} />
             </Stack>
           </CardContent>
         </Card>
