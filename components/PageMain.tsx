@@ -49,6 +49,19 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
   justifyContent: "center",
 }));
 
+const StyledSearchBar = styled(Stack)(({ theme }) => ({
+  "@media (min-width: 600px)": {
+    marginRight: theme.spacing(1),
+  },
+
+  "@media (min-width: 900px)": {
+    marginRight: theme.spacing(2),
+  },
+  "@media (min-width: 1200px)": {
+    marginRight: theme.spacing(4),
+  },
+}));
+
 const PageMain = ({ posts = [], category, title }) => {
   const [user] = useAuthState(getAuth());
   const { set: setQuery } = useDebouncedQuery(1000);
@@ -80,7 +93,7 @@ const PageMain = ({ posts = [], category, title }) => {
         <title>{title}</title>
       </Head>
       <Layout>
-        <Stack direction="row" spacing={2}>
+        <StyledSearchBar direction="row" spacing={2}>
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -92,7 +105,7 @@ const PageMain = ({ posts = [], category, title }) => {
             />
           </Search>
           <SelectCategory onChange={onCategoryChangeHandler} value={category} />
-        </Stack>
+        </StyledSearchBar>
         <Masonry spacing={2} columns={{ lg: 4, md: 3, sm: 2, xs: 1 }}>
           {posts.map((data, index) => (
             <Post

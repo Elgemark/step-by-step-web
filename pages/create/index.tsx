@@ -5,7 +5,7 @@ import StepEditable from "../../components/steps/StepEditable";
 import { useStateObject } from "../../utils/object";
 import AddIcon from "@mui/icons-material/Add";
 import SaveIcon from "@mui/icons-material/Save";
-import { Button, Divider } from "@mui/material";
+import { Button, Divider, Fade } from "@mui/material";
 import styled from "styled-components";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { getPost, getSteps, setPostAndSteps } from "../../utils/firebase/api";
@@ -72,12 +72,15 @@ const Create = ({ post, steps }) => {
     // setPostValue("tags", _.union(dataPost.tags, value.split(" ")));
   };
 
+  console.log("dataPost", dataPost);
+
   return (
     <>
       <Head>
         <title>create</title>
       </Head>
       <StyledLayout>
+        {/* SETTINGS & POST */}
         <PostEditable
           onChangeTitle={(value) => setPostValue("title", value)}
           onChangeBody={(value) => setPostValue("descr", value)}
@@ -92,6 +95,7 @@ const Create = ({ post, steps }) => {
           {...dataPost}
         />
         <StyledDivider />
+        {/* STEPS */}
         {dataSteps.steps.map((dataStep, index) => (
           <div key={"step-" + index}>
             <StepEditable
@@ -104,16 +108,19 @@ const Create = ({ post, steps }) => {
             <StyledDivider />
           </div>
         ))}
-        <StyledBottomBar>
-          <ButtonGroup variant="text" aria-label="text button group">
-            <Button endIcon={<SaveIcon />} onClick={onClickSaveHandler}>
-              Save
-            </Button>
-            <Button endIcon={<AddIcon />} onClick={onClickAddStepHandler}>
-              Step
-            </Button>
-          </ButtonGroup>
-        </StyledBottomBar>
+        {/* BUTTONS */}
+        <Fade in={dataPost.title && dataPost.descr && dataPost.media.imageURI}>
+          <StyledBottomBar>
+            <ButtonGroup variant="text" aria-label="text button group">
+              <Button endIcon={<SaveIcon />} onClick={onClickSaveHandler}>
+                Save
+              </Button>
+              <Button endIcon={<AddIcon />} onClick={onClickAddStepHandler}>
+                Step
+              </Button>
+            </ButtonGroup>
+          </StyledBottomBar>
+        </Fade>
         {/* SNACKBAR */}
         <Snackbar open={successMessage} autoHideDuration={6000} onClose={() => setSuccessMessage()}>
           <Alert onClose={() => setSuccessMessage()} severity="success" sx={{ width: "100%" }}>
