@@ -11,6 +11,7 @@ const Root = styled.div`
 `;
 const Content = styled(Box)`
   margin: 80px 10px 0;
+  width: 1024px;
   /* max-width: 800px;
   width: 100%; */
 `;
@@ -21,7 +22,7 @@ const Layout = ({ children, onSearch, propsTopbar, propsContent, ...rest }) => {
       <CssBaseline />
       <Root {...rest}>
         <TopBar className="top-bar" onSearch={onSearch} {...propsTopbar} />
-        <Content className="content" sx={{ width: 1024, minHeight: 393 }} {...propsContent}>
+        <Content className="content" {...propsContent}>
           {children}
         </Content>
       </Root>
