@@ -30,7 +30,7 @@ const AddText = ({ onAdd, placeholder, disabled, children }) => {
       <Fab
         sx={{ flexShrink: 0 }}
         size="small"
-        disabled={disabled}
+        disabled={disabled || !text}
         onClick={() => {
           onAdd({ text });
           setText("");

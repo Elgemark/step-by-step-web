@@ -8,13 +8,12 @@ import Fab from "@mui/material/Fab";
 import Stack from "@mui/material/Stack";
 import AddIcon from "@mui/icons-material/Add";
 import MediaEditable from "../primitives/MediaEditable";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SelectCategory from "../SelectCategory";
 import SettingsIcon from "@mui/icons-material/Settings";
 import AddText from "../primitives/AddText";
-import ListPrerequisites from "../ListPrerequisites";
-import GridPrerequisites from "../GridPrerequisites";
 import TablePrerequisites from "../TablePrerequisites";
+import _ from "lodash";
 
 const PostEditable = ({
   title,
@@ -29,9 +28,31 @@ const PostEditable = ({
   onRemoveTag,
   onChangeImage,
   onChangeCategory,
-  onAddPrerequisites,
+  onChangePrerequisites,
 }) => {
   const [tag, setTag] = useState();
+  const [prereqs, setPrereqs] = useState(prerequisites);
+
+  useEffect(() => {
+    onChangePrerequisites(prereqs);
+  }, [prereqs]);
+
+  const onAddPrerequisitesHandler = (item) => {
+    const newPrereqs = [...prereqs];
+    newPrereqs.push(item);
+    setPrereqs(newPrereqs);
+  };
+  const onRemovePrerequisitesHandler = (index) => {
+    const newPrereqs = [...prereqs];
+    _.pullAt(newPrereqs, index);
+    setPrereqs(newPrereqs);
+  };
+
+  const onEditPrerequisitesHandler = ({ index, key, value }) => {
+    const newPrereqs = [...prereqs];
+    _.set(newPrereqs, `[${index}].${key}`, value);
+    setPrereqs(newPrereqs);
+  };
 
   return (
     <Stack spacing={2}>
@@ -111,8 +132,13 @@ const PostEditable = ({
                 }}
                 size="small"
               />
-              <TablePrerequisites items={prerequisites} editable />
-              <AddText placeholder="Prerequisites" onAdd={onAddPrerequisites} />
+              <TablePrerequisites
+                items={prerequisites}
+                editable
+                onRemove={onRemovePrerequisitesHandler}
+                onEdit={onEditPrerequisitesHandler}
+              />
+              <AddText placeholder="Prerequisites" onAdd={onAddPrerequisitesHandler} />
             </Stack>
           </CardContent>
         </Card>
