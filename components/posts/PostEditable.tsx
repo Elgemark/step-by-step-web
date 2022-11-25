@@ -39,7 +39,7 @@ const PostEditable = ({
 
   const onAddPrerequisitesHandler = (item) => {
     const newPrereqs = [...prereqs];
-    newPrereqs.push(item);
+    newPrereqs.push({ quantity: "", unit: "", ...item });
     setPrereqs(newPrereqs);
   };
   const onRemovePrerequisitesHandler = (index) => {

@@ -13,6 +13,7 @@ import UserAvatar from "../UserAvatar";
 import Badge from "@mui/material/Badge";
 import { useIsPostLikedByUser } from "../../utils/firebase/api";
 import styled from "styled-components";
+import TablePrerequisites from "../TablePrerequisites";
 
 const StyledCardMedia = styled(CardMedia)`
   object-fit: contain;
@@ -21,6 +22,7 @@ const StyledCardMedia = styled(CardMedia)`
 const Post = ({
   title = "Title",
   descr = "Body",
+  prerequisites = [],
   media = {},
   userId,
   id,
@@ -53,6 +55,7 @@ const Post = ({
         <Typography variant="body2" color="text.secondary">
           {descr}
         </Typography>
+        <TablePrerequisites items={prerequisites} />
       </CardContent>
       <CardActions disableSpacing>
         <IconButton aria-label="like" onClick={onLike}>

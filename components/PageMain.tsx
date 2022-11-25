@@ -127,6 +127,7 @@ const PageMain = ({ posts = [], category, title }) => {
               }
               onLike={() => onLikeHandler(data)}
               {...data}
+              prerequisites={[]}
             />
           ))}
         </Masonry>

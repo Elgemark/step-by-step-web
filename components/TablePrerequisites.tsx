@@ -11,18 +11,25 @@ interface Item {
 
 const StyledTable = styled.table`
   text-align: left;
+  width: 100%;
+  margin-top: 10px;
   th,
   td {
-    padding: 0 5px;
-  }
-  tr {
+    /* padding: 0 5px; */
   }
   thead th {
     border-bottom: 1px solid white;
   }
+  thead .column-2 {
+    display: ${({ editable }) => (editable ? "inherit" : "none")};
+  }
+  thead .column-3 {
+    display: ${({ editable }) => (editable ? "inherit" : "none")};
+  }
   .column-1 {
     width: 60%;
   }
+
   .column-4 {
     display: ${({ editable }) => (editable ? "inherit" : "none")};
   }
@@ -45,7 +52,7 @@ const TablePrerequisites = ({ items = [], onRemove, onEdit, editable = false }) 
     <StyledTable editable={editable}>
       <thead>
         <tr>
-          <th className="column-1">
+          <th className="column-1" colSpan={editable ? 1 : 3}>
             <Typography variant="h6">{"Prerequisites"}</Typography>
           </th>
           <th className="column-2">
@@ -66,7 +73,7 @@ const TablePrerequisites = ({ items = [], onRemove, onEdit, editable = false }) 
                 {editable ? (
                   <Input value={item.text} onChange={(e) => onEdit({ index, key: "text", value: e.target.value })} />
                 ) : (
-                  <Typography>{item.text}</Typography>
+                  <Typography variant="body2">{item.text}</Typography>
                 )}
               </th>
               {/* QUANTITY */}
@@ -77,7 +84,7 @@ const TablePrerequisites = ({ items = [], onRemove, onEdit, editable = false }) 
                     onChange={(e) => onEdit({ index, key: "quantity", value: e.target.value })}
                   />
                 ) : (
-                  <Typography>{item.unit}</Typography>
+                  <Typography variant="body2">{item.quantity}</Typography>
                 )}
               </td>
               {/* UNIT */}
@@ -85,7 +92,7 @@ const TablePrerequisites = ({ items = [], onRemove, onEdit, editable = false }) 
                 {editable ? (
                   <Input value={item.unit} onChange={(e) => onEdit({ index, key: "unit", value: e.target.value })} />
                 ) : (
-                  <Typography>{item.unit}</Typography>
+                  <Typography variant="body2">{item.unit}</Typography>
                 )}
               </td>
               {/* REMOVE BUTTON */}
