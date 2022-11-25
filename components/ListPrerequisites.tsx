@@ -38,17 +38,12 @@ const ListPrerequisites = ({ items = [], onRemove, editable = false }) => {
                 <Stack direction="row" spacing={2} alignItems="center">
                   <ListItemText
                     primary={
-                      <Input
-                        size="small"
-                        placeholder="quantity"
-                        sx={{ width: "100px" }}
-                        inputProps={{ maxLength: 10 }}
-                      />
+                      <Input size="small" placeholder="quantity" sx={{ width: "60px" }} inputProps={{ maxLength: 6 }} />
                     }
                   />
                   <ListItemText
                     primary={
-                      <Input size="small" placeholder="unit" sx={{ width: "100px" }} inputProps={{ maxLength: 10 }} />
+                      <Input size="small" placeholder="unit" sx={{ width: "60px" }} inputProps={{ maxLength: 6 }} />
                     }
                   />
                   <SecondaryAction onClick={() => onRemove({ index, item })} />

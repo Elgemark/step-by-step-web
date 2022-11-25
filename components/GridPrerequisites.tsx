@@ -5,7 +5,7 @@ import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/Inbox";
 import RemoveIcon from "@mui/icons-material/Remove";
 import IconButton from "@mui/material/IconButton";
-import { Box, Fade, Grid, Input, Stack, TextField } from "@mui/material";
+import { Box, Fade, Grid, Input, Stack, TextField, Typography } from "@mui/material";
 
 interface Item {
   text: string;
@@ -35,7 +35,9 @@ const GridPrerequisites = ({ items = [], onRemove, editable = false }) => {
             <InboxIcon />
           </Grid>
           {/* TEXT */}
-          <Grid xs={8}></Grid>
+          <Grid xs={8}>
+            <Typography>{item.text}</Typography>
+          </Grid>
           {/* QUANTITY */}
           <Grid xs={1}>
             <Input placeholder="quantity" value={item.quantity} />

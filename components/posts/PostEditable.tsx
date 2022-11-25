@@ -110,7 +110,7 @@ const PostEditable = ({
                 }}
                 size="small"
               />
-              <GridPrerequisites items={prerequisites} editable />
+              <ListPrerequisites items={prerequisites} editable />
               <AddText placeholder="Prerequisites" onAdd={onAddPrerequisites} />
             </Stack>
           </CardContent>
