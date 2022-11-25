@@ -83,7 +83,7 @@ const Create = ({ post, steps }) => {
   return (
     <>
       <Head>
-        <title>create</title>
+        <title>STEPS | Create</title>
       </Head>
       <StyledLayout>
         {/* SETTINGS & POST */}
