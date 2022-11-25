@@ -14,6 +14,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import AddText from "../primitives/AddText";
 import ListPrerequisites from "../ListPrerequisites";
 import GridPrerequisites from "../GridPrerequisites";
+import TablePrerequisites from "../TablePrerequisites";
 
 const PostEditable = ({
   title,
@@ -110,7 +111,7 @@ const PostEditable = ({
                 }}
                 size="small"
               />
-              <ListPrerequisites items={prerequisites} editable />
+              <TablePrerequisites items={prerequisites} editable />
               <AddText placeholder="Prerequisites" onAdd={onAddPrerequisites} />
             </Stack>
           </CardContent>
