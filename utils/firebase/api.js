@@ -13,6 +13,7 @@ import {
   endAt as fsEndAt,
   increment,
   limit as fsLimit,
+  updateDoc,
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { getAuth } from "firebase/auth";
@@ -154,15 +155,23 @@ export const getSteps = async (id) => {
 
 // ::: USER DATA
 
-export const setUserStepsProgress = async (uid, stepsId, data) => {
+export const setUserStepsProgress = async (uid, id, data) => {
   const firebase = getFirestore();
   const result = {};
   try {
-    result.response = await setDoc(doc(firebase, "users", uid, "steps", stepsId, "progress"), data);
+    const docRef = doc(firebase, "users", uid, "steps", id);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      result.response = await updateDoc(docRef, { progress: data });
+    } else {
+      result.response = await setDoc(docRef, { progress: data });
+    }
+
     result.data = { ...data, uid };
     result.id = uid;
   } catch (error) {
     result.error = error;
+    debugger;
   }
   return result;
 };
@@ -171,12 +180,13 @@ export const getUserStepsProgress = async (uid, id) => {
   const firebase = getFirestore();
   const result = {};
   try {
-    const docRef = doc(firebase, "users", uid, "steps", id, "progress");
+    const docRef = doc(firebase, "users", uid, "steps", id);
     const docSnap = await getDoc(docRef);
-    result.data = docSnap.exists() ? { ...docSnap.data(), uid } : { ...dataModels.userStepsProgress, userId: uid, id };
+    result.data = docSnap.exists()
+      ? { ...docSnap.data().progress, uid }
+      : { ...dataModels.userStepsProgress, userId: uid, id };
   } catch (error) {
     result.error = error;
-    result.data = { ...dataModels.userStepsProgress, userId: uid, id };
   }
   return result;
 };
