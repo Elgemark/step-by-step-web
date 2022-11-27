@@ -57,6 +57,7 @@ const Create = ({ post, steps }) => {
 
   const onClickSaveHandler = async () => {
     const resp = await setPostAndSteps(dataPost, dataSteps);
+    // Update internal states...
     resp.postData && replacePost(resp.postData);
     resp.stepsData && replaceSteps(resp.stepsData);
     if (!resp.error) {
