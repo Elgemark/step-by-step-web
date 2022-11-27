@@ -158,7 +158,7 @@ export const setUserStepsProgress = async (uid, stepsId, data) => {
   const firebase = getFirestore();
   const result = {};
   try {
-    result.response = await setDoc(doc(firebase, "user-data", uid, "progress", stepsId), data);
+    result.response = await setDoc(doc(firebase, "users", uid, "steps", stepsId, "progress"), data);
     result.data = { ...data, uid };
     result.id = uid;
   } catch (error) {
@@ -167,30 +167,29 @@ export const setUserStepsProgress = async (uid, stepsId, data) => {
   return result;
 };
 
-export const getUserStepsProgress = async (uid, stepsId) => {
+export const getUserStepsProgress = async (uid, id) => {
   const firebase = getFirestore();
   const result = {};
   try {
-    const docRef = doc(firebase, "user-data", uid, "progress", stepsId);
+    const docRef = doc(firebase, "users", uid, "steps", id, "progress");
     const docSnap = await getDoc(docRef);
-    result.data = docSnap.exists()
-      ? { ...docSnap.data(), uid }
-      : { ...dataModels.userDataStepsProgress, userId: uid, stepsId };
+    result.data = docSnap.exists() ? { ...docSnap.data(), uid } : { ...dataModels.userStepsProgress, userId: uid, id };
   } catch (error) {
     result.error = error;
+    result.data = { ...dataModels.userStepsProgress, userId: uid, id };
   }
   return result;
 };
 
-export const useUserStepsProgress = (uid, stepsId) => {
+export const useUserStepsProgress = (uid, id) => {
   const [isLoading, setIsLoading] = useState();
   const { object: data, setValue, replace: setData } = useStateObject();
   const [error, setError] = useState();
 
   useEffect(() => {
-    if (uid && stepsId) {
+    if (uid && id) {
       setIsLoading(true);
-      getUserStepsProgress(uid, stepsId)
+      getUserStepsProgress(uid, id)
         .then((res) => {
           setData(res.data);
         })
@@ -198,7 +197,7 @@ export const useUserStepsProgress = (uid, stepsId) => {
           setError(err);
         });
     }
-  }, [uid, stepsId]);
+  }, [uid, id]);
 
   return {
     ...data,
@@ -206,7 +205,7 @@ export const useUserStepsProgress = (uid, stepsId) => {
     error,
     setStep: async (index) => {
       setValue("step", index);
-      return await setUserStepsProgress(uid, stepsId, { ...data, step: index });
+      return await setUserStepsProgress(uid, id, { ...data, step: index });
     },
   };
 };
@@ -220,7 +219,7 @@ export const likePost = async (postId) => {
   // setup batch write
   const batch = writeBatch(firebase);
   // See if post was liked
-  const likeRef = doc(firebase, "user-data", userId, "likes", postId);
+  const likeRef = doc(firebase, "users", userId, "likes", postId);
   const likeSnap = await getDoc(likeRef);
   // get new like value...
   const userNewLikeValue = likeSnap.exists() && likeSnap.data().value === 1 ? 0 : 1;
@@ -244,7 +243,7 @@ export const isPostLikedByUser = async (postId) => {
   const auth = getAuth();
   const userId = auth.currentUser.uid;
   const firebase = getFirestore();
-  const likeRef = doc(firebase, "user-data", userId, "likes", postId);
+  const likeRef = doc(firebase, "users", userId, "likes", postId);
   const likeSnap = await getDoc(likeRef);
   const isLiked = likeSnap.exists() && likeSnap.data().value > 0;
   return { isLiked };
@@ -291,7 +290,7 @@ export const useGetCategories = () => {
 
 // ::: MISC
 
-export const useUploadImage = (locationPath = []) => {
+export const useUploadImage = (...locationPath) => {
   const [result, setResult] = useState();
   const [error, setError] = useState();
   const [complete, setComplete] = useState(false);
@@ -321,7 +320,7 @@ export const useUploadImage = (locationPath = []) => {
       xhr.send(null);
     });
 
-    const fileRef = ref(getStorage(), "user", userId, ...locationPath, uuidv4());
+    const fileRef = ref(getStorage(), "users", userId, ...locationPath, uuidv4());
     const _result = await uploadBytes(fileRef, blob);
     setResult(_result);
 
@@ -339,15 +338,15 @@ export const useUploadImage = (locationPath = []) => {
   return { progress, complete, error, result, downloadURL, upload };
 };
 
-export const useUploadFileAsBlob = (locationPath = []) => {
+export const useUploadFileAsBlob = (...locationPath) => {
   const [result, setResult] = useState();
   const [downloadURL, setDownloadURL] = useState(0);
-  //
-  const auth = getAuth();
-  const userId = auth.currentUser.uid;
 
   const upload = async (blob) => {
-    const fileRef = ref(getStorage(), "user", userId, ...locationPath, uuidv4());
+    const auth = getAuth();
+    const userId = auth.currentUser.uid;
+    const pathArr = ["users", userId, ...locationPath].join("/");
+    const fileRef = ref(getStorage(), pathArr);
     const _result = await uploadBytes(fileRef, blob);
     const url = await getDownloadURL(fileRef);
     setResult(_result);

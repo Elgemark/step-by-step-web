@@ -1,6 +1,6 @@
 import RemoveIcon from "@mui/icons-material/Remove";
 import IconButton from "@mui/material/IconButton";
-import { Fade, Input, Typography } from "@mui/material";
+import { Fade, Input, Typography, useTheme } from "@mui/material";
 import styled from "styled-components";
 
 interface Item {
@@ -10,28 +10,34 @@ interface Item {
 }
 
 const StyledTable = styled.table`
+  table-layout: fixed;
   text-align: left;
-  width: 100%;
-  margin-top: 10px;
-  th,
-  td {
-    /* padding: 0 5px; */
+  width: ${({ editable }) => (editable ? "100%" : "70%")};
+  margin-top: ${({ theme }) => theme.spacing(2)};
+  .column-1 {
+    width: 60%;
+  }
+  .column-2 {
+    text-align: ${({ editable }) => (editable ? "left" : "right")};
+  }
+  .column-3 {
+    text-align: ${({ editable }) => (editable ? "left" : "right")};
   }
   thead th {
     border-bottom: 1px solid white;
   }
   thead .column-2 {
-    display: ${({ editable }) => (editable ? "inherit" : "none")};
+    display: ${({ editable }) => (editable ? "" : "none")};
   }
   thead .column-3 {
-    display: ${({ editable }) => (editable ? "inherit" : "none")};
+    display: ${({ editable }) => (editable ? "" : "none")};
   }
-  .column-1 {
-    width: 60%;
+  thead .column-4 {
+    display: ${({ editable }) => (editable ? "none" : "none")};
   }
 
-  .column-4 {
-    display: ${({ editable }) => (editable ? "inherit" : "none")};
+  tbody .column-4 {
+    display: ${({ editable }) => (editable ? "" : "none")};
   }
 `;
 
@@ -44,12 +50,13 @@ const RemoveButton = ({ onClick }) => {
 };
 
 const TablePrerequisites = ({ items = [], onRemove, onEdit, editable = false }) => {
+  const theme = useTheme();
   if (items.length === 0) {
     return <></>;
   }
 
   return (
-    <StyledTable editable={editable}>
+    <StyledTable editable={editable} theme={theme}>
       <thead>
         <tr>
           <th className="column-1" colSpan={editable ? 1 : 3}>

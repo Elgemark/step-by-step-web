@@ -36,9 +36,9 @@ const StyledCardMedia = styled(CardMedia)`
   object-fit: contain;
 `;
 
-const MediaEditable = ({ media = {}, onChangeImage }) => {
+const MediaEditable = ({ locationPath = [], media = {}, onChangeImage }) => {
   const { imageURI, blob, onPaste } = usePaste();
-  const { upload, downloadURL } = useUploadFileAsBlob();
+  const { upload, downloadURL } = useUploadFileAsBlob(locationPath);
   const [emptyrStr, setEmptyStr] = useState("");
 
   useEffect(() => {

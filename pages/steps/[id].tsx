@@ -7,10 +7,11 @@ import Step from "../../components/steps/Step";
 import Post from "../../components/posts/Post";
 import { post as postModel, steps as stepsModel } from "../../utils/firebase/models";
 // Firebase related
-import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
 import StepsProgress from "../../components/StepsProgress";
 import { useRouter } from "next/router";
+import { v4 as uuid } from "uuid";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -104,13 +105,13 @@ const Steps = ({ post, steps }) => {
 };
 
 export async function getServerSideProps({ query }) {
-  const id = query.id;
+  const id = query.id || uuid();
   const post = await getPost(id);
   const steps = await getSteps(id);
   return {
     props: {
-      post: post?.data || postModel,
-      steps: steps?.data || stepsModel,
+      post: post?.data || { ...postModel, id },
+      steps: steps?.data || { ...stepsModel, id },
     },
   };
 }

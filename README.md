@@ -4,6 +4,7 @@
 - https://mui.com/material-ui/material-icons/
 - https://www.npmjs.com/package/re-position
 - https://dev.to/menard_codes/next-js-sign-in-page-with-firebase-ui-and-firebase-auth-5375
+  https://medium.com/firebase-developers/role-based-access-in-firebase-firestore-firestore-rules-6d36cded1b15
 
 ### Inspirations:
 

@@ -8,7 +8,10 @@ export const post = {
   likes: 0,
   stepsCompleted: 0,
   userId: null,
-  stepsId: null,
+};
+export const user = {
+  role: "user",
+  domains: [],
 };
 export const steps = { steps: [] };
-export const userDataStepsProgress = { userId: null, step: 0, completed: false };
+export const userStepsProgress = { userId: null, step: 0, completed: false };
