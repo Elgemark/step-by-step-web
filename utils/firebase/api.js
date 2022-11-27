@@ -8,12 +8,10 @@ import {
   getDoc,
   getDocs,
   setDoc,
-  deleteDoc,
   orderBy as fsOrderBy,
   startAt as fsStartAt,
   endAt as fsEndAt,
   increment,
-  orderBy,
   limit as fsLimit,
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -83,16 +81,16 @@ export const setPostAndSteps = async (post, steps) => {
   const userId = auth.currentUser.uid;
   const firebase = getFirestore();
   const batch = writeBatch(firebase);
-  // Set the value of 'steps'
-  const stepsId = steps.id || uuidv4();
-  const stepsRef = doc(firebase, "steps", stepsId);
-  const stepsData = { ...steps, id: stepsId, userId };
-  batch.set(stepsRef, stepsData);
+  // Create id if missing...
+  const id = steps.id || uuidv4();
   // Set the value of 'posts'
-  const postId = post.id || uuidv4();
-  const postsRef = doc(firebase, "posts", postId);
-  const postData = { ...post, id: postId, stepsId, userId };
+  const postsRef = doc(firebase, "posts", id);
+  const postData = { ...post, id, userId };
   batch.set(postsRef, postData);
+  // Set the value of 'steps'
+  const stepsRef = doc(firebase, "posts", id, "steps", id);
+  const stepsData = { ...steps, id, userId };
+  batch.set(stepsRef, stepsData);
   //
   let resp = {};
   try {
@@ -120,7 +118,10 @@ export const getPost = async (id) => {
 
 export const deletePost = async (id) => {
   const firebase = getFirestore();
-  await deleteDoc(doc(firebase, "posts", id));
+  const batch = writeBatch(firebase);
+  batch.delete(doc(firebase, "posts", id));
+  batch.delete(doc(firebase, "posts", id, "steps", id));
+  return await batch.commit();
 };
 
 // ::: STEPS
@@ -129,7 +130,7 @@ export const setSteps = async (data) => {
   const result = {};
   try {
     const id = data.id || uuidv4();
-    result.response = await setDoc(doc(firebase, "steps", id), data);
+    result.response = await setDoc(doc(firebase, "posts", id, "steps", id), data);
     result.data = { ...data, id };
     result.id = id;
   } catch (error) {
@@ -142,7 +143,7 @@ export const getSteps = async (id) => {
   const firebase = getFirestore();
   const result = {};
   try {
-    const docRef = doc(firebase, "steps", id);
+    const docRef = doc(firebase, "posts", id, "steps", id);
     const docSnap = await getDoc(docRef);
     result.data = docSnap.exists() ? { ...docSnap.data(), id } : dataModels.steps;
   } catch (error) {
@@ -290,12 +291,15 @@ export const useGetCategories = () => {
 
 // ::: MISC
 
-export const useUploadImage = () => {
+export const useUploadImage = (locationPath = []) => {
   const [result, setResult] = useState();
   const [error, setError] = useState();
   const [complete, setComplete] = useState(false);
   const [progress, setProgress] = useState(0);
   const [downloadURL, setDownloadURL] = useState(0);
+  //
+  const auth = getAuth();
+  const userId = auth.currentUser.uid;
 
   const upload = async (uri) => {
     setComplete(false);
@@ -317,7 +321,7 @@ export const useUploadImage = () => {
       xhr.send(null);
     });
 
-    const fileRef = ref(getStorage(), uuidv4());
+    const fileRef = ref(getStorage(), "user", userId, ...locationPath, uuidv4());
     const _result = await uploadBytes(fileRef, blob);
     setResult(_result);
 
@@ -335,12 +339,15 @@ export const useUploadImage = () => {
   return { progress, complete, error, result, downloadURL, upload };
 };
 
-export const useUploadFileAsBlob = () => {
+export const useUploadFileAsBlob = (locationPath = []) => {
   const [result, setResult] = useState();
   const [downloadURL, setDownloadURL] = useState(0);
+  //
+  const auth = getAuth();
+  const userId = auth.currentUser.uid;
 
   const upload = async (blob) => {
-    const fileRef = ref(getStorage(), uuidv4());
+    const fileRef = ref(getStorage(), "user", userId, ...locationPath, uuidv4());
     const _result = await uploadBytes(fileRef, blob);
     const url = await getDownloadURL(fileRef);
     setResult(_result);

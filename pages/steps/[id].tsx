@@ -104,9 +104,9 @@ const Steps = ({ post, steps }) => {
 };
 
 export async function getServerSideProps({ query }) {
-  const postId = query.id;
-  const post = await getPost(postId);
-  const steps = await getSteps(post?.data?.stepsId);
+  const id = query.id;
+  const post = await getPost(id);
+  const steps = await getSteps(id);
   return {
     props: {
       post: post?.data || postModel,
