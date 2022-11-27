@@ -14,6 +14,7 @@ import {
   increment,
   limit as fsLimit,
   updateDoc,
+  serverTimestamp,
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { getAuth } from "firebase/auth";
@@ -61,20 +62,6 @@ export const searchPosts = async (tags = [], category, limit = 10) => {
     console.log("error", error);
   }
   return data;
-};
-
-export const setPost = async (data) => {
-  const firebase = getFirestore();
-  const result = {};
-  try {
-    const id = data.id || uuidv4();
-    result.response = await setDoc(doc(firebase, "posts", id), data);
-    result.data = { ...data, id };
-    result.id = id;
-  } catch (error) {
-    result.error = error;
-  }
-  return result;
 };
 
 export const setPostAndSteps = async (post, steps) => {
@@ -159,12 +146,12 @@ export const setUserStepsProgress = async (uid, id, data) => {
   const firebase = getFirestore();
   const result = {};
   try {
-    const docRef = doc(firebase, "users", uid, "steps", id);
+    const docRef = doc(firebase, "users", uid, "progress", id);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-      result.response = await updateDoc(docRef, { progress: data });
+      result.response = await updateDoc(docRef, data);
     } else {
-      result.response = await setDoc(docRef, { progress: data });
+      result.response = await setDoc(docRef, data);
     }
 
     result.data = { ...data, uid };
@@ -180,11 +167,9 @@ export const getUserStepsProgress = async (uid, id) => {
   const firebase = getFirestore();
   const result = {};
   try {
-    const docRef = doc(firebase, "users", uid, "steps", id);
+    const docRef = doc(firebase, "users", uid, "progress", id);
     const docSnap = await getDoc(docRef);
-    result.data = docSnap.exists()
-      ? { ...docSnap.data().progress, uid }
-      : { ...dataModels.userStepsProgress, userId: uid, id };
+    result.data = docSnap.exists() ? { ...docSnap.data(), uid } : { ...dataModels.userStepsProgress, userId: uid, id };
   } catch (error) {
     result.error = error;
   }

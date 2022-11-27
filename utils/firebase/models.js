@@ -8,6 +8,7 @@ export const post = {
   likes: 0,
   stepsCompleted: 0,
   userId: null,
+  visibility: "draft", // draft || public
 };
 export const user = {
   role: "user",
