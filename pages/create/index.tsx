@@ -87,6 +87,7 @@ const Create = ({ query, post, steps }) => {
   };
 
   console.log("dataPost", dataPost);
+  console.log("dataSteps", dataSteps);
 
   return (
     <>
@@ -107,6 +108,7 @@ const Create = ({ query, post, steps }) => {
             _.remove(tagsCopy, (tag) => tag === value);
             setPostValue("tags", tagsCopy);
           }}
+          mediaLocationPath={["post", id, "splash-" + _.kebabCase(dataPost.title)]}
           {...dataPost}
         />
         <StyledDivider />
@@ -118,6 +120,11 @@ const Create = ({ query, post, steps }) => {
               onChangeBody={(value) => setStepsValue("steps." + index + ".body", value)}
               onChangeTitle={(value) => setStepsValue("steps." + index + ".title", value)}
               onChangeImage={(value) => setStepsValue("steps." + index + ".media.imageURI", value)}
+              mediaLocationPath={[
+                "post",
+                id,
+                _.kebabCase(dataPost.title) + "_step-" + (index + 1) + "_" + _.kebabCase(dataStep.title || "image"),
+              ]}
               {...dataStep}
             />
             <StyledDivider />

@@ -21,6 +21,7 @@ const PostEditable = ({
   media = {},
   tags = [],
   prerequisites = [],
+  mediaLocationPath = [],
   category,
   onChangeTitle,
   onChangeBody,
@@ -119,7 +120,7 @@ const PostEditable = ({
             title={<TextField fullWidth label="Title" value={title} onChange={(e) => onChangeTitle(e.target.value)} />}
             // subheader="September 14, 2016"
           />
-          <MediaEditable onChangeImage={onChangeImage} media={media} />
+          <MediaEditable onChangeImage={onChangeImage} media={media} locationPath={mediaLocationPath} />
           <CardContent>
             <Stack spacing={2}>
               <TextField

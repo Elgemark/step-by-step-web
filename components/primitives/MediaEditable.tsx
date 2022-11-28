@@ -8,6 +8,7 @@ import { usePaste } from "../../utils/imageUtils";
 import { useUploadFileAsBlob } from "../../utils/firebase/api";
 import styled from "styled-components";
 import OpenDialog from "./OpenDialog";
+import { CircularProgress } from "@mui/material";
 
 const StyledCardMediaContainer = styled.div`
   position: relative;
@@ -38,7 +39,7 @@ const StyledCardMedia = styled(CardMedia)`
 
 const MediaEditable = ({ locationPath = [], media = {}, onChangeImage }) => {
   const { imageURI, blob, onPaste } = usePaste();
-  const { upload, downloadURL } = useUploadFileAsBlob(locationPath);
+  const { upload, downloadURL, isLoading } = useUploadFileAsBlob(locationPath);
   const [emptyrStr, setEmptyStr] = useState("");
 
   useEffect(() => {
@@ -61,20 +62,26 @@ const MediaEditable = ({ locationPath = [], media = {}, onChangeImage }) => {
 
   return (
     <StyledCardMediaContainer onPaste={onPaste} hasImage={downloadURL || imageURI || media.imageURI}>
-      <StyledCardMedia component="img" height="300" image={downloadURL || imageURI || media.imageURI} />
-      <TextField
-        size="small"
-        className="paste"
-        label="Paste image here..."
-        value={emptyrStr}
-        onChange={() => setEmptyStr("")}
-        onPaste={onPaste}
-      />
-      <OpenDialog onFileSelected={onFileSelectedHandler}>
-        <IconButton className="select-file" aria-label="browse">
-          <FolderOpenIcon />
-        </IconButton>
-      </OpenDialog>
+      {isLoading ? (
+        <CircularProgress />
+      ) : (
+        <>
+          <StyledCardMedia component="img" height="300" image={downloadURL || imageURI || media.imageURI} />
+          <TextField
+            size="small"
+            className="paste"
+            label="Paste image here..."
+            value={emptyrStr}
+            onChange={() => setEmptyStr("")}
+            onPaste={onPaste}
+          />
+          <OpenDialog onFileSelected={onFileSelectedHandler}>
+            <IconButton className="select-file" aria-label="browse">
+              <FolderOpenIcon />
+            </IconButton>
+          </OpenDialog>
+        </>
+      )}
     </StyledCardMediaContainer>
   );
 };

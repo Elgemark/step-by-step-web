@@ -282,7 +282,7 @@ export const useGetCategories = () => {
 
 // ::: MISC
 
-export const useUploadImage = (...locationPath) => {
+export const useUploadImage = (locationPath = []) => {
   const [result, setResult] = useState();
   const [error, setError] = useState();
   const [complete, setComplete] = useState(false);
@@ -330,21 +330,27 @@ export const useUploadImage = (...locationPath) => {
   return { progress, complete, error, result, downloadURL, upload };
 };
 
-export const useUploadFileAsBlob = (...locationPath) => {
+export const useUploadFileAsBlob = (locationPath = [], imageSize = "1024x1024") => {
   const [result, setResult] = useState();
+  const [isLoading, setIsLoading] = useState();
   const [downloadURL, setDownloadURL] = useState(0);
 
   const upload = async (blob) => {
+    setIsLoading(true);
     const auth = getAuth();
     const userId = auth.currentUser.uid;
     const pathArr = ["users", userId, ...locationPath].join("/");
     const fileRef = ref(getStorage(), pathArr);
     const _result = await uploadBytes(fileRef, blob);
-    const url = await getDownloadURL(fileRef);
+
+    const url = await getDownloadURL(fileRef.url);
+    debugger;
     setResult(_result);
-    setDownloadURL(url);
-    return { url, downloadURL };
+    const newDownloadUrl = imageSize ? url + "_" + imageSize : url;
+    setDownloadURL(newDownloadUrl);
+    setIsLoading(false);
+    return { url: newDownloadUrl, downloadURL: newDownloadUrl };
   };
 
-  return { upload, result, downloadURL };
+  return { upload, result, isLoading, downloadURL };
 };

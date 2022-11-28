@@ -7,7 +7,16 @@ import { red } from "@mui/material/colors";
 import TextField from "@mui/material/TextField";
 import MediaEditable from "../primitives/MediaEditable";
 
-const StepEditable = ({ index, title, body, media = {}, onChangeTitle, onChangeBody, onChangeImage }) => {
+const StepEditable = ({
+  mediaLocationPath,
+  index,
+  title,
+  body,
+  media = {},
+  onChangeTitle,
+  onChangeBody,
+  onChangeImage,
+}) => {
   return (
     <Card>
       <CardHeader
@@ -26,7 +35,7 @@ const StepEditable = ({ index, title, body, media = {}, onChangeTitle, onChangeB
           />
         }
       />
-      <MediaEditable onChangeImage={onChangeImage} media={media} />
+      <MediaEditable onChangeImage={onChangeImage} media={media} locationPath={mediaLocationPath} />
       <CardContent>
         <TextField
           fullWidth
