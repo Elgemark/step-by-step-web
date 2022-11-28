@@ -64,13 +64,11 @@ export const searchPosts = async (tags = [], category, limit = 10) => {
   return data;
 };
 
-export const setPostAndSteps = async (post, steps) => {
+export const setPostAndSteps = async (id, post, steps) => {
   const auth = getAuth();
   const userId = auth.currentUser.uid;
   const firebase = getFirestore();
   const batch = writeBatch(firebase);
-  // Create id if missing...
-  const id = steps.id || uuidv4();
   // Set the value of 'posts'
   const postsRef = doc(firebase, "posts", id);
   const postData = { ...post, id, userId };
@@ -113,11 +111,10 @@ export const deletePost = async (id) => {
 };
 
 // ::: STEPS
-export const setSteps = async (data) => {
+export const setSteps = async (id, data) => {
   const firebase = getFirestore();
   const result = {};
   try {
-    const id = data.id || uuidv4();
     result.response = await setDoc(doc(firebase, "posts", id, "steps", id), data);
     result.data = { ...data, id };
     result.id = id;

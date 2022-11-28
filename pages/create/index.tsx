@@ -12,10 +12,11 @@ import { getPost, getSteps, setPostAndSteps } from "../../utils/firebase/api";
 import _ from "lodash";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import * as dataModels from "../../utils/firebase/models";
 import { toSanitizedArray } from "../../utils/stringUtils";
+import { v4 as uuid } from "uuid";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -41,13 +42,22 @@ const StyledBottomBar = styled.div`
   justify-content: center;
 `;
 
-const Create = ({ post, steps }) => {
+const Create = ({ query, post, steps }) => {
   const router = useRouter();
+  const [id, setId] = useState(query?.id);
   const [successMessage, setSuccessMessage] = useState();
   // post object:
   const { object: dataPost, setValue: setPostValue, replace: replacePost } = useStateObject(post);
   // step object: {title: "Title",body: "Description",media: { imageURI: "" }}
   const { object: dataSteps, setValue: setStepsValue, replace: replaceSteps } = useStateObject(steps);
+
+  useEffect(() => {
+    if (!id) {
+      const newId = uuid();
+      router.replace(`/create?id=${newId}`);
+      setId(newId);
+    }
+  }, [id]);
 
   const onClickAddStepHandler = () => {
     const steps = [...dataSteps.steps];
@@ -56,7 +66,7 @@ const Create = ({ post, steps }) => {
   };
 
   const onClickSaveHandler = async () => {
-    const resp = await setPostAndSteps(dataPost, dataSteps);
+    const resp = await setPostAndSteps(id, dataPost, dataSteps);
     // Update internal states...
     resp.postData && replacePost(resp.postData);
     resp.stepsData && replaceSteps(resp.stepsData);
@@ -145,6 +155,7 @@ export async function getServerSideProps({ query }) {
     props: {
       post: post?.data || dataModels.post,
       steps: steps?.data || dataModels.steps,
+      query,
     },
   };
 }
