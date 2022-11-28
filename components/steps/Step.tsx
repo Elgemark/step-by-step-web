@@ -12,6 +12,7 @@ const StyledCardMedia = styled(CardMedia)`
 `;
 
 const Step = ({ index, title, body, media = {}, className, ...props }) => {
+  console.log("media", media);
   return (
     <Card {...props} className={className}>
       <CardHeader

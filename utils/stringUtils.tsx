@@ -15,3 +15,8 @@ export const toSanitizedArray = (str: string, tags = [], maxLength = 5) => {
   // Trim to max length
   return newTags.slice(0, maxLength);
 };
+
+export const parseURL = (url) => {
+  const urlArr = url.split("?");
+  return { base: urlArr[0], query: urlArr[1] };
+};

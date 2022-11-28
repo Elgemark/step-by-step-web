@@ -342,14 +342,13 @@ export const useUploadFileAsBlob = (locationPath = [], imageSize = "1024x1024") 
     const pathArr = ["users", userId, ...locationPath].join("/");
     const fileRef = ref(getStorage(), pathArr);
     const _result = await uploadBytes(fileRef, blob);
-
-    const url = await getDownloadURL(fileRef.url);
-    debugger;
+    const receivedURL = await getDownloadURL(fileRef);
+    const url = imageSize ? receivedURL.replace("?", `_${imageSize}?`) : receivedURL;
+    // set results
     setResult(_result);
-    const newDownloadUrl = imageSize ? url + "_" + imageSize : url;
-    setDownloadURL(newDownloadUrl);
+    setDownloadURL(url);
     setIsLoading(false);
-    return { url: newDownloadUrl, downloadURL: newDownloadUrl };
+    return { url: url, downloadURL: url };
   };
 
   return { upload, result, isLoading, downloadURL };
