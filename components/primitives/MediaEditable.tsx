@@ -38,7 +38,7 @@ const StyledCardMedia = styled(CardMedia)`
 `;
 
 const MediaEditable = ({ locationPath = [], media = {}, onChangeImage }) => {
-  const { blob, imageURI, onPaste } = usePaste();
+  const { blob, onPaste } = usePaste();
   const { upload, isLoading } = useUploadFileAsBlob(locationPath);
   const [emptyrStr, setEmptyStr] = useState("");
 
@@ -61,12 +61,12 @@ const MediaEditable = ({ locationPath = [], media = {}, onChangeImage }) => {
   };
 
   return (
-    <StyledCardMediaContainer onPaste={onPaste} hasImage={imageURI || media.imageURI}>
+    <StyledCardMediaContainer onPaste={onPaste} hasImage={media?.imageURI}>
       {isLoading ? (
         <CircularProgress />
       ) : (
         <>
-          <StyledCardMedia component="img" height="300" image={imageURI || media.imageURI} />
+          <StyledCardMedia component="img" height="300" image={media?.imageURI} />
           <TextField
             size="small"
             className="paste"

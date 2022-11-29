@@ -4,6 +4,7 @@ export const usePaste = () => {
   const [imageURI, setImageURI] = useState();
   const [file, setFile] = useState();
   const [blob, setBlob] = useState();
+  const [result, setResult] = useState();
   const [isLoading, setIsLoading] = useState();
 
   const onPaste = (e) => {
@@ -22,7 +23,8 @@ export const usePaste = () => {
       var blob = file.getRawFile();
       setBlob(blob);
       var reader = new FileReader();
-      reader.onload = (ev) => {
+      reader.onloadend = (ev) => {
+        setResult(ev.target.result);
         setImageURI(ev.target.result);
         setIsLoading(false);
       };
@@ -33,5 +35,5 @@ export const usePaste = () => {
     }
   };
 
-  return { onPaste, imageURI, blob, file, isLoading };
+  return { onPaste, imageURI, blob, result, file, isLoading };
 };

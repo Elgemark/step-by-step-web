@@ -1,6 +1,6 @@
 import { useRef } from "react";
 
-const OpenDialog = ({ children, onFileSelected, ...props }) => {
+const OpenDialog = ({ children, accept = "image/png, image/jpeg", onFileSelected, ...props }) => {
   const inputRef = useRef();
 
   const onClickHandler = (e) => {
@@ -17,7 +17,14 @@ const OpenDialog = ({ children, onFileSelected, ...props }) => {
   return (
     <div onClick={onClickHandler} {...props}>
       {children}
-      <input type="file" id="file" onChange={onChangeHandler} ref={inputRef} style={{ display: "none" }} />
+      <input
+        type="file"
+        id="file"
+        accept={accept}
+        onChange={onChangeHandler}
+        ref={inputRef}
+        style={{ display: "none" }}
+      />
     </div>
   );
 };
