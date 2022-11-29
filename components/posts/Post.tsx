@@ -14,18 +14,19 @@ import Badge from "@mui/material/Badge";
 import { useIsPostLikedByUser } from "../../utils/firebase/api";
 import styled from "styled-components";
 import TablePrerequisites from "../TablePrerequisites";
+import PropTypes from "prop-types";
 
 const StyledCardMedia = styled(CardMedia)`
-  object-fit: contain;
+  object-fit: cover;
 `;
 
 const Post = ({
   title = "Title",
   descr = "Body",
-  prerequisites = [],
-  media = {},
   userId,
   id,
+  prerequisites = [],
+  media = { imageURI: "" },
   minWidth = 320,
   likes = 0,
   onEdit,
@@ -60,7 +61,7 @@ const Post = ({
       <CardActions disableSpacing>
         <IconButton aria-label="like" onClick={onLike}>
           <Badge badgeContent={likes} color="success">
-            <FavoriteIcon color={isLikedByUser ? "warning" : ""} />
+            <FavoriteIcon color={isLikedByUser ? "warning" : "inherit"} />
           </Badge>
         </IconButton>
         <IconButton aria-label="share">
@@ -69,6 +70,15 @@ const Post = ({
       </CardActions>
     </Card>
   );
+};
+
+Post.propTypes = {
+  userId: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
+  onEdit: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  onReport: PropTypes.func.isRequired,
+  onLike: PropTypes.func.isRequired,
 };
 
 export default Post;

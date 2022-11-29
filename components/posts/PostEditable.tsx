@@ -14,6 +14,13 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import AddText from "../primitives/AddText";
 import TablePrerequisites from "../TablePrerequisites";
 import _ from "lodash";
+import styled from "styled-components";
+
+const StyledMediaEditable = styled(MediaEditable)`
+  img {
+    object-fit: cover;
+  }
+`;
 
 const PostEditable = ({
   title,
@@ -120,7 +127,7 @@ const PostEditable = ({
             title={<TextField fullWidth label="Title" value={title} onChange={(e) => onChangeTitle(e.target.value)} />}
             // subheader="September 14, 2016"
           />
-          <MediaEditable onChangeImage={onChangeImage} media={media} locationPath={mediaLocationPath} />
+          <StyledMediaEditable onChangeImage={onChangeImage} media={media} locationPath={mediaLocationPath} />
           <CardContent>
             <Stack spacing={2}>
               <TextField
