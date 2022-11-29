@@ -6,12 +6,24 @@ import Avatar from "@mui/material/Avatar";
 import { red } from "@mui/material/colors";
 import CardMedia from "@mui/material/CardMedia";
 import styled from "styled-components";
+import { FC } from "react";
 
 const StyledCardMedia = styled(CardMedia)`
   object-fit: contain;
 `;
 
-const Step = ({ index, title, body, media = {}, className, ...props }) => {
+interface Media {
+  imageURI: string;
+}
+
+const Step: FC<{ index: number; title: string; body: string; className: string; media: Media }> = ({
+  index,
+  title,
+  body,
+  media,
+  className,
+  ...props
+}) => {
   return (
     <Card {...props} className={className}>
       <CardHeader
