@@ -132,7 +132,7 @@ const Create = ({ query, post, steps }) => {
           </div>
         ))}
         {/* BUTTONS */}
-        <Fade in={dataPost.title && dataPost.descr && dataPost.media.imageURI}>
+        <Fade in={dataPost.title != undefined && dataPost.descr != undefined && dataPost.media.imageURI != undefined}>
           <StyledBottomBar>
             <ButtonGroup variant="text" aria-label="text button group">
               <Button endIcon={<SaveIcon />} onClick={onClickSaveHandler}>

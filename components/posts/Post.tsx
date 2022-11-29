@@ -74,10 +74,10 @@ const Post = ({
 Post.propTypes = {
   userId: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
-  onEdit: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired,
-  onReport: PropTypes.func.isRequired,
-  onLike: PropTypes.func.isRequired,
+  onEdit: PropTypes.func,
+  onDelete: PropTypes.func,
+  onReport: PropTypes.func,
+  onLike: PropTypes.func,
 };
 
 export default Post;

@@ -6,14 +6,16 @@ import IconButton from "@mui/material/IconButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import Divider from "@mui/material/Divider";
-import ArchiveIcon from "@mui/icons-material/Archive";
-import FileCopyIcon from "@mui/icons-material/FileCopy";
 import FlagIcon from "@mui/icons-material/Flag";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-const StyledMenu = styled((props) => (
+interface Props {
+  open: boolean;
+  onClose: Function;
+  anchorEl: Element;
+  children: React.ReactNode;
+}
+const StyledMenu = styled(({ open = false, onClose, ...props }: Props) => (
   <Menu
     elevation={0}
     anchorOrigin={{
@@ -24,6 +26,7 @@ const StyledMenu = styled((props) => (
       vertical: "top",
       horizontal: "right",
     }}
+    open={open}
     {...props}
   />
 ))(({ theme }) => ({

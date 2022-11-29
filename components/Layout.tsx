@@ -4,7 +4,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import theme from "../config/theme";
 import styled from "styled-components";
-import { FC } from "react";
+import { FC, ReactNode } from "react";
 
 const Root = styled.div`
   display: flex;
@@ -15,17 +15,15 @@ const Content = styled(Box)`
   width: 1024px;
 `;
 
-const Layout: FC<{ children: any; onSearch: Function | undefined; propsTopbar: Object; propsContent: Object }> = ({
-  children,
-  onSearch,
-  propsTopbar,
-  propsContent,
-  ...rest
-}) => {
+const Layout: FC<{
+  propsTopbar?: Object;
+  propsContent?: Object;
+  children?: ReactNode;
+}> = ({ children, propsTopbar, propsContent }) => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Root {...rest}>
+      <Root>
         <TopBar className="top-bar" {...propsTopbar} />
         <Content className="content" {...propsContent}>
           {children}

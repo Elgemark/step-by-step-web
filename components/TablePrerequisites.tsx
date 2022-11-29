@@ -2,8 +2,8 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import IconButton from "@mui/material/IconButton";
 import { Fade, Input, Typography, useTheme } from "@mui/material";
 import styled from "styled-components";
-import PropTypes from "prop-types";
 import Paper from "@mui/material/Paper";
+import { FC } from "react";
 
 interface Item {
   text: string;
@@ -85,7 +85,7 @@ const TablePrerequisitesDefault = ({ items = [], editable = false }) => {
         </thead>
         <tbody>
           {items.map((item: Item, index) => (
-            <Fade in={true}>
+            <Fade in={true} key={`fade-${index}`}>
               <tr key={index}>
                 {/* TEXT */}
                 <th className="column-1">
@@ -104,7 +104,12 @@ const TablePrerequisitesDefault = ({ items = [], editable = false }) => {
   );
 };
 
-const TablePrerequisitesEditable = ({ items = [], onRemove, onEdit, editable = false }) => {
+const TablePrerequisitesEditable: FC<{
+  items: Array<Item>;
+  onRemove: Function | undefined;
+  onEdit: Function | undefined;
+  editable: Boolean;
+}> = ({ items = [], onRemove, onEdit, editable = false }) => {
   const theme = useTheme();
   if (items.length === 0) {
     return <></>;
@@ -129,8 +134,8 @@ const TablePrerequisitesEditable = ({ items = [], onRemove, onEdit, editable = f
         </thead>
         <tbody>
           {items.map((item: Item, index) => (
-            <Fade in={true}>
-              <tr key={index}>
+            <Fade in={true} key={index}>
+              <tr key={`${item.text}-${index}`}>
                 {/* TEXT */}
                 <th className="column-1">
                   <Input value={item.text} onChange={(e) => onEdit({ index, key: "text", value: e.target.value })} />
@@ -158,16 +163,5 @@ const TablePrerequisitesEditable = ({ items = [], onRemove, onEdit, editable = f
     </StyledPaper>
   );
 };
-
-const componentPropTypes = {
-  items: PropTypes.array,
-  onRemove: PropTypes.oneOf([PropTypes.func, undefined]),
-  onEdit: PropTypes.oneOf([PropTypes.func, undefined]),
-  editable: PropTypes.bool,
-};
-
-TablePrerequisites.propTypes = componentPropTypes;
-TablePrerequisitesDefault.propTypes = componentPropTypes;
-TablePrerequisitesEditable.propTypes = componentPropTypes;
 
 export default TablePrerequisites;

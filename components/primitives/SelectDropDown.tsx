@@ -8,8 +8,10 @@ const SelectDropDown = ({ onChange, label, options = [], value = "", ...props })
     <FormControl sx={{ minWidth: 200 }} size="small" {...props}>
       <InputLabel>{label}</InputLabel>
       <Select value={value} label={label} onChange={(e) => onChange(e.target.value)}>
-        {options.map((option) => (
-          <MenuItem value={option}>{option}</MenuItem>
+        {options.map((option, index) => (
+          <MenuItem key={`${option}-${index}`} value={option}>
+            {option}
+          </MenuItem>
         ))}
       </Select>
     </FormControl>

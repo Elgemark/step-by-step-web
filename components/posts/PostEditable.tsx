@@ -38,7 +38,7 @@ const PostEditable = ({
   onChangeCategory,
   onChangePrerequisites,
 }) => {
-  const [tag, setTag] = useState();
+  const [tag, setTag] = useState("");
   const [prereqs, setPrereqs] = useState(prerequisites);
 
   useEffect(() => {
@@ -87,7 +87,6 @@ const PostEditable = ({
               <TextField
                 size="small"
                 fullWidth
-                value={tags.join(" ")}
                 placeholder="Tags"
                 value={tag}
                 onChange={(e) => {
@@ -116,7 +115,7 @@ const PostEditable = ({
         </CardContent>
       </Card>
       {/* POST */}
-      <Collapse in={category && tags.length}>
+      <Collapse in={category && tags.length > 0}>
         <Card>
           <CardHeader
             avatar={

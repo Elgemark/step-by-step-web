@@ -270,14 +270,17 @@ export const getCategories = async () => {
 };
 
 export const useGetCategories = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const [categories, setCategories] = useState([]);
   useEffect(() => {
+    setIsLoading(true);
     getCategories().then((resp) => {
       setCategories(resp.data);
+      setIsLoading(false);
     });
   }, []);
 
-  return categories;
+  return { categories, isLoading };
 };
 
 // ::: MISC
