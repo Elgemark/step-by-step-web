@@ -12,7 +12,6 @@ const StyledCardMedia = styled(CardMedia)`
 `;
 
 const Step = ({ index, title, body, media = {}, className, ...props }) => {
-  console.log("media", media);
   return (
     <Card {...props} className={className}>
       <CardHeader
@@ -21,12 +20,11 @@ const Step = ({ index, title, body, media = {}, className, ...props }) => {
             {index + 1}
           </Avatar>
         }
-        title={<Typography variant="h5">{title}</Typography>}
-        // subheader="September 14, 2016"
+        title={<Typography>{title}</Typography>}
       />
       {media.imageURI && <StyledCardMedia component="img" height="300" image={media.imageURI} />}
       <CardContent>
-        <Typography>{body}</Typography>
+        <Typography variant="body2">{body}</Typography>
       </CardContent>
       <CardActions disableSpacing>
         {/* <IconButton aria-label="save">

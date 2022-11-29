@@ -41,8 +41,7 @@ const Post = ({
       <CardHeader
         avatar={<UserAvatar userId={userId} />}
         action={<PostMoreMenu onEdit={onEdit} onDelete={onDelete} onReport={onReport} />}
-        title={title}
-        subheader="September 14, 2016"
+        title={<Typography>{title}</Typography>}
       />
       <Link
         href={{

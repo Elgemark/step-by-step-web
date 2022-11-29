@@ -89,11 +89,14 @@ const Steps = ({ post, steps }) => {
         {steps.steps.map((step, index) => {
           return (
             <RevealNext
+              id={"step-" + (index + 1)}
               key={"step-" + index}
               open={index < stepIndex}
               showButton={showButton(index)}
               showDone={showDone(index)}
-              onClick={() => setStep(index + 2)}
+              onClick={() => {
+                setStep(index + 2);
+              }}
             >
               <StyledStep {...step} index={index} />
             </RevealNext>

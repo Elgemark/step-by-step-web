@@ -125,6 +125,7 @@ const Create = ({ query, post, steps }) => {
                 id,
                 _.kebabCase(dataPost.title) + "_step-" + (index + 1) + "_" + _.kebabCase(dataStep.title || "image"),
               ]}
+              scrollIntoView={dataSteps.steps.length - 1 === index}
               {...dataStep}
             />
             <StyledDivider />

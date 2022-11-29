@@ -6,6 +6,7 @@ import Avatar from "@mui/material/Avatar";
 import { red } from "@mui/material/colors";
 import TextField from "@mui/material/TextField";
 import MediaEditable from "../primitives/MediaEditable";
+import { useRef, useEffect } from "react";
 
 const StepEditable = ({
   mediaLocationPath,
@@ -16,9 +17,22 @@ const StepEditable = ({
   onChangeTitle,
   onChangeBody,
   onChangeImage,
+  scrollIntoView = false,
 }) => {
+  const ref = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (ref && scrollIntoView) {
+      setTimeout(() => {
+        ref.current.scrollIntoView({
+          behavior: "smooth",
+        });
+      }, 100);
+    }
+  }, [ref, scrollIntoView]);
+
   return (
-    <Card>
+    <Card ref={ref}>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="post">
