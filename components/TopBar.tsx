@@ -21,6 +21,8 @@ const TopBar: FC<{ className: string }> = ({ className, ...props }) => {
         >
           <StepsLogo width={100}></StepsLogo>
         </Button>
+        {/* SPACER */}
+        <div style={{ flexGrow: 1 }} />
         <Typography component="div" />
         {/* CREATE */}
         {user && (
