@@ -2,6 +2,7 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import IconButton from "@mui/material/IconButton";
 import { Fade, Input, Typography, useTheme } from "@mui/material";
 import styled from "styled-components";
+import PropTypes from "prop-types";
 
 interface Item {
   text: string;
@@ -112,6 +113,13 @@ const TablePrerequisites = ({ items = [], onRemove, onEdit, editable = false }) 
       </tbody>
     </StyledTable>
   );
+};
+
+TablePrerequisites.propTypes = {
+  items: PropTypes.array,
+  onRemove: PropTypes.oneOf([PropTypes.func, undefined]),
+  onEdit: PropTypes.oneOf([PropTypes.func, undefined]),
+  editable: PropTypes.bool,
 };
 
 export default TablePrerequisites;
