@@ -3,8 +3,9 @@ import Fab from "@mui/material/Fab";
 import Stack from "@mui/material/Stack";
 import AddIcon from "@mui/icons-material/Add";
 import { useState } from "react";
+import { FC } from "react";
 
-const AddText = ({ onAdd, placeholder, disabled, children }) => {
+const AddText: FC<{ onAdd?: Function; placeholder?: string }> = ({ onAdd, placeholder }) => {
   const [text, setText] = useState("");
 
   const onTextChangeHandler = (e) => {
@@ -26,11 +27,10 @@ const AddText = ({ onAdd, placeholder, disabled, children }) => {
           }
         }}
       />
-      {children}
       <Fab
         sx={{ flexShrink: 0 }}
         size="small"
-        disabled={disabled || !text}
+        disabled={text === ""}
         onClick={() => {
           onAdd({ text });
           setText("");

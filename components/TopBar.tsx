@@ -6,7 +6,7 @@ import { getAuth } from "firebase/auth";
 import UserAvatar from "./UserAvatar";
 import { FC } from "react";
 
-const TopBar: FC<{ className: string }> = ({ actions, className, ...props }) => {
+const TopBar: FC<{ className: string }> = ({ className, ...props }) => {
   const [user] = useAuthState(getAuth());
   const router = useRouter();
 

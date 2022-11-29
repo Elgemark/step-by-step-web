@@ -39,7 +39,7 @@ const Post = ({
   return (
     <Card sx={{ minWidth: minWidth }} onClick={() => {}}>
       <CardHeader
-        avatar={<UserAvatar userId={userId} />}
+        avatar={<UserAvatar />}
         action={<PostMoreMenu onEdit={onEdit} onDelete={onDelete} onReport={onReport} />}
         title={<Typography>{title}</Typography>}
       />

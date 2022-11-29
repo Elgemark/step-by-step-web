@@ -9,6 +9,7 @@ import { useUploadFileAsBlob } from "../../utils/firebase/api";
 import styled from "styled-components";
 import OpenDialog from "./OpenDialog";
 import { CircularProgress } from "@mui/material";
+import { FC } from "react";
 
 const StyledCardMediaContainer = styled.div`
   position: relative;
@@ -37,7 +38,16 @@ const StyledCardMedia = styled(CardMedia)`
   object-fit: contain;
 `;
 
-const MediaEditable = ({ locationPath = [], media = {}, onChangeImage, ...props }) => {
+interface Media {
+  imageURI?: String;
+}
+
+const MediaEditable: FC<{ locationPath: Array<string>; media: Media; onChangeImage?: Function }> = ({
+  locationPath = [],
+  media = { imageURI: "" },
+  onChangeImage,
+  ...props
+}) => {
   const { blob, onPaste } = usePaste();
   const { upload, isLoading } = useUploadFileAsBlob(locationPath);
   const [emptyrStr, setEmptyStr] = useState("");

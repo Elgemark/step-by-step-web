@@ -45,7 +45,7 @@ const StyledBottomBar = styled.div`
 const Create = ({ query, post, steps }) => {
   const router = useRouter();
   const [id, setId] = useState(query?.id);
-  const [successMessage, setSuccessMessage] = useState();
+  const [successMessage, setSuccessMessage] = useState(null);
   // post object:
   const { object: dataPost, setValue: setPostValue, replace: replacePost } = useStateObject(post);
   // step object: {title: "Title",body: "Description",media: { imageURI: "" }}
@@ -145,8 +145,8 @@ const Create = ({ query, post, steps }) => {
           </StyledBottomBar>
         </Fade>
         {/* SNACKBAR */}
-        <Snackbar open={successMessage} autoHideDuration={6000} onClose={() => setSuccessMessage()}>
-          <Alert onClose={() => setSuccessMessage()} severity="success" sx={{ width: "100%" }}>
+        <Snackbar open={successMessage != null} autoHideDuration={6000} onClose={() => setSuccessMessage(null)}>
+          <Alert onClose={() => setSuccessMessage(null)} severity="success" sx={{ width: "100%" }}>
             {successMessage}
           </Alert>
         </Snackbar>

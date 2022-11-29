@@ -89,8 +89,8 @@ const Steps = ({ post, steps }) => {
         {steps.steps.map((step, index) => {
           return (
             <RevealNext
-              id={"step-" + (index + 1)}
               key={"step-" + index}
+              label="Next"
               open={index < stepIndex}
               showButton={showButton(index)}
               showDone={showDone(index)}

@@ -38,7 +38,6 @@ const Profile = ({ user, onChangeAlias }) => {
           <UserAvatar />
           <Stack gap={2} direction="row">
             <TextField
-              dense
               value={alias}
               placeholder="Change alias"
               onChange={(e) => {
