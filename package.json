@@ -12,12 +12,12 @@
     "@mui/lab": "^5.0.0-alpha.107",
     "@mui/material": "^5.10.13",
     "firebase": "^9.13.0",
+    "firebaseui": "^6.0.2",
     "lodash": "^4.17.21",
     "next": "latest",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-firebase-hooks": "^5.1.0",
-    "react-firebaseui": "^6.0.0",
     "styled-components": "^5.3.6",
     "uuid": "^9.0.0"
   },

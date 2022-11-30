@@ -1,15 +1,15 @@
+import { useEffect, FC, useCallback } from "react";
 import Head from "next/head";
-import { useRouter } from "next/router";
-// Firebase related
-import { useAuthState } from "react-firebase-hooks/auth";
-import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
-import firebase from "firebase/compat/app";
-import "firebase/compat/auth";
-import { getAuth } from "firebase/auth";
-import { config as uiConfig } from "../../config/firebaseAuthUI";
 import Layout from "../../components/Layout";
 import styled from "styled-components";
 import { CircularProgress } from "@mui/material";
+// Firebase related
+import { useAuthState } from "react-firebase-hooks/auth";
+import { getAuth } from "firebase/auth";
+import firebase from "firebase/compat/app";
+import { config as uiConfig } from "../../config/firebaseAuthUI";
+// CSS
+import "firebaseui/dist/firebaseui.css";
 
 const StyledContainer = styled.div`
   height: calc(100vh - 50%);
@@ -19,11 +19,25 @@ const StyledContainer = styled.div`
   align-items: center;
 `;
 
-const LogIn = ({ res }) => {
-  const [user, loading, error] = useAuthState(getAuth());
+interface Props {
+  firebaseClient: typeof firebase;
+  config: firebaseui.auth.Config;
+}
 
-  if (loading) {
-  }
+const LogIn: FC<Props> = ({ firebaseClient, config }) => {
+  const [loading] = useAuthState(getAuth());
+
+  const loadFirebaseui = useCallback(async () => {
+    const firebaseui = await import("firebaseui");
+    const firebaseUi = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(getAuth());
+    firebaseUi.start(".firebaseui-auth-container", uiConfig(firebase));
+  }, [firebaseClient, config]);
+
+  useEffect(() => {
+    if (!loading) {
+      loadFirebaseui();
+    }
+  }, [loading]);
 
   return (
     <>
@@ -33,15 +47,11 @@ const LogIn = ({ res }) => {
       <Layout>
         <StyledContainer>
           {loading && <CircularProgress />}
-          {!loading && <StyledFirebaseAuth uiConfig={uiConfig(firebase)} firebaseAuth={getAuth()} />}
+          <div className="firebaseui-auth-container" />
         </StyledContainer>
       </Layout>
     </>
   );
 };
-
-export async function getServerSideProps({ query }) {
-  return { props: { res: query } };
-}
 
 export default LogIn;
