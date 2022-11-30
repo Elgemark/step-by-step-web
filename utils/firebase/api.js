@@ -251,7 +251,12 @@ export const useIsPostLikedByUser = (postId) => {
       })
       .catch((error) => {});
   }, [postId]);
-  return isLiked;
+
+  const toggle = () => {
+    setIsLiked(!isLiked);
+    return !isLiked;
+  };
+  return { isLiked, toggle };
 };
 
 // ::: CATEGORIES

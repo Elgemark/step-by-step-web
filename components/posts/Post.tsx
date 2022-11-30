@@ -15,6 +15,7 @@ import { useIsPostLikedByUser } from "../../utils/firebase/api";
 import styled from "styled-components";
 import TablePrerequisites from "../TablePrerequisites";
 import PropTypes from "prop-types";
+import { useState } from "react";
 
 const StyledCardMedia = styled(CardMedia)`
   object-fit: cover;
@@ -34,7 +35,15 @@ const Post = ({
   onReport,
   onLike,
 }) => {
-  const isLikedByUser = useIsPostLikedByUser(id);
+  const [numLikes, setNumLikes] = useState(likes);
+
+  const { isLiked, toggle } = useIsPostLikedByUser(id);
+
+  const onLikeHandler = () => {
+    setNumLikes(numLikes + (isLiked ? -1 : 1));
+    toggle();
+    onLike();
+  };
 
   return (
     <Card sx={{ minWidth: minWidth }} onClick={() => {}}>
@@ -58,9 +67,9 @@ const Post = ({
         <TablePrerequisites items={prerequisites} />
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="like" onClick={onLike}>
-          <Badge badgeContent={likes} color="success">
-            <FavoriteIcon color={isLikedByUser ? "warning" : "inherit"} />
+        <IconButton aria-label="like" onClick={onLikeHandler}>
+          <Badge badgeContent={numLikes} color="success">
+            <FavoriteIcon color={isLiked ? "warning" : "inherit"} />
           </Badge>
         </IconButton>
         <IconButton aria-label="share">
