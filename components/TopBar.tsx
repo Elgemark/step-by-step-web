@@ -4,9 +4,9 @@ import StepsLogo from "./primitives/StepsLogo";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
 import UserAvatar from "./UserAvatar";
-import { FC } from "react";
+import { FC, ReactNode } from "react";
 
-const TopBar: FC<{ className: string }> = ({ className, ...props }) => {
+const TopBar: FC<{ className?: string; actions?: ReactNode }> = ({ className, actions, ...props }) => {
   const [user] = useAuthState(getAuth());
   const router = useRouter();
 
@@ -22,7 +22,7 @@ const TopBar: FC<{ className: string }> = ({ className, ...props }) => {
           <StepsLogo width={100}></StepsLogo>
         </Button>
         {/* SPACER */}
-        <div style={{ flexGrow: 1 }} />
+        <div style={{ flexGrow: 1 }}>{actions}</div>
         <Typography component="div" />
         {/* CREATE */}
         {user && (

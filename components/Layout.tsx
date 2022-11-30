@@ -19,11 +19,11 @@ const Layout: FC<{
   propsTopbar?: Object;
   propsContent?: Object;
   children?: ReactNode;
-}> = ({ children, propsTopbar, propsContent }) => {
+}> = ({ children, propsTopbar, propsContent, ...props }) => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Root>
+      <Root {...props}>
         <TopBar className="top-bar" {...propsTopbar} />
         <Content className="content" {...propsContent}>
           {children}
