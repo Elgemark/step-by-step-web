@@ -8,6 +8,8 @@ import Masonry from "@mui/lab/Masonry";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import { styled, alpha } from "@mui/material/styles";
+import { useState } from "react";
+import Dialog from "./primitives/Dialog";
 // Firebase related
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
@@ -63,6 +65,7 @@ const StyledSearchBar = styled(Stack)(({ theme }) => ({
 }));
 
 const PageMain = ({ posts = [], category, title }) => {
+  const [showDialog, setShowDialog] = useState({ open: false, content: "", onOkClick: () => {} });
   const [user] = useAuthState(getAuth());
   const { set: setQuery } = useDebouncedQuery(1000);
   const router = useRouter();
@@ -71,8 +74,13 @@ const PageMain = ({ posts = [], category, title }) => {
     router.push("/create?id=" + id);
   };
 
-  const onDeleteHandler = async ({ id }) => {
-    await deletePost(id);
+  const onDeleteHandler = ({ id }) => {
+    setShowDialog({
+      ...showDialog,
+      open: true,
+      content: "Are you sure you want to delete this post?",
+      onOkClick: () => deletePost(id),
+    });
   };
 
   const onLikeHandler = async ({ id }) => {
@@ -131,6 +139,17 @@ const PageMain = ({ posts = [], category, title }) => {
             />
           ))}
         </Masonry>
+        {/* DELETE DIALOG */}
+        <Dialog
+          open={showDialog.open}
+          onClose={() => setShowDialog({ ...showDialog, open: false })}
+          onClickOk={() => {
+            showDialog.onOkClick();
+            setShowDialog({ ...showDialog, open: false });
+          }}
+          onClickCancel={() => setShowDialog({ ...showDialog, open: false })}
+          content={showDialog.content}
+        />
       </Layout>
     </>
   );

@@ -6,7 +6,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { FC } from "react";
 
-const Dialogen: FC<{
+const Dialog: FC<{
   open?: boolean;
   title?: string;
   content: string;
@@ -48,4 +48,4 @@ const Dialogen: FC<{
   );
 };
 
-export default Dialogen;
+export default Dialog;

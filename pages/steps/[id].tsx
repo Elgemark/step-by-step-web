@@ -15,12 +15,6 @@ import { v4 as uuid } from "uuid";
 import Dialog from "../../components/primitives/Dialog";
 import { useState } from "react";
 
-interface ShowDialog {
-  open: boolean;
-  onOkClick: Function;
-  content: string;
-}
-
 const StyledLayout = styled(Layout)`
   display: flex;
   justify-content: center;
