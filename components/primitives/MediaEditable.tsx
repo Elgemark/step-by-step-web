@@ -52,6 +52,8 @@ const MediaEditable: FC<{ locationPath: Array<string>; media: Media; onChangeIma
   const { upload, isLoading } = useUploadFileAsBlob(locationPath);
   const [emptyrStr, setEmptyStr] = useState("");
 
+  console.log("media", media);
+
   useEffect(() => {
     if (blob) {
       upload(blob).then((e) => {

@@ -12,6 +12,14 @@ import { getAuth } from "firebase/auth";
 import StepsProgress from "../../components/StepsProgress";
 import { useRouter } from "next/router";
 import { v4 as uuid } from "uuid";
+import Dialog from "../../components/primitives/Dialog";
+import { useState } from "react";
+
+interface ShowDialog {
+  open: boolean;
+  onOkClick: Function;
+  content: string;
+}
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -37,6 +45,7 @@ const StyledStepsProgress = styled(StepsProgress)`
 `;
 
 const Steps = ({ post, steps }) => {
+  const [showDialog, setShowDialog] = useState({ open: false, content: "", onOkClick: () => {} });
   const router = useRouter();
   const [user] = useAuthState(getAuth());
   const { step: stepIndex, setStep } = useUserStepsProgress(user?.uid, steps?.id);
@@ -47,8 +56,13 @@ const Steps = ({ post, steps }) => {
     router.push("/create?id=" + id);
   };
 
-  const onDeleteHandler = async ({ id }) => {
-    await deletePost(id);
+  const onDeleteHandler = ({ id }) => {
+    setShowDialog({
+      ...showDialog,
+      open: true,
+      content: "Are you sure you want to delete this post?",
+      onOkClick: () => deletePost(id),
+    });
   };
 
   const onLikeHandler = async ({ id }) => {
@@ -103,6 +117,17 @@ const Steps = ({ post, steps }) => {
           );
         })}
       </StyledLayout>
+      {/* DELETE DIALOG */}
+      <Dialog
+        open={showDialog.open}
+        onClose={() => setShowDialog({ ...showDialog, open: false })}
+        onClickOk={() => {
+          showDialog.onOkClick();
+          setShowDialog({ ...showDialog, open: false });
+        }}
+        onClickCancel={() => setShowDialog({ ...showDialog, open: false })}
+        content={showDialog.content}
+      />
     </>
   );
 };
