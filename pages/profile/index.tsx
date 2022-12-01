@@ -64,6 +64,7 @@ const Loading = () => {
 const Profile = ({ user, onChangeAlias }) => {
   const [signOut, signOutLoading, signOutError] = useSignOut(getAuth());
   const [alias, setAlias] = useState(user?.displayName || "Anonymous");
+  // tab menu...
   const [value, setValue] = useState(0);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {

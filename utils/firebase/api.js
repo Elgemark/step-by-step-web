@@ -39,7 +39,15 @@ export const setUser = async (currentUser) => {
   }
 };
 
+export const updateUser = async (uid, data) => {
+  const firebase = getFirestore();
+  const userRef = doc(firebase, "users", uid);
+  return await updateDoc(userRef, data);
+};
+
 export const getUser = async () => {
+  const firebase = getFirestore();
+  const auth = getAuth();
   const { uid } = auth.currentUser;
   const userRef = doc(firebase, "users", uid);
   const userProfile = await getDoc(userRef);
@@ -48,6 +56,30 @@ export const getUser = async () => {
   } else {
     return { error: { message: "User not found!" }, uid };
   }
+};
+
+export const useUser = () => {
+  const { object: user, setValue: update, replace } = useStateObject();
+  const [isLoading, setIsLoading] = useState();
+  const [error, setError] = useState();
+
+  useEffect(() => {
+    setIsLoading(true);
+    getUser()
+      .then((res) => {
+        replace(res);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        setError(error);
+      });
+  }, []);
+
+  const save = async () => {
+    return await updateUser(user.id, user);
+  };
+
+  return { user, isLoading, error, update, save };
 };
 
 // ::: POSTS

@@ -9,7 +9,7 @@ import FlagIcon from "@mui/icons-material/Flag";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Menu from "./primitives/Menu";
 
-const PostMoreMenu = ({ onEdit, onDelete, onReport }) => {
+const ProfileMoreMenu = ({ onEdit }) => {
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -41,45 +41,19 @@ const PostMoreMenu = ({ onEdit, onDelete, onReport }) => {
         theme={theme}
       >
         {/* EDIT */}
-        {onEdit && (
-          <MenuItem
-            onClick={() => {
-              onEdit();
-              handleClose();
-            }}
-            disableRipple
-          >
-            <EditIcon />
-            Edit
-          </MenuItem>
-        )}
-        {/* DELETE */}
-        {onDelete && (
-          <MenuItem
-            onClick={() => {
-              onDelete();
-              handleClose();
-            }}
-            disableRipple
-          >
-            <DeleteIcon />
-            Delete
-          </MenuItem>
-        )}
-        <Divider sx={{ my: 0.5 }} />
         <MenuItem
           onClick={() => {
-            onReport();
+            onEdit();
             handleClose();
           }}
           disableRipple
         >
-          <FlagIcon />
-          Report
+          <EditIcon />
+          Edit
         </MenuItem>
       </Menu>
     </>
   );
 };
 
-export default PostMoreMenu;
+export default ProfileMoreMenu;
