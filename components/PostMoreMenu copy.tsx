@@ -1,6 +1,5 @@
 import * as React from "react";
-import { alpha, useTheme } from "@mui/material/styles";
-import styled from "styled-components";
+import { styled, alpha } from "@mui/material/styles";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
@@ -16,27 +15,45 @@ interface Props {
   anchorEl: Element;
   children: React.ReactNode;
 }
-
-const StyledMenu = styled(Menu)`
-  border-radius: 6;
-  margin-top: ${({ theme }) => theme.spacing(1)};
-  min-width: 180;
-  color: ${({ theme }) => (theme.palette.mode === "light" ? "rgb(55, 65, 81)" : theme.palette.grey[300])};
-  .MuiMenu-list {
-    padding: "4px 0";
-  }
-  .MuiSvgIcon-root {
-    font-size: 18;
-    color: ${({ theme }) => theme.palette.text.secondary};
-    margin-right: ${({ theme }) => theme.spacing(1.5)};
-  }
-  .MuiSvgIcon-root:active {
-    background-color: ${({ theme }) => alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity)};
-  }
-`;
+const StyledMenu = styled(({ open = false, onClose, ...props }: Props) => (
+  <Menu
+    elevation={0}
+    anchorOrigin={{
+      vertical: "bottom",
+      horizontal: "right",
+    }}
+    transformOrigin={{
+      vertical: "top",
+      horizontal: "right",
+    }}
+    open={open}
+    {...props}
+  />
+))(({ theme }) => ({
+  "& .MuiPaper-root": {
+    borderRadius: 6,
+    marginTop: theme.spacing(1),
+    minWidth: 180,
+    color: theme.palette.mode === "light" ? "rgb(55, 65, 81)" : theme.palette.grey[300],
+    boxShadow:
+      "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
+    "& .MuiMenu-list": {
+      padding: "4px 0",
+    },
+    "& .MuiMenuItem-root": {
+      "& .MuiSvgIcon-root": {
+        fontSize: 18,
+        color: theme.palette.text.secondary,
+        marginRight: theme.spacing(1.5),
+      },
+      "&:active": {
+        backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+      },
+    },
+  },
+}));
 
 const PostMoreMenu = ({ onEdit, onDelete, onReport }) => {
-  const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -51,21 +68,7 @@ const PostMoreMenu = ({ onEdit, onDelete, onReport }) => {
       <IconButton aria-label="more" onClick={handleClick}>
         <MoreVertIcon />
       </IconButton>
-      <StyledMenu
-        elevation={0}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "right",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        theme={theme}
-      >
+      <StyledMenu anchorEl={anchorEl} open={open} onClose={handleClose}>
         {/* EDIT */}
         {onEdit && (
           <MenuItem
