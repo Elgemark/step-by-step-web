@@ -27,7 +27,7 @@ const Loading = () => {
 
 const Profile = ({ user, onChangeAlias }) => {
   const [signOut, signOutLoading, signOutError] = useSignOut(getAuth());
-  const [alias, setAlias] = useState(user?.displayName);
+  const [alias, setAlias] = useState(user?.displayName || "Anonymous");
   return (
     <>
       <Head>
@@ -71,8 +71,6 @@ const LoggedOut = () => {
 const LogIn = ({ res }) => {
   const [user, userLoading, userError] = useAuthState(getAuth());
   const [_, signOutLoading, signOutError] = useSignOut(getAuth());
-
-  console.log("user", user);
 
   const onChangeAliasHandler = (newAlias) => {
     updateProfile(user, { displayName: newAlias });

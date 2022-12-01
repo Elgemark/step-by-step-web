@@ -10,9 +10,11 @@ export const post = {
   userId: null,
   visibility: "draft", // draft || public
 };
-export const user = {
-  role: "user",
+export const userProfile = {
+  roles: ["user"],
   domains: [],
+  avatar: null,
+  alias: null,
 };
 export const steps = { steps: [] };
 export const userStepsProgress = { userId: null, step: 0, completed: false };

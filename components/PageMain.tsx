@@ -64,7 +64,7 @@ const StyledSearchBar = styled(Stack)(({ theme }) => ({
   },
 }));
 
-const PageMain = ({ posts = [], category, title }) => {
+const PageMain = ({ posts = [], category, title, enableLink = false }) => {
   const [showDialog, setShowDialog] = useState({ open: false, content: "", onOkClick: () => {} });
   const [user] = useAuthState(getAuth());
   const { set: setQuery } = useDebouncedQuery(1000);
@@ -119,6 +119,7 @@ const PageMain = ({ posts = [], category, title }) => {
             <Post
               key={index}
               style={{ width: "100%" }}
+              enableLink={enableLink}
               onEdit={
                 user?.uid === data.userId
                   ? () => {

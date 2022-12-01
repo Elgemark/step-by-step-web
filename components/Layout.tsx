@@ -9,6 +9,9 @@ import { FC, ReactNode } from "react";
 const Root = styled.div`
   display: flex;
   justify-content: center;
+  .firebaseui-card-content:nth-child(1) {
+    display: none;
+  }
 `;
 const Content = styled(Box)`
   margin: 80px 10px 0;

@@ -23,6 +23,33 @@ import { v4 as uuidv4 } from "uuid";
 import { useStateObject } from "../object";
 import * as dataModels from "./models";
 
+/// :::USERS
+
+export const setUser = async (currentUser) => {
+  const { uid } = currentUser;
+  const firebase = getFirestore();
+  const userRef = doc(firebase, "users", uid);
+  const userProfile = await getDoc(userRef);
+
+  if (userProfile.exists()) {
+    return { ...userProfile.data(), uid, wasCreated: false };
+  } else {
+    await setDoc(userRef, dataModels.userProfile);
+    return { ...dataModels.userProfile, uid, wasCreated: true };
+  }
+};
+
+export const getUser = async () => {
+  const { uid } = auth.currentUser;
+  const userRef = doc(firebase, "users", uid);
+  const userProfile = await getDoc(userRef);
+  if (userProfile.exists()) {
+    return { ...userProfile.data(), uid };
+  } else {
+    return { error: { message: "User not found!" }, uid };
+  }
+};
+
 // ::: POSTS
 export const getPosts = async (orderBy = "likes", startAt = 0, endAt = 10) => {
   const firebase = getFirestore();

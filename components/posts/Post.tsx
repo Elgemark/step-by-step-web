@@ -16,16 +16,29 @@ import styled from "styled-components";
 import TablePrerequisites from "../TablePrerequisites";
 import PropTypes from "prop-types";
 import { useState } from "react";
+import { CardActionArea } from "@mui/material";
 
 const StyledCardMedia = styled(CardMedia)`
   object-fit: cover;
 `;
 
+const MediaContainer = ({ children, href, enableLink }) => {
+  if (enableLink) {
+    return (
+      <Link href={href}>
+        <CardActionArea>{children}</CardActionArea>
+      </Link>
+    );
+  } else {
+    return children;
+  }
+};
+
 const Post = ({
   title = "Title",
   descr = "Body",
-  userId,
   id,
+  enableLink,
   prerequisites = [],
   media = { imageURI: "" },
   minWidth = 320,
@@ -52,20 +65,24 @@ const Post = ({
         action={<PostMoreMenu onEdit={onEdit} onDelete={onDelete} onReport={onReport} />}
         title={<Typography>{title}</Typography>}
       />
-      <Link
+
+      <MediaContainer
         href={{
           pathname: "/steps/[slug]",
           query: { slug: id },
         }}
+        enableLink={enableLink}
       >
         {media?.imageURI && <StyledCardMedia height="300" component="img" image={media?.imageURI} />}
-      </Link>
+      </MediaContainer>
+
       <CardContent>
         <Typography variant="body2" color="text.secondary">
           {descr}
         </Typography>
         <TablePrerequisites items={prerequisites} />
       </CardContent>
+
       <CardActions disableSpacing>
         <IconButton aria-label="like" onClick={onLikeHandler}>
           <Badge badgeContent={numLikes} color="success">
@@ -83,6 +100,8 @@ const Post = ({
 Post.propTypes = {
   userId: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
+  href: PropTypes.string,
+  enableLink: PropTypes.bool,
   onEdit: PropTypes.func,
   onDelete: PropTypes.func,
   onReport: PropTypes.func,
