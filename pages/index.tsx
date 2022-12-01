@@ -3,7 +3,7 @@ import { toSanitizedArray } from "../utils/stringUtils";
 import PageMain from "../components/PageMain";
 
 export default function IndexPage(props) {
-  return <PageMain {...props} title="STEPS" enableLink />;
+  return <PageMain {...props} title="STEPS" />;
 }
 
 export async function getServerSideProps({ query }) {
