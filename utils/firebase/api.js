@@ -214,7 +214,6 @@ export const setUserStepsProgress = async (uid, id, data) => {
     result.id = uid;
   } catch (error) {
     result.error = error;
-    debugger;
   }
   return result;
 };

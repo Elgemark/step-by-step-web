@@ -12,7 +12,7 @@ const Dialog: FC<{
   content: string;
   labelButtonOk?: string;
   labelButtonCancel?: string;
-  onClose: Function;
+  onClose: (value: string) => void;
   onClickOk: Function;
   onClickCancel: Function;
 }> = ({

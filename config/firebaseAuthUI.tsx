@@ -6,13 +6,11 @@ export const config = (firebase) => {
     signInSuccessUrl: "/",
     tosUrl: "/terms-of-service",
     privacyPolicyUrl: "/privacy-policy",
-
-    signInOptions: [
-      { provider: firebase.auth.EmailAuthProvider.PROVIDER_ID, requireDisplayName: false, shouldDisplayName: false },
-    ],
+    signInOptions: [{ provider: firebase.auth.EmailAuthProvider.PROVIDER_ID, requireDisplayName: false }],
     callbacks: {
-      signInSuccess: (currentUser, credential, redirectUrl) => {
-        setUser(currentUser).then((res) => {
+      signInSuccessWithAuthResult: (authResult) => {
+        const { user } = authResult;
+        setUser(user).then((res) => {
           if (res.wasCreated) {
             window.location.assign(`/profile`);
           } else {
