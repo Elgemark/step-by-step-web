@@ -1,11 +1,10 @@
 import Head from "next/head";
-import { Box, Button, CircularProgress, Stack, TextField } from "@mui/material";
+import { Box, Button, CircularProgress, Typography, Stack, TextField } from "@mui/material";
 import Link from "next/link";
 import Layout from "../../components/Layout";
 import UserAvatar from "../../components/UserAvatar";
 import ProfileCard from "../../components/ProfileCard";
 import { useState } from "react";
-import styled from "styled-components";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { ReactNode } from "react";
@@ -78,7 +77,6 @@ const Profile = ({ user, onChangeAlias }) => {
       </Head>
       <Layout>
         <ProfileCard
-          alias={alias}
           actions={
             <Tabs value={value} onChange={handleTabChange} aria-label="basic tabs example">
               <Tab label="Favourites" {...tabProps(0)} />

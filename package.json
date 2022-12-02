@@ -30,7 +30,10 @@
   "resolutions": {
     "styled-components": "^5"
   },
+  "functions": {
+    "runtime": "nodejs16"
+  },
   "engines": {
-    "node": ">=8"
+    "node": "16"
   }
 }
