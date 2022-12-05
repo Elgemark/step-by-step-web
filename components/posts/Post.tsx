@@ -7,11 +7,13 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
 import PostMoreMenu from "../PostMoreMenu";
 import Link from "next/link";
 import UserAvatar from "../UserAvatar";
 import Badge from "@mui/material/Badge";
-import { useIsPostLikedByUser } from "../../utils/firebase/api";
+import { useLikes, useBookmarks } from "../../utils/firebase/api";
 import styled from "styled-components";
 import TablePrerequisites from "../TablePrerequisites";
 import PropTypes from "prop-types";
@@ -47,15 +49,21 @@ const Post = ({
   onDelete,
   onReport,
   onLike,
+  onBookmark,
 }) => {
   const [numLikes, setNumLikes] = useState(likes);
-
-  const { isLiked, toggle } = useIsPostLikedByUser(id);
+  const { isLiked, toggle: toggleLike } = useLikes(id);
+  const { isBookmarked, toggle: toogleBookmark } = useBookmarks(id);
 
   const onLikeHandler = () => {
     setNumLikes(numLikes + (isLiked ? -1 : 1));
-    toggle();
+    toggleLike();
     onLike();
+  };
+
+  const onBookmarkHandler = () => {
+    toogleBookmark();
+    onBookmark();
   };
 
   return (
@@ -84,13 +92,19 @@ const Post = ({
       </CardContent>
 
       <CardActions disableSpacing>
+        {/* LIKE */}
         <IconButton aria-label="like" onClick={onLikeHandler}>
           <Badge badgeContent={numLikes} color="success">
             <FavoriteIcon color={isLiked ? "warning" : "inherit"} />
           </Badge>
         </IconButton>
+        {/* SHARE */}
         <IconButton aria-label="share">
           <ShareIcon />
+        </IconButton>
+        {/* FAVOURITE */}
+        <IconButton aria-label="like" onClick={onBookmarkHandler}>
+          {isBookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
         </IconButton>
       </CardActions>
     </Card>

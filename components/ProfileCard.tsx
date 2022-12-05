@@ -1,19 +1,34 @@
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
+import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import UserAvatar from "./UserAvatar";
 import ProfileMoreMenu from "./ProfileMoreMenu";
 import { useUser } from "../utils/firebase/api";
 import { useState } from "react";
-import { Button, Stack } from "@mui/material";
+import { Button, Paper, Stack, useTheme } from "@mui/material";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { useSignOut } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
 import { SyntheticEvent } from "react";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
+import CreateIcon from "@mui/icons-material/Create";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import styled from "styled-components";
+
+const StyledPaper = styled(Paper)`
+  padding: ${({ theme }) => theme.spacing(2)};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  hr {
+    width: 100%;
+    margin: ${({ theme }) => theme.spacing(2)};
+  }
+`;
 
 interface ProfileCardProps {
   onTabChange: (event: SyntheticEvent<Element, Event>, value: any) => void;
@@ -28,6 +43,7 @@ const tabProps = (index: number) => {
 };
 
 const ProfileCard = (props: ProfileCardProps) => {
+  const theme = useTheme();
   const [signOut, signOutLoading, signOutError] = useSignOut(getAuth());
   const [edit, setEdit] = useState(false);
   const { data: user, update, save: saveUser, isLoading } = useUser();
@@ -51,34 +67,25 @@ const ProfileCard = (props: ProfileCardProps) => {
   };
 
   return (
-    <Card {...props}>
-      <CardHeader
-        avatar={<UserAvatar />}
-        action={<ProfileMoreMenu onEdit={onEditHandler} onSignOut={onSignOutHandler} />}
-        title={
-          edit ? <TextField fullWidth label="Alias" value={user?.alias} onChange={onChangeAliasHandler} /> : user?.alias
-        }
-      />
-      <CardContent>
+    <StyledPaper theme={theme} {...props}>
+      <Stack spacing={2}>
+        <UserAvatar size={72} />
+        <ProfileMoreMenu onEdit={onEditHandler} onSignOut={onSignOutHandler} />
+        {edit ? <TextField fullWidth label="Alias" value={user?.alias} onChange={onChangeAliasHandler} /> : user?.alias}
         <Typography variant="body2" color="text.secondary">
-          This impressive paella is a perfect party dish and a fun meal to cook together with your guests. Add 1 cup of
-          frozen peas along with the mussels, if you like.
+          {user?.description || "text..."}
         </Typography>
-      </CardContent>
-      <CardActions disableSpacing>
-        <Stack style={{ width: "100%" }} direction={"column"}>
-          <Stack direction={"row"} justifyContent={"right"}>
-            {edit && <Button onClick={onSaveHandler}>Save</Button>}
-          </Stack>
-          <Tabs value={tabValue} onChange={onTabChange} aria-label="basic tabs example">
-            <Tab label="Saved" {...tabProps(0)} value="saved" />
-            <Tab label="Created" {...tabProps(1)} value="created" />
-            <Tab label="Completed" {...tabProps(2)} value="completed" />
-            <Tab label="Incompleted" {...tabProps(3)} value="incompleted" />
-          </Tabs>
-        </Stack>
-      </CardActions>
-    </Card>
+
+        {edit && <Button onClick={onSaveHandler}>Save</Button>}
+      </Stack>
+      <Divider />
+      <Tabs value={tabValue} onChange={onTabChange} aria-label="basic tabs example">
+        <Tab label="Saved" icon={<BookmarkIcon />} {...tabProps(0)} value="saved" />
+        <Tab label="Created" icon={<CreateIcon />} {...tabProps(1)} value="created" />
+        <Tab label="Completed" icon={<CheckCircleIcon />} {...tabProps(2)} value="completed" />
+        <Tab label="Incompleted" {...tabProps(3)} value="incompleted" />
+      </Tabs>
+    </StyledPaper>
   );
 };
 

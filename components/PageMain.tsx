@@ -1,7 +1,7 @@
 import Layout from "../components/Layout";
 import Head from "next/head";
 import { useDebouncedQuery } from "../utils/queryUtils";
-import { deletePost, likePost } from "../utils/firebase/api";
+import { bookmarkPost, deletePost, likePost } from "../utils/firebase/api";
 import Post from "../components/posts/Post";
 import { useRouter } from "next/router";
 import Masonry from "@mui/lab/Masonry";
@@ -87,6 +87,10 @@ const PageMain = ({ posts = [], category, title, enableLink = false }) => {
     await likePost(id);
   };
 
+  const onBookmarkHandler = async ({ id }) => {
+    await bookmarkPost(id);
+  };
+
   const onSearchHandler = (value) => {
     setQuery({ search: value });
   };
@@ -135,6 +139,7 @@ const PageMain = ({ posts = [], category, title, enableLink = false }) => {
                   : undefined
               }
               onLike={() => onLikeHandler(data)}
+              onBookmark={() => onBookmarkHandler(data)}
               {...data}
               prerequisites={[]}
             />

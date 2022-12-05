@@ -8,7 +8,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import Menu from "./primitives/Menu";
 import { FC } from "react";
 
-const ProfileMoreMenu: FC<{ onEdit: Function; onSignOut: Function }> = ({ onEdit, onSignOut }) => {
+const ProfileMoreMenu: FC<{ onEdit: Function; onSignOut: Function }> = ({ onEdit, onSignOut, ...props }) => {
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -21,7 +21,7 @@ const ProfileMoreMenu: FC<{ onEdit: Function; onSignOut: Function }> = ({ onEdit
 
   return (
     <>
-      <IconButton aria-label="more" onClick={handleClick}>
+      <IconButton aria-label="more" onClick={handleClick} {...props}>
         <MoreVertIcon />
       </IconButton>
       <Menu
