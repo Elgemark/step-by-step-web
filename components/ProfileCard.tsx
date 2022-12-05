@@ -17,6 +17,7 @@ import { SyntheticEvent } from "react";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import CreateIcon from "@mui/icons-material/Create";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import UnpublishedIcon from "@mui/icons-material/Unpublished";
 import styled from "styled-components";
 
 const StyledPaper = styled(Paper)`
@@ -83,7 +84,7 @@ const ProfileCard = (props: ProfileCardProps) => {
         <Tab label="Saved" icon={<BookmarkIcon />} {...tabProps(0)} value="saved" />
         <Tab label="Created" icon={<CreateIcon />} {...tabProps(1)} value="created" />
         <Tab label="Completed" icon={<CheckCircleIcon />} {...tabProps(2)} value="completed" />
-        <Tab label="Incompleted" {...tabProps(3)} value="incompleted" />
+        <Tab label="Incompleted" icon={<UnpublishedIcon />} {...tabProps(3)} value="incompleted" />
       </Tabs>
     </StyledPaper>
   );

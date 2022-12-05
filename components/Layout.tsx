@@ -14,8 +14,11 @@ const Root = styled.div`
   }
 `;
 const Content = styled(Box)`
-  margin: 80px 10px 0;
+  margin: 62px 10px 0;
   width: 1024px;
+  @media (min-width: 600px) {
+    margin: 74px 10px 0;
+  }
 `;
 
 const Layout: FC<{
