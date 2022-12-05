@@ -115,37 +115,39 @@ export const getPosts = async (orderBy = "likes", startAt = 0, endAt = 10) => {
   return data;
 };
 
-export const getSavedPosts = async (uid, orderBy = "likes", startAt = 0, endAt = 10) => {
-  let data = [];
+export const getSavedPosts = async (uid, startAt = 0, endAt = 10) => {
+  let error = null;
+  const posts = [];
   const firebase = getFirestore();
   // get saved posts for user
   const bookmarksRef = collection(firebase, "users", uid, "bookmarks");
   const bookmarksQuery = query(bookmarksRef, where("value", "==", 1));
-  let bookmarks = [];
+  let bookmarksIds = [];
   try {
     const bookmarksSnap = await getDocs(bookmarksQuery);
-    if (bookmarksSnap.exists()) {
-      bookmarksSnap.forEach((doc) => {
-        bookmarks.push({ ...doc.data(), id: doc.id });
-      });
-    }
+    bookmarksSnap.forEach((doc) => {
+      bookmarksIds.push(doc.id);
+    });
   } catch (error) {
-    data.error = error;
+    error = error.toString();
   }
 
   //
-  const stepsRef = collection(firebase, "posts");
-  const queryBuild = query(stepsRef, fsOrderBy(orderBy), fsStartAt(startAt), fsEndAt(endAt));
+  if (bookmarksIds.length) {
+    const postsRef = collection(firebase, "posts");
+    const queryBuild = query(postsRef, where("id", "in", bookmarksIds));
 
-  try {
-    const querySnapshot = await getDocs(queryBuild);
-    querySnapshot.forEach((doc) => {
-      data.push({ ...doc.data(), id: doc.id });
-    });
-  } catch (error) {
-    data.error = error;
+    try {
+      const querySnapshot = await getDocs(queryBuild);
+      querySnapshot.forEach((doc) => {
+        posts.push({ ...doc.data(), id: doc.id });
+      });
+    } catch (error) {
+      error = error.toString();
+    }
   }
-  return data;
+
+  return { error, posts, bookmarksIds };
 };
 
 export const searchPosts = async (tags = [], category, limit = 10) => {
