@@ -1,4 +1,4 @@
-import Profile from "./profile";
+import Profile from "./user";
 
 const Index = (props) => {
   return <Profile {...props} tabValue="saved" />;

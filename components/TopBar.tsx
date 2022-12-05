@@ -53,7 +53,7 @@ const TopBar: FC<{ className?: string; actions?: ReactNode }> = ({ className, ac
             aria-label="account of current user"
             aria-controls="menu-appbar"
             onClick={() => {
-              router.push("/profile");
+              router.push("/user");
             }}
             color="inherit"
           >

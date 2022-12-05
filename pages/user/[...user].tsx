@@ -1,4 +1,4 @@
-import Profile from "./profile";
+import Profile from "./user";
 
 const Index = (props) => {
   console.log("props tabValue", props.tabValue);
@@ -6,7 +6,7 @@ const Index = (props) => {
 };
 
 export async function getServerSideProps({ query }) {
-  const tabValue = query.profile[0];
+  const tabValue = query.user[0];
   return { props: { tabValue } };
 }
 

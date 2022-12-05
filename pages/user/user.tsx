@@ -55,7 +55,7 @@ const LoggedIn = ({ user, tabValue, onChangeAlias }) => {
   const router = useRouter();
 
   const onTabChangehandle = (event: React.SyntheticEvent, newValue: string) => {
-    router.push("/profile/" + newValue);
+    router.push("/user/" + newValue);
   };
 
   return (
