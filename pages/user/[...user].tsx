@@ -1,7 +1,6 @@
 import Profile from "./user";
 
 const Index = (props) => {
-  console.log("props tabValue", props.tabValue);
   return <Profile {...props} />;
 };
 
