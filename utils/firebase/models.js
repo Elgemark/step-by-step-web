@@ -13,7 +13,7 @@ export const post = {
 export const userProfile = {
   roles: ["user"],
   domains: [],
-  avatar: null,
+  avatar: null, // url
   alias: null,
 };
 export const steps = { steps: [] };

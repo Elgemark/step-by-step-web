@@ -1,14 +1,14 @@
 import Avatar from "@mui/material/Avatar";
 // Firebase related
-import { useAuthState } from "react-firebase-hooks/auth";
-import { getAuth } from "firebase/auth";
 import { FC } from "react";
+import { useUser } from "../utils/firebase/api";
 
 const UserAvatar: FC<{ size?: number }> = ({ size = 32, ...props }) => {
-  const [user] = useAuthState(getAuth());
+  const { data: user } = useUser();
+
   return (
-    <Avatar alt={user?.displayName} src={user?.photoURL} sx={{ width: size, height: size }} {...props}>
-      {user?.displayName?.charAt(0) || "A"}
+    <Avatar alt={user?.alias} src={user?.avatar} sx={{ width: size, height: size }} {...props}>
+      {user?.alias?.charAt(0) || "A"}
     </Avatar>
   );
 };

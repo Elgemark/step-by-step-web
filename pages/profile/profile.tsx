@@ -1,17 +1,13 @@
 import Head from "next/head";
-import { Box, Button, CircularProgress, Typography, Stack, TextField } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import Link from "next/link";
 import Layout from "../../components/Layout";
-import UserAvatar from "../../components/UserAvatar";
 import ProfileCard from "../../components/ProfileCard";
-import { useState } from "react";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
 import { ReactNode } from "react";
 import { useRouter } from "next/router";
 // Firebase related
 import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
-import { getAuth, updateProfile } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 
 interface TabPanelProps {
   children?: ReactNode;
@@ -19,13 +15,6 @@ interface TabPanelProps {
   value: string;
   tabValue: string;
 }
-
-const tabProps = (index: number) => {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
-};
 
 const TabPanel = (props: TabPanelProps) => {
   const { children, value, tabValue, index, ...other } = props;
@@ -62,48 +51,31 @@ const Loading = () => {
   );
 };
 
-const LoggedIn = ({ user, onChangeAlias }) => {
+const LoggedIn = ({ user, tabValue, onChangeAlias }) => {
   const router = useRouter();
-  const [signOut, signOutLoading, signOutError] = useSignOut(getAuth());
-  const [alias, setAlias] = useState(user?.displayName || "Anonymous");
-  // tab menu...
-  const [value, setValue] = useState("");
 
   const onTabChangehandle = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
-    router.push("/profile/" + newValue, undefined, { shallow: true });
+    router.push("/profile/" + newValue);
   };
 
-  console.log("value", value);
   return (
     <>
       <Head>
         <title>STEPS | Profile</title>
       </Head>
       <Layout>
-        <ProfileCard onTabChange={onTabChangehandle} tabValue={value} />
-        <Stack direction="column" gap={2}>
-          <UserAvatar />
-          <Stack gap={2} direction="row">
-            <TextField
-              value={alias}
-              placeholder="Change alias"
-              onChange={(e) => {
-                setAlias(e.currentTarget.value);
-              }}
-            ></TextField>
-            <Button onClick={() => onChangeAlias(alias)}>Update</Button>
-          </Stack>
-          <Button onClick={signOut}>Sign out</Button>
-        </Stack>
-        <TabPanel value={value} tabValue="favourites" index={0}>
-          Favourits
+        <ProfileCard onTabChange={onTabChangehandle} tabValue={tabValue} />
+        <TabPanel value={tabValue} tabValue="saved" index={0}>
+          Saved
         </TabPanel>
-        <TabPanel value={value} tabValue="my-posts" index={1}>
-          My Posts
+        <TabPanel value={tabValue} tabValue="created" index={1}>
+          Created
         </TabPanel>
-        <TabPanel value={value} tabValue="completed-posts" index={2}>
+        <TabPanel value={tabValue} tabValue="completed" index={2}>
           Completed Posts
+        </TabPanel>
+        <TabPanel value={tabValue} tabValue="incompleted" index={2}>
+          Incompleted Posts
         </TabPanel>
       </Layout>
     </>
@@ -125,20 +97,16 @@ const LoggedOut = () => {
   );
 };
 
-const Profile = ({ res }) => {
+const Profile = (props) => {
   const [user, userLoading, userError] = useAuthState(getAuth());
   const [_, signOutLoading, signOutError] = useSignOut(getAuth());
-
-  const onChangeAliasHandler = (newAlias) => {
-    updateProfile(user, { displayName: newAlias });
-  };
 
   if (userLoading || signOutLoading) {
     return <Loading></Loading>;
   } else if (!user || userError || signOutError) {
     return <LoggedOut />;
   } else {
-    return <LoggedIn user={user} onChangeAlias={onChangeAliasHandler}></LoggedIn>;
+    return <LoggedIn {...props}></LoggedIn>;
   }
 };
 

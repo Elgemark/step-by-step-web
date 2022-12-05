@@ -5,12 +5,10 @@ import IconButton from "@mui/material/IconButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import LogoutIcon from "@mui/icons-material/Logout";
-import Divider from "@mui/material/Divider";
-import FlagIcon from "@mui/icons-material/Flag";
-import DeleteIcon from "@mui/icons-material/Delete";
 import Menu from "./primitives/Menu";
+import { FC } from "react";
 
-const ProfileMoreMenu = ({ onEdit }) => {
+const ProfileMoreMenu: FC<{ onEdit: Function; onSignOut: Function }> = ({ onEdit, onSignOut }) => {
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -52,10 +50,10 @@ const ProfileMoreMenu = ({ onEdit }) => {
           <EditIcon />
           Edit
         </MenuItem>
-        {/* EDIT */}
+        {/* SIGN OUT */}
         <MenuItem
           onClick={() => {
-            onEdit();
+            onSignOut();
             handleClose();
           }}
           disableRipple

@@ -11,11 +11,12 @@ import { useState } from "react";
 import { Button, Stack } from "@mui/material";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
-import { getAuth, updateProfile } from "firebase/auth";
+import { useSignOut } from "react-firebase-hooks/auth";
+import { getAuth } from "firebase/auth";
+import { SyntheticEvent } from "react";
 
 interface ProfileCardProps {
-  onTabChange: Function;
+  onTabChange: (event: SyntheticEvent<Element, Event>, value: any) => void;
   tabValue: string;
 }
 
@@ -29,7 +30,7 @@ const tabProps = (index: number) => {
 const ProfileCard = (props: ProfileCardProps) => {
   const [signOut, signOutLoading, signOutError] = useSignOut(getAuth());
   const [edit, setEdit] = useState(false);
-  const { user, update, save: saveUser, isLoading } = useUser();
+  const { data: user, update, save: saveUser, isLoading } = useUser();
   const { tabValue, onTabChange } = props;
 
   const onEditHandler = () => {
@@ -42,6 +43,7 @@ const ProfileCard = (props: ProfileCardProps) => {
 
   const onSaveHandler = () => {
     setEdit(false);
+    saveUser();
   };
 
   const onChangeAliasHandler = (e) => {
@@ -52,7 +54,7 @@ const ProfileCard = (props: ProfileCardProps) => {
     <Card {...props}>
       <CardHeader
         avatar={<UserAvatar />}
-        action={<ProfileMoreMenu onEdit={onEditHandler} />}
+        action={<ProfileMoreMenu onEdit={onEditHandler} onSignOut={onSignOutHandler} />}
         title={
           edit ? <TextField fullWidth label="Alias" value={user?.alias} onChange={onChangeAliasHandler} /> : user?.alias
         }
@@ -72,7 +74,7 @@ const ProfileCard = (props: ProfileCardProps) => {
             <Tab label="Saved" {...tabProps(0)} value="saved" />
             <Tab label="Created" {...tabProps(1)} value="created" />
             <Tab label="Completed" {...tabProps(2)} value="completed" />
-            <Tab label="In progress" {...tabProps(3)} />
+            <Tab label="Incompleted" {...tabProps(3)} value="incompleted" />
           </Tabs>
         </Stack>
       </CardActions>
