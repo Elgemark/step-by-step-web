@@ -131,8 +131,7 @@ export const getSavedPosts = async (uid, startAt = 0, endAt = 10) => {
   } catch (error) {
     error = error.toString();
   }
-
-  //
+  // Get posts saved by user (if any)
   if (bookmarksIds.length) {
     const postsRef = collection(firebase, "posts");
     const queryBuild = query(postsRef, where("id", "in", bookmarksIds));
@@ -148,6 +147,58 @@ export const getSavedPosts = async (uid, startAt = 0, endAt = 10) => {
   }
 
   return { error, posts, bookmarksIds };
+};
+
+export const getCreatedPosts = async (uid) => {
+  let error = null;
+  const posts = [];
+  //
+  const firebase = getFirestore();
+  const postsRef = collection(firebase, "posts");
+  const queryBuild = query(postsRef, where("userId", "==", uid));
+
+  try {
+    const querySnapshot = await getDocs(queryBuild);
+    querySnapshot.forEach((doc) => {
+      posts.push({ ...doc.data(), id: doc.id });
+    });
+  } catch (error) {
+    error = error.toString();
+  }
+  return { error, posts };
+};
+
+export const getPostsByState = async (uid, state) => {
+  let error = null;
+  const posts = [];
+  const firebase = getFirestore();
+  // get completed posts for user
+  const progressRef = collection(firebase, "users", uid, "progress");
+  const progressQuery = query(progressRef, where("completed", "==", state === "completed"));
+  let postIds = [];
+  try {
+    const docsSnap = await getDocs(progressQuery);
+    docsSnap.forEach((doc) => {
+      postIds.push(doc.id);
+    });
+  } catch (error) {
+    error = error.toString();
+  }
+  // Get posts saved by user (if any)
+  if (postIds.length) {
+    const postsRef = collection(firebase, "posts");
+    const queryBuild = query(postsRef, where("id", "in", postIds));
+    try {
+      const querySnapshot = await getDocs(queryBuild);
+      querySnapshot.forEach((doc) => {
+        posts.push({ ...doc.data(), id: doc.id });
+      });
+    } catch (error) {
+      error = error.toString();
+    }
+  }
+
+  return { error, posts, postIds };
 };
 
 export const searchPosts = async (tags = [], category, limit = 10) => {
@@ -306,7 +357,10 @@ export const useUserStepsProgress = (uid, id) => {
     error,
     setStep: async (index) => {
       setValue("step", index);
-      return await setUserStepsProgress(uid, id, { ...data, step: index });
+      return await setUserStepsProgress(uid, id, {
+        ...data,
+        step: index,
+      });
     },
   };
 };

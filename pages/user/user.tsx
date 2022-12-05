@@ -39,7 +39,7 @@ const LoggedIn = ({ tabValue, uid, posts = [] }) => {
       </Head>
       <Layout>
         <ProfileCard onTabChange={onTabChangehandle} tabValue={tabValue} />
-        <Posts posts={posts} />
+        <Posts posts={posts} enableLink />
       </Layout>
     </>
   );

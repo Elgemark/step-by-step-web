@@ -2,11 +2,19 @@ import Post from "./Post";
 import Masonry from "@mui/lab/Masonry";
 import { useState } from "react";
 import Dialog from "../primitives/Dialog";
+import { FC } from "react";
 // Firebase related
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
 
-const Posts = ({ posts = [], enableLink = false, onEdit, onDelete, onLike, onBookmark }) => {
+const Posts: FC<{
+  posts: Array<object>;
+  enableLink: Boolean;
+  onEdit?: Function;
+  onDelete?: Function;
+  onLike?: Function;
+  onBookmark?: Function;
+}> = ({ posts = [], enableLink = false, onEdit, onDelete, onLike, onBookmark }) => {
   const [showDialog, setShowDialog] = useState({ open: false, content: "", onOkClick: () => {} });
   const [user] = useAuthState(getAuth());
 

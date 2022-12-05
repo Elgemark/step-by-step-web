@@ -34,7 +34,7 @@ const Step: FC<{ index: number; title: string; body: string; className: string; 
         }
         title={<Typography>{title}</Typography>}
       />
-      {media.imageURI && <StyledCardMedia component="img" height="300" image={media.imageURI} />}
+      {media?.imageURI && <StyledCardMedia component="img" height="300" image={media.imageURI} />}
       <CardContent>
         <Typography variant="body2">{body}</Typography>
       </CardContent>
