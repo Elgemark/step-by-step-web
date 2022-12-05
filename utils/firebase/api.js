@@ -65,6 +65,8 @@ export const useUser = () => {
   const [isLoading, setIsLoading] = useState();
   const [error, setError] = useState();
 
+  console.log("user", data);
+
   useEffect(() => {
     setIsLoading(true);
     getUser()
@@ -85,7 +87,7 @@ export const useUser = () => {
       const docRef = doc(firebase, "users", uid);
       onSnapshot(docRef, (snapshot) => {
         if (snapshot.exists()) {
-          replace(snapshot.data());
+          replace({ ...data, ...snapshot.data() });
         }
       });
     }
