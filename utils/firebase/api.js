@@ -14,6 +14,8 @@ import {
   increment,
   limit as fsLimit,
   updateDoc,
+  onSnapshot,
+  onValue,
   serverTimestamp,
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -59,7 +61,7 @@ export const getUser = async () => {
 };
 
 export const useUser = () => {
-  const { object: user, setValue: update, replace } = useStateObject();
+  const { object: data, setValue: update, replace } = useStateObject();
   const [isLoading, setIsLoading] = useState();
   const [error, setError] = useState();
 
@@ -75,11 +77,25 @@ export const useUser = () => {
       });
   }, []);
 
+  // Add realtime listener
+  useEffect(() => {
+    const { uid } = data;
+    if (uid) {
+      const firebase = getFirestore();
+      const docRef = doc(firebase, "users", uid);
+      onSnapshot(docRef, (snapshot) => {
+        if (snapshot.exists()) {
+          replace(snapshot.data());
+        }
+      });
+    }
+  }, [data.uid]);
+
   const save = async () => {
-    return await updateUser(user.id, user);
+    return await updateUser(data.uid, data);
   };
 
-  return { user, isLoading, error, update, save };
+  return { data, isLoading, error, update, save };
 };
 
 // ::: POSTS
