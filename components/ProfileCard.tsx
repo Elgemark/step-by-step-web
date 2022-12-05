@@ -9,16 +9,40 @@ import ProfileMoreMenu from "./ProfileMoreMenu";
 import { useUser } from "../utils/firebase/api";
 import { useState } from "react";
 import { Button, Stack } from "@mui/material";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
+import { getAuth, updateProfile } from "firebase/auth";
 
 interface ProfileCardProps {
-  actions?: React.ReactNode;
+  onTabChange: Function;
+  tabValue: string;
 }
+
+const tabProps = (index: number) => {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+};
+
 const ProfileCard = (props: ProfileCardProps) => {
+  const [signOut, signOutLoading, signOutError] = useSignOut(getAuth());
   const [edit, setEdit] = useState(false);
   const { user, update, save: saveUser, isLoading } = useUser();
-  const { actions } = props;
+  const { tabValue, onTabChange } = props;
 
-  const onEditHandler = () => {};
+  const onEditHandler = () => {
+    setEdit(true);
+  };
+
+  const onSignOutHandler = () => {
+    signOut();
+  };
+
+  const onSaveHandler = () => {
+    setEdit(false);
+  };
 
   const onChangeAliasHandler = (e) => {
     update("alias", e.target.value);
@@ -42,9 +66,14 @@ const ProfileCard = (props: ProfileCardProps) => {
       <CardActions disableSpacing>
         <Stack style={{ width: "100%" }} direction={"column"}>
           <Stack direction={"row"} justifyContent={"right"}>
-            <Button>Save</Button>
+            {edit && <Button onClick={onSaveHandler}>Save</Button>}
           </Stack>
-          {actions}
+          <Tabs value={tabValue} onChange={onTabChange} aria-label="basic tabs example">
+            <Tab label="Saved" {...tabProps(0)} value="saved" />
+            <Tab label="Created" {...tabProps(1)} value="created" />
+            <Tab label="Completed" {...tabProps(2)} value="completed" />
+            <Tab label="In progress" {...tabProps(3)} />
+          </Tabs>
         </Stack>
       </CardActions>
     </Card>

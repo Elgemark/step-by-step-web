@@ -4,6 +4,7 @@ import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
+import LogoutIcon from "@mui/icons-material/Logout";
 import Divider from "@mui/material/Divider";
 import FlagIcon from "@mui/icons-material/Flag";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -50,6 +51,17 @@ const ProfileMoreMenu = ({ onEdit }) => {
         >
           <EditIcon />
           Edit
+        </MenuItem>
+        {/* EDIT */}
+        <MenuItem
+          onClick={() => {
+            onEdit();
+            handleClose();
+          }}
+          disableRipple
+        >
+          <LogoutIcon />
+          Sign out
         </MenuItem>
       </Menu>
     </>
