@@ -15,6 +15,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
 import { Stack } from "@mui/material";
 import SelectCategory from "./SelectCategory";
+import Posts from "./posts/Posts";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -118,43 +119,13 @@ const PageMain = ({ posts = [], category, title, enableLink = false }) => {
           </Search>
           <SelectCategory onChange={onCategoryChangeHandler} value={category} />
         </StyledSearchBar>
-        <Masonry spacing={2} columns={{ lg: 4, md: 3, sm: 2, xs: 1 }}>
-          {posts.map((data, index) => (
-            <Post
-              key={index}
-              style={{ width: "100%" }}
-              enableLink={enableLink}
-              onEdit={
-                user?.uid === data.userId
-                  ? () => {
-                      onEditHandler(data);
-                    }
-                  : undefined
-              }
-              onDelete={
-                user?.uid === data.userId
-                  ? () => {
-                      onDeleteHandler(data);
-                    }
-                  : undefined
-              }
-              onLike={() => onLikeHandler(data)}
-              onBookmark={() => onBookmarkHandler(data)}
-              {...data}
-              prerequisites={[]}
-            />
-          ))}
-        </Masonry>
-        {/* DELETE DIALOG */}
-        <Dialog
-          open={showDialog.open}
-          onClose={() => setShowDialog({ ...showDialog, open: false })}
-          onClickOk={() => {
-            showDialog.onOkClick();
-            setShowDialog({ ...showDialog, open: false });
-          }}
-          onClickCancel={() => setShowDialog({ ...showDialog, open: false })}
-          content={showDialog.content}
+        <Posts
+          enableLink={enableLink}
+          posts={posts}
+          onEdit={onEditHandler}
+          onDelete={onDeleteHandler}
+          onLike={onLikeHandler}
+          onBookmark={onBookmarkHandler}
         />
       </Layout>
     </>
