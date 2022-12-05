@@ -8,33 +8,7 @@ import { useRouter } from "next/router";
 // Firebase related
 import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
-
-interface TabPanelProps {
-  children?: ReactNode;
-  index: number;
-  value: string;
-  tabValue: string;
-}
-
-const TabPanel = (props: TabPanelProps) => {
-  const { children, value, tabValue, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== tabValue}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === tabValue && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-};
+import Posts from "../../components/posts/Posts";
 
 const Loading = () => {
   return (
@@ -51,11 +25,11 @@ const Loading = () => {
   );
 };
 
-const LoggedIn = ({ user, tabValue, onChangeAlias }) => {
+const LoggedIn = ({ tabValue, uid, posts = [] }) => {
   const router = useRouter();
 
   const onTabChangehandle = (event: React.SyntheticEvent, newValue: string) => {
-    router.push("/user/" + newValue);
+    router.push("/user/" + uid + "/" + newValue);
   };
 
   return (
@@ -65,18 +39,7 @@ const LoggedIn = ({ user, tabValue, onChangeAlias }) => {
       </Head>
       <Layout>
         <ProfileCard onTabChange={onTabChangehandle} tabValue={tabValue} />
-        <TabPanel value={tabValue} tabValue="saved" index={0}>
-          Saved
-        </TabPanel>
-        <TabPanel value={tabValue} tabValue="created" index={1}>
-          Created
-        </TabPanel>
-        <TabPanel value={tabValue} tabValue="completed" index={2}>
-          Completed Posts
-        </TabPanel>
-        <TabPanel value={tabValue} tabValue="incompleted" index={2}>
-          Incompleted Posts
-        </TabPanel>
+        <Posts posts={posts} />
       </Layout>
     </>
   );

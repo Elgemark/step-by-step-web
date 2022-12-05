@@ -1,3 +1,4 @@
+import { getSavedPosts } from "../../utils/firebase/api";
 import Profile from "./user";
 
 const Index = (props) => {
@@ -5,8 +6,10 @@ const Index = (props) => {
 };
 
 export async function getServerSideProps({ query }) {
-  const tabValue = query.user[0];
-  return { props: { tabValue } };
+  const uid = query.user[0];
+  const tabValue = query.user[1] || "saved";
+  const posts = await getSavedPosts(uid);
+  return { props: { tabValue, uid, posts } };
 }
 
 export default Index;

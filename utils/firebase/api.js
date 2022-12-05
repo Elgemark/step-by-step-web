@@ -65,8 +65,6 @@ export const useUser = () => {
   const [isLoading, setIsLoading] = useState();
   const [error, setError] = useState();
 
-  console.log("user", data);
-
   useEffect(() => {
     setIsLoading(true);
     getUser()
@@ -113,6 +111,39 @@ export const getPosts = async (orderBy = "likes", startAt = 0, endAt = 10) => {
     });
   } catch (error) {
     console.log("error", error);
+  }
+  return data;
+};
+
+export const getSavedPosts = async (uid, orderBy = "likes", startAt = 0, endAt = 10) => {
+  let data = [];
+  const firebase = getFirestore();
+  // get saved posts for user
+  const bookmarksRef = collection(firebase, "users", uid, "bookmarks");
+  const bookmarksQuery = query(bookmarksRef, where("value", "==", 1));
+  let bookmarks = [];
+  try {
+    const bookmarksSnap = await getDocs(bookmarksQuery);
+    if (bookmarksSnap.exists()) {
+      bookmarksSnap.forEach((doc) => {
+        bookmarks.push({ ...doc.data(), id: doc.id });
+      });
+    }
+  } catch (error) {
+    data.error = error;
+  }
+
+  //
+  const stepsRef = collection(firebase, "posts");
+  const queryBuild = query(stepsRef, fsOrderBy(orderBy), fsStartAt(startAt), fsEndAt(endAt));
+
+  try {
+    const querySnapshot = await getDocs(queryBuild);
+    querySnapshot.forEach((doc) => {
+      data.push({ ...doc.data(), id: doc.id });
+    });
+  } catch (error) {
+    data.error = error;
   }
   return data;
 };
