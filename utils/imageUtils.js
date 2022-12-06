@@ -127,5 +127,8 @@ export const generateBlob = async (imageSrc, crop) => {
 
   const canvas = await getCroppedImg(imageSrc, crop);
 
-  return await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
+  const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
+  const url = URL.createObjectURL(blob);
+
+  return { blob, url };
 };

@@ -4,7 +4,9 @@ import { FC, useCallback, useState } from "react";
 import Slider from "@mui/material/Slider";
 import Cropper from "react-easy-crop";
 import { Point, Area } from "react-easy-crop/types";
-import { generateBlob, generateDownload } from "../utils/imageUtils";
+import { generateBlob } from "../utils/imageUtils";
+import IconButton from "@mui/material/IconButton";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 const Root = styled(Box)`
   position: absolute;
@@ -15,6 +17,11 @@ const Root = styled(Box)`
   height: 100%;
   background-color: "background.paper";
   border: 2px solid #fff;
+  .button-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
   .crop-container {
     position: absolute;
     top: 0;
@@ -51,8 +58,8 @@ const ImageEditor: FC<{ src: string; onDone: Function }> = ({ src, onDone }) => 
 
   const onDoneHandler = async () => {
     try {
-      const result = await generateBlob(src, croppedArea);
-      onDone({ image: result });
+      const { blob, url } = await generateBlob(src, croppedArea);
+      onDone({ blob, url });
     } catch (error) {
       console.log("error", error);
     }
@@ -60,6 +67,9 @@ const ImageEditor: FC<{ src: string; onDone: Function }> = ({ src, onDone }) => 
 
   return (
     <Root>
+      <IconButton className="button-close">
+        <CancelIcon />
+      </IconButton>
       <div className="crop-container">
         <Cropper
           image={src}

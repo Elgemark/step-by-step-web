@@ -49,16 +49,18 @@ const MediaEditable: FC<{ locationPath: Array<string>; media: Media; onChangeIma
   ...props
 }) => {
   const [openEditor, setOpenEditor] = useState(false);
+  const [previewImageURI, setPreviewImageURI] = useState();
   const [selectedImageURI, setSelectedImageURI] = useState();
-  const { blob, imageURI: pasteImageURI, onPaste } = usePaste();
+  const { blob, onPaste } = usePaste();
   const { upload, isLoading } = useUploadFileAsBlob(locationPath);
   const [emptyrStr, setEmptyStr] = useState("");
 
-  const hasImage = selectedImageURI || pasteImageURI || media?.imageURI;
+  const hasImage = previewImageURI || selectedImageURI || media?.imageURI;
 
   useEffect(() => {
     if (blob) {
-      setSelectedImageURI(null);
+      setSelectedImageURI(blob);
+      setPreviewImageURI(blob);
       // Upload
       upload(blob).then((e) => {
         onChangeImage(e.url);
@@ -68,6 +70,7 @@ const MediaEditable: FC<{ locationPath: Array<string>; media: Media; onChangeIma
 
   const onFileSelectedHandler = ({ file, url }) => {
     setSelectedImageURI(url);
+    setPreviewImageURI(url);
     // Upload
     upload(file)
       .then((e) => {
@@ -86,10 +89,11 @@ const MediaEditable: FC<{ locationPath: Array<string>; media: Media; onChangeIma
     setOpenEditor(false);
   };
 
-  const onCropDoneHandler = ({ image }) => {
+  const onCropDoneHandler = ({ blob: imageBlob, url }) => {
     setOpenEditor(false);
+    setPreviewImageURI(url);
     // Upload
-    upload(image)
+    upload(imageBlob)
       .then((e) => {
         onChangeImage(e.url);
       })
@@ -108,7 +112,7 @@ const MediaEditable: FC<{ locationPath: Array<string>; media: Media; onChangeIma
             className="card-media"
             component="img"
             height="300"
-            image={selectedImageURI || pasteImageURI || media?.imageURI}
+            image={previewImageURI || selectedImageURI || media?.imageURI}
           />
 
           <Stack direction="row" className="actions-overlay" spacing={1}>
@@ -125,7 +129,7 @@ const MediaEditable: FC<{ locationPath: Array<string>; media: Media; onChangeIma
                 <FolderOpenIcon />
               </IconButton>
             </OpenDialog>
-            {hasImage && (
+            {selectedImageURI && (
               <IconButton className="button-edit-image" aria-label="edit" onClick={onClickEditHandler}>
                 <EditIcon />
               </IconButton>
@@ -134,7 +138,7 @@ const MediaEditable: FC<{ locationPath: Array<string>; media: Media; onChangeIma
         </>
       )}
       <Modal open={openEditor} onClose={onCloseEditorHandle}>
-        <ImageEditor src={selectedImageURI || pasteImageURI} onDone={onCropDoneHandler} />
+        <ImageEditor src={selectedImageURI} onDone={onCropDoneHandler} />
       </Modal>
     </StyledCardMediaContainer>
   );
