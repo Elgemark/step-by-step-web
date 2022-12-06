@@ -9,6 +9,8 @@
 https://www.npmjs.com/package/react-draggable
 https://www.npmjs.com/package/react-easy-crop
 
+https://github.com/manishboro/image-crop-and-zoom
+
 ### Inspirations:
 
 https://homewithkelsey.com/diy-shelf/

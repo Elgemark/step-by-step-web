@@ -1,9 +1,10 @@
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import styled from "styled-components";
 import { FC, useCallback, useState } from "react";
 import Slider from "@mui/material/Slider";
 import Cropper from "react-easy-crop";
 import { Point, Area } from "react-easy-crop/types";
+import { generateBlob, generateDownload } from "../utils/imageUtils";
 
 const Root = styled(Box)`
   position: absolute;
@@ -38,25 +39,24 @@ const Root = styled(Box)`
   }
 `;
 
-// const style = {
-//   position: "absolute" as "absolute",
-//   top: "50%",
-//   left: "50%",
-//   transform: "translate(-50%, -50%)",
-//   width: 400,
-//   bgcolor: "background.paper",
-//   border: "2px solid #000",
-//   boxShadow: 24,
-//   p: 4,
-// };
-
-const ImageEditor: FC<{ src: string }> = ({ src }) => {
+const ImageEditor: FC<{ src: string; onDone: Function }> = ({ src, onDone }) => {
+  const [croppedArea, setCroppedArea] = useState(null);
   const [crop, setCrop] = useState<Point>({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
 
   const onCropComplete = useCallback((croppedArea: Area, croppedAreaPixels: Area) => {
     console.log(croppedArea, croppedAreaPixels);
+    setCroppedArea(croppedAreaPixels);
   }, []);
+
+  const onDoneHandler = async () => {
+    try {
+      const result = await generateBlob(src, croppedArea);
+      onDone({ image: result });
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
 
   return (
     <Root>
@@ -81,6 +81,7 @@ const ImageEditor: FC<{ src: string }> = ({ src }) => {
           onChange={(e, zoom) => setZoom(Number(zoom))}
           classes={{ root: "slider" }}
         />
+        <Button onClick={onDoneHandler}>Ok</Button>
       </div>
     </Root>
   );

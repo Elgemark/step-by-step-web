@@ -86,6 +86,18 @@ const MediaEditable: FC<{ locationPath: Array<string>; media: Media; onChangeIma
     setOpenEditor(false);
   };
 
+  const onCropDoneHandler = ({ image }) => {
+    setOpenEditor(false);
+    // Upload
+    upload(image)
+      .then((e) => {
+        onChangeImage(e.url);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
     <StyledCardMediaContainer onPaste={onPaste} hasImage={hasImage} {...props}>
       {isLoading ? (
@@ -122,7 +134,7 @@ const MediaEditable: FC<{ locationPath: Array<string>; media: Media; onChangeIma
         </>
       )}
       <Modal open={openEditor} onClose={onCloseEditorHandle}>
-        <ImageEditor src={selectedImageURI || pasteImageURI} />
+        <ImageEditor src={selectedImageURI || pasteImageURI} onDone={onCropDoneHandler} />
       </Modal>
     </StyledCardMediaContainer>
   );
