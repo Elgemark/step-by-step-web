@@ -10,8 +10,13 @@ const OpenDialog = ({ children, accept = "image/png, image/jpeg", onFileSelected
   const onChangeHandler = (e) => {
     e.stopPropagation();
     e.preventDefault();
-    var file = e.target.files[0];
-    onFileSelected(file);
+    const file = e.target.files[0];
+
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(file);
+    fileReader.onload = function (e) {
+      onFileSelected({ file, url: e.target.result });
+    };
   };
 
   return (

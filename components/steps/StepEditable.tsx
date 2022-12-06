@@ -27,7 +27,6 @@ const StepEditable = ({
 
   useEffect(() => {
     if (ref && scrollIntoView) {
-      console.log("scrollIntoView", index);
       setTimeout(() => {
         ref.current.scrollIntoView({
           behavior: "smooth",

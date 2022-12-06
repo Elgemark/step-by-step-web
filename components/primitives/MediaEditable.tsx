@@ -48,7 +48,8 @@ const MediaEditable: FC<{ locationPath: Array<string>; media: Media; onChangeIma
   onChangeImage,
   ...props
 }) => {
-  const { blob, onPaste } = usePaste();
+  const [selectedImageURI, setSelectedImageURI] = useState();
+  const { blob, imageURI: pasteImageURI, onPaste } = usePaste();
   const { upload, isLoading } = useUploadFileAsBlob(locationPath);
   const [emptyrStr, setEmptyStr] = useState("");
 
@@ -56,13 +57,17 @@ const MediaEditable: FC<{ locationPath: Array<string>; media: Media; onChangeIma
 
   useEffect(() => {
     if (blob) {
+      setSelectedImageURI(null);
+      // Upload
       upload(blob).then((e) => {
         onChangeImage(e.url);
       });
     }
   }, [blob]);
 
-  const onFileSelectedHandler = (file) => {
+  const onFileSelectedHandler = ({ file, url }) => {
+    setSelectedImageURI(url);
+    // Upload
     upload(file)
       .then((e) => {
         onChangeImage(e.url);
@@ -73,12 +78,21 @@ const MediaEditable: FC<{ locationPath: Array<string>; media: Media; onChangeIma
   };
 
   return (
-    <StyledCardMediaContainer onPaste={onPaste} hasImage={media?.imageURI} {...props}>
+    <StyledCardMediaContainer
+      onPaste={onPaste}
+      hasImage={selectedImageURI || pasteImageURI || media?.imageURI}
+      {...props}
+    >
       {isLoading ? (
         <CircularProgress />
       ) : (
         <>
-          <StyledCardMedia className="card-media" component="img" height="300" image={media?.imageURI} />
+          <StyledCardMedia
+            className="card-media"
+            component="img"
+            height="300"
+            image={selectedImageURI || pasteImageURI || media?.imageURI}
+          />
           <TextField
             size="small"
             className="paste"

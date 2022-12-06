@@ -52,6 +52,8 @@ const Create = ({ query, post, steps }) => {
   // step object: {title: "Title",body: "Description",media: { imageURI: "" }}
   const { object: dataSteps, setValue: setStepsValue, replace: replaceSteps } = useStateObject(steps);
 
+  console.log("dataPost", dataPost);
+
   useEffect(() => {
     if (!id) {
       const newId = uuid();
@@ -151,7 +153,7 @@ const Create = ({ query, post, steps }) => {
           </div>
         ))}
         {/* BUTTONS */}
-        <Fade in={dataPost.title != undefined && dataPost.descr != undefined && dataPost.media.imageURI != undefined}>
+        <Fade in={dataPost.title != "" && dataPost.descr != "" && dataPost.media.imageURI != ""}>
           <StyledBottomBar>
             <ButtonGroup variant="text" aria-label="text button group">
               <Button endIcon={<SaveIcon />} onClick={onClickSaveHandler}>
