@@ -6,6 +6,9 @@
 - https://dev.to/menard_codes/next-js-sign-in-page-with-firebase-ui-and-firebase-auth-5375
   https://medium.com/firebase-developers/role-based-access-in-firebase-firestore-firestore-rules-6d36cded1b15
 
+https://www.npmjs.com/package/react-draggable
+https://www.npmjs.com/package/react-easy-crop
+
 ### Inspirations:
 
 https://homewithkelsey.com/diy-shelf/
