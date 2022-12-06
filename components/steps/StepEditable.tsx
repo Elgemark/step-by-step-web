@@ -7,6 +7,7 @@ import { red } from "@mui/material/colors";
 import TextField from "@mui/material/TextField";
 import MediaEditable from "../primitives/MediaEditable";
 import { useRef, useEffect } from "react";
+import StepMoreMenu from "../StepMoreMenu";
 
 const StepEditable = ({
   mediaLocationPath,
@@ -17,6 +18,8 @@ const StepEditable = ({
   onChangeTitle,
   onChangeBody,
   onChangeImage,
+  onDelete,
+  onAddStep,
   scrollIntoView = false,
 }) => {
   const ref = useRef<HTMLInputElement>(null);
@@ -39,6 +42,7 @@ const StepEditable = ({
             {index + 1}
           </Avatar>
         }
+        action={<StepMoreMenu onDelete={onDelete} onAddStep={onAddStep} />}
         title={
           <TextField
             fullWidth

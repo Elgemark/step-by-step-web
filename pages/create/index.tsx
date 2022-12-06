@@ -86,8 +86,19 @@ const Create = ({ query, post, steps }) => {
     setPostValue("prerequisites", prerequisites);
   };
 
-  console.log("dataPost", dataPost);
-  console.log("dataSteps", dataSteps);
+  const onDeleteStepHandler = (e) => {
+    const { index } = e;
+    const steps = [...dataSteps.steps];
+    _.pullAt(steps, index);
+    setStepsValue("steps", steps);
+  };
+
+  const onAddStepHandler = (e) => {
+    const { index } = e;
+    const steps = [...dataSteps.steps];
+    steps.splice(index, 0, {});
+    setStepsValue("steps", steps);
+  };
 
   return (
     <>
@@ -120,6 +131,8 @@ const Create = ({ query, post, steps }) => {
               onChangeBody={(value) => setStepsValue("steps." + index + ".body", value)}
               onChangeTitle={(value) => setStepsValue("steps." + index + ".title", value)}
               onChangeImage={(value) => setStepsValue("steps." + index + ".media.imageURI", value)}
+              onDelete={() => onDeleteStepHandler({ ...dataStep, index })}
+              onAddStep={() => onAddStepHandler({ ...dataStep, index })}
               mediaLocationPath={[
                 "post",
                 id,

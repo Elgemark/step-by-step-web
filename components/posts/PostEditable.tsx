@@ -124,7 +124,6 @@ const PostEditable = ({
               </Avatar>
             }
             title={<TextField fullWidth label="Title" value={title} onChange={(e) => onChangeTitle(e.target.value)} />}
-            // subheader="September 14, 2016"
           />
           <StyledMediaEditable onChangeImage={onChangeImage} media={media} locationPath={mediaLocationPath} />
           <CardContent>
