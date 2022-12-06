@@ -1,3 +1,5 @@
+import { v4 as uuid } from "uuid";
+
 export const post = {
   title: "",
   descr: "",
@@ -17,4 +19,7 @@ export const userProfile = {
   alias: null,
 };
 export const steps = { steps: [] };
+export const step = { body: "", title: "", media: { imageURI: null, id: null } };
 export const userStepsProgress = { userId: null, step: 0, completed: false };
+// CREATE FUNCTIONS
+export const createStep = () => ({ ...step, id: uuid() });

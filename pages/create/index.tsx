@@ -46,6 +46,7 @@ const Create = ({ query, post, steps }) => {
   const router = useRouter();
   const [id, setId] = useState(query?.id);
   const [successMessage, setSuccessMessage] = useState(null);
+  const [createdStep, setCreatedStep] = useState({});
   // post object:
   const { object: dataPost, setValue: setPostValue, replace: replacePost } = useStateObject(post);
   // step object: {title: "Title",body: "Description",media: { imageURI: "" }}
@@ -61,8 +62,10 @@ const Create = ({ query, post, steps }) => {
 
   const onClickAddStepHandler = () => {
     const steps = [...dataSteps.steps];
-    steps.push({});
+    const newStep = dataModels.createStep();
+    steps.push(newStep);
     setStepsValue("steps", steps);
+    setCreatedStep(newStep);
   };
 
   const onClickSaveHandler = async () => {
@@ -93,11 +96,13 @@ const Create = ({ query, post, steps }) => {
     setStepsValue("steps", steps);
   };
 
-  const onAddStepHandler = (e) => {
+  const onAddStepAtIndexHandler = (e) => {
     const { index } = e;
     const steps = [...dataSteps.steps];
-    steps.splice(index, 0, {});
+    const newStep = dataModels.createStep();
+    steps.splice(index + 1, 0, newStep);
     setStepsValue("steps", steps);
+    setCreatedStep(newStep);
   };
 
   return (
@@ -125,20 +130,21 @@ const Create = ({ query, post, steps }) => {
         <StyledDivider />
         {/* STEPS */}
         {dataSteps.steps.map((dataStep, index) => (
-          <div key={"step-" + index}>
+          <div key={"step-" + index + "-" + dataStep.id}>
             <StepEditable
               index={index}
               onChangeBody={(value) => setStepsValue("steps." + index + ".body", value)}
               onChangeTitle={(value) => setStepsValue("steps." + index + ".title", value)}
               onChangeImage={(value) => setStepsValue("steps." + index + ".media.imageURI", value)}
               onDelete={() => onDeleteStepHandler({ ...dataStep, index })}
-              onAddStep={() => onAddStepHandler({ ...dataStep, index })}
+              onAddStep={() => onAddStepAtIndexHandler({ ...dataStep, index })}
               mediaLocationPath={[
                 "post",
                 id,
                 _.kebabCase(dataPost.title) + "_step-" + (index + 1) + "_" + _.kebabCase(dataStep.title || "image"),
               ]}
-              scrollIntoView={dataSteps.steps.length - 1 === index}
+              // scrollIntoView={dataSteps.steps.length - 1 === index}
+              scrollIntoView={createdStep.id === dataStep.id}
               {...dataStep}
             />
             <StyledDivider />

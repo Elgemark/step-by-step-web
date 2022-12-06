@@ -8,6 +8,7 @@ import TextField from "@mui/material/TextField";
 import MediaEditable from "../primitives/MediaEditable";
 import { useRef, useEffect } from "react";
 import StepMoreMenu from "../StepMoreMenu";
+import { step as stepModel } from "../../utils/firebase/models";
 
 const StepEditable = ({
   mediaLocationPath,
@@ -26,6 +27,7 @@ const StepEditable = ({
 
   useEffect(() => {
     if (ref && scrollIntoView) {
+      console.log("scrollIntoView", index);
       setTimeout(() => {
         ref.current.scrollIntoView({
           behavior: "smooth",
