@@ -62,6 +62,11 @@ const Steps = ({ post, steps }) => {
   const onLikeHandler = async ({ id }) => {
     await likePost(id);
   };
+
+  const onStartOverHandler = async () => {
+    setStep(0, false);
+  };
+
   return (
     <>
       <Head>
@@ -85,6 +90,7 @@ const Steps = ({ post, steps }) => {
               : undefined
           }
           onLike={() => onLikeHandler(post)}
+          onStartOver={onStartOverHandler}
         />
         <RevealNext
           open
@@ -103,7 +109,8 @@ const Steps = ({ post, steps }) => {
               showButton={showButton(index)}
               showDone={showDone(index)}
               onClick={() => {
-                setStep(index + 2);
+                const completed = index === steps.steps.length - 2;
+                setStep(index + 2, completed);
               }}
             >
               <StyledStep {...step} index={index} />

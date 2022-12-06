@@ -7,9 +7,16 @@ import EditIcon from "@mui/icons-material/Edit";
 import Divider from "@mui/material/Divider";
 import FlagIcon from "@mui/icons-material/Flag";
 import DeleteIcon from "@mui/icons-material/Delete";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import Menu from "./primitives/Menu";
+import { FC } from "react";
 
-const PostMoreMenu = ({ onEdit, onDelete, onReport }) => {
+const PostMoreMenu: FC<{ onEdit?: Function; onDelete?: Function; onStartOver?: Function; onReport?: Function }> = ({
+  onEdit,
+  onDelete,
+  onStartOver,
+  onReport,
+}) => {
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -66,7 +73,21 @@ const PostMoreMenu = ({ onEdit, onDelete, onReport }) => {
             Delete
           </MenuItem>
         )}
+        {/* STRART OVER */}
+        {onStartOver && (
+          <MenuItem
+            onClick={() => {
+              onStartOver();
+              handleClose();
+            }}
+            disableRipple
+          >
+            <RestartAltIcon />
+            Start Over
+          </MenuItem>
+        )}
         <Divider sx={{ my: 0.5 }} />
+        {/* REPORT */}
         <MenuItem
           onClick={() => {
             onReport();

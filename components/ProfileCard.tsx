@@ -22,9 +22,11 @@ import styled from "styled-components";
 
 const StyledPaper = styled(Paper)`
   padding: ${({ theme }) => theme.spacing(2)};
+  margin-bottom: ${({ theme }) => theme.spacing(2)};
   display: flex;
   flex-direction: column;
   align-items: center;
+
   hr {
     width: 100%;
     margin: ${({ theme }) => theme.spacing(2)};

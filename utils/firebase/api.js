@@ -355,10 +355,11 @@ export const useUserStepsProgress = (uid, id) => {
     ...data,
     isLoading,
     error,
-    setStep: async (index) => {
+    setStep: async (index, completed = false) => {
       setValue("step", index);
       return await setUserStepsProgress(uid, id, {
         ...data,
+        completed,
         step: index,
       });
     },

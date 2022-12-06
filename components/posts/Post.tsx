@@ -9,6 +9,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import PostMoreMenu from "../PostMoreMenu";
 import Link from "next/link";
 import UserAvatar from "../UserAvatar";
@@ -50,6 +51,7 @@ const Post = ({
   onReport,
   onLike,
   onBookmark,
+  onStartOver,
 }) => {
   const [numLikes, setNumLikes] = useState(likes);
   const { isLiked, toggle: toggleLike } = useLikes(id);
@@ -70,7 +72,7 @@ const Post = ({
     <Card sx={{ minWidth: minWidth }} onClick={() => {}}>
       <CardHeader
         avatar={<UserAvatar />}
-        action={<PostMoreMenu onEdit={onEdit} onDelete={onDelete} onReport={onReport} />}
+        action={<PostMoreMenu onEdit={onEdit} onDelete={onDelete} onReport={onReport} onStartOver={onStartOver} />}
         title={<Typography>{title}</Typography>}
       />
 
@@ -103,7 +105,7 @@ const Post = ({
           <ShareIcon />
         </IconButton>
         {/* FAVOURITE */}
-        <IconButton aria-label="like" onClick={onBookmarkHandler}>
+        <IconButton aria-label="bookmark" onClick={onBookmarkHandler}>
           {isBookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
         </IconButton>
       </CardActions>
