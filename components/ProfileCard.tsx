@@ -3,7 +3,7 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import UserAvatar from "./UserAvatar";
 import { useUser } from "../utils/firebase/api";
-import { useState } from "react";
+import { useState, FC } from "react";
 import { Button, ButtonGroup, Paper, Stack, useTheme } from "@mui/material";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
@@ -22,19 +22,11 @@ const Root = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  .user-alias {
-    /* text-align: center; */
-  }
   hr {
     width: 100%;
     margin: ${({ theme }) => theme.spacing(2)};
   }
 `;
-
-interface ProfileCardProps {
-  onTabChange: (event: SyntheticEvent<Element, Event>, value: any) => void;
-  tabValue: string;
-}
 
 const tabProps = (index: number) => {
   return {
@@ -43,12 +35,14 @@ const tabProps = (index: number) => {
   };
 };
 
-const ProfileCard = (props: ProfileCardProps) => {
+const ProfileCard: FC<{
+  onTabChange: (event: SyntheticEvent<Element, Event>, value: any) => void;
+  tabValue: string;
+}> = (tabValue, onTabChange, ...props) => {
   const theme = useTheme();
   const [signOut, signOutLoading, signOutError] = useSignOut(getAuth());
   const [edit, setEdit] = useState(false);
   const { data: user, update, save: saveUser, isLoading } = useUser();
-  const { tabValue, onTabChange } = props;
 
   const onEditHandler = () => {
     setEdit(true);
@@ -89,7 +83,7 @@ const ProfileCard = (props: ProfileCardProps) => {
           </Typography>
         )}
         <Typography className="user-description" variant="body2" color="text.secondary">
-          {user?.description || "text..."}
+          {user?.description || ""}
         </Typography>
         <ButtonGroup variant="text">
           {edit ? (

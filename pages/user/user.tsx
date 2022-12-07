@@ -1,6 +1,5 @@
 import Head from "next/head";
-import { Box, CircularProgress, Typography } from "@mui/material";
-import Link from "next/link";
+import { Box, CircularProgress } from "@mui/material";
 import Layout from "../../components/Layout";
 import ProfileCard from "../../components/ProfileCard";
 import { useRouter } from "next/router";
@@ -8,6 +7,7 @@ import { useRouter } from "next/router";
 import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
 import Posts from "../../components/posts/Posts";
+import { useEffect } from "react";
 
 const Loading = () => {
   return (
@@ -44,29 +44,19 @@ const LoggedIn = ({ tabValue, uid, posts = [] }) => {
   );
 };
 
-const LoggedOut = () => {
-  return (
-    <>
-      <Head>
-        <title>STEPS | Signed out!</title>
-      </Head>
-      <Layout>
-        <Box sx={{ display: "flex" }}>
-          <Link href="/login">Login</Link>
-        </Box>
-      </Layout>
-    </>
-  );
-};
-
 const Profile = (props) => {
   const [user, userLoading, userError] = useAuthState(getAuth());
   const [_, signOutLoading, signOutError] = useSignOut(getAuth());
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!userLoading && !user) {
+      router.replace("/");
+    }
+  }, [userLoading, user]);
 
   if (userLoading || signOutLoading) {
     return <Loading></Loading>;
-  } else if (!user || userError || signOutError) {
-    return <LoggedOut />;
   } else {
     return <LoggedIn {...props}></LoggedIn>;
   }
