@@ -7,6 +7,7 @@ import { Point, Area } from "react-easy-crop/types";
 import { generateBlob } from "../utils/imageUtils";
 import IconButton from "@mui/material/IconButton";
 import CancelIcon from "@mui/icons-material/Cancel";
+import appSettings from "../config";
 
 const Root = styled(Box)`
   position: absolute;
@@ -45,20 +46,29 @@ const Root = styled(Box)`
   }
 `;
 
-const ImageEditor: FC<{ src: string; onDone: Function; onClose: Function }> = ({ src, onDone, onClose }) => {
+interface CropSetting {
+  crop: Point;
+  zoom: number;
+}
+
+const ImageEditor: FC<{
+  src: string;
+  settings?: CropSetting;
+  onDone: Function;
+  onClose: React.MouseEventHandler<HTMLElement>;
+}> = ({ src, settings = { crop: { x: 0, y: 0 }, zoom: 1 }, onDone, onClose }) => {
   const [croppedArea, setCroppedArea] = useState(null);
-  const [crop, setCrop] = useState<Point>({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
+  const [crop, setCrop] = useState<Point>(settings.crop);
+  const [zoom, setZoom] = useState<number>(settings.zoom);
 
   const onCropComplete = useCallback((croppedArea: Area, croppedAreaPixels: Area) => {
-    console.log(croppedArea, croppedAreaPixels);
     setCroppedArea(croppedAreaPixels);
   }, []);
 
   const onDoneHandler = async () => {
     try {
       const { blob, url } = await generateBlob(src, croppedArea);
-      onDone({ blob, url });
+      onDone({ blob, url, settings: { crop, zoom } });
     } catch (error) {
       console.log("error", error);
     }
@@ -71,7 +81,7 @@ const ImageEditor: FC<{ src: string; onDone: Function; onClose: Function }> = ({
           image={src}
           crop={crop}
           zoom={zoom}
-          aspect={4 / 3}
+          aspect={appSettings.image.aspect}
           onCropChange={setCrop}
           onCropComplete={onCropComplete}
           onZoomChange={setZoom}
@@ -88,7 +98,7 @@ const ImageEditor: FC<{ src: string; onDone: Function; onClose: Function }> = ({
           classes={{ root: "slider" }}
         />
 
-        <Button onClick={onDoneHandler}>Ok</Button>
+        <Button onClick={onDoneHandler}>Done</Button>
       </div>
       <IconButton className="button-close" onClick={onClose}>
         <CancelIcon />

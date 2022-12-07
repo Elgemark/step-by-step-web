@@ -1,6 +1,5 @@
 import CardMedia from "@mui/material/CardMedia";
 import IconButton from "@mui/material/IconButton";
-import EditIcon from "@mui/icons-material/Edit";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import CropIcon from "@mui/icons-material/Crop";
 import TextField from "@mui/material/TextField";
@@ -13,6 +12,7 @@ import { CircularProgress, Stack } from "@mui/material";
 import { FC } from "react";
 import Modal from "@mui/material/Modal";
 import ImageEditor from "../ImageEditor";
+import settings from "../../config";
 
 const StyledCardMediaContainer = styled.div`
   position: relative;
@@ -57,6 +57,7 @@ const MediaEditable: FC<{ locationPath: Array<string>; media: Media; onChangeIma
   const { upload, isLoading } = useUploadFileAsBlob(locationPath);
   // Prevents typing in paste textField
   const [emptyrStr, setEmptyStr] = useState("");
+  const [cropSettings, setCropSettings] = useState();
 
   const hasImage = previewImageURI || selectedImageURI || media?.imageURI;
 
@@ -92,7 +93,8 @@ const MediaEditable: FC<{ locationPath: Array<string>; media: Media; onChangeIma
     setOpenEditor(false);
   };
 
-  const onCropDoneHandler = ({ blob: imageBlob, url }) => {
+  const onCropDoneHandler = ({ blob: imageBlob, url, settings }) => {
+    setCropSettings(settings);
     setOpenEditor(false);
     setPreviewImageURI(url);
     // Upload
@@ -106,7 +108,7 @@ const MediaEditable: FC<{ locationPath: Array<string>; media: Media; onChangeIma
   };
 
   return (
-    <StyledCardMediaContainer onPaste={onPaste} hasImage={hasImage} {...props}>
+    <StyledCardMediaContainer onPaste={onPaste} hasImage={hasImage} {...props} height={settings.image.height}>
       {isLoading ? (
         <CircularProgress />
       ) : (
@@ -141,7 +143,12 @@ const MediaEditable: FC<{ locationPath: Array<string>; media: Media; onChangeIma
         </>
       )}
       <Modal open={openEditor} onClose={onCloseEditorHandle}>
-        <ImageEditor src={selectedImageURI} onDone={onCropDoneHandler} onClose={() => setOpenEditor(false)} />
+        <ImageEditor
+          src={selectedImageURI}
+          onDone={onCropDoneHandler}
+          onClose={() => setOpenEditor(false)}
+          settings={cropSettings}
+        />
       </Modal>
     </StyledCardMediaContainer>
   );
