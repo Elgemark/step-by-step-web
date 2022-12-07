@@ -15,7 +15,6 @@ const Root = styled(Box)`
   transform: translate(-50%, -50%);
   width: 100%;
   height: 100%;
-  background-color: "background.paper";
   border: 2px solid #fff;
   .button-close {
     position: absolute;
@@ -46,7 +45,7 @@ const Root = styled(Box)`
   }
 `;
 
-const ImageEditor: FC<{ src: string; onDone: Function }> = ({ src, onDone }) => {
+const ImageEditor: FC<{ src: string; onDone: Function; onClose: Function }> = ({ src, onDone, onClose }) => {
   const [croppedArea, setCroppedArea] = useState(null);
   const [crop, setCrop] = useState<Point>({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
@@ -67,9 +66,6 @@ const ImageEditor: FC<{ src: string; onDone: Function }> = ({ src, onDone }) => 
 
   return (
     <Root>
-      <IconButton className="button-close">
-        <CancelIcon />
-      </IconButton>
       <div className="crop-container">
         <Cropper
           image={src}
@@ -91,8 +87,12 @@ const ImageEditor: FC<{ src: string; onDone: Function }> = ({ src, onDone }) => 
           onChange={(e, zoom) => setZoom(Number(zoom))}
           classes={{ root: "slider" }}
         />
+
         <Button onClick={onDoneHandler}>Ok</Button>
       </div>
+      <IconButton className="button-close" onClick={onClose}>
+        <CancelIcon />
+      </IconButton>
     </Root>
   );
 };

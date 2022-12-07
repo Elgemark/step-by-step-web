@@ -52,8 +52,10 @@ const MediaEditable: FC<{ locationPath: Array<string>; media: Media; onChangeIma
   const [openEditor, setOpenEditor] = useState(false);
   const [previewImageURI, setPreviewImageURI] = useState();
   const [selectedImageURI, setSelectedImageURI] = useState();
+
   const { blob, onPaste } = usePaste();
   const { upload, isLoading } = useUploadFileAsBlob(locationPath);
+  // Prevents typing in paste textField
   const [emptyrStr, setEmptyStr] = useState("");
 
   const hasImage = previewImageURI || selectedImageURI || media?.imageURI;
@@ -139,7 +141,7 @@ const MediaEditable: FC<{ locationPath: Array<string>; media: Media; onChangeIma
         </>
       )}
       <Modal open={openEditor} onClose={onCloseEditorHandle}>
-        <ImageEditor src={selectedImageURI} onDone={onCropDoneHandler} />
+        <ImageEditor src={selectedImageURI} onDone={onCropDoneHandler} onClose={() => setOpenEditor(false)} />
       </Modal>
     </StyledCardMediaContainer>
   );
