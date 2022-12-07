@@ -44,7 +44,7 @@ const LoggedIn = ({ tabValue, uid, posts = [] }) => {
   );
 };
 
-const Profile = (props) => {
+const User = (props) => {
   const [user, userLoading, userError] = useAuthState(getAuth());
   const [_, signOutLoading, signOutError] = useSignOut(getAuth());
   const router = useRouter();
@@ -62,4 +62,4 @@ const Profile = (props) => {
   }
 };
 
-export default Profile;
+export default User;
