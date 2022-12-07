@@ -2,14 +2,11 @@ import Layout from "../components/Layout";
 import Head from "next/head";
 import { useDebouncedQuery } from "../utils/queryUtils";
 import { bookmarkPost, deletePost, likePost } from "../utils/firebase/api";
-import Post from "../components/posts/Post";
 import { useRouter } from "next/router";
-import Masonry from "@mui/lab/Masonry";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import { styled, alpha } from "@mui/material/styles";
 import { useState } from "react";
-import Dialog from "./primitives/Dialog";
 // Firebase related
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
@@ -92,6 +89,10 @@ const PageMain = ({ posts = [], category, title, enableLink = false }) => {
     await bookmarkPost(id);
   };
 
+  const onClickAvatarHandler = ({ userId }) => {
+    router.push("/user/" + userId);
+  };
+
   const onSearchHandler = (value) => {
     setQuery({ search: value });
   };
@@ -126,6 +127,7 @@ const PageMain = ({ posts = [], category, title, enableLink = false }) => {
           onDelete={onDeleteHandler}
           onLike={onLikeHandler}
           onBookmark={onBookmarkHandler}
+          onClickAvatar={onClickAvatarHandler}
         />
       </Layout>
     </>

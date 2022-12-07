@@ -38,11 +38,14 @@ const tabProps = (index: number) => {
 const ProfileCard: FC<{
   onTabChange: (event: SyntheticEvent<Element, Event>, value: any) => void;
   tabValue: string;
-}> = ({ tabValue, onTabChange, ...props }) => {
+  userId?: string;
+}> = ({ tabValue, onTabChange, userId, ...props }) => {
   const theme = useTheme();
   const [signOut, signOutLoading, signOutError] = useSignOut(getAuth());
   const [edit, setEdit] = useState(false);
-  const { data: user, update, save: saveUser, isLoading } = useUser();
+  const { data: user, update, save: saveUser, isCurrentUser, isLoading } = useUser(userId);
+
+  console.log("userId", userId, "isCurrentUser", isCurrentUser);
 
   const onEditHandler = () => {
     setEdit(true);
@@ -68,7 +71,7 @@ const ProfileCard: FC<{
   return (
     <Root theme={theme} {...props}>
       <Stack spacing={2} width="100%" alignItems="center">
-        <UserAvatar size={72} realtime />
+        <UserAvatar size={72} userId={userId} realtime />
         {edit ? (
           <TextField
             className="user-alias"
@@ -100,7 +103,7 @@ const ProfileCard: FC<{
         </ButtonGroup>
       </Stack>
       <Divider />
-      <Tabs value={tabValue} onChange={onTabChange} aria-label="basic tabs example">
+      <Tabs value={tabValue} onChange={onTabChange} aria-label="post tabs">
         <Tab label="Saved" icon={<BookmarkIcon />} {...tabProps(0)} value="saved" />
         <Tab label="Created" icon={<CreateIcon />} {...tabProps(1)} value="created" />
         <Tab label="Completed" icon={<CheckCircleIcon />} {...tabProps(2)} value="completed" />

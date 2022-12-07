@@ -37,7 +37,7 @@ const LoggedIn = ({ tabValue, uid, posts = [] }) => {
         <title>STEPS | Profile</title>
       </Head>
       <Layout>
-        <ProfileCard onTabChange={onTabChangehandle} tabValue={tabValue} />
+        <ProfileCard onTabChange={onTabChangehandle} tabValue={tabValue} userId={uid} />
         <Posts posts={posts} enableLink />
       </Layout>
     </>

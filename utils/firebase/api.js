@@ -68,6 +68,9 @@ export const useUser = (uid, realtime = false) => {
   const { object: data, setValue: update, replace } = useStateObject();
   const [isLoading, setIsLoading] = useState();
   const [error, setError] = useState();
+  //
+  const auth = getAuth();
+  const { uid: currentUserId } = auth.currentUser;
 
   const getUserFunc = uid ? getUser : getCurrentUser;
 
@@ -101,7 +104,7 @@ export const useUser = (uid, realtime = false) => {
     return await updateUser(data.uid, data);
   };
 
-  return { data, isLoading, error, update, save };
+  return { data, isLoading, isCurrentUser: currentUserId === data?.uid, error, update, save };
 };
 
 // ::: POSTS

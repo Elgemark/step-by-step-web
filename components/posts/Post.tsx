@@ -1,4 +1,4 @@
-import { Card } from "@mui/material";
+import { Card, Button } from "@mui/material";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
@@ -57,6 +57,7 @@ const Post: FC<{
   onLike?: Function;
   onBookmark?: Function;
   onStartOver?: Function;
+  onClickAvatar?: Function;
 }> = ({
   userId,
   title = "Title",
@@ -72,6 +73,7 @@ const Post: FC<{
   onLike,
   onBookmark,
   onStartOver,
+  onClickAvatar,
 }) => {
   const [numLikes, setNumLikes] = useState(likes);
   const { isLiked, toggle: toggleLike } = useLikes(id);
@@ -91,7 +93,11 @@ const Post: FC<{
   return (
     <Card>
       <CardHeader
-        avatar={<UserAvatar userId={userId} />}
+        avatar={
+          <IconButton sx={{ padding: 0 }} onClick={() => onClickAvatar(userId)}>
+            <UserAvatar userId={userId} />
+          </IconButton>
+        }
         action={<PostMoreMenu onEdit={onEdit} onDelete={onDelete} onReport={onReport} onStartOver={onStartOver} />}
         title={<Typography>{title}</Typography>}
       />

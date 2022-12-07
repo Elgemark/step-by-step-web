@@ -9,12 +9,13 @@ import { getAuth } from "firebase/auth";
 
 const Posts: FC<{
   posts: Array<object>;
-  enableLink: Boolean;
+  enableLink: boolean;
   onEdit?: Function;
   onDelete?: Function;
   onLike?: Function;
   onBookmark?: Function;
-}> = ({ posts = [], enableLink = false, onEdit, onDelete, onLike, onBookmark }) => {
+  onClickAvatar?: Function;
+}> = ({ posts = [], enableLink = false, onEdit, onDelete, onLike, onBookmark, onClickAvatar }) => {
   const [showDialog, setShowDialog] = useState({ open: false, content: "", onOkClick: () => {} });
   const [user] = useAuthState(getAuth());
 
@@ -42,6 +43,7 @@ const Posts: FC<{
             }
             onLike={() => onLike(data)}
             onBookmark={() => onBookmark(data)}
+            onClickAvatar={() => onClickAvatar(data)}
             {...data}
             prerequisites={[]}
           />
