@@ -23,6 +23,7 @@ import settings from "../../config";
 
 const StyledCardMedia = styled(CardMedia)`
   object-fit: cover;
+  max-height: 320px;
 `;
 
 const MediaContainer = ({ children, href, enableLink }) => {

@@ -18,7 +18,8 @@ const StyledCardMediaContainer = styled.div`
   position: relative;
   user-select: initial;
   width: 100%;
-  min-height: 300px;
+  min-height: 320px;
+  overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -36,7 +37,7 @@ const StyledCardMediaContainer = styled.div`
 
 const StyledCardMedia = styled(CardMedia)`
   position: absolute;
-  object-fit: contain;
+  object-fit: cover;
 `;
 
 interface Media {
@@ -53,18 +54,16 @@ const MediaEditable: FC<{ locationPath: Array<string>; media: Media; onChangeIma
   const [previewImageURI, setPreviewImageURI] = useState();
   const [selectedImageURI, setSelectedImageURI] = useState();
 
-  const { blob, onPaste } = usePaste();
+  const { blob, imageURI: pasteImageURI, onPaste } = usePaste();
   const { upload, isLoading } = useUploadFileAsBlob(locationPath);
   // Prevents typing in paste textField
   const [emptyrStr, setEmptyStr] = useState("");
-  const [cropSettings, setCropSettings] = useState();
+  const [cropSettings, setCropSettings] = useState({ crop: { x: 0, y: 0 }, zoom: 1 });
 
   const hasImage = previewImageURI || selectedImageURI || media?.imageURI;
 
   useEffect(() => {
     if (blob) {
-      setSelectedImageURI(blob);
-      setPreviewImageURI(blob);
       // Upload
       upload(blob).then((e) => {
         onChangeImage(e.url);
@@ -72,9 +71,18 @@ const MediaEditable: FC<{ locationPath: Array<string>; media: Media; onChangeIma
     }
   }, [blob]);
 
+  useEffect(() => {
+    if (pasteImageURI) {
+      setSelectedImageURI(pasteImageURI);
+      setPreviewImageURI(pasteImageURI);
+      setCropSettings({ crop: { x: 0, y: 0 }, zoom: 1 });
+    }
+  }, [pasteImageURI]);
+
   const onFileSelectedHandler = ({ file, url }) => {
     setSelectedImageURI(url);
     setPreviewImageURI(url);
+    setCropSettings({ crop: { x: 0, y: 0 }, zoom: 1 });
     // Upload
     upload(file)
       .then((e) => {
@@ -116,7 +124,6 @@ const MediaEditable: FC<{ locationPath: Array<string>; media: Media; onChangeIma
           <StyledCardMedia
             className="card-media"
             component="img"
-            height="300"
             image={previewImageURI || selectedImageURI || media?.imageURI}
           />
 

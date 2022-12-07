@@ -7,6 +7,7 @@ import { red } from "@mui/material/colors";
 import CardMedia from "@mui/material/CardMedia";
 import styled from "styled-components";
 import { FC } from "react";
+import settings from "../../config";
 
 const StyledCardMedia = styled(CardMedia)`
   object-fit: contain;
@@ -34,7 +35,7 @@ const Step: FC<{ index: number; title: string; body: string; className: string; 
         }
         title={<Typography>{title}</Typography>}
       />
-      {media?.imageURI && <StyledCardMedia component="img" height="75%" image={media.imageURI} />}
+      {media?.imageURI && <StyledCardMedia component="img" height={settings.image.height} image={media.imageURI} />}
       <CardContent>
         <Typography variant="body2">{body}</Typography>
       </CardContent>
