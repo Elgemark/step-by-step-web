@@ -5,7 +5,7 @@ import _ from "lodash";
 
 export default function CategoryPage(props) {
   const { category } = props;
-  return <PageMain {...props} title={"STEPS | " + _.capitalize(category)} />;
+  return <PageMain {...props} title={"STEPS | " + _.capitalize(category)} enableLink={true} />;
 }
 
 export async function getServerSideProps({ query }) {
