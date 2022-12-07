@@ -64,7 +64,7 @@ export const getUser = async (uid) => {
   }
 };
 
-export const useUser = (uid) => {
+export const useUser = (uid, realtime = false) => {
   const { object: data, setValue: update, replace } = useStateObject();
   const [isLoading, setIsLoading] = useState();
   const [error, setError] = useState();
@@ -86,7 +86,7 @@ export const useUser = (uid) => {
   // Add realtime listener
   useEffect(() => {
     const { uid } = data;
-    if (uid) {
+    if (uid && realtime) {
       const firebase = getFirestore();
       const docRef = doc(firebase, "users", uid);
       onSnapshot(docRef, (snapshot) => {
@@ -95,7 +95,7 @@ export const useUser = (uid) => {
         }
       });
     }
-  }, [data.uid]);
+  }, [data.uid, realtime]);
 
   const save = async () => {
     return await updateUser(data.uid, data);

@@ -132,9 +132,11 @@ const Post: FC<{
           </IconButton>
         )}
       </CardActions>
-      <CardContent>
-        <TablePrerequisites items={prerequisites} />
-      </CardContent>
+      {prerequisites.length ? (
+        <CardContent>
+          <TablePrerequisites items={prerequisites} />
+        </CardContent>
+      ) : null}
     </Card>
   );
 };

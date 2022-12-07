@@ -74,7 +74,7 @@ const ProfileCard = (props: ProfileCardProps) => {
   return (
     <Root theme={theme} {...props}>
       <Stack spacing={2} width="100%" alignItems="center">
-        <UserAvatar size={72} />
+        <UserAvatar size={72} realtime />
         {edit ? (
           <TextField
             className="user-alias"

@@ -57,7 +57,7 @@ const TopBar: FC<{ className?: string; actions?: ReactNode }> = ({ className, ac
             }}
             color="inherit"
           >
-            <UserAvatar size={32} />
+            <UserAvatar size={32} realtime />
           </IconButton>
         )}
       </Toolbar>
