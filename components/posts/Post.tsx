@@ -9,7 +9,6 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
-import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import PostMoreMenu from "../PostMoreMenu";
 import Link from "next/link";
 import UserAvatar from "../UserAvatar";
@@ -20,6 +19,7 @@ import TablePrerequisites from "../TablePrerequisites";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import { CardActionArea } from "@mui/material";
+import settings from "../../config";
 
 const StyledCardMedia = styled(CardMedia)`
   object-fit: cover;
@@ -83,7 +83,7 @@ const Post = ({
         }}
         enableLink={enableLink}
       >
-        {media?.imageURI && <StyledCardMedia height="300" component="img" image={media?.imageURI} />}
+        {media?.imageURI && <StyledCardMedia height={settings.image.height} component="img" image={media?.imageURI} />}
       </MediaContainer>
 
       <CardContent>
