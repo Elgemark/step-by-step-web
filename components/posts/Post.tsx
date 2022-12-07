@@ -16,10 +16,14 @@ import Badge from "@mui/material/Badge";
 import { useLikes, useBookmarks } from "../../utils/firebase/api";
 import styled from "styled-components";
 import TablePrerequisites from "../TablePrerequisites";
-import PropTypes from "prop-types";
-import { useState } from "react";
+
+import { useState, FC } from "react";
 import { CardActionArea } from "@mui/material";
 import settings from "../../config";
+
+interface Media {
+  imageURI: string;
+}
 
 const StyledCardMedia = styled(CardMedia)`
   object-fit: cover;
@@ -38,14 +42,29 @@ const MediaContainer = ({ children, href, enableLink }) => {
   }
 };
 
-const Post = ({
+const Post: FC<{
+  userId: string;
+  id: string;
+  title: string;
+  descr?: string;
+  enableLink: boolean;
+  prerequisites: Array<string>;
+  media: Media;
+  likes: number;
+  onEdit?: Function;
+  onDelete?: Function;
+  onReport?: Function;
+  onLike?: Function;
+  onBookmark?: Function;
+  onStartOver?: Function;
+}> = ({
+  userId,
   title = "Title",
   descr = "Body",
   id,
   enableLink,
   prerequisites = [],
   media = { imageURI: "" },
-  minWidth = 320,
   likes = 0,
   onEdit,
   onDelete,
@@ -72,7 +91,7 @@ const Post = ({
   return (
     <Card>
       <CardHeader
-        avatar={<UserAvatar />}
+        avatar={<UserAvatar userId={userId} />}
         action={<PostMoreMenu onEdit={onEdit} onDelete={onDelete} onReport={onReport} onStartOver={onStartOver} />}
         title={<Typography>{title}</Typography>}
       />
@@ -95,36 +114,29 @@ const Post = ({
 
       <CardActions disableSpacing>
         {/* LIKE */}
-        <IconButton aria-label="like" onClick={onLikeHandler}>
-          <Badge badgeContent={numLikes} color="success">
-            <FavoriteIcon color={isLiked ? "warning" : "inherit"} />
-          </Badge>
-        </IconButton>
+        {onLike && (
+          <IconButton aria-label="like" onClick={onLikeHandler}>
+            <Badge badgeContent={numLikes} color="success">
+              <FavoriteIcon color={isLiked ? "warning" : "inherit"} />
+            </Badge>
+          </IconButton>
+        )}
         {/* SHARE */}
-        <IconButton aria-label="share">
+        {/* <IconButton aria-label="share">
           <ShareIcon />
-        </IconButton>
+        </IconButton> */}
         {/* FAVOURITE */}
-        <IconButton aria-label="bookmark" onClick={onBookmarkHandler}>
-          {isBookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
-        </IconButton>
+        {onBookmark && (
+          <IconButton aria-label="bookmark" onClick={onBookmarkHandler}>
+            {isBookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
+          </IconButton>
+        )}
       </CardActions>
       <CardContent>
         <TablePrerequisites items={prerequisites} />
       </CardContent>
     </Card>
   );
-};
-
-Post.propTypes = {
-  userId: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
-  href: PropTypes.string,
-  enableLink: PropTypes.bool,
-  onEdit: PropTypes.func,
-  onDelete: PropTypes.func,
-  onReport: PropTypes.func,
-  onLike: PropTypes.func,
 };
 
 export default Post;

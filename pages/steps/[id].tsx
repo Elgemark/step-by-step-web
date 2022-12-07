@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Layout from "../../components/Layout";
 import styled from "styled-components";
-import { getPost, getSteps, useUserStepsProgress, deletePost, likePost } from "../../utils/firebase/api";
+import { getPost, getSteps, useUserStepsProgress, deletePost, likePost, bookmarkPost } from "../../utils/firebase/api";
 import RevealNext from "../../components/RevealNext";
 import Step from "../../components/steps/Step";
 import Post from "../../components/posts/Post";
@@ -63,6 +63,10 @@ const Steps = ({ post, steps }) => {
     await likePost(id);
   };
 
+  const onBookmarkHandler = async ({ id }) => {
+    await bookmarkPost(id);
+  };
+
   const onStartOverHandler = async () => {
     setStep(0, false);
   };
@@ -90,6 +94,7 @@ const Steps = ({ post, steps }) => {
               : undefined
           }
           onLike={() => onLikeHandler(post)}
+          onBookmark={() => onBookmarkHandler(post)}
           onStartOver={onStartOverHandler}
         />
         <RevealNext

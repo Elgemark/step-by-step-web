@@ -47,10 +47,14 @@ export const updateUser = async (uid, data) => {
   return await updateDoc(userRef, data);
 };
 
-export const getUser = async () => {
-  const firebase = getFirestore();
+export const getCurrentUser = async () => {
   const auth = getAuth();
   const { uid } = auth.currentUser;
+  return await getUser(uid);
+};
+
+export const getUser = async (uid) => {
+  const firebase = getFirestore();
   const userRef = doc(firebase, "users", uid);
   const userProfile = await getDoc(userRef);
   if (userProfile.exists()) {
@@ -60,14 +64,16 @@ export const getUser = async () => {
   }
 };
 
-export const useUser = () => {
+export const useUser = (uid) => {
   const { object: data, setValue: update, replace } = useStateObject();
   const [isLoading, setIsLoading] = useState();
   const [error, setError] = useState();
 
+  const getUserFunc = uid ? getUser : getCurrentUser;
+
   useEffect(() => {
     setIsLoading(true);
-    getUser()
+    getUserFunc(uid)
       .then((res) => {
         replace(res);
         setIsLoading(false);
