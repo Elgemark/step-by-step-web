@@ -70,7 +70,7 @@ const Post = ({
   };
 
   return (
-    <Card sx={{ minWidth: minWidth }} onClick={() => {}}>
+    <Card>
       <CardHeader
         avatar={<UserAvatar />}
         action={<PostMoreMenu onEdit={onEdit} onDelete={onDelete} onReport={onReport} onStartOver={onStartOver} />}
@@ -91,7 +91,6 @@ const Post = ({
         <Typography variant="body2" color="text.secondary">
           {descr}
         </Typography>
-        <TablePrerequisites items={prerequisites} />
       </CardContent>
 
       <CardActions disableSpacing>
@@ -110,6 +109,9 @@ const Post = ({
           {isBookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
         </IconButton>
       </CardActions>
+      <CardContent>
+        <TablePrerequisites items={prerequisites} />
+      </CardContent>
     </Card>
   );
 };

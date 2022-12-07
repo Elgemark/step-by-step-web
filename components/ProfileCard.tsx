@@ -1,14 +1,10 @@
-import Card from "@mui/material/Card";
-import CardHeader from "@mui/material/CardHeader";
-import CardContent from "@mui/material/CardContent";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import UserAvatar from "./UserAvatar";
-import ProfileMoreMenu from "./ProfileMoreMenu";
 import { useUser } from "../utils/firebase/api";
 import { useState } from "react";
-import { Button, Paper, Stack, useTheme } from "@mui/material";
+import { Button, ButtonGroup, Paper, Stack, useTheme } from "@mui/material";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { useSignOut } from "react-firebase-hooks/auth";
@@ -20,13 +16,15 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import UnpublishedIcon from "@mui/icons-material/Unpublished";
 import styled from "styled-components";
 
-const StyledPaper = styled(Paper)`
+const Root = styled.div`
   padding: ${({ theme }) => theme.spacing(2)};
   margin-bottom: ${({ theme }) => theme.spacing(2)};
   display: flex;
   flex-direction: column;
   align-items: center;
-
+  .user-alias {
+    /* text-align: center; */
+  }
   hr {
     width: 100%;
     margin: ${({ theme }) => theme.spacing(2)};
@@ -65,21 +63,47 @@ const ProfileCard = (props: ProfileCardProps) => {
     saveUser();
   };
 
+  const onCancelHandler = () => {
+    setEdit(false);
+  };
+
   const onChangeAliasHandler = (e) => {
     update("alias", e.target.value);
   };
 
   return (
-    <StyledPaper theme={theme} {...props}>
-      <Stack spacing={2}>
+    <Root theme={theme} {...props}>
+      <Stack spacing={2} width="100%" alignItems="center">
         <UserAvatar size={72} />
-        <ProfileMoreMenu onEdit={onEditHandler} onSignOut={onSignOutHandler} />
-        {edit ? <TextField fullWidth label="Alias" value={user?.alias} onChange={onChangeAliasHandler} /> : user?.alias}
-        <Typography variant="body2" color="text.secondary">
+        {edit ? (
+          <TextField
+            className="user-alias"
+            fullWidth
+            label="Alias"
+            value={user?.alias}
+            onChange={onChangeAliasHandler}
+          />
+        ) : (
+          <Typography className="user-alias" variant="h4">
+            {user?.alias}
+          </Typography>
+        )}
+        <Typography className="user-description" variant="body2" color="text.secondary">
           {user?.description || "text..."}
         </Typography>
-
-        {edit && <Button onClick={onSaveHandler}>Save</Button>}
+        <ButtonGroup variant="text">
+          {edit ? (
+            <>
+              <Button onClick={onCancelHandler}>Cancel</Button>
+              <Button onClick={onSaveHandler}>Save</Button>
+            </>
+          ) : (
+            <>
+              <Button onClick={onEditHandler}>Edit</Button>
+              <Button onClick={onSignOutHandler}>Log Out</Button>
+            </>
+          )}
+        </ButtonGroup>
       </Stack>
       <Divider />
       <Tabs value={tabValue} onChange={onTabChange} aria-label="basic tabs example">
@@ -88,7 +112,7 @@ const ProfileCard = (props: ProfileCardProps) => {
         <Tab label="Completed" icon={<CheckCircleIcon />} {...tabProps(2)} value="completed" />
         <Tab label="Incompleted" icon={<UnpublishedIcon />} {...tabProps(3)} value="incompleted" />
       </Tabs>
-    </StyledPaper>
+    </Root>
   );
 };
 

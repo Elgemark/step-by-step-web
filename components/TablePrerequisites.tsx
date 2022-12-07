@@ -13,7 +13,7 @@ interface Item {
 
 const StyledPaper = styled(Paper)`
   padding: ${({ theme }) => theme.spacing(2)};
-  margin-top: ${({ theme }) => theme.spacing(2)};
+  margin-bottom: ${({ theme }) => theme.spacing(2)};
 `;
 
 const StyledTable = styled.table`
@@ -72,7 +72,6 @@ const TablePrerequisitesDefault = ({ items = [], editable = false }) => {
   if (items.length === 0) {
     return <></>;
   }
-
   return (
     <StyledPaper elevation={4} theme={theme}>
       <StyledTable editable={editable} theme={theme}>

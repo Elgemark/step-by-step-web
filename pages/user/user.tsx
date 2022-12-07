@@ -3,7 +3,6 @@ import { Box, CircularProgress, Typography } from "@mui/material";
 import Link from "next/link";
 import Layout from "../../components/Layout";
 import ProfileCard from "../../components/ProfileCard";
-import { ReactNode } from "react";
 import { useRouter } from "next/router";
 // Firebase related
 import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
