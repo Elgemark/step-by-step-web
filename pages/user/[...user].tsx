@@ -1,8 +1,8 @@
 import { getCreatedPosts, getPostsByState, getSavedPosts } from "../../utils/firebase/api";
-import Profile from "./user";
+import User from "./User";
 
 const Index = (props) => {
-  return <Profile {...props} />;
+  return <User {...props} />;
 };
 
 export async function getServerSideProps({ query }) {
