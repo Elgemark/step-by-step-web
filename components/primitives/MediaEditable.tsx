@@ -2,6 +2,7 @@ import CardMedia from "@mui/material/CardMedia";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
+import CropIcon from "@mui/icons-material/Crop";
 import TextField from "@mui/material/TextField";
 import { useEffect, useState } from "react";
 import { usePaste } from "../../utils/imageUtils";
@@ -131,7 +132,7 @@ const MediaEditable: FC<{ locationPath: Array<string>; media: Media; onChangeIma
             </OpenDialog>
             {selectedImageURI && (
               <IconButton className="button-edit-image" aria-label="edit" onClick={onClickEditHandler}>
-                <EditIcon />
+                <CropIcon />
               </IconButton>
             )}
           </Stack>
