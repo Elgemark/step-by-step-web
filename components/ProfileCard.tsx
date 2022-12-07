@@ -38,7 +38,7 @@ const tabProps = (index: number) => {
 const ProfileCard: FC<{
   onTabChange: (event: SyntheticEvent<Element, Event>, value: any) => void;
   tabValue: string;
-}> = (tabValue, onTabChange, ...props) => {
+}> = ({ tabValue, onTabChange, ...props }) => {
   const theme = useTheme();
   const [signOut, signOutLoading, signOutError] = useSignOut(getAuth());
   const [edit, setEdit] = useState(false);
