@@ -97,38 +97,9 @@ export default async function getCroppedImg(imageSrc, pixelCrop, rotation = 0) {
   return canvas;
 }
 
-export const generateDownload = async (imageSrc, crop) => {
-  if (!crop || !imageSrc) {
-    return;
-  }
-
-  const canvas = await getCroppedImg(imageSrc, crop);
-
-  canvas.toBlob(
-    (blob) => {
-      const previewUrl = window.URL.createObjectURL(blob);
-
-      const anchor = document.createElement("a");
-      anchor.download = "image.jpeg";
-      anchor.href = URL.createObjectURL(blob);
-      anchor.click();
-
-      window.URL.revokeObjectURL(previewUrl);
-    },
-    "image/jpeg",
-    0.66
-  );
-};
-
 export const generateBlob = async (imageSrc, crop) => {
-  if (!crop || !imageSrc) {
-    return;
-  }
-
   const canvas = await getCroppedImg(imageSrc, crop);
-
   const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
   const url = URL.createObjectURL(blob);
-
   return { blob, url };
 };
