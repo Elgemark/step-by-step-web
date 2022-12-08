@@ -90,7 +90,11 @@ const PageMain = ({ posts = [], category, title, enableLink = false }) => {
   };
 
   const onClickAvatarHandler = ({ userId }) => {
-    router.push("/profile/" + userId);
+    if (user.uid === userId) {
+      router.push("/profile/" + userId);
+    } else {
+      router.push("/user/" + userId);
+    }
   };
 
   const onSearchHandler = (value) => {
