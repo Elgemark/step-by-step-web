@@ -70,7 +70,7 @@ export const useUser = (uid, realtime = false) => {
   const [error, setError] = useState();
   //
   const auth = getAuth();
-  const { uid: currentUserId } = auth.currentUser;
+  const { uid: currentUserId } = auth.currentUser || {};
 
   const getUserFunc = uid ? getUser : getCurrentUser;
 

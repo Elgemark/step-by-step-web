@@ -28,7 +28,7 @@ const LoggedIn = ({ tabValue, uid, posts = [] }) => {
   const router = useRouter();
 
   const onTabChangehandle = (event: React.SyntheticEvent, newValue: string) => {
-    router.push("/user/" + uid + "/" + newValue);
+    router.push("/profile/" + uid + "/" + newValue);
   };
 
   return (
@@ -44,7 +44,7 @@ const LoggedIn = ({ tabValue, uid, posts = [] }) => {
   );
 };
 
-const User = (props) => {
+const Profile = (props) => {
   const [user, userLoading, userError] = useAuthState(getAuth());
   const [_, signOutLoading, signOutError] = useSignOut(getAuth());
   const router = useRouter();
@@ -62,4 +62,4 @@ const User = (props) => {
   }
 };
 
-export default User;
+export default Profile;

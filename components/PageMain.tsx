@@ -90,7 +90,7 @@ const PageMain = ({ posts = [], category, title, enableLink = false }) => {
   };
 
   const onClickAvatarHandler = ({ userId }) => {
-    router.push("/user/" + userId);
+    router.push("/profile/" + userId);
   };
 
   const onSearchHandler = (value) => {

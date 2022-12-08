@@ -12,7 +12,7 @@ export const config = (firebase) => {
         const { user } = authResult;
         setUser(user).then((res) => {
           if (res.wasCreated) {
-            window.location.assign(`/user`);
+            window.location.assign(`/profile`);
           } else {
             window.location.assign(`/`);
           }

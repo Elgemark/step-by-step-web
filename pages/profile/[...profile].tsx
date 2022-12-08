@@ -1,13 +1,13 @@
 import { getCreatedPosts, getPostsByState, getSavedPosts } from "../../utils/firebase/api";
-import User from "./User";
+import User from "./Profile";
 
 const Index = (props) => {
   return <User {...props} />;
 };
 
 export async function getServerSideProps({ query }) {
-  const uid = query.user[0];
-  const tabValue = query.user[1] || "saved";
+  const uid = query.profile[0];
+  const tabValue = query.profile[1] || "saved";
   let posts = [];
   switch (tabValue) {
     case "saved":
