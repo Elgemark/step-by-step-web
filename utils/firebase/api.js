@@ -375,6 +375,47 @@ export const useUserStepsProgress = (uid, id) => {
   };
 };
 
+// ::: FOLLOW
+
+export const follow = async (userId, follow = true) => {
+  const auth = getAuth();
+  const currentUserId = auth.currentUser.uid;
+  const firebase = getFirestore();
+  // setup batch write
+  const batch = writeBatch(firebase);
+  //::: Update current user follow data...
+  // See if user was followed
+  const followRef = doc(firebase, "users", currentUserId, "follows", userId);
+  const followSnap = await getDoc(followRef);
+  // Delete follow if exists & follow = false
+  if (followSnap.exists() && !follow) {
+    await batch.delete(followRef);
+  }
+  // Set follow if exists = false & follow = true
+  else if (!followSnap.exists() && follow) {
+    await batch.set(followRef, { follow });
+  }
+  //::: Update the followed user followers...
+  const userFollowerRef = collection(firebase, "users", userId, "followers", currentUserId);
+  const userFollowerSnap = await getDoc(userFollowerRef);
+  // Delete follower if exists & follow = false
+  if (userFollowerSnap.exists() && !follow) {
+    await batch.delete(userFollowerRef);
+  }
+  // Set follower if exists = false & follow = true
+  else if (!userFollowerSnap.exists() && follow) {
+    await batch.set(userFollowerRef, { follow });
+  }
+  // ::: Comit...
+  let resp = {};
+  try {
+    resp.response = await batch.commit();
+  } catch (error) {
+    resp.error = error;
+  }
+  return resp;
+};
+
 // ::: LIKES POST
 
 export const likePost = async (postId) => {
