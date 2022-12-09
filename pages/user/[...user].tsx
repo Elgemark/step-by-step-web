@@ -1,4 +1,4 @@
-import { getCreatedPosts } from "../../utils/firebase/api";
+import { follow, getCreatedPosts } from "../../utils/firebase/api";
 import Head from "next/head";
 import Layout from "../../components/Layout";
 import { useRouter } from "next/router";
@@ -13,13 +13,17 @@ const Index = ({ posts, uid, tabValue }) => {
     router.push("/user/" + uid + "/" + newValue);
   };
 
+  const onFollowHandler = () => {
+    follow(uid);
+  };
+
   return (
     <>
       <Head>
         <title>STEPS | User</title>
       </Head>
       <Layout>
-        <UserCard onTabChange={onTabChangehandle} userId={uid} tabValue={tabValue} />
+        <UserCard onTabChange={onTabChangehandle} userId={uid} tabValue={tabValue} onFollow={onFollowHandler} />
         <Posts posts={posts} enableLink />
       </Layout>
     </>

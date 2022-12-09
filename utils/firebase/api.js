@@ -396,7 +396,7 @@ export const follow = async (userId, follow = true) => {
     await batch.set(followRef, { follow });
   }
   //::: Update the followed user followers...
-  const userFollowerRef = collection(firebase, "users", userId, "followers", currentUserId);
+  const userFollowerRef = doc(firebase, "users", userId, "followers", currentUserId);
   const userFollowerSnap = await getDoc(userFollowerRef);
   // Delete follower if exists & follow = false
   if (userFollowerSnap.exists() && !follow) {

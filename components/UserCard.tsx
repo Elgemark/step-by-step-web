@@ -3,13 +3,13 @@ import Typography from "@mui/material/Typography";
 import UserAvatar from "./UserAvatar";
 import { useUser } from "../utils/firebase/api";
 import { FC } from "react";
-import { Stack, useTheme } from "@mui/material";
+import { Button, Stack, useTheme } from "@mui/material";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import { SyntheticEvent } from "react";
+import { SyntheticEvent, MouseEventHandler } from "react";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import CreateIcon from "@mui/icons-material/Create";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import AssistantDirectionIcon from "@mui/icons-material/AssistantDirection";
 import styled from "styled-components";
 
 const Root = styled.div`
@@ -30,12 +30,12 @@ const tabProps = (index: number) => {
     "aria-controls": `simple-tabpanel-${index}`,
   };
 };
-
 const UserCard: FC<{
   onTabChange: (event: SyntheticEvent<Element, Event>, value: any) => void;
+  onFollow: MouseEventHandler<HTMLButtonElement>;
   tabValue: string;
   userId?: string;
-}> = ({ tabValue, onTabChange, userId, ...props }) => {
+}> = ({ tabValue, onTabChange, onFollow, userId, ...props }) => {
   const theme = useTheme();
   const { data: user, update, isLoading } = useUser(userId);
 
@@ -49,12 +49,15 @@ const UserCard: FC<{
         <Typography className="user-description" variant="body2" color="text.secondary">
           {user?.description || ""}
         </Typography>
+        <Button variant="contained" onClick={onFollow}>
+          Follow
+        </Button>
       </Stack>
       <Divider />
       <Tabs value={tabValue} onChange={onTabChange} aria-label="post tabs">
         <Tab label="Created" icon={<CreateIcon />} {...tabProps(1)} value="created" />
         <Tab label="Saved" icon={<BookmarkIcon />} {...tabProps(0)} value="saved" />
-        <Tab label="Follows" icon={<CheckCircleIcon />} {...tabProps(2)} value="follows" />
+        <Tab label="Follows" icon={<AssistantDirectionIcon />} {...tabProps(2)} value="follows" />
       </Tabs>
     </Root>
   );
