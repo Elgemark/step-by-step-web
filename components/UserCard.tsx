@@ -23,6 +23,9 @@ const Root = styled.div`
     width: 100%;
     margin: ${({ theme }) => theme.spacing(2)};
   }
+  .button-follow {
+    margin-bottom: ${({ theme }) => theme.spacing(2)};
+  }
 `;
 
 const tabProps = (index: number) => {
@@ -54,11 +57,11 @@ const UserCard: FC<{
           {user?.description || ""}
         </Typography>
         {isFollowing ? (
-          <LoadingButton variant="contained" onClick={onUnfollow} loading={loadingFollower}>
+          <LoadingButton className="button-follow" variant="contained" onClick={onUnfollow} loading={loadingFollower}>
             Unfollow
           </LoadingButton>
         ) : (
-          <LoadingButton variant="contained" onClick={onFollow} loading={loadingFollower}>
+          <LoadingButton className="button-follow" variant="contained" onClick={onFollow} loading={loadingFollower}>
             Follow
           </LoadingButton>
         )}
