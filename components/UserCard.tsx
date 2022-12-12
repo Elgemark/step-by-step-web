@@ -11,6 +11,7 @@ import BookmarkIcon from "@mui/icons-material/Bookmark";
 import CreateIcon from "@mui/icons-material/Create";
 import AssistantDirectionIcon from "@mui/icons-material/AssistantDirection";
 import styled from "styled-components";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 const Root = styled.div`
   padding: ${({ theme }) => theme.spacing(2)};
@@ -33,9 +34,12 @@ const tabProps = (index: number) => {
 const UserCard: FC<{
   onTabChange: (event: SyntheticEvent<Element, Event>, value: any) => void;
   onFollow: MouseEventHandler<HTMLButtonElement>;
+  onUnfollow: MouseEventHandler<HTMLButtonElement>;
   tabValue: string;
   userId?: string;
-}> = ({ tabValue, onTabChange, onFollow, userId, ...props }) => {
+  isFollowing: boolean;
+  loadingFollower: boolean;
+}> = ({ tabValue, onTabChange, onFollow, onUnfollow, userId, isFollowing, loadingFollower = false, ...props }) => {
   const theme = useTheme();
   const { data: user, update, isLoading } = useUser(userId);
 
@@ -49,9 +53,15 @@ const UserCard: FC<{
         <Typography className="user-description" variant="body2" color="text.secondary">
           {user?.description || ""}
         </Typography>
-        <Button variant="contained" onClick={onFollow}>
-          Follow
-        </Button>
+        {isFollowing ? (
+          <LoadingButton variant="contained" onClick={onUnfollow} loading={loadingFollower}>
+            Unfollow
+          </LoadingButton>
+        ) : (
+          <LoadingButton variant="contained" onClick={onFollow} loading={loadingFollower}>
+            Follow
+          </LoadingButton>
+        )}
       </Stack>
       <Divider />
       <Tabs value={tabValue} onChange={onTabChange} aria-label="post tabs">

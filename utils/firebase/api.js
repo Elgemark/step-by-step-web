@@ -20,10 +20,11 @@ import {
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { getAuth } from "firebase/auth";
-import { useEffect, useState } from "react";
+import { useEffect, useInsertionEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useStateObject } from "../object";
 import * as dataModels from "./models";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 /// :::USERS
 
@@ -414,6 +415,44 @@ export const follow = async (userId, follow = true) => {
     resp.error = error;
   }
   return resp;
+};
+
+export const getLeaderForFollower = async (leaderUserId, followerUserId) => {
+  const firebase = getFirestore();
+  const docRef = doc(firebase, "users", followerUserId, "follows", leaderUserId);
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+    return docSnap.data();
+  } else {
+    return null;
+  }
+};
+
+export const useFollow = (leaderUserId) => {
+  const [currentUser] = useAuthState(getAuth());
+  const [isLoading, setIsLoading] = useState(true);
+  const [isFollowing, setIsFollowing] = useState(false);
+
+  useEffect(() => {
+    if (currentUser) {
+      setIsLoading(true);
+      const followeUserId = currentUser.uid;
+      // Get leader
+      getLeaderForFollower(leaderUserId, followeUserId).then((res) => {
+        setIsFollowing(res ? true : false);
+        setIsLoading(false);
+      });
+    }
+  }, [currentUser]);
+
+  return {
+    isFollowing,
+    toggle: (userId) => {
+      setIsFollowing(!isFollowing);
+      follow(userId, !isFollowing);
+    },
+    isLoading,
+  };
 };
 
 // ::: LIKES POST

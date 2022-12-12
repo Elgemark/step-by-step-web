@@ -1,4 +1,4 @@
-import { follow, getCreatedPosts } from "../../utils/firebase/api";
+import { getCreatedPosts, useFollow } from "../../utils/firebase/api";
 import Head from "next/head";
 import Layout from "../../components/Layout";
 import { useRouter } from "next/router";
@@ -8,13 +8,16 @@ import { SyntheticEvent } from "react";
 
 const Index = ({ posts, uid, tabValue }) => {
   const router = useRouter();
+  const { isFollowing, toggle, isLoading } = useFollow(uid);
+
+  console.log("isLoading", isLoading);
 
   const onTabChangehandle = (event: SyntheticEvent, newValue: string) => {
     router.push("/user/" + uid + "/" + newValue);
   };
 
   const onFollowHandler = () => {
-    follow(uid);
+    toggle(uid);
   };
 
   return (
@@ -23,14 +26,23 @@ const Index = ({ posts, uid, tabValue }) => {
         <title>STEPS | User</title>
       </Head>
       <Layout>
-        <UserCard onTabChange={onTabChangehandle} userId={uid} tabValue={tabValue} onFollow={onFollowHandler} />
+        <UserCard
+          onTabChange={onTabChangehandle}
+          userId={uid}
+          tabValue={tabValue}
+          onFollow={onFollowHandler}
+          onUnfollow={onFollowHandler}
+          isFollowing={isFollowing}
+          loadingFollower={isLoading}
+        />
         <Posts posts={posts} enableLink />
       </Layout>
     </>
   );
 };
 
-export async function getServerSideProps({ query }) {
+export async function getServerSideProps(props) {
+  const { query } = props;
   const uid = query.user[0];
   const tabValue = query.user[1] || "created";
   let posts = [];
@@ -46,7 +58,14 @@ export async function getServerSideProps({ query }) {
       posts = [];
       break;
   }
-  return { props: { uid, posts, tabValue } };
+  //
+  return {
+    props: {
+      uid,
+      posts,
+      tabValue,
+    },
+  };
 }
 
 export default Index;
