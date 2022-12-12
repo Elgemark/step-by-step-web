@@ -10,8 +10,6 @@ const Index = ({ posts, uid, tabValue }) => {
   const router = useRouter();
   const { isFollowing, toggle, isLoading } = useFollow(uid);
 
-  console.log("isLoading", isLoading);
-
   const onTabChangehandle = (event: SyntheticEvent, newValue: string) => {
     router.push("/user/" + uid + "/" + newValue);
   };
