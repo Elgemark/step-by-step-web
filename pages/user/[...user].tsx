@@ -1,4 +1,4 @@
-import { getCreatedPosts, useFollow } from "../../utils/firebase/api";
+import { getCreatedPosts, getFollows, useFollow } from "../../utils/firebase/api";
 import Head from "next/head";
 import Layout from "../../components/Layout";
 import { useRouter } from "next/router";
@@ -44,6 +44,7 @@ export async function getServerSideProps(props) {
   const uid = query.user[0];
   const tabValue = query.user[1] || "created";
   let posts = [];
+  let users = [];
   switch (tabValue) {
     case "created":
       const { posts: createdPosts } = await getCreatedPosts(uid);
@@ -53,6 +54,8 @@ export async function getServerSideProps(props) {
       posts = [];
       break;
     case "follows":
+      const { data: follows } = await getFollows(uid);
+      users = follows;
       posts = [];
       break;
   }

@@ -24,7 +24,8 @@ const Loading = () => {
   );
 };
 
-const LoggedIn = ({ tabValue, uid, posts = [] }) => {
+const LoggedIn = ({ tabValue, uid, posts = [], users = [] }) => {
+  console.log("users", users);
   const router = useRouter();
 
   const onTabChangehandle = (event: React.SyntheticEvent, newValue: string) => {

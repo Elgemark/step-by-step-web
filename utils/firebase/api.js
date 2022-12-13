@@ -417,6 +417,40 @@ export const follow = async (userId, follow = true) => {
   return resp;
 };
 
+export const getFollows = async (userId) => {
+  const firebase = getFirestore();
+  const result = {};
+  try {
+    const followsRef = collection(firebase, "users", userId, "follows");
+    const followsSnap = await getDocs(followsRef);
+    const data = [];
+    followsSnap.forEach((doc) => {
+      data.push({ ...doc.data(), id: doc.id });
+    });
+    result.data = data;
+  } catch (error) {
+    result.error = error;
+  }
+  return result;
+};
+
+export const getFollowers = async (userId) => {
+  const firebase = getFirestore();
+  const result = {};
+  try {
+    const followersRef = collection(firebase, "users", userId, "followers");
+    const followersSnap = await getDocs(followersRef);
+    const data = [];
+    followersSnap.forEach((doc) => {
+      data.push({ ...doc.data(), id: doc.id });
+    });
+    result.data = data;
+  } catch (error) {
+    result.error = error;
+  }
+  return result;
+};
+
 export const getLeaderForFollower = async (leaderUserId, followerUserId) => {
   const firebase = getFirestore();
   const docRef = doc(firebase, "users", followerUserId, "follows", leaderUserId);

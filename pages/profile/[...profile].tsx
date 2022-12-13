@@ -1,14 +1,15 @@
-import { getCreatedPosts, getPostsByState, getSavedPosts } from "../../utils/firebase/api";
-import User from "./Profile";
+import { getCreatedPosts, getFollows, getPostsByState, getSavedPosts } from "../../utils/firebase/api";
+import Profile from "./Profile";
 
 const Index = (props) => {
-  return <User {...props} />;
+  return <Profile {...props} />;
 };
 
 export async function getServerSideProps({ query }) {
   const uid = query.profile[0];
   const tabValue = query.profile[1] || "saved";
   let posts = [];
+  let users = [];
   switch (tabValue) {
     case "saved":
       const { posts: savedPosts } = await getSavedPosts(uid);
@@ -26,9 +27,13 @@ export async function getServerSideProps({ query }) {
       const { posts: incompletedPosts } = await getPostsByState(uid, "incompleted");
       posts = incompletedPosts;
       break;
+    case "follows":
+      const { data: follows } = await getFollows(uid);
+      users = follows;
+      break;
   }
 
-  return { props: { tabValue, uid, posts } };
+  return { props: { tabValue, uid, posts, users } };
 }
 
 export default Index;

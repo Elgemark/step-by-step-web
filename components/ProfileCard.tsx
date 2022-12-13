@@ -14,6 +14,7 @@ import BookmarkIcon from "@mui/icons-material/Bookmark";
 import CreateIcon from "@mui/icons-material/Create";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import UnpublishedIcon from "@mui/icons-material/Unpublished";
+import AssistantDirectionIcon from "@mui/icons-material/AssistantDirection";
 import styled from "styled-components";
 
 const Root = styled.div`
@@ -108,6 +109,7 @@ const ProfileCard: FC<{
         <Tab label="Created" icon={<CreateIcon />} {...tabProps(1)} value="created" />
         <Tab label="Completed" icon={<CheckCircleIcon />} {...tabProps(2)} value="completed" />
         <Tab label="Incompleted" icon={<UnpublishedIcon />} {...tabProps(3)} value="incompleted" />
+        <Tab label="Follows" icon={<AssistantDirectionIcon />} {...tabProps(4)} value="follows" />
       </Tabs>
     </Root>
   );
