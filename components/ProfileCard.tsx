@@ -1,20 +1,11 @@
-import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import UserAvatar from "./UserAvatar";
 import { useUser } from "../utils/firebase/api";
 import { useState, FC } from "react";
-import { Button, ButtonGroup, Paper, Stack, useTheme } from "@mui/material";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
+import { Button, ButtonGroup, Stack, useTheme } from "@mui/material";
 import { useSignOut } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
-import { SyntheticEvent } from "react";
-import BookmarkIcon from "@mui/icons-material/Bookmark";
-import CreateIcon from "@mui/icons-material/Create";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import UnpublishedIcon from "@mui/icons-material/Unpublished";
-import AssistantDirectionIcon from "@mui/icons-material/AssistantDirection";
 import styled from "styled-components";
 
 const Root = styled.div`
@@ -29,24 +20,13 @@ const Root = styled.div`
   }
 `;
 
-const tabProps = (index: number) => {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
-};
-
 const ProfileCard: FC<{
-  onTabChange: (event: SyntheticEvent<Element, Event>, value: any) => void;
-  tabValue: string;
   userId?: string;
-}> = ({ tabValue, onTabChange, userId, ...props }) => {
+}> = ({ userId, ...props }) => {
   const theme = useTheme();
   const [signOut, signOutLoading, signOutError] = useSignOut(getAuth());
   const [edit, setEdit] = useState(false);
   const { data: user, update, save: saveUser, isCurrentUser, isLoading } = useUser(userId);
-
-  console.log("userId", userId, "isCurrentUser", isCurrentUser);
 
   const onEditHandler = () => {
     setEdit(true);
@@ -103,14 +83,6 @@ const ProfileCard: FC<{
           )}
         </ButtonGroup>
       </Stack>
-      <Divider />
-      <Tabs value={tabValue} onChange={onTabChange} aria-label="post tabs">
-        <Tab label="Saved" icon={<BookmarkIcon />} {...tabProps(0)} value="saved" />
-        <Tab label="Created" icon={<CreateIcon />} {...tabProps(1)} value="created" />
-        <Tab label="Completed" icon={<CheckCircleIcon />} {...tabProps(2)} value="completed" />
-        <Tab label="Incompleted" icon={<UnpublishedIcon />} {...tabProps(3)} value="incompleted" />
-        <Tab label="Follows" icon={<AssistantDirectionIcon />} {...tabProps(4)} value="follows" />
-      </Tabs>
     </Root>
   );
 };
