@@ -1,10 +1,8 @@
-import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import UserAvatar from "./UserAvatar";
 import { useUser } from "../utils/firebase/api";
 import { FC } from "react";
 import { Stack, useTheme } from "@mui/material";
-import { MouseEventHandler } from "react";
 import styled from "styled-components";
 
 const Root = styled.div`
@@ -23,12 +21,8 @@ const Root = styled.div`
 `;
 
 const UserCard: FC<{
-  onFollow: MouseEventHandler<HTMLButtonElement>;
-  onUnfollow: MouseEventHandler<HTMLButtonElement>;
-  userId?: string;
-  isFollowing: boolean;
-  loadingFollower: boolean;
-}> = ({ onFollow, onUnfollow, userId, isFollowing, loadingFollower = false, ...props }) => {
+  userId: string;
+}> = ({ userId, ...props }) => {
   const theme = useTheme();
   const { data: user, update, isLoading } = useUser(userId);
 
@@ -43,7 +37,6 @@ const UserCard: FC<{
           {user?.description || ""}
         </Typography>
       </Stack>
-      <Divider />
     </Root>
   );
 };
