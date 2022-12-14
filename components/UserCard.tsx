@@ -2,7 +2,7 @@ import Typography from "@mui/material/Typography";
 import UserAvatar from "./UserAvatar";
 import { useUser } from "../utils/firebase/api";
 import { FC } from "react";
-import { CircularProgress, Stack, useTheme } from "@mui/material";
+import { CircularProgress, Paper, Stack, useTheme } from "@mui/material";
 import styled from "styled-components";
 
 interface User {
@@ -19,7 +19,7 @@ const StyledDefault = styled.div`
   align-items: center;
 `;
 
-const StyledSmall = styled.div`
+const StyledSmall = styled(Paper)`
   padding: ${({ theme }) => theme.spacing(2)};
   margin-bottom: ${({ theme }) => theme.spacing(2)};
   display: flex;
@@ -54,7 +54,7 @@ const CardSmall: FC<{
   const theme = useTheme();
 
   return (
-    <StyledSmall theme={theme} {...props}>
+    <StyledSmall theme={theme} elevation={2} {...props}>
       <UserAvatar className="user-avatar" size={36} userId={user.id} realtime />
       <Stack direction={"column"} spacing={2}>
         <Typography className="user-alias" variant="h6">
