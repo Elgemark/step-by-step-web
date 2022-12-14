@@ -2,42 +2,88 @@ import Typography from "@mui/material/Typography";
 import UserAvatar from "./UserAvatar";
 import { useUser } from "../utils/firebase/api";
 import { FC } from "react";
-import { Stack, useTheme } from "@mui/material";
+import { CircularProgress, Stack, useTheme } from "@mui/material";
 import styled from "styled-components";
 
-const Root = styled.div`
+interface User {
+  alias: string;
+  description: string;
+  id: string;
+}
+
+const StyledDefault = styled.div`
   padding: ${({ theme }) => theme.spacing(2)};
   margin-bottom: ${({ theme }) => theme.spacing(2)};
   display: flex;
   flex-direction: column;
   align-items: center;
-  hr {
-    width: 100%;
-    margin: ${({ theme }) => theme.spacing(2)};
-  }
-  .button-follow {
-    margin-bottom: ${({ theme }) => theme.spacing(2)};
+`;
+
+const StyledSmall = styled.div`
+  padding: ${({ theme }) => theme.spacing(2)};
+  margin-bottom: ${({ theme }) => theme.spacing(2)};
+  display: flex;
+  .user-avatar {
+    margin-right: ${({ theme }) => theme.spacing(2)};
   }
 `;
 
-const UserCard: FC<{
-  userId: string;
-}> = ({ userId, ...props }) => {
+const CardDefault: FC<{
+  user: User;
+}> = ({ user, ...props }) => {
   const theme = useTheme();
-  const { data: user, update, isLoading } = useUser(userId);
 
   return (
-    <Root theme={theme} {...props}>
+    <StyledDefault theme={theme} {...props}>
       <Stack spacing={2} width="100%" alignItems="center">
-        <UserAvatar size={72} userId={userId} realtime />
+        <UserAvatar className="user-avatar" size={72} userId={user.id} realtime />
         <Typography className="user-alias" variant="h4">
-          {user?.alias}
+          {user.alias}
         </Typography>
         <Typography className="user-description" variant="body2" color="text.secondary">
-          {user?.description || ""}
+          {user.description || ""}
         </Typography>
       </Stack>
-    </Root>
+    </StyledDefault>
+  );
+};
+
+const CardSmall: FC<{
+  user: User;
+}> = ({ user, ...props }) => {
+  const theme = useTheme();
+
+  return (
+    <StyledSmall theme={theme} {...props}>
+      <UserAvatar className="user-avatar" size={36} userId={user.id} realtime />
+      <Stack direction={"column"} spacing={2}>
+        <Typography className="user-alias" variant="h6">
+          {user.alias}
+        </Typography>
+        {user.description && (
+          <Typography className="user-description" variant="body2" color="text.secondary">
+            {user.description}
+          </Typography>
+        )}
+      </Stack>
+    </StyledSmall>
+  );
+};
+
+const UserCard: FC<{
+  userId: string;
+  variant: "default" | "small";
+}> = (props) => {
+  const { userId, variant = "small" } = props;
+  const { data: user, isLoading } = useUser(userId);
+
+  return (
+    <>
+      {(isLoading && <CircularProgress />) ||
+        (variant === "default" && <CardDefault user={user} />) ||
+        (variant === "small" && <CardSmall user={user} />) ||
+        null}
+    </>
   );
 };
 
