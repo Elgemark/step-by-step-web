@@ -72,7 +72,7 @@ const CardSmall: FC<{
 
 const UserCard: FC<{
   userId: string;
-  variant: "default" | "small";
+  variant?: "default" | "small";
 }> = (props) => {
   const { userId, variant = "small" } = props;
   const { data: user, isLoading } = useUser(userId);

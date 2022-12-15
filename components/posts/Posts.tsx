@@ -19,6 +19,10 @@ const Posts: FC<{
   const [showDialog, setShowDialog] = useState({ open: false, content: "", onOkClick: () => {} });
   const [user] = useAuthState(getAuth());
 
+  if (!posts.length) {
+    return null;
+  }
+
   return (
     <>
       <Masonry spacing={2} columns={{ lg: 4, md: 3, sm: 2, xs: 1 }}>
