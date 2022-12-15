@@ -28,7 +28,7 @@ const Users: FC<{ userIds: Array<string> }> = ({ userIds = [] }) => {
   return (
     <ResponsiveGrid>
       {userIds.map((userId) => (
-        <UserCard key={`user-${userId}`} userId={userId} />
+        <UserCard key={`user-${userId}`} userId={userId} variant="small" />
       ))}
     </ResponsiveGrid>
   );
@@ -60,8 +60,6 @@ const Index = ({ tabValue, uid, posts = [], userIds = [] }) => {
   const [user, userLoading, userError] = useAuthState(getAuth());
   const [_, signOutLoading, signOutError] = useSignOut(getAuth());
   const router = useRouter();
-
-  console.log("userIds", userIds);
 
   useEffect(() => {
     if (!userLoading && !user) {
