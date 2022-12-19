@@ -14,7 +14,7 @@ import {
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { Post } from "../interface";
-
+import { Steps } from "../type";
 
 export const getPosts = async (orderBy = "likes", startAt = 0, endAt = 10) => {
   const firebase = getFirestore();
@@ -118,7 +118,7 @@ export const getPostsByState = async (uid, state) => {
   return { error, posts, postIds };
 };
 
-export const searchPosts = async (tags = [], category, limit = 10) => {
+export const searchPosts = async (tags = [], category: string, limit = 10) => {
   const firebase = getFirestore();
   const stepsRef = collection(firebase, "posts");
   const tagsQuery = where("tags", "array-contains-any", tags);
@@ -142,7 +142,7 @@ export const searchPosts = async (tags = [], category, limit = 10) => {
   return data;
 };
 
-export const setPostAndSteps = async (id:string, post:Post, steps) => {
+export const setPostAndSteps = async (id: string, post: Post, steps: Steps) => {
   const auth = getAuth();
   const userId = auth.currentUser.uid;
   const firebase = getFirestore();
@@ -167,7 +167,7 @@ export const setPostAndSteps = async (id:string, post:Post, steps) => {
   return resp;
 };
 
-export const getPost = async (id:string) => {
+export const getPost = async (id: string) => {
   const firebase = getFirestore();
   const result = { data: null, error: null };
   try {
@@ -180,7 +180,7 @@ export const getPost = async (id:string) => {
   return result;
 };
 
-export const deletePost = async (id:string) => {
+export const deletePost = async (id: string) => {
   const firebase = getFirestore();
   const batch = writeBatch(firebase);
   batch.delete(doc(firebase, "posts", id));

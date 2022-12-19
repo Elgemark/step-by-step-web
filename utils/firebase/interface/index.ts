@@ -1,8 +1,11 @@
+impo;
+
 export interface Media {
   imageURI: string | null;
 }
 
 export interface Post {
+  id?: string;
   title: string;
   descr: string;
   media: Media;
