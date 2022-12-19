@@ -1,15 +1,11 @@
 import Layout from "../components/Layout";
 import Head from "next/head";
 import { useDebouncedQuery } from "../utils/queryUtils";
-import { bookmarkPost, deletePost, likePost } from "../utils/firebase/api";
 import { useRouter } from "next/router";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import { styled, alpha } from "@mui/material/styles";
-import { useState } from "react";
 // Firebase related
-import { useAuthState } from "react-firebase-hooks/auth";
-import { getAuth } from "firebase/auth";
 import { Stack } from "@mui/material";
 import SelectCategory from "./SelectCategory";
 import Posts from "./posts/Posts";
@@ -63,39 +59,8 @@ const StyledSearchBar = styled(Stack)(({ theme }) => ({
 }));
 
 const PageMain = ({ posts = [], category, title, enableLink = false }) => {
-  const [showDialog, setShowDialog] = useState({ open: false, content: "", onOkClick: () => {} });
-  const [user] = useAuthState(getAuth());
   const { set: setQuery } = useDebouncedQuery(1000);
   const router = useRouter();
-
-  const onEditHandler = ({ id }) => {
-    router.push("/create?id=" + id);
-  };
-
-  const onDeleteHandler = ({ id }) => {
-    setShowDialog({
-      ...showDialog,
-      open: true,
-      content: "Are you sure you want to delete this post?",
-      onOkClick: () => deletePost(id),
-    });
-  };
-
-  const onLikeHandler = async ({ id }) => {
-    await likePost(id);
-  };
-
-  const onBookmarkHandler = async ({ id }) => {
-    await bookmarkPost(id);
-  };
-
-  const onClickAvatarHandler = ({ userId }) => {
-    if (user.uid === userId) {
-      router.push("/profile/" + userId);
-    } else {
-      router.push("/user/" + userId);
-    }
-  };
 
   const onSearchHandler = (value) => {
     setQuery({ search: value });
@@ -124,15 +89,7 @@ const PageMain = ({ posts = [], category, title, enableLink = false }) => {
           </Search>
           <SelectCategory onChange={onCategoryChangeHandler} value={category} />
         </StyledSearchBar>
-        <Posts
-          enableLink={enableLink}
-          posts={posts}
-          onEdit={onEditHandler}
-          onDelete={onDeleteHandler}
-          onLike={onLikeHandler}
-          onBookmark={onBookmarkHandler}
-          onClickAvatar={onClickAvatarHandler}
-        />
+        <Posts enableLink={enableLink} posts={posts} />
       </Layout>
     </>
   );
