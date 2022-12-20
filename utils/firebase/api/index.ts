@@ -48,7 +48,9 @@ export const getPost = postApi.getPost;
 export const deletePost = postApi.deletePost;
 // ::: LISTS
 export const getLists = listApi.getLists;
+export const getList = listApi.getList;
 export const setLists = listApi.setLists;
+export const setList = listApi.setList;
 // ::: STEPS
 export const setSteps = async (id, data) => {
   const firebase = getFirestore();

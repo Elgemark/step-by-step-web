@@ -1,4 +1,4 @@
-import { Card, Chip, Collapse } from "@mui/material";
+import { Button, Card, CardActions, Chip, Collapse } from "@mui/material";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import Avatar from "@mui/material/Avatar";
@@ -8,13 +8,19 @@ import Fab from "@mui/material/Fab";
 import Stack from "@mui/material/Stack";
 import AddIcon from "@mui/icons-material/Add";
 import MediaEditable from "../primitives/MediaEditable";
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import SelectCategory from "../SelectCategory";
 import SettingsIcon from "@mui/icons-material/Settings";
 import AddText from "../primitives/AddText";
 import TablePrerequisites from "../TablePrerequisites";
 import _ from "lodash";
 import styled from "styled-components";
+import ListIcon from "@mui/icons-material/List";
+import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
+import { useStateObject } from "../../utils/object";
+import { Media } from "../../utils/firebase/interface";
+import { Lists } from "../../utils/firebase/type";
+import { MouseEventHandler } from "react";
 
 const StyledMediaEditable = styled(MediaEditable)`
   img {
@@ -22,17 +28,29 @@ const StyledMediaEditable = styled(MediaEditable)`
   }
 `;
 
-const PostEditable = ({
+const PostEditable: FC<{
+  title: string;
+  descr: string;
+  media: Media;
+  tags: Array<string>;
+  prerequisites: any;
+  mediaLocationPath: Array<any>;
+  category: string;
+  lists: Lists;
+  onAddList: any;
+}> = ({
   title,
   descr,
   media = {},
   tags = [],
   prerequisites = [],
+  lists = [],
   mediaLocationPath = [],
   category,
   onChangeTitle,
   onChangeBody,
   onAddTag,
+  onAddList,
   onRemoveTag,
   onChangeImage,
   onChangeCategory,
@@ -40,6 +58,7 @@ const PostEditable = ({
 }) => {
   const [tag, setTag] = useState("");
   const [prereqs, setPrereqs] = useState(prerequisites);
+  const { object } = useStateObject({ lists: [] });
 
   useEffect(() => {
     onChangePrerequisites(prereqs);
@@ -138,15 +157,20 @@ const PostEditable = ({
                 }}
                 size="small"
               />
-              <TablePrerequisites
+              {/* <TablePrerequisites
                 items={prerequisites}
                 editable
                 onRemove={onRemovePrerequisitesHandler}
                 onEdit={onEditPrerequisitesHandler}
               />
-              <AddText placeholder="Prerequisites" onAdd={onAddPrerequisitesHandler} />
+              <AddText placeholder="Prerequisites" onAdd={onAddPrerequisitesHandler} /> */}
             </Stack>
           </CardContent>
+          <CardActions>
+            <Button onClick={onAddList} endIcon={<PlaylistAddIcon></PlaylistAddIcon>}>
+              Add List
+            </Button>
+          </CardActions>
         </Card>
       </Collapse>
     </Stack>

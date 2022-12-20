@@ -30,6 +30,7 @@ export interface ListItem {
 }
 
 export interface List {
+  id: string;
   title: string;
   items: Array<ListItem>;
 }

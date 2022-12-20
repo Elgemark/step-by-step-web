@@ -52,11 +52,9 @@ const Create: FC<{ query: object; post: Post; steps: Steps; lists: List }> = ({ 
   // POST
   const { object: dataPost, setValue: setPostValue, replace: replacePost } = useStateObject(post);
   // POST LISTS
-  const { object: dataLists, setValue: setListValue, replace: replaceList } = useStateObject(lists);
+  const { object: dataLists, setValue: setListValue, replace: replaceList } = useStateObject({ lists });
   // STEPS
   const { object: dataSteps, setValue: setStepsValue, replace: replaceSteps } = useStateObject(steps);
-
-  console.log("dataPost", dataPost);
 
   useEffect(() => {
     if (!id) {
@@ -111,6 +109,12 @@ const Create: FC<{ query: object; post: Post; steps: Steps; lists: List }> = ({ 
     setCreatedStep(newStep);
   };
 
+  const onAddListHandler = () => {
+    const id = uuid();
+    const list: List = { id, items: [], title: "" };
+    setListValue("lists." + id, list);
+  };
+
   return (
     <>
       <Head>
@@ -119,6 +123,8 @@ const Create: FC<{ query: object; post: Post; steps: Steps; lists: List }> = ({ 
       <StyledLayout>
         {/* SETTINGS & POST */}
         <PostEditable
+          lists={dataLists.lists}
+          onAddList={onAddListHandler}
           onChangeTitle={(value) => setPostValue("title", value)}
           onChangeBody={(value) => setPostValue("descr", value)}
           onChangeImage={(value) => setPostValue("media.imageURI", value)}
