@@ -20,6 +20,7 @@ import * as userApi from "./user";
 import * as followApi from "./follow";
 import * as storageApi from "./storage";
 import * as postApi from "./post";
+import * as listApi from "./list";
 // User
 // Follow
 export const follow = followApi.follow;
@@ -45,6 +46,9 @@ export const searchPosts = postApi.searchPosts;
 export const setPostAndSteps = postApi.setPostAndSteps;
 export const getPost = postApi.getPost;
 export const deletePost = postApi.deletePost;
+// ::: LISTS
+export const getLists = listApi.getLists;
+export const setLists = listApi.setLists;
 // ::: STEPS
 export const setSteps = async (id, data) => {
   const firebase = getFirestore();

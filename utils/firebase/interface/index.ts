@@ -1,3 +1,5 @@
+import { Lists } from "../type";
+
 export interface Media {
   imageURI: string | null;
 }
@@ -30,4 +32,10 @@ export interface ListItem {
 export interface List {
   title: string;
   items: Array<ListItem>;
+}
+
+export interface ListResponse {
+  id: string;
+  data: Lists | [];
+  error: string | null;
 }

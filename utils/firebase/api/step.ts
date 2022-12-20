@@ -1,20 +1,7 @@
-import {
-  getFirestore,
-  writeBatch,
-  doc,
-  getDoc,
-  setDoc,
-  orderBy as fsOrderBy,
-  startAt as fsStartAt,
-  endAt as fsEndAt,
-  increment,
-  limit as fsLimit,
-  updateDoc,
-} from "firebase/firestore";
+import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 
 import * as dataModels from "../models";
 
-import { Step } from "../interface";
 import { Steps } from "../type";
 
 export const setSteps = async (id: string, data: Steps) => {

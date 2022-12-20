@@ -8,15 +8,17 @@ import SaveIcon from "@mui/icons-material/Save";
 import { Button, Divider, Fade } from "@mui/material";
 import styled from "styled-components";
 import ButtonGroup from "@mui/material/ButtonGroup";
-import { getPost, getSteps, setPostAndSteps } from "../../utils/firebase/api";
+import { getLists, getPost, getSteps, setPostAndSteps } from "../../utils/firebase/api";
 import _ from "lodash";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import * as dataModels from "../../utils/firebase/models";
 import { toSanitizedArray } from "../../utils/stringUtils";
 import { v4 as uuid } from "uuid";
+import { List, ListResponse, Post } from "../../utils/firebase/interface";
+import { Steps } from "../../utils/firebase/type";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -42,14 +44,16 @@ const StyledBottomBar = styled.div`
   justify-content: center;
 `;
 
-const Create = ({ query, post, steps }) => {
+const Create: FC<{ query: object; post: Post; steps: Steps; lists: List }> = ({ query, post, steps, lists }) => {
   const router = useRouter();
   const [id, setId] = useState(query?.id);
   const [successMessage, setSuccessMessage] = useState(null);
   const [createdStep, setCreatedStep] = useState({});
-  // post object:
+  // POST
   const { object: dataPost, setValue: setPostValue, replace: replacePost } = useStateObject(post);
-  // step object: {title: "Title",body: "Description",media: { imageURI: "" }}
+  // POST LISTS
+  const { object: dataLists, setValue: setListValue, replace: replaceList } = useStateObject(lists);
+  // STEPS
   const { object: dataSteps, setValue: setStepsValue, replace: replaceSteps } = useStateObject(steps);
 
   console.log("dataPost", dataPost);
@@ -180,10 +184,12 @@ export async function getServerSideProps({ query }) {
   const id = query.id;
   const post = await getPost(id);
   const steps = await getSteps(id);
+  const listsResp: ListResponse = await getLists(id);
   return {
     props: {
       post: post?.data || dataModels.post,
       steps: steps?.data || dataModels.steps,
+      lists: listsResp.data,
       query,
     },
   };
