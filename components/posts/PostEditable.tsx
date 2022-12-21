@@ -38,9 +38,9 @@ const PostEditable: FC<{
   mediaLocationPath: Array<any>;
   category: string;
   lists: Lists;
-  onAddList: any;
-  onDeleteList: Function;
-  onEditLists: Function;
+  onAddList: (e: object) => {} | Function;
+  onDeleteList: (e: object) => {} | Function;
+  onEditLists: (e: object) => {} | Function;
 }> = ({
   title,
   descr,

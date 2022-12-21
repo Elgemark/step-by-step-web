@@ -111,9 +111,17 @@ const Create: FC<{ query: object; post: Post; steps: Steps; lists: Lists }> = ({
 
   const onAddListHandler = () => {
     const id = uuid();
-    const list: List = { id, items: [], title: "" };
+    const list: List = { id, items: [{ text: "", value: "" }], title: "" };
     const newDataLists = [...dataLists, list];
     setDataLists(newDataLists);
+  };
+
+  const onAddListItemHandler = ({ id, index }) => {
+    const newDataLists = _.cloneDeep(dataLists);
+    const listIndex = newDataLists.findIndex((list) => list.id === id);
+    newDataLists[listIndex].items.splice(index, 0, { text: "", value: "" });
+    setDataLists(newDataLists);
+    console.log("dataLists", index, dataLists);
   };
 
   const onEditListsHandler = (e) => {
@@ -133,6 +141,7 @@ const Create: FC<{ query: object; post: Post; steps: Steps; lists: Lists }> = ({
         <PostEditable
           lists={dataLists}
           onAddList={onAddListHandler}
+          onAddListItem={onAddListItemHandler}
           onChangeTitle={(value) => setPostValue("title", value)}
           onChangeBody={(value) => setPostValue("descr", value)}
           onChangeImage={(value) => setPostValue("media.imageURI", value)}

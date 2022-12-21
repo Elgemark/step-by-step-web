@@ -1,9 +1,10 @@
 import RemoveIcon from "@mui/icons-material/Remove";
+import AddIcon from "@mui/icons-material/Add";
 import IconButton from "@mui/material/IconButton";
-import { Button, Fade, Input, useTheme } from "@mui/material";
+import { Button, ButtonGroup, Fade, Input, useTheme } from "@mui/material";
 import styled from "styled-components";
 import Paper from "@mui/material/Paper";
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import { ListItem } from "../../utils/firebase/interface";
 import { useStateObject } from "../../utils/object";
 
@@ -20,14 +21,15 @@ const StyledTable = styled.table`
   p {
     opacity: 0.7;
   }
-  .column-1 {
-    width: 60%;
+  tr {
+    display: block;
+  }
+  .column-1,
+  .column-1 input {
     text-align: left;
   }
-  .column-2 {
-    text-align: right;
-  }
-  .column-2 {
+  .column-2,
+  .column-2 input {
     text-align: right;
   }
   thead th {
@@ -35,6 +37,12 @@ const StyledTable = styled.table`
   }
   thead .column-3 {
     display: ${({ editable }) => (editable ? "" : "none")};
+  }
+
+  .list-buttons {
+    margin-top: ${({ theme }) => theme.spacing(3)};
+    display: flex;
+    justify-content: center;
   }
 `;
 
@@ -46,20 +54,39 @@ const RemoveButton = ({ onClick }) => {
   );
 };
 
+const AddButton = ({ onClick }) => {
+  return (
+    <IconButton edge="end" aria-label="remove" onClick={onClick}>
+      <AddIcon />
+    </IconButton>
+  );
+};
+
 const ListEditable: FC<{
   id: string;
   title: string;
   items: Array<ListItem>;
-  onEdit: Function | undefined;
-  onRemoveListItem: Function | undefined;
-  onDelete: Function | undefined;
-}> = ({ id, title, items = [], onDelete, onRemoveListItem, onEdit }) => {
+  onEdit: (e: object) => {} | Function;
+  onDelete: (e: object) => {} | Function;
+}> = ({ id, title, items = [], onDelete, onEdit }) => {
   const { object, setValue, getValue } = useStateObject({ title, items, id });
   const theme = useTheme();
 
   const updateValue = (path, value) => {
     const result: object = setValue(path, value);
     onEdit(result);
+  };
+
+  const onAddListItemHandler = ({ index }) => {
+    const newItems = [...object.items];
+    newItems.splice(index + 1, 0, { text: "", value: "" });
+    updateValue("items", newItems);
+  };
+
+  const onDeleteListItemHandler = ({ index }) => {
+    const newItems = [...object.items];
+    newItems.splice(index, 1);
+    updateValue("items", newItems);
   };
 
   return (
@@ -77,7 +104,7 @@ const ListEditable: FC<{
         <tbody>
           {items.map((item: ListItem, index) => (
             <Fade in={true} key={index}>
-              <tr key={`${item.text}-${index}`}>
+              <tr key={`${id}-${index}-${Math.random()}`}>
                 {/* TEXT Left */}
                 <th className="column-1">
                   <Input
@@ -88,24 +115,27 @@ const ListEditable: FC<{
                 {/* TEXT Right */}
                 <td className="column-2">
                   <Input
-                    value={"items." + index + ".value"}
+                    value={getValue("items." + index + ".value")}
                     onChange={(e) => updateValue("items." + index + ".value", e.target.value)}
                   />
                 </td>
                 {/* REMOVE BUTTON */}
                 <td className="column-3">
-                  <RemoveButton onClick={() => onRemoveListItem(index)} />
+                  <RemoveButton onClick={() => onDeleteListItemHandler({ id, index })} />
                 </td>
-              </tr>
-              <tr>
-                <th colSpan={3}>
-                  <Button>Add list item</Button>
-                </th>
+                {/* ADD BUTTON */}
+                <td className="column-4">
+                  <AddButton onClick={() => onAddListItemHandler({ id, index })} />
+                </td>
               </tr>
             </Fade>
           ))}
+          <tr className="list-buttons">
+            <td colSpan={3}>
+              <Button onClick={() => onDelete({ id })}>Delete List</Button>
+            </td>
+          </tr>
         </tbody>
-        <Button>Delete List</Button>
       </StyledTable>
     </StyledPaper>
   );
