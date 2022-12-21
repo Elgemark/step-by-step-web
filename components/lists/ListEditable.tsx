@@ -47,21 +47,21 @@ const RemoveButton = ({ onClick }) => {
 };
 
 const ListEditable: FC<{
+  id: string;
   title: string;
   items: Array<ListItem>;
   onRemove: Function | undefined;
   onEdit: Function | undefined;
-  editable: Boolean;
-}> = ({ title, items = [], onRemove, onEdit, editable = false }) => {
+}> = ({ id, title, items = [], onRemove, onEdit }) => {
   const { object, setValue, getValue } = useStateObject({ title, items });
   const theme = useTheme();
 
   return (
     <StyledPaper elevation={3} theme={theme}>
-      <StyledTable editable={editable} theme={theme}>
+      <StyledTable theme={theme}>
         <thead>
           <tr>
-            <th className="column-1" colSpan={editable ? 1 : 3}>
+            <th className="column-1" colSpan={1}>
               <Input value={object.title} onChange={(e) => setValue("title", e.target.value)} />
             </th>
             <th className="column-2"></th>

@@ -21,6 +21,7 @@ import { useStateObject } from "../../utils/object";
 import { Media } from "../../utils/firebase/interface";
 import { Lists } from "../../utils/firebase/type";
 import { MouseEventHandler } from "react";
+import ListEditable from "../lists/ListEditable";
 
 const StyledMediaEditable = styled(MediaEditable)`
   img {
@@ -58,7 +59,6 @@ const PostEditable: FC<{
 }) => {
   const [tag, setTag] = useState("");
   const [prereqs, setPrereqs] = useState(prerequisites);
-  const { object } = useStateObject({ lists: [] });
 
   useEffect(() => {
     onChangePrerequisites(prereqs);
@@ -80,6 +80,8 @@ const PostEditable: FC<{
     _.set(newPrereqs, `[${index}].${key}`, value);
     setPrereqs(newPrereqs);
   };
+
+  console.log("lists", lists);
 
   return (
     <Stack spacing={2}>
@@ -157,13 +159,9 @@ const PostEditable: FC<{
                 }}
                 size="small"
               />
-              {/* <TablePrerequisites
-                items={prerequisites}
-                editable
-                onRemove={onRemovePrerequisitesHandler}
-                onEdit={onEditPrerequisitesHandler}
-              />
-              <AddText placeholder="Prerequisites" onAdd={onAddPrerequisitesHandler} /> */}
+              {lists.map((list) => (
+                <ListEditable key={list.id} id={list.id} title={list.title} items={list.items} />
+              ))}
             </Stack>
           </CardContent>
           <CardActions>

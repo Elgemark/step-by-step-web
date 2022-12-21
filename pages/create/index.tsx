@@ -18,7 +18,7 @@ import * as dataModels from "../../utils/firebase/models";
 import { toSanitizedArray } from "../../utils/stringUtils";
 import { v4 as uuid } from "uuid";
 import { List, ListResponse, Post } from "../../utils/firebase/interface";
-import { Steps } from "../../utils/firebase/type";
+import { Lists, Steps } from "../../utils/firebase/type";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -44,7 +44,7 @@ const StyledBottomBar = styled.div`
   justify-content: center;
 `;
 
-const Create: FC<{ query: object; post: Post; steps: Steps; lists: List }> = ({ query, post, steps, lists }) => {
+const Create: FC<{ query: object; post: Post; steps: Steps; lists: Lists }> = ({ query, post, steps, lists }) => {
   const router = useRouter();
   const [id, setId] = useState(query?.id);
   const [successMessage, setSuccessMessage] = useState(null);
@@ -52,7 +52,7 @@ const Create: FC<{ query: object; post: Post; steps: Steps; lists: List }> = ({ 
   // POST
   const { object: dataPost, setValue: setPostValue, replace: replacePost } = useStateObject(post);
   // POST LISTS
-  const { object: dataLists, setValue: setListValue, replace: replaceList } = useStateObject({ lists });
+  const [dataLists, setDataLists] = useState(lists);
   // STEPS
   const { object: dataSteps, setValue: setStepsValue, replace: replaceSteps } = useStateObject(steps);
 
@@ -112,7 +112,8 @@ const Create: FC<{ query: object; post: Post; steps: Steps; lists: List }> = ({ 
   const onAddListHandler = () => {
     const id = uuid();
     const list: List = { id, items: [], title: "" };
-    setListValue("lists." + id, list);
+    const newDataLists = [...dataLists, list];
+    setDataLists(newDataLists);
   };
 
   return (
@@ -123,7 +124,7 @@ const Create: FC<{ query: object; post: Post; steps: Steps; lists: List }> = ({ 
       <StyledLayout>
         {/* SETTINGS & POST */}
         <PostEditable
-          lists={dataLists.lists}
+          lists={dataLists}
           onAddList={onAddListHandler}
           onChangeTitle={(value) => setPostValue("title", value)}
           onChangeBody={(value) => setPostValue("descr", value)}
