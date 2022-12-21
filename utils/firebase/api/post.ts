@@ -13,8 +13,8 @@ import {
   limit as fsLimit,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
-import { Post } from "../interface";
-import { Steps } from "../type";
+import { List, Post } from "../interface";
+import { Lists, Steps } from "../type";
 
 export const getPosts = async (orderBy = "likes", startAt = 0, endAt = 10) => {
   const firebase = getFirestore();
@@ -142,7 +142,7 @@ export const searchPosts = async (tags = [], category: string, limit = 10) => {
   return data;
 };
 
-export const setPostAndSteps = async (id: string, post: Post, steps: Steps) => {
+export const setPostAndSteps = async (id: string, post: Post, steps: Steps, lists: Lists = []) => {
   const auth = getAuth();
   const userId = auth.currentUser.uid;
   const firebase = getFirestore();
@@ -155,6 +155,12 @@ export const setPostAndSteps = async (id: string, post: Post, steps: Steps) => {
   const stepsRef = doc(firebase, "posts", id, "steps", id);
   const stepsData = { ...steps, id, userId };
   batch.set(stepsRef, stepsData);
+  // Set the value of 'lists'
+  lists.forEach((list: List) => {
+    const listsRef = doc(firebase, "posts", id, "lists", list.id);
+    const listsData = { ...list, userId };
+    batch.set(listsRef, listsData);
+  });
   //
   let resp = { response: null, stepsData: null, error: null, postData: null };
   try {

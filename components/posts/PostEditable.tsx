@@ -39,6 +39,8 @@ const PostEditable: FC<{
   category: string;
   lists: Lists;
   onAddList: any;
+  onDeleteList: Function;
+  onEditLists: Function;
 }> = ({
   title,
   descr,
@@ -48,10 +50,12 @@ const PostEditable: FC<{
   lists = [],
   mediaLocationPath = [],
   category,
+  onAddList,
+  onDeleteList,
+  onEditLists,
   onChangeTitle,
   onChangeBody,
   onAddTag,
-  onAddList,
   onRemoveTag,
   onChangeImage,
   onChangeCategory,
@@ -160,7 +164,14 @@ const PostEditable: FC<{
                 size="small"
               />
               {lists.map((list) => (
-                <ListEditable key={list.id} id={list.id} title={list.title} items={list.items} />
+                <ListEditable
+                  onEdit={onEditLists}
+                  onDelete={onDeleteList}
+                  key={list.id}
+                  id={list.id}
+                  title={list.title}
+                  items={list.items}
+                />
               ))}
             </Stack>
           </CardContent>

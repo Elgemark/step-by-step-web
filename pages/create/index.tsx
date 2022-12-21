@@ -73,15 +73,15 @@ const Create: FC<{ query: object; post: Post; steps: Steps; lists: Lists }> = ({
   };
 
   const onClickSaveHandler = async () => {
-    const resp = await setPostAndSteps(id, dataPost, dataSteps);
+    const resp = await setPostAndSteps(id, dataPost, dataSteps, dataLists);
     // Update internal states...
-    resp.postData && replacePost(resp.postData);
-    resp.stepsData && replaceSteps(resp.stepsData);
+    // resp.postData && replacePost(resp.postData);
+    // resp.stepsData && replaceSteps(resp.stepsData);
     if (!resp.error) {
       // Success...
       setSuccessMessage("Post saved!");
       // Update route...
-      router.replace("/create", { query: { id: resp.postData.id } });
+      // router.replace("/create", { query: { id: resp.postData.id } });
     }
   };
 
@@ -116,6 +116,13 @@ const Create: FC<{ query: object; post: Post; steps: Steps; lists: Lists }> = ({
     setDataLists(newDataLists);
   };
 
+  const onEditListsHandler = (e) => {
+    const newDataLists = [...dataLists];
+    const index = newDataLists.findIndex((list) => list.id === e.id);
+    newDataLists[index] = e;
+    setDataLists(newDataLists);
+  };
+
   return (
     <>
       <Head>
@@ -131,6 +138,7 @@ const Create: FC<{ query: object; post: Post; steps: Steps; lists: Lists }> = ({
           onChangeImage={(value) => setPostValue("media.imageURI", value)}
           onChangeCategory={(value) => setPostValue("category", value)}
           onChangePrerequisites={onChangePrerequisitesHandler}
+          onEditLists={onEditListsHandler}
           onAddTag={onAddTagHandler}
           onRemoveTag={(value) => {
             const tagsCopy = [...dataPost.tags];
