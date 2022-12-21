@@ -102,20 +102,17 @@ const ListEditable: FC<{
           </tr>
         </thead>
         <tbody>
-          {items.map((item: ListItem, index) => (
-            <Fade in={true} key={index}>
-              <tr key={`${id}-${index}-${Math.random()}`}>
+          {object.items.map((item: ListItem, index) => (
+            <Fade in={true} key={`${id}-${index}`}>
+              <tr>
                 {/* TEXT Left */}
                 <th className="column-1">
-                  <Input
-                    value={getValue("items." + index + ".text")}
-                    onChange={(e) => updateValue("items." + index + ".text", e.target.value)}
-                  />
+                  <Input value={item.text} onChange={(e) => updateValue("items." + index + ".text", e.target.value)} />
                 </th>
                 {/* TEXT Right */}
                 <td className="column-2">
                   <Input
-                    value={getValue("items." + index + ".value")}
+                    value={item.value}
                     onChange={(e) => updateValue("items." + index + ".value", e.target.value)}
                   />
                 </td>
