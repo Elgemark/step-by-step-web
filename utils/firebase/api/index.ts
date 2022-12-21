@@ -51,6 +51,7 @@ export const getLists = listApi.getLists;
 export const getList = listApi.getList;
 export const setLists = listApi.setLists;
 export const setList = listApi.setList;
+export const deleteList = listApi.deleteList;
 // ::: STEPS
 export const setSteps = async (id, data) => {
   const firebase = getFirestore();

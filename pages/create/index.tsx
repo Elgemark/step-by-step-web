@@ -8,7 +8,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import { Button, Divider, Fade } from "@mui/material";
 import styled from "styled-components";
 import ButtonGroup from "@mui/material/ButtonGroup";
-import { getLists, getPost, getSteps, setPostAndSteps } from "../../utils/firebase/api";
+import { getLists, getPost, getSteps, setPostAndSteps, deleteList } from "../../utils/firebase/api";
 import _ from "lodash";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
@@ -124,11 +124,25 @@ const Create: FC<{ query: object; post: Post; steps: Steps; lists: Lists }> = ({
     console.log("dataLists", index, dataLists);
   };
 
-  const onEditListsHandler = (e) => {
+  const onEditListsHandler = (data) => {
     const newDataLists = [...dataLists];
-    const index = newDataLists.findIndex((list) => list.id === e.id);
-    newDataLists[index] = e;
+    const index = newDataLists.findIndex((list) => list.id === data.id);
+    newDataLists[index] = data;
     setDataLists(newDataLists);
+  };
+
+  const onDeleteListHandler = ({ id }) => {
+    const newDataLists = _.cloneDeep(dataLists);
+    const listIndex = newDataLists.findIndex((list) => list.id === id);
+    newDataLists.splice(listIndex, 1);
+    setDataLists(newDataLists);
+    deleteList(query.id, id)
+      .then((e) => {
+        debugger;
+      })
+      .catch((e) => {
+        debugger;
+      });
   };
 
   return (
@@ -142,12 +156,13 @@ const Create: FC<{ query: object; post: Post; steps: Steps; lists: Lists }> = ({
           lists={dataLists}
           onAddList={onAddListHandler}
           onAddListItem={onAddListItemHandler}
+          onEditLists={onEditListsHandler}
+          onDeleteList={onDeleteListHandler}
           onChangeTitle={(value) => setPostValue("title", value)}
           onChangeBody={(value) => setPostValue("descr", value)}
           onChangeImage={(value) => setPostValue("media.imageURI", value)}
           onChangeCategory={(value) => setPostValue("category", value)}
           onChangePrerequisites={onChangePrerequisitesHandler}
-          onEditLists={onEditListsHandler}
           onAddTag={onAddTagHandler}
           onRemoveTag={(value) => {
             const tagsCopy = [...dataPost.tags];

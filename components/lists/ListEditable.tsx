@@ -7,10 +7,11 @@ import Paper from "@mui/material/Paper";
 import { FC } from "react";
 import { ListItem } from "../../utils/firebase/interface";
 import { useStateObject } from "../../utils/object";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const StyledPaper = styled(Paper)`
-  padding: ${({ theme }) => theme.spacing(2)};
-  margin-bottom: ${({ theme }) => theme.spacing(2)};
+  padding: ${({ theme }) => theme.spacing(1)};
+  margin-bottom: ${({ theme }) => theme.spacing(1)};
 `;
 
 const StyledTable = styled.table`
@@ -40,9 +41,9 @@ const StyledTable = styled.table`
   }
 
   .list-buttons {
-    margin-top: ${({ theme }) => theme.spacing(3)};
+    margin-top: ${({ theme }) => theme.spacing(2)};
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
   }
 `;
 
@@ -95,7 +96,7 @@ const ListEditable: FC<{
         <thead>
           <tr>
             <th className="column-1" colSpan={1}>
-              <Input value={object.title} onChange={(e) => updateValue("title", e.target.value)} />
+              <Input value={object.title} placeholder="Title" onChange={(e) => updateValue("title", e.target.value)} />
             </th>
             <th className="column-2"></th>
             <th className="column-3"></th>
@@ -107,11 +108,16 @@ const ListEditable: FC<{
               <tr>
                 {/* TEXT Left */}
                 <th className="column-1">
-                  <Input value={item.text} onChange={(e) => updateValue("items." + index + ".text", e.target.value)} />
+                  <Input
+                    placeholder="Text left..."
+                    value={item.text}
+                    onChange={(e) => updateValue("items." + index + ".text", e.target.value)}
+                  />
                 </th>
                 {/* TEXT Right */}
                 <td className="column-2">
                   <Input
+                    placeholder="Text right..."
                     value={item.value}
                     onChange={(e) => updateValue("items." + index + ".value", e.target.value)}
                   />
@@ -129,7 +135,9 @@ const ListEditable: FC<{
           ))}
           <tr className="list-buttons">
             <td colSpan={3}>
-              <Button onClick={() => onDelete({ id })}>Delete List</Button>
+              <IconButton edge="end" aria-label="remove" onClick={() => onDelete({ id })}>
+                <DeleteIcon />
+              </IconButton>
             </td>
           </tr>
         </tbody>
