@@ -1,7 +1,15 @@
 import Head from "next/head";
 import Layout from "../../components/Layout";
 import styled from "styled-components";
-import { getPost, getSteps, useUserStepsProgress, deletePost, likePost, bookmarkPost } from "../../utils/firebase/api";
+import {
+  getPost,
+  getSteps,
+  useUserStepsProgress,
+  deletePost,
+  likePost,
+  bookmarkPost,
+  getLists,
+} from "../../utils/firebase/api";
 import RevealNext from "../../components/RevealNext";
 import Step from "../../components/steps/Step";
 import Post from "../../components/posts/Post";
@@ -14,6 +22,8 @@ import { useRouter } from "next/router";
 import { v4 as uuid } from "uuid";
 import Dialog from "../../components/primitives/Dialog";
 import { useState } from "react";
+import { Lists } from "../../utils/firebase/type";
+import { ListResponse } from "../../utils/firebase/interface";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -38,7 +48,7 @@ const StyledStepsProgress = styled(StepsProgress)`
   margin: 0, 40px;
 `;
 
-const Steps = ({ post, steps }) => {
+const Steps = ({ post, steps, lists }) => {
   const [showDialog, setShowDialog] = useState({ open: false, content: "", onOkClick: () => {} });
   const router = useRouter();
   const [user] = useAuthState(getAuth());
@@ -79,6 +89,7 @@ const Steps = ({ post, steps }) => {
       <StyledLayout propsTopbar={{ actions: <StyledStepsProgress label={`${stepIndex}/${steps.steps.length}`} /> }}>
         <Post
           {...post}
+          lists={lists}
           onEdit={
             user?.uid === post.userId
               ? () => {
@@ -142,10 +153,12 @@ export async function getServerSideProps({ query }) {
   const id = query.id || uuid();
   const post = await getPost(id);
   const steps = await getSteps(id);
+  const listsResp: ListResponse = await getLists(id);
   return {
     props: {
       post: post?.data || { ...postModel, id },
       steps: steps?.data || { ...stepsModel, id },
+      lists: listsResp.data,
     },
   };
 }

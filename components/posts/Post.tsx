@@ -1,4 +1,4 @@
-import { Card, Button } from "@mui/material";
+import { Card, useTheme } from "@mui/material";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
@@ -14,15 +14,13 @@ import UserAvatar from "../UserAvatar";
 import Badge from "@mui/material/Badge";
 import { useLikes, useBookmarks } from "../../utils/firebase/api";
 import styled from "styled-components";
-import TablePrerequisites from "../TablePrerequisites";
-
 import { useState, FC } from "react";
 import { CardActionArea } from "@mui/material";
-import settings from "../../config";
+import { Lists } from "../../utils/firebase/type";
+import List from "../lists/List";
+import { Media } from "../../utils/firebase/interface";
 
-interface Media {
-  imageURI: string;
-}
+const Root = styled(Card)``;
 
 const StyledCardMedia = styled(CardMedia)`
   object-fit: cover;
@@ -47,7 +45,7 @@ const Post: FC<{
   title: string;
   descr?: string;
   enableLink: boolean;
-  prerequisites: Array<string>;
+  lists: Lists;
   media: Media;
   likes: number;
   onEdit?: Function;
@@ -63,7 +61,7 @@ const Post: FC<{
   descr = "Body",
   id,
   enableLink,
-  prerequisites = [],
+  lists = [],
   media = { imageURI: "" },
   likes = 0,
   onEdit,
@@ -74,6 +72,7 @@ const Post: FC<{
   onStartOver,
   onClickAvatar,
 }) => {
+  const theme = useTheme();
   const [numLikes, setNumLikes] = useState(likes);
   const { isLiked, toggle: toggleLike } = useLikes(id);
   const { isBookmarked, toggle: toogleBookmark } = useBookmarks(id);
@@ -90,7 +89,7 @@ const Post: FC<{
   };
 
   return (
-    <Card>
+    <Root theme={theme}>
       <CardHeader
         avatar={
           <IconButton sx={{ padding: 0 }} onClick={() => onClickAvatar(userId)}>
@@ -108,7 +107,7 @@ const Post: FC<{
         }}
         enableLink={enableLink}
       >
-        {media?.imageURI && <StyledCardMedia height={settings.image.height} component="img" image={media?.imageURI} />}
+        {media?.imageURI && <StyledCardMedia component="img" image={media?.imageURI} />}
       </MediaContainer>
 
       <CardContent>
@@ -137,12 +136,14 @@ const Post: FC<{
           </IconButton>
         )}
       </CardActions>
-      {prerequisites.length ? (
+      {lists.length ? (
         <CardContent>
-          <TablePrerequisites items={prerequisites} />
+          {lists.map((list) => (
+            <List {...list} />
+          ))}
         </CardContent>
       ) : null}
-    </Card>
+    </Root>
   );
 };
 
