@@ -7,6 +7,7 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import PostMoreMenu from "../PostMoreMenu";
 import Link from "next/link";
@@ -121,7 +122,7 @@ const Post: FC<{
         {onLike && (
           <IconButton aria-label="like" onClick={onLikeHandler}>
             <Badge badgeContent={numLikes} color="success">
-              <FavoriteIcon color={isLiked ? "warning" : "inherit"} />
+              {isLiked ? <FavoriteIcon color="warning" /> : <FavoriteBorderIcon />}
             </Badge>
           </IconButton>
         )}
@@ -129,7 +130,7 @@ const Post: FC<{
         {/* <IconButton aria-label="share">
           <ShareIcon />
         </IconButton> */}
-        {/* FAVOURITE */}
+        {/* BOOKMARK */}
         {onBookmark && (
           <IconButton aria-label="bookmark" onClick={onBookmarkHandler}>
             {isBookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}

@@ -18,6 +18,12 @@ import { Lists } from "../../utils/firebase/type";
 import ListEditable from "../lists/ListEditable";
 import { Media } from "../../utils/firebase/interface";
 
+const Root = styled(Stack)`
+  .card-actions {
+    justify-content: center;
+  }
+`;
+
 const StyledMediaEditable = styled(MediaEditable)`
   img {
     object-fit: cover;
@@ -62,7 +68,7 @@ const PostEditable: FC<{
   const [tag, setTag] = useState("");
 
   return (
-    <Stack spacing={2}>
+    <Root spacing={2}>
       {/* SETTINGS */}
       <Card>
         <CardHeader
@@ -149,14 +155,14 @@ const PostEditable: FC<{
               ))}
             </Stack>
           </CardContent>
-          <CardActions>
+          <CardActions className="card-actions">
             <Button onClick={onAddList} endIcon={<PlaylistAddIcon></PlaylistAddIcon>}>
               Add List
             </Button>
           </CardActions>
         </Card>
       </Collapse>
-    </Stack>
+    </Root>
   );
 };
 

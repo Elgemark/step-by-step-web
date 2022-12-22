@@ -73,6 +73,8 @@ const Create: FC<{ id: string; post: Post; steps: Steps; lists: Lists }> = ({ id
     if (!resp.error) {
       // Success...
       setSuccessMessage("Post saved!");
+    } else {
+      console.warn(resp.error);
     }
   };
 

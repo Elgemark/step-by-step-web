@@ -37,6 +37,10 @@ export const updateUser = userApi.updateUser;
 export const getCurrentUser = userApi.getCurrentUser;
 export const getUser = userApi.getUser;
 export const useUser = userApi.useUser;
+///
+export const setUserStepsProgress = userApi.setUserStepsProgress;
+export const getUserStepsProgress = userApi.getUserStepsProgress;
+export const useUserStepsProgress = userApi.useUserStepsProgress;
 // ::: POSTS
 export const getPosts = postApi.getPosts;
 export const getSavedPosts = postApi.getSavedPosts;
@@ -77,74 +81,6 @@ export const getSteps = async (id) => {
     result.error = error;
   }
   return result;
-};
-
-// ::: USER DATA
-
-export const setUserStepsProgress = async (uid, id, data) => {
-  const firebase = getFirestore();
-  const result = {};
-  try {
-    const docRef = doc(firebase, "users", uid, "progress", id);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      result.response = await updateDoc(docRef, data);
-    } else {
-      result.response = await setDoc(docRef, data);
-    }
-
-    result.data = { ...data, uid };
-    result.id = uid;
-  } catch (error) {
-    result.error = error;
-  }
-  return result;
-};
-
-export const getUserStepsProgress = async (uid, id) => {
-  const firebase = getFirestore();
-  const result = {};
-  try {
-    const docRef = doc(firebase, "users", uid, "progress", id);
-    const docSnap = await getDoc(docRef);
-    result.data = docSnap.exists() ? { ...docSnap.data(), uid } : { ...dataModels.userStepsProgress, userId: uid, id };
-  } catch (error) {
-    result.error = error;
-  }
-  return result;
-};
-
-export const useUserStepsProgress = (uid, id) => {
-  const [isLoading, setIsLoading] = useState();
-  const { object: data, setValue, replace: setData } = useStateObject();
-  const [error, setError] = useState();
-
-  useEffect(() => {
-    if (uid && id) {
-      setIsLoading(true);
-      getUserStepsProgress(uid, id)
-        .then((res) => {
-          setData(res.data);
-        })
-        .catch((err) => {
-          setError(err);
-        });
-    }
-  }, [uid, id]);
-
-  return {
-    ...data,
-    isLoading,
-    error,
-    setStep: async (index, completed = false) => {
-      setValue("step", index);
-      return await setUserStepsProgress(uid, id, {
-        ...data,
-        completed,
-        step: index,
-      });
-    },
-  };
 };
 
 // ::: LIKES POST
