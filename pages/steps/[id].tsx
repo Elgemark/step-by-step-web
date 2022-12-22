@@ -57,7 +57,7 @@ const Steps = ({ post, steps, lists }) => {
   const showDone = (index) => index === steps.steps.length - 1;
 
   const onEditHandler = ({ id }) => {
-    router.push("/create?id=" + id);
+    router.push("/create/" + id);
   };
 
   const onDeleteHandler = ({ id }) => {

@@ -5,6 +5,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
 import UserAvatar from "./UserAvatar";
 import { FC, ReactNode } from "react";
+import { v4 as uuid } from "uuid";
 
 const TopBar: FC<{ className?: string; actions?: ReactNode }> = ({ className, actions, ...props }) => {
   const [user] = useAuthState(getAuth());
@@ -29,7 +30,7 @@ const TopBar: FC<{ className?: string; actions?: ReactNode }> = ({ className, ac
           <Button
             color="inherit"
             onClick={() => {
-              router.push("/create");
+              router.push("/create/" + uuid());
             }}
           >
             Create

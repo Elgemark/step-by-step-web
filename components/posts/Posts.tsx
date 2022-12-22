@@ -23,7 +23,7 @@ const Posts: FC<{
   }
 
   const onEditHandler = ({ id }) => {
-    router.push("/create?id=" + id);
+    router.push("/create/" + id);
   };
 
   const onDeleteHandler = ({ id }) => {

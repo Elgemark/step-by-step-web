@@ -13,7 +13,6 @@ import _ from "lodash";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { FC, useEffect, useState } from "react";
-import { useRouter } from "next/router";
 import * as dataModels from "../../utils/firebase/models";
 import { toSanitizedArray } from "../../utils/stringUtils";
 import { v4 as uuid } from "uuid";
@@ -44,9 +43,7 @@ const StyledBottomBar = styled.div`
   justify-content: center;
 `;
 
-const Create: FC<{ query: object; post: Post; steps: Steps; lists: Lists }> = ({ query, post, steps, lists }) => {
-  const router = useRouter();
-  const [id, setId] = useState(query?.id);
+const Create: FC<{ id: string; post: Post; steps: Steps; lists: Lists }> = ({ id, post, steps, lists }) => {
   const [successMessage, setSuccessMessage] = useState(null);
   const [createdStep, setCreatedStep] = useState({});
   // POST
@@ -56,12 +53,11 @@ const Create: FC<{ query: object; post: Post; steps: Steps; lists: Lists }> = ({
   // STEPS
   const { object: dataSteps, setValue: setStepsValue, replace: replaceSteps } = useStateObject(steps);
 
+  // Neccesery to force a reload of data if user clicks "CREATE"
   useEffect(() => {
-    if (!id) {
-      const newId = uuid();
-      router.replace(`/create?id=${newId}`);
-      setId(newId);
-    }
+    replacePost(post);
+    replaceSteps(steps);
+    setDataLists(lists);
   }, [id]);
 
   const onClickAddStepHandler = () => {
@@ -74,14 +70,9 @@ const Create: FC<{ query: object; post: Post; steps: Steps; lists: Lists }> = ({
 
   const onClickSaveHandler = async () => {
     const resp = await setPostAndSteps(id, dataPost, dataSteps, dataLists);
-    // Update internal states...
-    // resp.postData && replacePost(resp.postData);
-    // resp.stepsData && replaceSteps(resp.stepsData);
     if (!resp.error) {
       // Success...
       setSuccessMessage("Post saved!");
-      // Update route...
-      // router.replace("/create", { query: { id: resp.postData.id } });
     }
   };
 
@@ -110,18 +101,17 @@ const Create: FC<{ query: object; post: Post; steps: Steps; lists: Lists }> = ({
   };
 
   const onAddListHandler = () => {
-    const id = uuid();
-    const list: List = { id, items: [{ text: "", value: "" }], title: "" };
+    const listId = uuid();
+    const list: List = { id: listId, items: [{ text: "", value: "" }], title: "" };
     const newDataLists = [...dataLists, list];
     setDataLists(newDataLists);
   };
 
-  const onAddListItemHandler = ({ id, index }) => {
+  const onAddListItemHandler = ({ id: listId, index }) => {
     const newDataLists = _.cloneDeep(dataLists);
-    const listIndex = newDataLists.findIndex((list) => list.id === id);
+    const listIndex = newDataLists.findIndex((list) => list.id === listId);
     newDataLists[listIndex].items.splice(index, 0, { text: "", value: "" });
     setDataLists(newDataLists);
-    console.log("dataLists", index, dataLists);
   };
 
   const onEditListsHandler = (data) => {
@@ -131,18 +121,14 @@ const Create: FC<{ query: object; post: Post; steps: Steps; lists: Lists }> = ({
     setDataLists(newDataLists);
   };
 
-  const onDeleteListHandler = ({ id }) => {
+  const onDeleteListHandler = ({ id: listId }) => {
     const newDataLists = _.cloneDeep(dataLists);
-    const listIndex = newDataLists.findIndex((list) => list.id === id);
+    const listIndex = newDataLists.findIndex((list) => list.id === listId);
     newDataLists.splice(listIndex, 1);
     setDataLists(newDataLists);
-    deleteList(query.id, id)
-      .then((e) => {
-        debugger;
-      })
-      .catch((e) => {
-        debugger;
-      });
+    deleteList(id, listId).then((e) => {
+      setSuccessMessage("List deleted!");
+    });
   };
 
   return (
@@ -229,7 +215,7 @@ export async function getServerSideProps({ query }) {
       post: post?.data || dataModels.post,
       steps: steps?.data || dataModels.steps,
       lists: listsResp.data,
-      query,
+      id,
     },
   };
 }
