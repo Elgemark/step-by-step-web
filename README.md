@@ -9,6 +9,7 @@
 https://www.npmjs.com/package/react-draggable
 https://www.npmjs.com/package/react-easy-crop
 
+https://markerjs.com/
 https://github.com/manishboro/image-crop-and-zoom
 
 ### Inspirations:
