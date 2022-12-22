@@ -8,20 +8,15 @@ import Fab from "@mui/material/Fab";
 import Stack from "@mui/material/Stack";
 import AddIcon from "@mui/icons-material/Add";
 import MediaEditable from "../primitives/MediaEditable";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import SelectCategory from "../SelectCategory";
 import SettingsIcon from "@mui/icons-material/Settings";
-import AddText from "../primitives/AddText";
-import TablePrerequisites from "../TablePrerequisites";
 import _ from "lodash";
 import styled from "styled-components";
-import ListIcon from "@mui/icons-material/List";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
-import { useStateObject } from "../../utils/object";
-import { Media } from "../../utils/firebase/interface";
 import { Lists } from "../../utils/firebase/type";
-import { MouseEventHandler } from "react";
 import ListEditable from "../lists/ListEditable";
+import { Media } from "../../utils/firebase/interface";
 
 const StyledMediaEditable = styled(MediaEditable)`
   img {
@@ -34,19 +29,23 @@ const PostEditable: FC<{
   descr: string;
   media: Media;
   tags: Array<string>;
-  prerequisites: any;
   mediaLocationPath: Array<any>;
   category: string;
   lists: Lists;
   onAddList: (e: object) => {} | Function;
   onDeleteList: (e: object) => {} | Function;
   onEditLists: (e: object) => {} | Function;
+  onChangeTitle: (e: string) => {} | Function;
+  onChangeBody: (e: string) => {} | Function;
+  onAddTag: (e: string) => {} | Function;
+  onRemoveTag: (e: string) => {} | Function;
+  onChangeImage: (e: object) => {} | Function;
+  onChangeCategory: (e: object) => {} | Function;
 }> = ({
   title,
   descr,
   media = {},
   tags = [],
-  prerequisites = [],
   lists = [],
   mediaLocationPath = [],
   category,
@@ -59,33 +58,8 @@ const PostEditable: FC<{
   onRemoveTag,
   onChangeImage,
   onChangeCategory,
-  onChangePrerequisites,
 }) => {
   const [tag, setTag] = useState("");
-  const [prereqs, setPrereqs] = useState(prerequisites);
-
-  useEffect(() => {
-    onChangePrerequisites(prereqs);
-  }, [prereqs]);
-
-  const onAddPrerequisitesHandler = (item) => {
-    const newPrereqs = [...prereqs];
-    newPrereqs.push({ quantity: "", unit: "", ...item });
-    setPrereqs(newPrereqs);
-  };
-  const onRemovePrerequisitesHandler = (index) => {
-    const newPrereqs = [...prereqs];
-    _.pullAt(newPrereqs, index);
-    setPrereqs(newPrereqs);
-  };
-
-  const onEditPrerequisitesHandler = ({ index, key, value }) => {
-    const newPrereqs = [...prereqs];
-    _.set(newPrereqs, `[${index}].${key}`, value);
-    setPrereqs(newPrereqs);
-  };
-
-  console.log("lists", lists);
 
   return (
     <Stack spacing={2}>

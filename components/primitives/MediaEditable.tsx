@@ -76,6 +76,7 @@ const MediaEditable: FC<{ locationPath: Array<string>; media: Media; onChangeIma
       setSelectedImageURI(pasteImageURI);
       setPreviewImageURI(pasteImageURI);
       setCropSettings({ crop: { x: 0, y: 0 }, zoom: 1 });
+      setOpenEditor(true);
     }
   }, [pasteImageURI]);
 
@@ -83,6 +84,7 @@ const MediaEditable: FC<{ locationPath: Array<string>; media: Media; onChangeIma
     setSelectedImageURI(url);
     setPreviewImageURI(url);
     setCropSettings({ crop: { x: 0, y: 0 }, zoom: 1 });
+    setOpenEditor(true);
     // Upload
     upload(file)
       .then((e) => {
