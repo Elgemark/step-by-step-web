@@ -59,7 +59,7 @@ const StyledSearchBar = styled(Stack)(({ theme }) => ({
 }));
 
 const PageMain = ({ posts = [], category, title, enableLink = false }) => {
-  const { set: setQuery } = useDebouncedQuery(1000);
+  const { set: setQuery, query } = useDebouncedQuery(1000);
   const router = useRouter();
 
   const onSearchHandler = (value) => {
@@ -67,7 +67,7 @@ const PageMain = ({ posts = [], category, title, enableLink = false }) => {
   };
 
   const onCategoryChangeHandler = (value) => {
-    router.push("/category/" + value);
+    router.push({ pathname: "/category/" + value, query: { search: query.search } });
   };
   return (
     <>
@@ -82,6 +82,7 @@ const PageMain = ({ posts = [], category, title, enableLink = false }) => {
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
+              value={query.search}
               onChange={(e) => onSearchHandler(e.currentTarget.value.toLowerCase())}
               placeholder="Search…"
               inputProps={{ "aria-label": "search" }}
