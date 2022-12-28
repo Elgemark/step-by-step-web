@@ -12,7 +12,7 @@ import Posts from "./posts/Posts";
 import { FC, useEffect } from "react";
 import { Posts as PostsType } from "../utils/firebase/type";
 import { useScrolledToBottom } from "../utils/scrollUtils";
-import { useCollection } from "../utils/collectionUtils";
+import { Collection, useCollection } from "../utils/collectionUtils";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -65,7 +65,7 @@ const StyledSearchBar = styled(Stack)(({ theme }) => ({
 const PageMain: FC<{
   search: string;
   limit: string;
-  posts: Array<PostsType>;
+  posts: PostsType;
   category: string;
   title: string;
   enableLink: boolean;
@@ -76,7 +76,7 @@ const PageMain: FC<{
   const router = useRouter();
 
   useEffect(() => {
-    addItems(posts);
+    addItems(posts as Collection);
   }, [posts]);
 
   useEffect(() => {

@@ -5,7 +5,7 @@ export interface Media {
 }
 
 export interface Post {
-  id?: string;
+  id: string;
   title: string;
   descr: string;
   media: Media;
