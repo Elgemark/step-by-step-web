@@ -10,5 +10,5 @@ export async function getServerSideProps({ query }) {
   const tags = toSanitizedArray(query.search);
   const category = query.category;
   const posts = tags.length ? await searchPosts(tags, category) : await getPosts();
-  return { props: { posts } };
+  return { props: { posts, search: tags } };
 }

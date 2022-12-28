@@ -9,6 +9,8 @@ import { styled, alpha } from "@mui/material/styles";
 import { Stack } from "@mui/material";
 import SelectCategory from "./SelectCategory";
 import Posts from "./posts/Posts";
+import { FC } from "react";
+import { Posts as PostsType } from "../utils/firebase/type";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -58,8 +60,14 @@ const StyledSearchBar = styled(Stack)(({ theme }) => ({
   },
 }));
 
-const PageMain = ({ posts = [], category, title, enableLink = false }) => {
-  const { set: setQuery, query } = useDebouncedQuery(1000);
+const PageMain: FC<{
+  search: string;
+  posts: Array<PostsType>;
+  category: string;
+  title: string;
+  enableLink: boolean;
+}> = ({ search, posts = [], category, title, enableLink = false }) => {
+  const { set: setQuery, query } = useDebouncedQuery({ search });
   const router = useRouter();
 
   const onSearchHandler = (value) => {

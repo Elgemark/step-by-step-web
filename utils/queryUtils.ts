@@ -2,17 +2,17 @@ import _ from "lodash";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-interface Query {
+export interface Query {
   [key: string]: any;
 }
 
 const debouncedSetQuery = _.debounce((router, query) => {
   router.replace({ query: _.omitBy({ ...router.query, ...query }, _.isEmpty) });
-}, 500);
+}, 1000);
 
-export const useDebouncedQuery = () => {
+export const useDebouncedQuery = (query = {}) => {
   const router = useRouter();
-  const [query, setQuery] = useState<Query>({});
+  const [_query, setQuery] = useState<Query>(query);
 
   return {
     set: (query) => {
@@ -22,6 +22,6 @@ export const useDebouncedQuery = () => {
     get: () => {
       return router.query;
     },
-    query,
+    query: _query,
   };
 };
