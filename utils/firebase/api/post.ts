@@ -17,10 +17,14 @@ import { getAuth } from "firebase/auth";
 import { List, Post } from "../interface";
 import { Lists, Steps } from "../type";
 
-export const getPosts = async (orderBy = "likes", startAt = 0, limit = 10) => {
+export const getPosts = async (orderBy = "likes", startAfter = 0, limit = 10) => {
   const firebase = getFirestore();
   const stepsRef = collection(firebase, "posts");
-  const queryBuild = query(stepsRef, fsOrderBy(orderBy), fsStartAt(startAt), fsLimit(limit));
+  const queries = [fsOrderBy(orderBy, "desc"), fsLimit(limit)];
+  if (startAfter) {
+    queries.push(fsStartAfter(startAfter));
+  }
+  const queryBuild = query(stepsRef, ...queries);
   let data = [];
   try {
     const querySnapshot = await getDocs(queryBuild);

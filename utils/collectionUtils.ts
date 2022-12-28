@@ -14,11 +14,11 @@ export const useCollection = (collection: Collection = []) => {
   return {
     collection: _collection,
     addItem: (item: CollectionItem) => {
-      const newCollection = _.unionBy(_collection, [item]);
+      const newCollection = _.unionBy(_collection, [item], "id");
       _setCollection(newCollection);
     },
     addItems: (items: Collection) => {
-      const newCollection = _.unionBy(_collection, items);
+      const newCollection = _.unionBy(_collection, items, "id");
       _setCollection(newCollection);
     },
   };

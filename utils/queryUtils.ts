@@ -7,7 +7,7 @@ export interface Query {
 }
 
 const debouncedSetQuery = _.debounce((router, query) => {
-  router.replace({ query: _.omitBy({ ...router.query, ...query }, _.isEmpty) });
+  router.replace({ query: _.omitBy({ ...router.query, ...query }, _.isEmpty) }, null, { scroll: false });
 }, 1000);
 
 export const useDebouncedQuery = (query = {}) => {

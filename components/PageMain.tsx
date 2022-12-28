@@ -9,9 +9,10 @@ import { styled, alpha } from "@mui/material/styles";
 import { Stack } from "@mui/material";
 import SelectCategory from "./SelectCategory";
 import Posts from "./posts/Posts";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { Posts as PostsType } from "../utils/firebase/type";
 import { useScrolledToBottom } from "../utils/scrollUtils";
+import { useCollection } from "../utils/collectionUtils";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -63,14 +64,30 @@ const StyledSearchBar = styled(Stack)(({ theme }) => ({
 
 const PageMain: FC<{
   search: string;
+  limit: string;
   posts: Array<PostsType>;
   category: string;
   title: string;
   enableLink: boolean;
-}> = ({ search, posts = [], category, title, enableLink = false }) => {
+}> = ({ search, limit, posts = [], category, title, enableLink = false }) => {
   const isBottom = useScrolledToBottom();
+  const { collection: postsCollection, addItems } = useCollection(posts);
   const { set: setQuery, query } = useDebouncedQuery({ search });
   const router = useRouter();
+
+  useEffect(() => {
+    addItems(posts);
+  }, [posts]);
+
+  useEffect(() => {
+    const mayHaveMorePosts = postsCollection.length >= Number(limit);
+    if (isBottom && mayHaveMorePosts) {
+      const newLimit = Number(limit) + 3;
+      setQuery({ limit: newLimit.toString() });
+    }
+  }, [isBottom]);
+
+  console.log("limit", limit);
 
   const onSearchHandler = (value) => {
     setQuery({ search: value });
@@ -100,7 +117,7 @@ const PageMain: FC<{
           </Search>
           <SelectCategory onChange={onCategoryChangeHandler} value={category} />
         </StyledSearchBar>
-        <Posts enableLink={enableLink} posts={posts} />
+        <Posts enableLink={enableLink} posts={postsCollection} />
       </Layout>
     </>
   );

@@ -15,5 +15,5 @@ export async function getServerSideProps({ query }) {
   const posts = tags.length
     ? await searchPosts(tags, category)
     : await getPosts("likes", queryLimit - queryOffset, queryLimit);
-  return { props: { posts, search: tags } };
+  return { props: { posts, search: tags, limit: queryLimit } };
 }
