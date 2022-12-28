@@ -11,6 +11,7 @@ import SelectCategory from "./SelectCategory";
 import Posts from "./posts/Posts";
 import { FC } from "react";
 import { Posts as PostsType } from "../utils/firebase/type";
+import { useScrolledToBottom } from "../utils/scrollUtils";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -67,6 +68,7 @@ const PageMain: FC<{
   title: string;
   enableLink: boolean;
 }> = ({ search, posts = [], category, title, enableLink = false }) => {
+  const isBottom = useScrolledToBottom();
   const { set: setQuery, query } = useDebouncedQuery({ search });
   const router = useRouter();
 

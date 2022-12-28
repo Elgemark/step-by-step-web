@@ -11,15 +11,16 @@ import {
   startAt as fsStartAt,
   endAt as fsEndAt,
   limit as fsLimit,
+  startAfter as fsStartAfter,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { List, Post } from "../interface";
 import { Lists, Steps } from "../type";
 
-export const getPosts = async (orderBy = "likes", startAt = 0, endAt = 10) => {
+export const getPosts = async (orderBy = "likes", startAt = 0, limit = 10) => {
   const firebase = getFirestore();
   const stepsRef = collection(firebase, "posts");
-  const queryBuild = query(stepsRef, fsOrderBy(orderBy), fsStartAt(startAt), fsEndAt(endAt));
+  const queryBuild = query(stepsRef, fsOrderBy(orderBy), fsStartAt(startAt), fsLimit(limit));
   let data = [];
   try {
     const querySnapshot = await getDocs(queryBuild);
