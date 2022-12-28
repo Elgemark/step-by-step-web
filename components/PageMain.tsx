@@ -82,7 +82,7 @@ const PageMain: FC<{
   useEffect(() => {
     const mayHaveMorePosts = postsCollection.length >= Number(limit);
     if (isBottom && mayHaveMorePosts) {
-      const newLimit = Number(limit) + 3;
+      const newLimit = Number(limit) + 10;
       setQuery({ limit: newLimit.toString() });
       console.log("limit", newLimit);
     }
@@ -95,6 +95,9 @@ const PageMain: FC<{
   const onCategoryChangeHandler = (value) => {
     router.push({ pathname: "/category/" + value, query: { search: query.search } });
   };
+
+  const postsByCategory = category ? postsCollection.filter((post) => post.category === category) : postsCollection;
+
   return (
     <>
       <Head>
@@ -116,7 +119,7 @@ const PageMain: FC<{
           </Search>
           <SelectCategory onChange={onCategoryChangeHandler} value={category} />
         </StyledSearchBar>
-        <Posts enableLink={enableLink} posts={postsCollection} />
+        <Posts enableLink={enableLink} posts={postsByCategory} />
       </Layout>
     </>
   );

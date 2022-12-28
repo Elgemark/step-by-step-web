@@ -17,9 +17,7 @@ import { getAuth } from "firebase/auth";
 import { List, Post, PostsResponse } from "../interface";
 import { Lists, Steps } from "../type";
 
-let lastDoc: any;
-
-export const getPosts = async (orderBy = "likes", limit = 10) => {
+export const getPosts = async (orderBy = "likes", limit = 10, lastDoc) => {
   const response: PostsResponse = { data: [], error: null };
   //
   const firebase = getFirestore();
@@ -35,7 +33,7 @@ export const getPosts = async (orderBy = "likes", limit = 10) => {
     querySnapshot.forEach((doc) => {
       response.data.push({ ...doc.data(), id: doc.id });
     });
-    lastDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
+    response.lastDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
   } catch (error) {
     response.error = error;
   }
@@ -148,7 +146,6 @@ export const searchPosts = async (tags = [], category: string, limit = 10) => {
       response.data.push({ ...doc.data(), id: doc.id });
     });
   } catch (error) {
-    console.log("error", error);
     response.error = error;
   }
   return response;

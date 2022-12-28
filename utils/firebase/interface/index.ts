@@ -44,4 +44,5 @@ export interface ListResponse {
 export interface PostsResponse {
   data: Posts | [];
   error: string | null;
+  lastDoc?: any;
 }
