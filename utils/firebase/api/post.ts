@@ -14,30 +14,35 @@ import {
   startAfter as fsStartAfter,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
-import { List, Post } from "../interface";
+import { List, Post, PostsResponse } from "../interface";
 import { Lists, Steps } from "../type";
 
-export const getPosts = async (orderBy = "likes", startAfter = 0, limit = 10) => {
+let lastDoc: any;
+
+export const getPosts = async (orderBy = "likes", limit = 10) => {
+  const response: PostsResponse = { data: [], error: null };
+  //
   const firebase = getFirestore();
   const stepsRef = collection(firebase, "posts");
   const queries = [fsOrderBy(orderBy, "desc"), fsLimit(limit)];
-  if (startAfter) {
-    queries.push(fsStartAfter(startAfter));
+  if (lastDoc) {
+    queries.push(fsStartAfter(lastDoc));
   }
   const queryBuild = query(stepsRef, ...queries);
-  let data = [];
+
   try {
     const querySnapshot = await getDocs(queryBuild);
     querySnapshot.forEach((doc) => {
-      data.push({ ...doc.data(), id: doc.id });
+      response.data.push({ ...doc.data(), id: doc.id });
     });
+    lastDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
   } catch (error) {
-    console.log("error", error);
+    response.error = error;
   }
-  return data;
+  return response;
 };
 
-export const getSavedPosts = async (uid, startAt = 0, endAt = 10) => {
+export const getSavedPosts = async (uid, limit = 10) => {
   let error = null;
   const posts = [];
   const firebase = getFirestore();
@@ -124,6 +129,8 @@ export const getPostsByState = async (uid, state) => {
 };
 
 export const searchPosts = async (tags = [], category: string, limit = 10) => {
+  const response: PostsResponse = { data: [], error: null };
+  //
   const firebase = getFirestore();
   const stepsRef = collection(firebase, "posts");
   const tagsQuery = where("tags", "array-contains-any", tags);
@@ -134,17 +141,17 @@ export const searchPosts = async (tags = [], category: string, limit = 10) => {
   category && queries.push(categoryQuery);
   // build query
   const queryBuild = query(stepsRef, ...queries, fsLimit(limit));
-  //
-  let data = [];
+
   try {
     const querySnapshot = await getDocs(queryBuild);
     querySnapshot.forEach((doc) => {
-      data.push({ ...doc.data(), id: doc.id });
+      response.data.push({ ...doc.data(), id: doc.id });
     });
   } catch (error) {
     console.log("error", error);
+    response.error = error;
   }
-  return data;
+  return response;
 };
 
 export const setPostAndSteps = async (id: string, post: Post, steps: Steps, lists: Lists = []) => {

@@ -1,4 +1,4 @@
-import { Lists } from "../type";
+import { Lists, Posts } from "../type";
 
 export interface Media {
   imageURI: string | null;
@@ -38,5 +38,10 @@ export interface List {
 export interface ListResponse {
   id: string;
   data: Lists | [];
+  error: string | null;
+}
+
+export interface PostsResponse {
+  data: Posts | [];
   error: string | null;
 }

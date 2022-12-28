@@ -70,7 +70,7 @@ const PageMain: FC<{
   title: string;
   enableLink: boolean;
 }> = ({ search, limit, posts = [], category, title, enableLink = false }) => {
-  const isBottom = useScrolledToBottom();
+  const isBottom = useScrolledToBottom(100);
   const { collection: postsCollection, addItems } = useCollection(posts);
   const { set: setQuery, query } = useDebouncedQuery({ search });
   const router = useRouter();
@@ -84,10 +84,9 @@ const PageMain: FC<{
     if (isBottom && mayHaveMorePosts) {
       const newLimit = Number(limit) + 3;
       setQuery({ limit: newLimit.toString() });
+      console.log("limit", newLimit);
     }
   }, [isBottom]);
-
-  console.log("limit", limit);
 
   const onSearchHandler = (value) => {
     setQuery({ search: value });

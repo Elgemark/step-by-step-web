@@ -30,7 +30,7 @@ export const setLists = async (id: string, data: Lists) => {
 
 export const getList = async (postId, listId: string) => {
   const firebase = getFirestore();
-  const result: ListResponse = { data: [], listId, error: null };
+  const result: ListResponse = { data: [], id: listId, error: null };
   try {
     const docRef = doc(firebase, "posts", postId, "lists", listId);
     const docSnap = await getDoc(docRef);

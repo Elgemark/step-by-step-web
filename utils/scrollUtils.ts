@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 
-export const useScrolledToBottom = () => {
+export const useScrolledToBottom = (margin = 0) => {
   const [isBottom, setIsBottom] = useState(false);
 
   useEffect(() => {
     window.onscroll = function (ev) {
-      if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+      if (window.innerHeight + window.scrollY + margin >= document.body.offsetHeight) {
         setIsBottom(true);
       } else {
         setIsBottom(false);
