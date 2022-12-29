@@ -20,8 +20,13 @@ import { CardActionArea } from "@mui/material";
 import { Lists } from "../../utils/firebase/type";
 import List from "../lists/List";
 import { Media } from "../../utils/firebase/interface";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
-const Root = styled(Card)``;
+const Root = styled(Card)`
+  .button-link {
+    margin-left: auto;
+  }
+`;
 
 const StyledCardMedia = styled(CardMedia)`
   object-fit: cover;
@@ -29,11 +34,14 @@ const StyledCardMedia = styled(CardMedia)`
 `;
 
 const MediaContainer = ({ children, href, enableLink }) => {
+  console.log("href", href);
   if (enableLink) {
     return (
-      <Link href={href}>
+      // <Link href={href} >
+      <a href={`/steps/${href.query.slug}`} target="_blank">
         <CardActionArea>{children}</CardActionArea>
-      </Link>
+      </a>
+      // </Link>
     );
   } else {
     return children;
@@ -134,6 +142,11 @@ const Post: FC<{
         {onBookmark && (
           <IconButton aria-label="bookmark" onClick={onBookmarkHandler}>
             {isBookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
+          </IconButton>
+        )}
+        {enableLink && (
+          <IconButton className="button-link" aria-label="open-in-new-window" href={`/steps/${id}`} target="_blank">
+            <OpenInNewIcon />
           </IconButton>
         )}
       </CardActions>
