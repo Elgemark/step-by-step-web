@@ -21,6 +21,7 @@ import * as followApi from "./follow";
 import * as storageApi from "./storage";
 import * as postApi from "./post";
 import * as listApi from "./list";
+import * as bookmarksApi from "./bookmarks";
 // User
 // Follow
 export const follow = followApi.follow;
@@ -43,13 +44,18 @@ export const getUserStepsProgress = userApi.getUserStepsProgress;
 export const useUserStepsProgress = userApi.useUserStepsProgress;
 // ::: POSTS
 export const getPosts = postApi.getPosts;
-export const getSavedPosts = postApi.getSavedPosts;
+export const getBookmarkedPosts = postApi.getBookmarkedPosts;
 export const getCreatedPosts = postApi.getCreatedPosts;
 export const getPostsByState = postApi.getPostsByState;
 export const searchPosts = postApi.searchPosts;
 export const setPostAndSteps = postApi.setPostAndSteps;
 export const getPost = postApi.getPost;
 export const deletePost = postApi.deletePost;
+// BOOKMARKS
+export const addBookmark = bookmarksApi.addBookmark;
+export const deleteBookmark = bookmarksApi.deleteBookmark;
+export const useBookmarks = bookmarksApi.useBookmarks;
+export const isBookmarkedByUser = bookmarksApi.isBookmarkedByUser;
 // ::: LISTS
 export const getLists = listApi.getLists;
 export const getList = listApi.getList;
@@ -138,62 +144,6 @@ export const useLikes = (postId) => {
     return !isLiked;
   };
   return { isLiked, toggle };
-};
-
-// BOOKMARKS
-export const bookmarkPost = async (postId) => {
-  const auth = getAuth();
-  const userId = auth.currentUser.uid;
-  const firebase = getFirestore();
-  // setup batch write
-  const batch = writeBatch(firebase);
-  // See if post was bookmarked
-  const bookmarkRef = doc(firebase, "users", userId, "bookmarks", postId);
-  const bookmarkSnap = await getDoc(bookmarkRef);
-  // get new bookmark value...
-  const userNewBookmarkValue = bookmarkSnap.exists() && bookmarkSnap.data().value === 1 ? 0 : 1;
-  // update user bookmark value
-  await batch.set(bookmarkRef, { value: userNewBookmarkValue });
-  // update total bookmark on post...
-  const incrementBookmarks = increment(bookmarkSnap.exists() && userNewBookmarkValue === 0 ? -1 : 1);
-  const postRef = doc(firebase, "posts", postId);
-  await batch.update(postRef, { bookmarks: incrementBookmarks });
-  let resp = {};
-  try {
-    // commit batch
-    resp.response = await batch.commit();
-  } catch (error) {
-    resp.error = error;
-  }
-  return resp;
-};
-
-export const isPostBookmarkedByUser = async (postId) => {
-  const auth = getAuth();
-  const userId = auth.currentUser.uid;
-  const firebase = getFirestore();
-  const bookmarkRef = doc(firebase, "users", userId, "bookmarks", postId);
-  const bookmarkSnap = await getDoc(bookmarkRef);
-  const isBookmarked = bookmarkSnap.exists() && bookmarkSnap.data().value > 0;
-  return { isBookmarked };
-};
-
-export const useBookmarks = (postId) => {
-  const [isBookmarked, setIsBookmarked] = useState(false);
-
-  useEffect(() => {
-    isPostBookmarkedByUser(postId)
-      .then((resp) => {
-        setIsBookmarked(resp.isBookmarked);
-      })
-      .catch((error) => {});
-  }, [postId]);
-
-  const toggle = () => {
-    setIsBookmarked(!isBookmarked);
-    return !isBookmarked;
-  };
-  return { isBookmarked, toggle };
 };
 
 // ::: CATEGORIES

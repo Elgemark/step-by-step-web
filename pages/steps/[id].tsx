@@ -1,15 +1,7 @@
 import Head from "next/head";
 import Layout from "../../components/Layout";
 import styled from "styled-components";
-import {
-  getPost,
-  getSteps,
-  useUserStepsProgress,
-  deletePost,
-  likePost,
-  bookmarkPost,
-  getLists,
-} from "../../utils/firebase/api";
+import { getPost, getSteps, useUserStepsProgress, deletePost, likePost, getLists } from "../../utils/firebase/api";
 import RevealNext from "../../components/RevealNext";
 import Step from "../../components/steps/Step";
 import Post from "../../components/posts/Post";
@@ -73,10 +65,6 @@ const Steps = ({ post, steps, lists }) => {
     await likePost(id);
   };
 
-  const onBookmarkHandler = async ({ id }) => {
-    await bookmarkPost(id);
-  };
-
   const onStartOverHandler = async () => {
     setStep(0, false);
   };
@@ -89,6 +77,7 @@ const Steps = ({ post, steps, lists }) => {
       <StyledLayout propsTopbar={{ actions: <StyledStepsProgress label={`${stepIndex}/${steps.steps.length}`} /> }}>
         <Post
           {...post}
+          currentUserId={user?.uid}
           lists={lists}
           onEdit={
             user?.uid === post.userId
@@ -105,7 +94,6 @@ const Steps = ({ post, steps, lists }) => {
               : undefined
           }
           onLike={() => onLikeHandler(post)}
-          onBookmark={() => onBookmarkHandler(post)}
           onStartOver={onStartOverHandler}
         />
         <RevealNext

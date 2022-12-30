@@ -57,6 +57,7 @@ const Post: FC<{
   lists: Lists;
   media: Media;
   likes: number;
+  currentUserId?: string;
   onEdit?: Function;
   onDelete?: Function;
   onReport?: Function;
@@ -66,6 +67,7 @@ const Post: FC<{
   onClickAvatar?: Function;
 }> = ({
   userId,
+  currentUserId,
   title = "Title",
   descr = "Body",
   id,
@@ -77,7 +79,6 @@ const Post: FC<{
   onDelete,
   onReport,
   onLike,
-  onBookmark,
   onStartOver,
   onClickAvatar,
 }) => {
@@ -93,8 +94,7 @@ const Post: FC<{
   };
 
   const onBookmarkHandler = () => {
-    toogleBookmark();
-    onBookmark();
+    toogleBookmark(id);
   };
 
   return (
@@ -139,7 +139,7 @@ const Post: FC<{
           <ShareIcon />
         </IconButton> */}
         {/* BOOKMARK */}
-        {onBookmark && (
+        {currentUserId && (
           <IconButton aria-label="bookmark" onClick={onBookmarkHandler}>
             {isBookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
           </IconButton>

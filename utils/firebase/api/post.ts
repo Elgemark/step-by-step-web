@@ -40,16 +40,19 @@ export const getPosts = async (orderBy = "likes", limit = 10, lastDoc) => {
   return response;
 };
 
-export const getSavedPosts = async (uid, limit = 10) => {
+export const getBookmarkedPosts = async (uid, limit = 10, lastDoc) => {
   let error = null;
   const posts = [];
   const firebase = getFirestore();
   // get saved posts for user
   const bookmarksRef = collection(firebase, "users", uid, "bookmarks");
-  const bookmarksQuery = query(bookmarksRef, where("value", "==", 1));
+
+  const queries = [fsLimit(limit)];
+  const queryBuild = query(bookmarksRef, ...queries);
+
   let bookmarksIds = [];
   try {
-    const bookmarksSnap = await getDocs(bookmarksQuery);
+    const bookmarksSnap = await getDocs(queryBuild);
     bookmarksSnap.forEach((doc) => {
       bookmarksIds.push(doc.id);
     });

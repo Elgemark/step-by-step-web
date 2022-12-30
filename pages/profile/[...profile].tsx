@@ -1,4 +1,4 @@
-import { getCreatedPosts, getFollows, getPostsByState, getSavedPosts } from "../../utils/firebase/api";
+import { getCreatedPosts, getFollows, getPostsByState, getBookmarkedPosts } from "../../utils/firebase/api";
 import { Divider, useTheme } from "@mui/material";
 import Head from "next/head";
 import Layout from "../../components/Layout";
@@ -101,7 +101,7 @@ export async function getServerSideProps({ query }) {
   let userIds = [];
   switch (tabValue) {
     case "saved":
-      const { posts: savedPosts } = await getSavedPosts(uid);
+      const { posts: savedPosts } = await getBookmarkedPosts(uid);
       posts = savedPosts;
       break;
     case "created":

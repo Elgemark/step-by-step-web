@@ -3,7 +3,7 @@ import Masonry from "@mui/lab/Masonry";
 import { useState } from "react";
 import Dialog from "../primitives/Dialog";
 import { FC } from "react";
-import { deletePost, likePost, bookmarkPost } from "../../utils/firebase/api";
+import { deletePost, likePost } from "../../utils/firebase/api";
 // Firebase related
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
@@ -39,10 +39,6 @@ const Posts: FC<{
     await likePost(id);
   };
 
-  const onBookmarkHandler = async ({ id }) => {
-    await bookmarkPost(id);
-  };
-
   const onClickAvatarHandler = ({ userId }) => {
     if (user.uid === userId) {
       router.push("/profile/" + userId);
@@ -57,6 +53,7 @@ const Posts: FC<{
         {posts.map((data, index) => (
           <Post
             key={index}
+            currentUserId={user?.uid}
             enableLink={enableLink}
             onEdit={
               user?.uid === data.userId
@@ -73,7 +70,6 @@ const Posts: FC<{
                 : undefined
             }
             onLike={() => onLikeHandler(data)}
-            onBookmark={() => onBookmarkHandler(data)}
             onClickAvatar={() => onClickAvatarHandler(data)}
             // onReport={(() => onReportHandler(data))}
             {...data}
