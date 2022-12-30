@@ -64,12 +64,11 @@ const StyledSearchBar = styled(Stack)(({ theme }) => ({
 
 const PageMain: FC<{
   search: string;
-  limit: string;
   posts: PostsType;
   category: string;
   title: string;
   enableLink: boolean;
-}> = ({ search, limit, posts = [], category, title, enableLink = false }) => {
+}> = ({ search, posts = [], category, title, enableLink = false }) => {
   const isBottom = useScrolledToBottom(100);
   const { collection: postsCollection, addItems } = useCollection(posts);
   const { set: setQuery, query } = useDebouncedQuery({ search });
@@ -80,13 +79,12 @@ const PageMain: FC<{
   }, [posts]);
 
   useEffect(() => {
-    const mayHaveMorePosts = postsCollection.length >= Number(limit);
-    if (isBottom && mayHaveMorePosts) {
-      const newLimit = Number(limit) + 10;
-      setQuery({ limit: newLimit.toString() });
-      console.log("limit", newLimit);
-    }
+    refreshData();
   }, [isBottom]);
+
+  const refreshData = () => {
+    router.replace(router.asPath, undefined, { scroll: false });
+  };
 
   const onSearchHandler = (value) => {
     setQuery({ search: value });
