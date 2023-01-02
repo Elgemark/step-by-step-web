@@ -38,7 +38,7 @@ const MediaContainer = ({ children, href, enableLink }) => {
   if (enableLink) {
     return (
       // <Link href={href} >
-      <a href={`/steps/${href.query.slug}`} target="_blank">
+      <a href={`/steps/${href.query.slug}`}>
         <CardActionArea>{children}</CardActionArea>
       </a>
       // </Link>
