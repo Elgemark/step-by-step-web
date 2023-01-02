@@ -1,8 +1,30 @@
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 import { v4 as uuidv4 } from "uuid";
-import {useState} from "react"
+import { useState } from "react";
 
+export const uploadFile = async (uri: string, locationPath: Array<string>, onProgress?: Function) => {
+  const blob: Blob = await new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.onload = function (e) {
+      resolve(xhr.response);
+      onProgress && onProgress(e.loaded / e.total);
+    };
+    xhr.onerror = function (e) {
+      reject(new TypeError("Network request failed"));
+    };
+    xhr.responseType = "blob";
+    xhr.open("GET", uri, true);
+    xhr.send(null);
+  });
+
+  const fileRef = ref(getStorage(), ...locationPath);
+  await uploadBytes(fileRef, blob);
+
+  const url = await getDownloadURL(fileRef);
+
+  return url;
+};
 
 export const useUploadImage = (locationPath = []) => {
   const [result, setResult] = useState(null);
@@ -19,7 +41,7 @@ export const useUploadImage = (locationPath = []) => {
     // Why are we using XMLHttpRequest? See:
     // https://github.com/expo/expo/issues/2402#issuecomment-443726662
 
-    const blob:Blob = await new Promise((resolve, reject) => {
+    const blob: Blob = await new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.onload = function (e) {
         resolve(xhr.response);
@@ -54,7 +76,7 @@ export const useUploadFileAsBlob = (locationPath = [], imageSize = "1024x1024") 
   const [isLoading, setIsLoading] = useState(false);
   const [downloadURL, setDownloadURL] = useState("");
 
-  const upload = async (blob:Blob) => {
+  const upload = async (blob: Blob) => {
     setIsLoading(true);
     const auth = getAuth();
     const userId = auth.currentUser.uid;

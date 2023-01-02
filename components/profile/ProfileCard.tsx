@@ -1,7 +1,7 @@
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import UserAvatar from "../UserAvatar";
-import { useUser } from "../../utils/firebase/api";
+import { useUploadFileAsBlob, useUser } from "../../utils/firebase/api";
 import { useState, FC } from "react";
 import { Button, ButtonGroup, Modal, Stack, useTheme } from "@mui/material";
 import { useSignOut } from "react-firebase-hooks/auth";
@@ -12,6 +12,7 @@ import OpenDialog from "../primitives/OpenDialog";
 import { useStateObject } from "../../utils/object";
 import ImageEditor, { CropSetting } from "../ImageEditor";
 import appSettings from "../../config";
+import { uploadFile } from "../../utils/firebase/api/storage";
 
 const IMAGE_URI =
   "https://firebasestorage.googleapis.com/v0/b/step-by-step-37f76.appspot.com/o/users%2F17f4uCCESETNm1qM7xm366cXRz22%2Fpost%2F0ffa27bc-2247-4318-aeb6-757d1e8b3188%2Fsplash-y-eey_1024x1024?alt=media&token=f5f745fe-00fb-45f6-94ce-695485f3d674";
@@ -64,7 +65,7 @@ const ProfileCardEditable: FC<{
   onCancel: Function;
 }> = ({ userId, onSave, onCancel, ...props }) => {
   const theme = useTheme();
-  const { data: user, update, save: saveUser, isCurrentUser, isLoading } = useUser(userId);
+  const { data: user, update: updateUser, save: saveUser, isCurrentUser, isLoading } = useUser(userId);
   const { object: avatarData, update: updateAvatarObject } = useStateObject({
     url: null,
     file: null,
@@ -78,7 +79,15 @@ const ProfileCardEditable: FC<{
 
   const [editImage, setEditImage] = useState<"avatar" | "background" | null>(null);
 
-  const onSaveHandler = () => {
+  const onSaveHandler = async () => {
+    if (avatarData.url) {
+      const avatarUrl = await uploadFile(avatarData.url, ["users", userId, "avatar"]);
+      updateUser("avatar", avatarUrl);
+    }
+    if (backgroundData.url) {
+      const backgroundUrl = await uploadFile(backgroundData.url, ["users", userId, "background"]);
+      updateUser("background", backgroundUrl);
+    }
     saveUser();
     onSave();
   };
@@ -88,11 +97,11 @@ const ProfileCardEditable: FC<{
   };
 
   const onChangeAliasHandler = (e) => {
-    update("alias", e.target.value);
+    updateUser("alias", e.target.value);
   };
 
   const onChangeBiographyHandler = (e) => {
-    update("biography", e.target.value);
+    updateUser("biography", e.target.value);
   };
 
   const onAvatarSelectHandler = ({ file, url }) => {
