@@ -62,8 +62,6 @@ const ImageEditor: FC<{
   const [crop, setCrop] = useState<Point>(settings.crop);
   const [zoom, setZoom] = useState<number>(settings.zoom);
 
-  console.log("settings", settings);
-
   const onCropComplete = useCallback((croppedArea: Area, croppedAreaPixels: Area) => {
     setCroppedArea(croppedAreaPixels);
   }, []);

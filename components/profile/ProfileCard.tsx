@@ -11,6 +11,7 @@ import ImageIcon from "@mui/icons-material/Image";
 import OpenDialog from "../primitives/OpenDialog";
 import { useStateObject } from "../../utils/object";
 import ImageEditor, { CropSetting } from "../ImageEditor";
+import appSettings from "../../config";
 
 const IMAGE_URI =
   "https://firebasestorage.googleapis.com/v0/b/step-by-step-37f76.appspot.com/o/users%2F17f4uCCESETNm1qM7xm366cXRz22%2Fpost%2F0ffa27bc-2247-4318-aeb6-757d1e8b3188%2Fsplash-y-eey_1024x1024?alt=media&token=f5f745fe-00fb-45f6-94ce-695485f3d674";
@@ -57,12 +58,6 @@ const Root = styled.div`
   }
 `;
 
-interface ImageData {
-  url: string | null;
-  file: string | null;
-  cropSettings: CropSetting | null;
-}
-
 const ProfileCardEditable: FC<{
   userId?: string;
   onSave: Function;
@@ -70,22 +65,18 @@ const ProfileCardEditable: FC<{
 }> = ({ userId, onSave, onCancel, ...props }) => {
   const theme = useTheme();
   const { data: user, update, save: saveUser, isCurrentUser, isLoading } = useUser(userId);
-  const {
-    object: avatarData,
-    setValue: setAvatarValue,
-    update: updateAvatarObject,
-  } = useStateObject({
+  const { object: avatarData, update: updateAvatarObject } = useStateObject({
     url: null,
     file: null,
     cropSettings: { crop: { x: 0, y: 0 }, zoom: 1, aspect: 1 },
   });
-  const { object: backgroundData, setValue: setBackgroundValue } = useStateObject({
+  const { object: backgroundData, update: updateBackgroundObject } = useStateObject({
     url: null,
     file: null,
-    cropSettings: { crop: { x: 0, y: 0 }, zoom: 1, aspect: 1 },
+    cropSettings: { crop: { x: 0, y: 0 }, zoom: 1, aspect: appSettings.avatarBackground.aspect },
   });
 
-  const [editImage, setEditImage] = useState<ImageData | null>();
+  const [editImage, setEditImage] = useState<"avatar" | "background" | null>(null);
 
   const onSaveHandler = () => {
     saveUser();
@@ -105,22 +96,33 @@ const ProfileCardEditable: FC<{
   };
 
   const onAvatarSelectHandler = ({ file, url }) => {
-    console.log("avatarData", avatarData);
-    const avatarObject = updateAvatarObject({ file, url });
-    console.log("avatarObject", avatarObject);
-    setEditImage(avatarObject as ImageData);
+    updateAvatarObject({ file, url });
+    setEditImage("avatar");
   };
 
-  const onCropDoneHandler = ({ blob: imageBlob, url, settings }) => {};
+  const onBackgroundSelectHandler = ({ file, url }) => {
+    updateBackgroundObject({ file, url });
+    setEditImage("background");
+  };
+
+  const onCropDoneHandler = ({ blob, url, settings }) => {
+    if (editImage === "avatar") {
+      updateAvatarObject({ file: blob, url, cropSettings: settings });
+    }
+    if (editImage === "background") {
+      updateBackgroundObject({ file: blob, url, cropSettings: settings });
+    }
+    setEditImage(null);
+  };
 
   if (isLoading) {
     return <></>;
   }
 
   return (
-    <Root theme={theme} backgroundImage={IMAGE_URI} {...props}>
+    <Root theme={theme} backgroundImage={backgroundData.url} {...props}>
       <Stack spacing={2} width="100%" height="100%" alignItems="center">
-        <UserAvatar className="user-avatar" size={72} userId={userId} realtime />
+        <UserAvatar className="user-avatar" size={72} userId={userId} src={avatarData.url} realtime />
         <OpenDialog className="button-change-avatar" onFileSelected={onAvatarSelectHandler}>
           <Button endIcon={<ImageIcon></ImageIcon>}>avatar</Button>
         </OpenDialog>
@@ -138,20 +140,23 @@ const ProfileCardEditable: FC<{
         <Typography className="user-biography" variant="body2" color="text.secondary">
           {user.description || ""}
         </Typography>
-        <Button className="button-change-background" endIcon={<ImageIcon></ImageIcon>}>
-          background
-        </Button>
+        <OpenDialog className="button-change-background" onFileSelected={onBackgroundSelectHandler}>
+          <Button endIcon={<ImageIcon></ImageIcon>}>background</Button>
+        </OpenDialog>
         <ButtonGroup variant="text">
           <Button onClick={onCancelHandler}>Cancel</Button>
           <Button onClick={onSaveHandler}>Save</Button>
         </ButtonGroup>
       </Stack>
-      <Modal open={editImage != null}>
+      <Modal open={editImage !== null}>
         <ImageEditor
-          src={editImage?.url}
+          src={(editImage === "avatar" && avatarData?.url) || (editImage === "background" && backgroundData?.url)}
           onDone={onCropDoneHandler}
           onClose={() => setEditImage(null)}
-          settings={editImage?.cropSettings}
+          settings={
+            (editImage === "avatar" && avatarData?.cropSettings) ||
+            (editImage === "background" && backgroundData?.cropSettings)
+          }
         />
       </Modal>
     </Root>

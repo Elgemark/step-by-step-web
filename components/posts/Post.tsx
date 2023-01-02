@@ -34,7 +34,6 @@ const StyledCardMedia = styled(CardMedia)`
 `;
 
 const MediaContainer = ({ children, href, enableLink }) => {
-  console.log("href", href);
   if (enableLink) {
     return (
       // <Link href={href} >
