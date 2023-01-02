@@ -14,6 +14,8 @@ const Root = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+  max-width: 640px;
   hr {
     width: 100%;
     margin: ${({ theme }) => theme.spacing(2)};
@@ -41,13 +43,30 @@ const ProfileCardEditable: FC<{
     update("alias", e.target.value);
   };
 
+  const onChangeBiographyHandler = (e) => {
+    update("biography", e.target.value);
+  };
+
+  if (isLoading) {
+    return <></>;
+  }
+
   return (
     <Root theme={theme} {...props}>
       <Stack spacing={2} width="100%" alignItems="center">
         <UserAvatar size={72} userId={userId} realtime />
         <TextField className="user-alias" fullWidth label="Alias" value={user?.alias} onChange={onChangeAliasHandler} />
+        <TextField
+          className="user-biography"
+          fullWidth
+          label="Biography"
+          value={user.biography}
+          multiline
+          inputProps={{ maxLength: 120 }}
+          onChange={onChangeBiographyHandler}
+        />
         <Typography className="user-description" variant="body2" color="text.secondary">
-          {user?.description || ""}
+          {user.description || ""}
         </Typography>
         <ButtonGroup variant="text">
           <Button onClick={onCancelHandler}>Cancel</Button>
@@ -79,7 +98,7 @@ const ProfileCardDefault: FC<{
           {user?.alias}
         </Typography>
         <Typography className="user-description" variant="body2" color="text.secondary">
-          {user?.description || ""}
+          {user?.biography || ""}
         </Typography>
         <ButtonGroup variant="text">
           <Button onClick={onEdit}>Edit</Button>

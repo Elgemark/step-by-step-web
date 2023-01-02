@@ -39,6 +39,7 @@ const StyledLayout = styled(Layout)`
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
   }
   .tabs {
     margin: ${({ theme }) => theme.spacing(4)} 0;
