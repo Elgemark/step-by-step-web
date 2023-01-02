@@ -16,6 +16,11 @@ export const useStateObject = (obj = {}) => {
       setObject(object);
       return object;
     },
+    update: (obj: object): object => {
+      const updatedObject = _.merge(object, obj);
+      setObject(updatedObject);
+      return updatedObject;
+    },
     getValue: (path: Array<string | number> | string, defaultValue?: any): any => _.get(object, path) || defaultValue,
   };
 };

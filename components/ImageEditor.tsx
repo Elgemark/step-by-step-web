@@ -46,9 +46,10 @@ const Root = styled(Box)`
   }
 `;
 
-interface CropSetting {
+export interface CropSetting {
   crop: Point;
   zoom: number;
+  aspect?: number;
 }
 
 const ImageEditor: FC<{
@@ -60,6 +61,8 @@ const ImageEditor: FC<{
   const [croppedArea, setCroppedArea] = useState(null);
   const [crop, setCrop] = useState<Point>(settings.crop);
   const [zoom, setZoom] = useState<number>(settings.zoom);
+
+  console.log("settings", settings);
 
   const onCropComplete = useCallback((croppedArea: Area, croppedAreaPixels: Area) => {
     setCroppedArea(croppedAreaPixels);
@@ -81,7 +84,7 @@ const ImageEditor: FC<{
           image={src}
           crop={crop}
           zoom={zoom}
-          aspect={appSettings.image.aspect}
+          aspect={settings.aspect || appSettings.image.aspect}
           onCropChange={setCrop}
           onCropComplete={onCropComplete}
           onZoomChange={setZoom}
