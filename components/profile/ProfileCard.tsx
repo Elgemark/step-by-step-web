@@ -13,6 +13,7 @@ const IMAGE_URI =
   "https://firebasestorage.googleapis.com/v0/b/step-by-step-37f76.appspot.com/o/users%2F17f4uCCESETNm1qM7xm366cXRz22%2Fpost%2F0ffa27bc-2247-4318-aeb6-757d1e8b3188%2Fsplash-y-eey_1024x1024?alt=media&token=f5f745fe-00fb-45f6-94ce-695485f3d674";
 
 const Root = styled.div`
+  border-radius: ${({ theme }) => theme.spacing(2)};
   padding: ${({ theme }) => theme.spacing(2)};
   margin-top: ${({ theme }) => theme.spacing(5)};
   margin-bottom: ${({ theme }) => theme.spacing(2)};
