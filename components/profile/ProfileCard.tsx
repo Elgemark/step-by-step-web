@@ -14,6 +14,7 @@ import ImageEditor from "../ImageEditor";
 import appSettings from "../../config";
 import { uploadImage } from "../../utils/firebase/api/storage";
 import { UploadResponse } from "../../utils/firebase/interface";
+import UserCard from "../primitives/UserCard";
 
 const Root = styled.div`
   border-radius: ${({ theme }) => theme.spacing(1)};
@@ -96,10 +97,8 @@ const ProfileCardEditable: FC<{
     }
 
     await saveUser(update);
-    // onSave();
+    onSave();
   };
-
-  console.log("user", user);
 
   const onCancelHandler = () => {
     onCancel();
@@ -138,9 +137,9 @@ const ProfileCardEditable: FC<{
   }
 
   return (
-    <Root theme={theme} backgroundImage={backgroundData.url} {...props}>
+    <Root theme={theme} backgroundImage={backgroundData.url || user.background} {...props}>
       <Stack spacing={2} width="100%" height="100%" alignItems="center">
-        <UserAvatar className="user-avatar" size={72} userId={userId} src={avatarData.url} realtime />
+        <UserAvatar className="user-avatar" size={72} userId={userId} src={avatarData.url || user.avatar} realtime />
         <OpenDialog className="button-change-avatar" onFileSelected={onAvatarSelectHandler}>
           <Button endIcon={<ImageIcon></ImageIcon>}>avatar</Button>
         </OpenDialog>
@@ -186,30 +185,20 @@ const ProfileCardDefault: FC<{
   onEdit: any;
   onSignOut: any;
 }> = ({ userId, onEdit, ...props }) => {
-  const theme = useTheme();
+  const { data: user, update: updateUser, save: saveUser, isCurrentUser, isLoading } = useUser(userId);
   const [signOut] = useSignOut(getAuth());
-  const { data: user } = useUser(userId);
 
   const onSignOutHandler = () => {
     signOut();
   };
 
   return (
-    <Root theme={theme} backgroundImage={user.background} {...props}>
-      <Stack spacing={2} width="100%" height="100%" alignItems="center">
-        <UserAvatar className="user-avatar" src={user.avatar} size={72} userId={userId} realtime />
-        <Typography className="user-alias" variant="h4">
-          {user?.alias}
-        </Typography>
-        <Typography className="user-biography" variant="body2" color="text.secondary">
-          {user?.biography || ""}
-        </Typography>
-        <ButtonGroup variant="text">
-          <Button onClick={onEdit}>Edit</Button>
-          <Button onClick={onSignOutHandler}>Log Out</Button>
-        </ButtonGroup>
-      </Stack>
-    </Root>
+    <UserCard variant="big" {...user} {...props}>
+      <ButtonGroup variant="text">
+        <Button onClick={onEdit}>Edit</Button>
+        <Button onClick={onSignOutHandler}>Log Out</Button>
+      </ButtonGroup>
+    </UserCard>
   );
 };
 
