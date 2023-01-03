@@ -1,4 +1,4 @@
-import { getCreatedPosts, getFollows, getPostsByState, getBookmarkedPosts } from "../../utils/firebase/api";
+import { getCreatedPosts, getFollows, getPostsByState, getBookmarkedPosts, useUser } from "../../utils/firebase/api";
 import { Divider, useTheme } from "@mui/material";
 import Head from "next/head";
 import Layout from "../../components/Layout";
@@ -18,7 +18,12 @@ import UnpublishedIcon from "@mui/icons-material/Unpublished";
 import AssistantDirectionIcon from "@mui/icons-material/AssistantDirection";
 import styled from "styled-components";
 import ResponsiveGrid from "../../components/primitives/ResponsiveGrid";
-import UserCard from "../../components/UserCard";
+import UserCard from "../../components/primitives/UserCard";
+
+const UserCardControlled: FC<{ userId: string }> = ({ userId, ...props }) => {
+  const { data: user } = useUser(userId);
+  return <UserCard {...user} {...props} variant="small" />;
+};
 
 const Users: FC<{ userIds: Array<string> }> = ({ userIds = [] }) => {
   if (!userIds.length) {
@@ -28,7 +33,7 @@ const Users: FC<{ userIds: Array<string> }> = ({ userIds = [] }) => {
   return (
     <ResponsiveGrid>
       {userIds.map((userId) => (
-        <UserCard key={`user-${userId}`} userId={userId} variant="small" />
+        <UserCardControlled key={`user-${userId}`} userId={userId} />
       ))}
     </ResponsiveGrid>
   );

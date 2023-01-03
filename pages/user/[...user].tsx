@@ -1,9 +1,8 @@
-import { getCreatedPosts, getFollows, useFollow } from "../../utils/firebase/api";
+import { getCreatedPosts, getFollows, useFollow, useUser } from "../../utils/firebase/api";
 import Head from "next/head";
 import Layout from "../../components/Layout";
 import { useRouter } from "next/router";
 import Posts from "../../components/posts/Posts";
-import UserCard from "../../components/UserCard";
 import { FC, SyntheticEvent } from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
@@ -14,6 +13,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import styled from "styled-components";
 import { Divider, useTheme } from "@mui/material";
 import ResponsiveGrid from "../../components/primitives/ResponsiveGrid";
+import UserCard from "../../components/primitives/UserCard";
 
 const Users: FC<{ userIds: Array<string> }> = ({ userIds = [] }) => {
   if (!userIds.length) {
@@ -33,7 +33,7 @@ const StyledLayout = styled(Layout)`
     flex-direction: column;
     align-items: center;
   }
-  .button-follow {
+  .user-card {
     margin-bottom: ${({ theme }) => theme.spacing(4)};
   }
   .tabs {
@@ -54,6 +54,8 @@ const tabProps = (index: number) => {
 const Index = ({ posts, userIds, uid, tabValue }) => {
   const router = useRouter();
   const theme = useTheme();
+  const { data: user } = useUser(uid);
+
   const { isFollowing, toggle, isLoading } = useFollow(uid);
 
   const onTabChangehandle = (event: SyntheticEvent, newValue: string) => {
@@ -70,16 +72,17 @@ const Index = ({ posts, userIds, uid, tabValue }) => {
         <title>STEPS | User</title>
       </Head>
       <StyledLayout theme={theme}>
-        <UserCard userId={uid} />
-        {isFollowing ? (
-          <LoadingButton className="button-follow" variant="contained" onClick={onFollowHandler} loading={isLoading}>
-            Unfollow
-          </LoadingButton>
-        ) : (
-          <LoadingButton className="button-follow" variant="contained" onClick={onFollowHandler} loading={isLoading}>
-            Follow
-          </LoadingButton>
-        )}
+        <UserCard variant="big" className="user-card" {...user}>
+          {isFollowing ? (
+            <LoadingButton className="button-follow" variant="contained" onClick={onFollowHandler} loading={isLoading}>
+              Unfollow
+            </LoadingButton>
+          ) : (
+            <LoadingButton className="button-follow" variant="contained" onClick={onFollowHandler} loading={isLoading}>
+              Follow
+            </LoadingButton>
+          )}
+        </UserCard>
         <Divider className="divider" />
         <Tabs className="tabs" value={tabValue} onChange={onTabChangehandle} aria-label="post tabs">
           <Tab label="Created" icon={<CreateIcon />} {...tabProps(1)} value="created" />

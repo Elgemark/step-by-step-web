@@ -16,6 +16,7 @@ const RootBig = styled.div`
   max-width: 640px;
   min-height: 320px;
   position: relative;
+  background-color: #272727;
   background-image: ${({ backgroundImage }) => "url(" + backgroundImage + ")"};
   background-repeat: no-repeat;
   background-position: center;
@@ -36,13 +37,6 @@ const RootBig = styled.div`
     position: absolute;
     bottom: 0;
     width: 100%;
-  }
-  .button-change-avatar {
-    align-self: center;
-    margin-top: -2px;
-  }
-  .button-change-background {
-    align-self: flex-end;
   }
 `;
 
@@ -71,6 +65,25 @@ const UserCardBig: FC<{
   );
 };
 
+const UserCardSmall: FC<{
+  children?: JSX.Element;
+  alias?: string;
+  biography?: string;
+  avatar?: string;
+  background: string;
+}> = ({ alias, biography, avatar, background, children, ...props }) => {
+  const theme = useTheme();
+
+  return (
+    <RootBig theme={theme} backgroundImage={background} {...props}>
+      <Avatar className="user-avatar" src={avatar} sx={{ width: 72, height: 72 }} />
+      <Typography className="user-alias" variant="h4">
+        {alias}
+      </Typography>
+    </RootBig>
+  );
+};
+
 const UserCard: FC<{
   variant: "big" | "small";
   alias?: string;
@@ -81,8 +94,10 @@ const UserCard: FC<{
   switch (variant) {
     case "big":
       return <UserCardBig alias={alias} biography={biography} avatar={avatar} background={background} {...props} />;
+    case "small":
+      return <UserCardSmall alias={alias} biography={biography} avatar={avatar} background={background} {...props} />;
     default:
-      return <>{`Variant ${variant} is not applicable!`}</>;
+      return <div>{`Variant ${variant} is not applicable!`}</div>;
   }
 };
 
