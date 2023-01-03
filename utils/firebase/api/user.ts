@@ -42,7 +42,7 @@ export const getUser = async (uid) => {
 };
 
 export const useUser = (uid, realtime = false) => {
-  const { object: data, setValue: update, replace } = useStateObject();
+  const { object: data, setValue: update, replace, update: updateObject } = useStateObject();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   //
@@ -77,8 +77,9 @@ export const useUser = (uid, realtime = false) => {
     }
   }, [data.uid, realtime]);
 
-  const save = async () => {
-    return await updateUser(data.uid, data);
+  const save = async (update = {}) => {
+    updateObject(update);
+    return await updateUser(data.uid, { ...data, ...update });
   };
 
   return { data, isLoading, isCurrentUser: currentUserId === data?.uid, error, update, save };

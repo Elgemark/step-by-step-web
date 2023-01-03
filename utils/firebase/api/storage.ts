@@ -1,74 +1,22 @@
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { getAuth } from "firebase/auth";
-import { v4 as uuidv4 } from "uuid";
 import { useState } from "react";
+import { UploadResponse } from "../interface";
 
-export const uploadFile = async (uri: string, locationPath: Array<string>, onProgress?: Function) => {
-  const blob: Blob = await new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    xhr.onload = function (e) {
-      resolve(xhr.response);
-      onProgress && onProgress(e.loaded / e.total);
-    };
-    xhr.onerror = function (e) {
-      reject(new TypeError("Network request failed"));
-    };
-    xhr.responseType = "blob";
-    xhr.open("GET", uri, true);
-    xhr.send(null);
-  });
+export const uploadImage = async (blob: Blob, imageSize: string = "1024x1024", ...locationPath: Array<string>) => {
+  const response: UploadResponse = { error: null, url: null };
 
-  const fileRef = ref(getStorage(), ...locationPath);
-  await uploadBytes(fileRef, blob);
+  try {
+    const pathArr = locationPath.join("/");
+    const fileRef = ref(getStorage(), pathArr);
+    await uploadBytes(fileRef, blob);
+    const receivedURL = await getDownloadURL(fileRef);
+    response.url = imageSize ? receivedURL.replace("?", `_${imageSize}?`) : receivedURL;
+  } catch (error) {
+    response.error = error;
+  }
 
-  const url = await getDownloadURL(fileRef);
-
-  return url;
-};
-
-export const useUploadImage = (locationPath = []) => {
-  const [result, setResult] = useState(null);
-  const [error, setError] = useState(null);
-  const [complete, setComplete] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [downloadURL, setDownloadURL] = useState("");
-  //
-  const auth = getAuth();
-  const userId = auth.currentUser.uid;
-
-  const upload = async (uri) => {
-    setComplete(false);
-    // Why are we using XMLHttpRequest? See:
-    // https://github.com/expo/expo/issues/2402#issuecomment-443726662
-
-    const blob: Blob = await new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.onload = function (e) {
-        resolve(xhr.response);
-        setProgress(e.loaded / e.total);
-      };
-      xhr.onerror = function (e) {
-        setError(e);
-        reject(new TypeError("Network request failed"));
-      };
-      xhr.responseType = "blob";
-      xhr.open("GET", uri, true);
-      xhr.send(null);
-    });
-
-    const fileRef = ref(getStorage(), "users", userId, ...locationPath, uuidv4());
-    const _result = await uploadBytes(fileRef, blob);
-    setResult(_result);
-
-    const url = await getDownloadURL(fileRef);
-
-    setComplete(true);
-    setDownloadURL(url);
-
-    return { downloadURL: url };
-  };
-
-  return { progress, complete, error, result, downloadURL, upload };
+  return response;
 };
 
 export const useUploadFileAsBlob = (locationPath = [], imageSize = "1024x1024") => {

@@ -46,3 +46,8 @@ export interface PostsResponse {
   error: string | null;
   lastDoc?: any;
 }
+
+export interface UploadResponse {
+  error: string | null;
+  url: string | null;
+}

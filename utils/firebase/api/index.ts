@@ -30,8 +30,8 @@ export const getFollows = followApi.getFollows;
 export const getLeaderForFollower = followApi.getLeaderForFollower;
 export const useFollow = followApi.useFollow;
 // :::Storage
-export const useUploadImage = storageApi.useUploadImage;
 export const useUploadFileAsBlob = storageApi.useUploadFileAsBlob;
+export const uploadImage = storageApi.uploadImage;
 /// :::USERS
 export const setUser = userApi.setUser;
 export const updateUser = userApi.updateUser;

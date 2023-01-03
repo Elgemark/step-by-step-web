@@ -1,7 +1,7 @@
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import UserAvatar from "../UserAvatar";
-import { useUploadFileAsBlob, useUser } from "../../utils/firebase/api";
+import { useUser } from "../../utils/firebase/api";
 import { useState, FC } from "react";
 import { Button, ButtonGroup, Modal, Stack, useTheme } from "@mui/material";
 import { useSignOut } from "react-firebase-hooks/auth";
@@ -10,12 +10,10 @@ import styled from "styled-components";
 import ImageIcon from "@mui/icons-material/Image";
 import OpenDialog from "../primitives/OpenDialog";
 import { useStateObject } from "../../utils/object";
-import ImageEditor, { CropSetting } from "../ImageEditor";
+import ImageEditor from "../ImageEditor";
 import appSettings from "../../config";
-import { uploadFile } from "../../utils/firebase/api/storage";
-
-const IMAGE_URI =
-  "https://firebasestorage.googleapis.com/v0/b/step-by-step-37f76.appspot.com/o/users%2F17f4uCCESETNm1qM7xm366cXRz22%2Fpost%2F0ffa27bc-2247-4318-aeb6-757d1e8b3188%2Fsplash-y-eey_1024x1024?alt=media&token=f5f745fe-00fb-45f6-94ce-695485f3d674";
+import { uploadImage } from "../../utils/firebase/api/storage";
+import { UploadResponse } from "../../utils/firebase/interface";
 
 const Root = styled.div`
   border-radius: ${({ theme }) => theme.spacing(1)};
@@ -80,17 +78,28 @@ const ProfileCardEditable: FC<{
   const [editImage, setEditImage] = useState<"avatar" | "background" | null>(null);
 
   const onSaveHandler = async () => {
-    if (avatarData.url) {
-      const avatarUrl = await uploadFile(avatarData.url, ["users", userId, "avatar"]);
-      updateUser("avatar", avatarUrl);
+    const update = { avatar: null, background: null };
+
+    if (avatarData.file) {
+      const avatarResp: UploadResponse = await uploadImage(avatarData.file, "1024x1024", "users", userId, "avatar");
+      update.avatar = avatarResp.url;
     }
-    if (backgroundData.url) {
-      const backgroundUrl = await uploadFile(backgroundData.url, ["users", userId, "background"]);
-      updateUser("background", backgroundUrl);
+    if (backgroundData.file) {
+      const backgroundResp: UploadResponse = await uploadImage(
+        backgroundData.file,
+        "1024x1024",
+        "users",
+        userId,
+        "background"
+      );
+      update.background = backgroundResp.url;
     }
-    saveUser();
-    onSave();
+
+    await saveUser(update);
+    // onSave();
   };
+
+  console.log("user", user);
 
   const onCancelHandler = () => {
     onCancel();
@@ -186,10 +195,9 @@ const ProfileCardDefault: FC<{
   };
 
   return (
-    <Root theme={theme} backgroundImage={IMAGE_URI} {...props}>
-      {/* <img className="user-wallpaper" src={IMAGE_URI}></img> */}
+    <Root theme={theme} backgroundImage={user.background} {...props}>
       <Stack spacing={2} width="100%" height="100%" alignItems="center">
-        <UserAvatar className="user-avatar" size={72} userId={userId} realtime />
+        <UserAvatar className="user-avatar" src={user.avatar} size={72} userId={userId} realtime />
         <Typography className="user-alias" variant="h4">
           {user?.alias}
         </Typography>
