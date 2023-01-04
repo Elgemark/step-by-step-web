@@ -3,6 +3,7 @@ import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { useStateObject } from "../../object";
 import * as dataModels from "../models";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 export const setUser = async (currentUser) => {
   const { uid } = currentUser;
@@ -41,9 +42,55 @@ export const getUser = async (uid) => {
   }
 };
 
+export const useCurrentUser = (realtime = false) => {
+  const [user] = useAuthState(getAuth());
+  const { object: data, update: updateData } = useStateObject();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (user) {
+      getUser(user.uid)
+        .then((res) => {
+          updateData({ ...res, uid: user.uid });
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          setIsLoading(false);
+        });
+    }
+  }, [user]);
+
+  // Add realtime listener
+  useEffect(() => {
+    if (user && realtime) {
+      debugger;
+      const { uid } = user;
+      const firebase = getFirestore();
+      const docRef = doc(firebase, "users", uid);
+      onSnapshot(docRef, (snapshot) => {
+        if (snapshot.exists()) {
+          updateData(snapshot.data());
+        }
+      });
+    }
+  }, [user, realtime]);
+
+  const save = async (update = {}) => {
+    updateData(update);
+    return await updateUser(data.uid, { ...data, ...update });
+  };
+
+  return {
+    data,
+    isLoading,
+    save,
+    update: updateData,
+  };
+};
+
 export const useUser = (uid, realtime = false) => {
   const { object: data, setValue: update, replace, update: updateObject } = useStateObject();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   //
   const auth = getAuth();
@@ -60,6 +107,7 @@ export const useUser = (uid, realtime = false) => {
       })
       .catch((error) => {
         setError(error);
+        setIsLoading(false);
       });
   }, []);
 

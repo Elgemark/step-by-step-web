@@ -1,4 +1,4 @@
-import { searchPosts, getPosts, deletePost, likePost } from "../utils/firebase/api";
+import { searchPosts, getPosts } from "../utils/firebase/api";
 import { toSanitizedArray } from "../utils/stringUtils";
 import PageMain from "../components/PageMain";
 import { PostsResponse } from "../utils/firebase/interface";

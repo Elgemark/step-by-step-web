@@ -1,7 +1,7 @@
 import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
 import { FC } from "react";
-import { Divider, Stack, useTheme } from "@mui/material";
+import { Stack, useTheme } from "@mui/material";
 import styled from "styled-components";
 import TextField from "@mui/material/TextField";
 import { Button, ButtonGroup } from "@mui/material";
