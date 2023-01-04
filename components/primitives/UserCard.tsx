@@ -113,9 +113,14 @@ export const UserCardBigEditable: FC<{
     <RootBig theme={theme} backgroundImage={background} {...props}>
       <Stack spacing={2} width="100%" height="100%" alignItems="center">
         <Avatar className="user-avatar" src={avatar} sx={{ width: 72, height: 72 }} />
-        <OpenDialog className="button-change-avatar" onFileSelected={onAvatarSelect}>
-          <Button endIcon={<ImageIcon></ImageIcon>}>avatar</Button>
-        </OpenDialog>
+        <Stack direction="row">
+          <OpenDialog className="button-change-avatar" onFileSelected={onAvatarSelect}>
+            <Button endIcon={<ImageIcon></ImageIcon>}>avatar</Button>
+          </OpenDialog>
+          <OpenDialog className="button-change-background" onFileSelected={onBackgroundSelect}>
+            <Button endIcon={<ImageIcon></ImageIcon>}>wallpaper</Button>
+          </OpenDialog>
+        </Stack>
         <TextField className="user-alias" fullWidth label="Alias" value={alias} onChange={onChangeAlias} />
         <TextField
           className="user-biography"
@@ -127,9 +132,7 @@ export const UserCardBigEditable: FC<{
           maxRows={3}
           onChange={onChangeBiography}
         />
-        <OpenDialog className="button-change-background" onFileSelected={onBackgroundSelect}>
-          <Button endIcon={<ImageIcon></ImageIcon>}>background</Button>
-        </OpenDialog>
+
         <ButtonGroup variant="text">
           <Button onClick={onCancel}>Cancel</Button>
           <Button onClick={onSave}>Save</Button>

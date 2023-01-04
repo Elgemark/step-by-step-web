@@ -1,69 +1,20 @@
-import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
-import UserAvatar from "../UserAvatar";
 import { useUser } from "../../utils/firebase/api";
 import { useState, FC } from "react";
-import { Button, ButtonGroup, Modal, Stack, useTheme } from "@mui/material";
+import { Button, ButtonGroup, Modal } from "@mui/material";
 import { useSignOut } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
-import styled from "styled-components";
-import ImageIcon from "@mui/icons-material/Image";
-import OpenDialog from "../primitives/OpenDialog";
 import { useStateObject } from "../../utils/object";
 import ImageEditor from "../ImageEditor";
 import appSettings from "../../config";
 import { uploadImage } from "../../utils/firebase/api/storage";
 import { UploadResponse } from "../../utils/firebase/interface";
-import UserCard from "../primitives/UserCard";
-
-const Root = styled.div`
-  border-radius: ${({ theme }) => theme.spacing(1)};
-  padding: ${({ theme }) => theme.spacing(2)};
-  margin-top: ${({ theme }) => theme.spacing(5)};
-  margin-bottom: ${({ theme }) => theme.spacing(2)};
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  max-width: 640px;
-  min-height: 320px;
-  position: relative;
-  background-image: ${({ backgroundImage }) => "url(" + backgroundImage + ")"};
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  hr {
-    width: 100%;
-    margin: ${({ theme }) => theme.spacing(2)};
-  }
-  .user-avatar {
-    margin-top: -54px;
-    border: 8px solid ${({ theme }) => (theme.palette.mode === "dark" ? "black" : "white")};
-    box-sizing: content-box;
-  }
-  .user-biography {
-    flex-grow: 1;
-  }
-  .user-wallpaper {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-  }
-  .button-change-avatar {
-    align-self: center;
-    margin-top: -2px;
-  }
-  .button-change-background {
-    align-self: flex-end;
-  }
-`;
+import UserCard, { UserCardBigEditable } from "../primitives/UserCard";
 
 const ProfileCardEditable: FC<{
   userId?: string;
   onSave: Function;
   onCancel: Function;
-}> = ({ userId, onSave, onCancel, ...props }) => {
-  const theme = useTheme();
+}> = ({ userId, onSave, onCancel }) => {
   const { data: user, update: updateUser, save: saveUser, isCurrentUser, isLoading } = useUser(userId);
   const { object: avatarData, update: updateAvatarObject } = useStateObject({
     url: null,
@@ -137,34 +88,19 @@ const ProfileCardEditable: FC<{
   }
 
   return (
-    <Root theme={theme} backgroundImage={backgroundData.url || user.background} {...props}>
-      <Stack spacing={2} width="100%" height="100%" alignItems="center">
-        <UserAvatar className="user-avatar" size={72} userId={userId} src={avatarData.url || user.avatar} realtime />
-        <OpenDialog className="button-change-avatar" onFileSelected={onAvatarSelectHandler}>
-          <Button endIcon={<ImageIcon></ImageIcon>}>avatar</Button>
-        </OpenDialog>
-        <TextField className="user-alias" fullWidth label="Alias" value={user?.alias} onChange={onChangeAliasHandler} />
-        <TextField
-          className="user-biography"
-          fullWidth
-          label="Biography"
-          value={user.biography}
-          multiline
-          inputProps={{ maxLength: 120 }}
-          maxRows={3}
-          onChange={onChangeBiographyHandler}
-        />
-        <Typography className="user-biography" variant="body2" color="text.secondary">
-          {user.description || ""}
-        </Typography>
-        <OpenDialog className="button-change-background" onFileSelected={onBackgroundSelectHandler}>
-          <Button endIcon={<ImageIcon></ImageIcon>}>background</Button>
-        </OpenDialog>
-        <ButtonGroup variant="text">
-          <Button onClick={onCancelHandler}>Cancel</Button>
-          <Button onClick={onSaveHandler}>Save</Button>
-        </ButtonGroup>
-      </Stack>
+    <>
+      <UserCardBigEditable
+        avatar={avatarData.url || user.avatar}
+        background={backgroundData.url || user.background}
+        alias={user.alias}
+        biography={user.biography}
+        onAvatarSelect={onAvatarSelectHandler}
+        onChangeAlias={onChangeAliasHandler}
+        onChangeBiography={onChangeBiographyHandler}
+        onBackgroundSelect={onBackgroundSelectHandler}
+        onCancel={onCancelHandler}
+        onSave={onSaveHandler}
+      />
       <Modal open={editImage !== null}>
         <ImageEditor
           src={(editImage === "avatar" && avatarData?.url) || (editImage === "background" && backgroundData?.url)}
@@ -176,7 +112,7 @@ const ProfileCardEditable: FC<{
           }
         />
       </Modal>
-    </Root>
+    </>
   );
 };
 
