@@ -43,9 +43,9 @@ const TopBar: FC<{ className?: string; actions?: ReactNode }> = ({ className, ac
           </Button>
         )}
         {/* THEME */}
-        <IconButton size="small" onClick={colorMode.toggleColorMode} color="inherit">
+        {/* <IconButton size="small" onClick={colorMode.toggleColorMode} color="inherit">
           {theme.palette.mode === "dark" ? <Brightness7Icon fontSize="12px" /> : <Brightness4Icon fontSize="12px" />}
-        </IconButton>
+        </IconButton> */}
         {/* LOGIN */}
         {!user && (
           <Button
