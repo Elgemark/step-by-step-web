@@ -3,8 +3,12 @@ import Avatar from "@mui/material/Avatar";
 import { FC } from "react";
 import { Stack, useTheme } from "@mui/material";
 import styled from "styled-components";
+import TextField from "@mui/material/TextField";
+import { Button, ButtonGroup } from "@mui/material";
+import ImageIcon from "@mui/icons-material/Image";
+import OpenDialog from "../primitives/OpenDialog";
 
-const RootBig = styled.div`
+const DefaultStyle = styled.div`
   border-radius: ${({ theme }) => theme.spacing(1)};
   padding: ${({ theme }) => theme.spacing(2)};
   margin-top: ${({ theme }) => theme.spacing(5)};
@@ -37,8 +41,21 @@ const RootBig = styled.div`
     position: absolute;
     bottom: 0;
     width: 100%;
+    filter: brightness(0.8);
   }
 `;
+
+const RootSmall = styled(DefaultStyle)`
+  max-width: 320px;
+  min-height: 160px;
+  max-height: 320px;
+  .user-avatar {
+    margin-top: -42px;
+
+    align-self: flex-start;
+  }
+`;
+const RootBig = styled(DefaultStyle)``;
 
 const UserCardBig: FC<{
   children?: JSX.Element;
@@ -65,6 +82,63 @@ const UserCardBig: FC<{
   );
 };
 
+export const UserCardBigEditable: FC<{
+  children?: JSX.Element;
+  alias?: string;
+  biography?: string;
+  avatar?: string;
+  background: string;
+  onAvatarSelect: any;
+  onChangeAlias: any;
+  onChangeBiography: any;
+  onBackgroundSelect: any;
+  onCancel: any;
+  onSave: any;
+}> = ({
+  alias,
+  biography,
+  avatar,
+  background,
+  onAvatarSelect,
+  onChangeAlias,
+  onChangeBiography,
+  onBackgroundSelect,
+  onCancel,
+  onSave,
+  ...props
+}) => {
+  const theme = useTheme();
+
+  return (
+    <RootBig theme={theme} backgroundImage={background} {...props}>
+      <Stack spacing={2} width="100%" height="100%" alignItems="center">
+        <Avatar className="user-avatar" src={avatar} sx={{ width: 72, height: 72 }} />
+        <OpenDialog className="button-change-avatar" onFileSelected={onAvatarSelect}>
+          <Button endIcon={<ImageIcon></ImageIcon>}>avatar</Button>
+        </OpenDialog>
+        <TextField className="user-alias" fullWidth label="Alias" value={alias} onChange={onChangeAlias} />
+        <TextField
+          className="user-biography"
+          fullWidth
+          label="Biography"
+          value={biography}
+          multiline
+          inputProps={{ maxLength: 120 }}
+          maxRows={3}
+          onChange={onChangeBiography}
+        />
+        <OpenDialog className="button-change-background" onFileSelected={onBackgroundSelect}>
+          <Button endIcon={<ImageIcon></ImageIcon>}>background</Button>
+        </OpenDialog>
+        <ButtonGroup variant="text">
+          <Button onClick={onCancel}>Cancel</Button>
+          <Button onClick={onSave}>Save</Button>
+        </ButtonGroup>
+      </Stack>
+    </RootBig>
+  );
+};
+
 const UserCardSmall: FC<{
   children?: JSX.Element;
   alias?: string;
@@ -75,12 +149,12 @@ const UserCardSmall: FC<{
   const theme = useTheme();
 
   return (
-    <RootBig theme={theme} backgroundImage={background} {...props}>
-      <Avatar className="user-avatar" src={avatar} sx={{ width: 72, height: 72 }} />
-      <Typography className="user-alias" variant="h4">
+    <RootSmall theme={theme} backgroundImage={background} {...props}>
+      <Avatar className="user-avatar" src={avatar} sx={{ width: 36, height: 36 }} />
+      <Typography className="user-alias" variant="h5">
         {alias}
       </Typography>
-    </RootBig>
+    </RootSmall>
   );
 };
 
