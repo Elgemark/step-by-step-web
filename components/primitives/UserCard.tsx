@@ -48,23 +48,8 @@ const RootSmall = styled(DefaultStyle)`
   max-width: 320px;
   min-height: 160px;
   max-height: 320px;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  .user-avatar {
-    margin: auto;
-    border: none;
-  }
-  .inner-container {
-    /* width: 100%; */
-    backdrop-filter: blur(4px);
-    border-radius: 36px;
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    flex-direction: row;
-  }
 `;
+
 const RootBig = styled(DefaultStyle)``;
 
 const UserCardBig: FC<{
@@ -163,12 +148,12 @@ const UserCardSmall: FC<{
 
   return (
     <RootSmall theme={theme} backgroundImage={background} {...props}>
-      <div className="inner-container">
+      <Stack spacing={2} width="100%" height="100%" alignItems="center">
         <Avatar className="user-avatar" src={avatar} sx={{ width: 72, height: 72 }} />
         <Typography className="user-alias" variant="h5">
           {alias}
         </Typography>
-      </div>
+      </Stack>
     </RootSmall>
   );
 };
