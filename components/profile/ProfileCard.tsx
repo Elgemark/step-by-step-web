@@ -121,7 +121,7 @@ const ProfileCardDefault: FC<{
   onEdit: any;
   onSignOut: any;
 }> = ({ userId, onEdit, ...props }) => {
-  const { data: user, update: updateUser, save: saveUser, isCurrentUser, isLoading } = useUser(userId);
+  const { data: user } = useUser(userId, true);
   const [signOut] = useSignOut(getAuth());
 
   const onSignOutHandler = () => {

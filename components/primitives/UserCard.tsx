@@ -1,7 +1,7 @@
 import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
 import { FC } from "react";
-import { Stack, useTheme } from "@mui/material";
+import { Divider, Stack, useTheme } from "@mui/material";
 import styled from "styled-components";
 import TextField from "@mui/material/TextField";
 import { Button, ButtonGroup } from "@mui/material";
@@ -15,7 +15,6 @@ const DefaultStyle = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing(2)};
   display: flex;
   flex-direction: column;
-  align-items: center;
   width: 100%;
   max-width: 640px;
   min-height: 320px;
@@ -49,10 +48,21 @@ const RootSmall = styled(DefaultStyle)`
   max-width: 320px;
   min-height: 160px;
   max-height: 320px;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
   .user-avatar {
-    margin-top: -42px;
-
-    align-self: flex-start;
+    margin: auto;
+    border: none;
+  }
+  .inner-container {
+    /* width: 100%; */
+    backdrop-filter: blur(4px);
+    border-radius: 36px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: row;
   }
 `;
 const RootBig = styled(DefaultStyle)``;
@@ -153,10 +163,12 @@ const UserCardSmall: FC<{
 
   return (
     <RootSmall theme={theme} backgroundImage={background} {...props}>
-      <Avatar className="user-avatar" src={avatar} sx={{ width: 36, height: 36 }} />
-      <Typography className="user-alias" variant="h5">
-        {alias}
-      </Typography>
+      <div className="inner-container">
+        <Avatar className="user-avatar" src={avatar} sx={{ width: 72, height: 72 }} />
+        <Typography className="user-alias" variant="h5">
+          {alias}
+        </Typography>
+      </div>
     </RootSmall>
   );
 };
