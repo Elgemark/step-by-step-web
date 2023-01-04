@@ -48,6 +48,9 @@ const RootSmall = styled(DefaultStyle)`
   max-width: 320px;
   min-height: 160px;
   max-height: 320px;
+  .user-alias {
+    margin-top: 30px;
+  }
 `;
 
 const RootBig = styled(DefaultStyle)``;
@@ -68,7 +71,7 @@ const UserCardBig: FC<{
         <Typography className="user-alias" variant="h4">
           {alias}
         </Typography>
-        <Typography className="user-biography" variant="body2" color="text.secondary">
+        <Typography className="user-biography" variant="body1" color="text.secondary">
           {biography}
         </Typography>
         {children}
@@ -149,7 +152,7 @@ const UserCardSmall: FC<{
   return (
     <RootSmall theme={theme} backgroundImage={background} {...props}>
       <Stack spacing={2} width="100%" height="100%" alignItems="center">
-        <Avatar className="user-avatar" src={avatar} sx={{ width: 72, height: 72 }} />
+        <Avatar className="user-avatar" src={avatar} sx={{ width: 56, height: 56 }} />
         <Typography className="user-alias" variant="h5">
           {alias}
         </Typography>

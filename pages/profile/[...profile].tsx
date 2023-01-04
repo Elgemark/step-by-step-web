@@ -20,10 +20,16 @@ import styled from "styled-components";
 import ResponsiveGrid from "../../components/primitives/ResponsiveGrid";
 import UserCard from "../../components/primitives/UserCard";
 
-const UserCardControlled: FC<{ userId: string }> = ({ userId, ...props }) => {
+const UserCardControlled: FC<{ userId: string }> = styled(({ userId, ...props }) => {
+  const router = useRouter();
   const { data: user } = useUser(userId);
-  return <UserCard {...user} {...props} variant="small" />;
-};
+  const onClickHandler = () => {
+    router.push(`/user/${userId}`);
+  };
+  return <UserCard {...user} {...props} variant="small" onClick={onClickHandler} />;
+})`
+  cursor: pointer;
+`;
 
 const Users: FC<{ userIds: Array<string> }> = ({ userIds = [] }) => {
   if (!userIds.length) {
@@ -64,7 +70,6 @@ const tabProps = (index: number) => {
 const Index = ({ tabValue, uid, posts = [], userIds = [] }) => {
   const theme = useTheme();
   const [user, userLoading, userError] = useAuthState(getAuth());
-  const [_, signOutLoading, signOutError] = useSignOut(getAuth());
   const router = useRouter();
 
   useEffect(() => {
