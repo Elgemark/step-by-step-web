@@ -1,4 +1,4 @@
-import { Card, useTheme } from "@mui/material";
+import { Card } from "@mui/material";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
@@ -10,7 +10,6 @@ import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import PostMoreMenu from "../PostMoreMenu";
-import Link from "next/link";
 import UserAvatar from "../UserAvatar";
 import Badge from "@mui/material/Badge";
 import { useLikes, useBookmarks } from "../../utils/firebase/api";
@@ -81,7 +80,6 @@ const Post: FC<{
   onStartOver,
   onClickAvatar,
 }) => {
-  const theme = useTheme();
   const [numLikes, setNumLikes] = useState(likes);
   const { isLiked, toggle: toggleLike } = useLikes(id);
   const { isBookmarked, toggle: toogleBookmark } = useBookmarks(id);
@@ -97,7 +95,7 @@ const Post: FC<{
   };
 
   return (
-    <Root theme={theme}>
+    <Root>
       <CardHeader
         avatar={
           <IconButton sx={{ padding: 0 }} onClick={() => onClickAvatar(userId)}>

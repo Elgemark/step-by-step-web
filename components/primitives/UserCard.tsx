@@ -2,13 +2,13 @@ import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
 import { FC } from "react";
 import { Stack, useTheme } from "@mui/material";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import TextField from "@mui/material/TextField";
 import { Button, ButtonGroup } from "@mui/material";
 import ImageIcon from "@mui/icons-material/Image";
 import OpenDialog from "../primitives/OpenDialog";
 
-const DefaultStyle = styled.div`
+const defaultStyle = css`
   border-radius: ${({ theme }) => theme.spacing(1)};
   padding: ${({ theme }) => theme.spacing(2)};
   margin-top: ${({ theme }) => theme.spacing(5)};
@@ -44,7 +44,7 @@ const DefaultStyle = styled.div`
   }
 `;
 
-const RootSmall = styled(DefaultStyle)`
+const RootSmall = styled.div`
   max-width: 320px;
   min-height: 160px;
   max-height: 320px;
@@ -53,7 +53,7 @@ const RootSmall = styled(DefaultStyle)`
   }
 `;
 
-const RootBig = styled(DefaultStyle)``;
+const RootBig = styled.div``;
 
 const UserCardBig: FC<{
   children?: JSX.Element;
