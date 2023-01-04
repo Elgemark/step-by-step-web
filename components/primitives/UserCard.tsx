@@ -9,10 +9,10 @@ import ImageIcon from "@mui/icons-material/Image";
 import OpenDialog from "../primitives/OpenDialog";
 
 const defaultStyle = css`
-  border-radius: ${({ theme }) => theme.spacing(1)};
-  padding: ${({ theme }) => theme.spacing(2)};
-  margin-top: ${({ theme }) => theme.spacing(5)};
-  margin-bottom: ${({ theme }) => theme.spacing(2)};
+  border-radius: ${({ spacing }) => spacing(1)};
+  padding: ${({ spacing }) => spacing(2)};
+  margin-top: ${({ spacing }) => spacing(5)};
+  margin-bottom: ${({ spacing }) => spacing(2)};
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -26,11 +26,11 @@ const defaultStyle = css`
   background-size: cover;
   hr {
     width: 100%;
-    margin: ${({ theme }) => theme.spacing(2)};
+    margin: ${({ spacing }) => spacing(2)};
   }
   .user-avatar {
     margin-top: -54px;
-    border: 8px solid ${({ theme }) => (theme.palette.mode === "dark" ? "black" : "white")};
+    border: 8px solid ${({ palette }) => (palette.mode === "dark" ? "black" : "white")};
     box-sizing: content-box;
   }
   .user-biography {
@@ -45,6 +45,7 @@ const defaultStyle = css`
 `;
 
 const RootSmall = styled.div`
+  ${defaultStyle}
   max-width: 320px;
   min-height: 160px;
   max-height: 320px;
@@ -53,7 +54,9 @@ const RootSmall = styled.div`
   }
 `;
 
-const RootBig = styled.div``;
+const RootBig = styled.div`
+  ${defaultStyle}
+`;
 
 const UserCardBig: FC<{
   children?: JSX.Element;
@@ -65,7 +68,7 @@ const UserCardBig: FC<{
   const theme = useTheme();
 
   return (
-    <RootBig theme={theme} backgroundImage={background} {...props}>
+    <RootBig spacing={theme.spacing} palette={theme.palette} backgroundImage={background} {...props}>
       <Stack spacing={2} width="100%" height="100%" alignItems="center">
         <Avatar className="user-avatar" src={avatar} sx={{ width: 72, height: 72 }} />
         <Typography className="user-alias" variant="h4">
@@ -108,7 +111,7 @@ export const UserCardBigEditable: FC<{
   const theme = useTheme();
 
   return (
-    <RootBig theme={theme} backgroundImage={background} {...props}>
+    <RootBig spacing={theme.spacing} palette={theme.palette} backgroundImage={background} {...props}>
       <Stack spacing={2} width="100%" height="100%" alignItems="center">
         <Avatar className="user-avatar" src={avatar} sx={{ width: 72, height: 72 }} />
         <Stack direction="row">
@@ -150,7 +153,7 @@ const UserCardSmall: FC<{
   const theme = useTheme();
 
   return (
-    <RootSmall theme={theme} backgroundImage={background} {...props}>
+    <RootSmall spacing={theme.spacing} palette={theme.palette} backgroundImage={background} {...props}>
       <Stack spacing={2} width="100%" height="100%" alignItems="center">
         <Avatar className="user-avatar" src={avatar} sx={{ width: 56, height: 56 }} />
         <Typography className="user-alias" variant="h5">
