@@ -63,7 +63,6 @@ export const useCurrentUser = (realtime = false) => {
   // Add realtime listener
   useEffect(() => {
     if (user && realtime) {
-      debugger;
       const { uid } = user;
       const firebase = getFirestore();
       const docRef = doc(firebase, "users", uid);
@@ -113,7 +112,6 @@ export const useUser = (uid, realtime = false) => {
 
   // Add realtime listener
   useEffect(() => {
-    const { uid } = data;
     if (uid && realtime) {
       const firebase = getFirestore();
       const docRef = doc(firebase, "users", uid);
@@ -123,7 +121,7 @@ export const useUser = (uid, realtime = false) => {
         }
       });
     }
-  }, [data.uid, realtime]);
+  }, [uid, realtime]);
 
   const save = async (update = {}) => {
     updateObject(update);

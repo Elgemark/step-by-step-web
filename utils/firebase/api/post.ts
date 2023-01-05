@@ -145,6 +145,7 @@ export const searchPosts = async (tags = [], category: string, limit = 10) => {
 
   try {
     const querySnapshot = await getDocs(queryBuild);
+
     querySnapshot.forEach((doc) => {
       response.data.push({ ...doc.data(), id: doc.id });
     });

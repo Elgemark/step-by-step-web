@@ -117,10 +117,12 @@ const ProfileCardEditable: FC<{
 };
 
 const ProfileCardDefault: FC<{
-  userId?: string;
+  userId: string;
   onEdit: any;
   onSignOut: any;
 }> = ({ userId, onEdit, ...props }) => {
+  const [bgBurst] = useState<number>(Math.random());
+  const [avatarBurst] = useState<number>(Math.random());
   const { data: user } = useUser(userId, true);
   const [signOut] = useSignOut(getAuth());
 
@@ -129,7 +131,13 @@ const ProfileCardDefault: FC<{
   };
 
   return (
-    <UserCard variant="big" {...user} {...props}>
+    <UserCard
+      variant="big"
+      {...user}
+      avatar={`${user.avatar}&${avatarBurst}`}
+      background={`${user.background}&${bgBurst}`}
+      {...props}
+    >
       <ButtonGroup variant="text">
         <Button onClick={onEdit}>Edit</Button>
         <Button onClick={onSignOutHandler}>Log Out</Button>
