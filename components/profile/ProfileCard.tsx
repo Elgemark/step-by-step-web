@@ -30,7 +30,7 @@ const ProfileCardEditable: FC<{
   const [editImage, setEditImage] = useState<"avatar" | "background" | null>(null);
 
   const onSaveHandler = async () => {
-    const update = { avatar: null, background: null };
+    const update = { avatar: user.avatar, background: user.background };
 
     if (avatarData.file) {
       const avatarResp: UploadResponse = await uploadImage(avatarData.file, "1024x1024", "users", userId, "avatar");
