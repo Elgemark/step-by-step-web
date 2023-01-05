@@ -40,7 +40,7 @@ export const getPosts = async (orderBy = "likes", limit = 10, lastDoc) => {
   return response;
 };
 
-export const getBookmarkedPosts = async (uid, limit = 10, lastDoc) => {
+export const getBookmarkedPosts = async (uid, limit = 10, lastDoc = null) => {
   let error = null;
   const posts = [];
   const firebase = getFirestore();

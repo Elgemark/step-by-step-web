@@ -129,7 +129,7 @@ export async function getServerSideProps({ query }) {
       break;
     case "follows":
       const { data: follows } = await getFollows(uid);
-      userIds = follows.map((user) => user.id);
+      userIds = follows.map((follow) => follow.id);
       break;
   }
 

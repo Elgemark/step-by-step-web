@@ -1,4 +1,4 @@
-import { Lists, Posts, Steps } from "../type";
+import { Lists, Posts } from "../type";
 
 export interface Media {
   imageURI: string | null;
@@ -61,4 +61,14 @@ export interface StepsResponse {
 export interface UploadResponse {
   error: string | null;
   url: string | null;
+}
+
+export interface FollowResponse {
+  error: string | null;
+  data: object | null;
+}
+
+export interface FollowersResponse {
+  error: string | null;
+  data: Array<any> | [];
 }

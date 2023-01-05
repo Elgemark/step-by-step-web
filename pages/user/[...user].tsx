@@ -15,16 +15,25 @@ import { Divider, useTheme } from "@mui/material";
 import ResponsiveGrid from "../../components/primitives/ResponsiveGrid";
 import UserCard from "../../components/primitives/UserCard";
 
-const Users: FC<{ userIds: Array<string> }> = ({ userIds = [] }) => {
-  if (!userIds.length) {
-    return null;
-  }
+const UserCardControlled: FC<{ userId: string }> = styled(({ userId, ...props }) => {
+  const router = useRouter();
+  const { data: user } = useUser(userId);
+  const onClickHandler = () => {
+    router.push(`/user/${userId}`);
+  };
+  return <UserCard {...user} {...props} variant="small" onClick={onClickHandler} />;
+})`
+  cursor: pointer;
+`;
 
-  <ResponsiveGrid>
-    {userIds.map((userId) => (
-      <UserCard key={`user-${userId}`} userId={userId} />
-    ))}
-  </ResponsiveGrid>;
+const Users: FC<{ userIds: Array<string> }> = ({ userIds = [] }) => {
+  return (
+    <ResponsiveGrid>
+      {userIds.map((userId) => (
+        <UserCardControlled key={`user-${userId}`} userId={userId} />
+      ))}
+    </ResponsiveGrid>
+  );
 };
 
 const StyledLayout = styled(Layout)`
