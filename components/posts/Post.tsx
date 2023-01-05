@@ -52,7 +52,7 @@ const Post: FC<{
   title: string;
   descr?: string;
   enableLink: boolean;
-  lists: Lists;
+  lists?: Lists;
   media: Media;
   likes: number;
   currentUserId?: string;

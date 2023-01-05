@@ -8,9 +8,10 @@ import { deletePost, likePost } from "../../utils/firebase/api";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
 import { useRouter } from "next/router";
+import { Posts } from "../../utils/firebase/type";
 
 const Posts: FC<{
-  posts: Array<object>;
+  posts: Posts;
   enableLink: boolean;
   onDelete?: Function;
 }> = ({ posts = [], enableLink = false }) => {
@@ -73,7 +74,6 @@ const Posts: FC<{
             onClickAvatar={() => onClickAvatarHandler(data)}
             // onReport={(() => onReportHandler(data))}
             {...data}
-            prerequisites={[]}
           />
         ))}
       </Masonry>

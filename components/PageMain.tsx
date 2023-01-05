@@ -94,7 +94,9 @@ const PageMain: FC<{
     router.push({ pathname: "/category/" + value, query: { search: query.search } });
   };
 
-  const postsByCategory = category ? postsCollection.filter((post) => post.category === category) : postsCollection;
+  const postsByCategory = category
+    ? (postsCollection.filter((post) => post.category === category) as PostsType)
+    : (postsCollection as PostsType);
 
   return (
     <>

@@ -1,15 +1,13 @@
 import { v4 as uuid } from "uuid";
 
-export interface Post{
-  
-}
+export interface Post {}
 
 export const post = {
   title: "",
   descr: "",
   media: { imageURI: "" },
   tags: [],
-  prerequisites: [],
+  lists: [],
   category: null,
   likes: 0,
   stepsCompleted: 0,

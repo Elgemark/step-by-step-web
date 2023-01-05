@@ -22,6 +22,7 @@ import * as storageApi from "./storage";
 import * as postApi from "./post";
 import * as listApi from "./list";
 import * as bookmarksApi from "./bookmarks";
+import { StepsResponse } from "../interface";
 // User
 // Follow
 export const follow = followApi.follow;
@@ -76,17 +77,20 @@ export const setSteps = async (id, data) => {
   return result;
 };
 
-export const getSteps = async (id) => {
+export const getSteps = async (id: string) => {
+  const response: StepsResponse = { data: { steps: [], id: null }, error: null };
   const firebase = getFirestore();
-  const result = {};
+
   try {
     const docRef = doc(firebase, "posts", id, "steps", id);
     const docSnap = await getDoc(docRef);
-    result.data = docSnap.exists() ? { ...docSnap.data(), id } : dataModels.steps;
+    if (docSnap.exists()) {
+      response.data = docSnap.data();
+    }
   } catch (error) {
-    result.error = error;
+    response.error = error;
   }
-  return result;
+  return response;
 };
 
 // ::: LIKES POST

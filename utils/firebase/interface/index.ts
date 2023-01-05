@@ -1,4 +1,4 @@
-import { Lists, Posts } from "../type";
+import { Lists, Posts, Steps } from "../type";
 
 export interface Media {
   imageURI: string | null;
@@ -10,7 +10,7 @@ export interface Post {
   descr: string;
   media: Media;
   tags: Array<string>;
-  prerequisites?: Array<string>;
+  lists?: Lists;
   category: string;
   likes: number;
   stepsCompleted: number;
@@ -19,9 +19,15 @@ export interface Post {
 }
 
 export interface Step {
+  id: string;
   body: string;
   title: string;
   media: Media;
+}
+
+export interface Steps {
+  id: string;
+  steps: Array<Step> | [];
 }
 
 export interface ListItem {
@@ -45,6 +51,11 @@ export interface PostsResponse {
   data: Posts | [];
   error: string | null;
   lastDoc?: any;
+}
+
+export interface StepsResponse {
+  data: Steps | null;
+  error: string | null;
 }
 
 export interface UploadResponse {

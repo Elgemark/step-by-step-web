@@ -140,12 +140,12 @@ const Steps = ({ post, steps, lists }) => {
 export async function getServerSideProps({ query }) {
   const id = query.id || uuid();
   const post = await getPost(id);
-  const steps = await getSteps(id);
+  const stepsResponse = await getSteps(id);
   const listsResp: ListResponse = await getLists(id);
   return {
     props: {
       post: post?.data || { ...postModel, id },
-      steps: steps?.data || { ...stepsModel, id },
+      steps: stepsResponse.data,
       lists: listsResp.data,
     },
   };

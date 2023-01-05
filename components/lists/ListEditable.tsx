@@ -70,7 +70,7 @@ const ListEditable: FC<{
   onEdit: (e: object) => {} | Function;
   onDelete: (e: object) => {} | Function;
 }> = ({ id, title, items = [], onDelete, onEdit }) => {
-  const { object, setValue, getValue } = useStateObject({ title, items, id });
+  const { object, setValue } = useStateObject({ title, items, id });
   const theme = useTheme();
 
   const updateValue = (path, value) => {
@@ -78,13 +78,13 @@ const ListEditable: FC<{
     onEdit(result);
   };
 
-  const onAddListItemHandler = ({ index }) => {
+  const onAddListItemHandler = ({ id, index }) => {
     const newItems = [...object.items];
     newItems.splice(index + 1, 0, { text: "", value: "" });
     updateValue("items", newItems);
   };
 
-  const onDeleteListItemHandler = ({ index }) => {
+  const onDeleteListItemHandler = ({ id, index }) => {
     const newItems = [...object.items];
     newItems.splice(index, 1);
     updateValue("items", newItems);

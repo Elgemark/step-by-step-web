@@ -54,7 +54,7 @@ const StyledBottomBar = styled.div`
 
 const Create: FC<{ id: string; post: Post; steps: Steps; lists: Lists }> = ({ id, post, steps, lists }) => {
   const [successMessage, setSuccessMessage] = useState(null);
-  const [createdStep, setCreatedStep] = useState({});
+  const [createdStep, setCreatedStep] = useState({ id: null });
   const [showSaveButton, setShowSaveButton] = useState(false);
   const [showAddStepButton, setShowAddStepButton] = useState(true);
   // POST
@@ -102,10 +102,6 @@ const Create: FC<{ id: string; post: Post; steps: Steps; lists: Lists }> = ({ id
 
   const onAddTagHandler = (value) => {
     setPostValue("tags", toSanitizedArray(value, dataPost.tags));
-  };
-
-  const onChangePrerequisitesHandler = (prerequisites) => {
-    setPostValue("prerequisites", prerequisites);
   };
 
   const onDeleteStepHandler = (e) => {
@@ -172,7 +168,6 @@ const Create: FC<{ id: string; post: Post; steps: Steps; lists: Lists }> = ({ id
           onChangeBody={(value) => setPostValue("descr", value)}
           onChangeImage={(value) => setPostValue("media.imageURI", value)}
           onChangeCategory={(value) => setPostValue("category", value)}
-          onChangePrerequisites={onChangePrerequisitesHandler}
           onAddTag={onAddTagHandler}
           onRemoveTag={(value) => {
             const tagsCopy = [...dataPost.tags];
@@ -198,7 +193,6 @@ const Create: FC<{ id: string; post: Post; steps: Steps; lists: Lists }> = ({ id
                 id,
                 _.kebabCase(dataPost.title) + "_step-" + (index + 1) + "_" + _.kebabCase(dataStep.title || "image"),
               ]}
-              // scrollIntoView={dataSteps.steps.length - 1 === index}
               scrollIntoView={createdStep.id === dataStep.id}
               {...dataStep}
             />
@@ -233,12 +227,12 @@ const Create: FC<{ id: string; post: Post; steps: Steps; lists: Lists }> = ({ id
 export async function getServerSideProps({ query }) {
   const id = query.id;
   const post = await getPost(id);
-  const steps = await getSteps(id);
+  const stepsResponse = await getSteps(id);
   const listsResp: ListResponse = await getLists(id);
   return {
     props: {
       post: post?.data || dataModels.post,
-      steps: steps?.data || dataModels.steps,
+      steps: stepsResponse.data,
       lists: listsResp.data,
       id,
     },
