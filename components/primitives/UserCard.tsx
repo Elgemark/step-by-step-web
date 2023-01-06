@@ -49,8 +49,11 @@ const RootSmall = styled.div`
   max-width: 320px;
   min-height: 160px;
   max-height: 320px;
+  .user-avatar {
+    margin-top: -50px;
+  }
   .user-alias {
-    margin-top: 30px;
+    margin-top: 26px;
   }
 `;
 
