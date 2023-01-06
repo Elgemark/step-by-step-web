@@ -1,4 +1,4 @@
-import { Lists, Posts } from "../type";
+import { Bookmarks, Lists, Posts } from "../type";
 
 export interface Media {
   imageURI: string | null;
@@ -30,6 +30,10 @@ export interface Steps {
   steps: Array<Step> | [];
 }
 
+export interface Bookmark {
+  postId: string;
+}
+
 export interface ListItem {
   text: string;
   value: string;
@@ -41,10 +45,24 @@ export interface List {
   items: Array<ListItem>;
 }
 
+//::::::
+//:::::: RESPONSE INTERFACES
+//::::::
+
 export interface ListResponse {
   id: string;
   data: Lists | [];
   error: string | null;
+}
+
+export interface BookmarksResponse {
+  data: Bookmarks | null;
+  error: any;
+}
+
+export interface BookmarkResponse {
+  data: Bookmark | null;
+  error: any;
 }
 
 export interface PostsResponse {

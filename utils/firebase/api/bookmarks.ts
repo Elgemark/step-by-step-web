@@ -1,20 +1,11 @@
-import {
-  getFirestore,
-  writeBatch,
-  doc,
-  getDoc,
-  setDoc,
-  orderBy as fsOrderBy,
-  startAt as fsStartAt,
-  endAt as fsEndAt,
-  increment,
-  limit as fsLimit,
-} from "firebase/firestore";
+import { getFirestore, writeBatch, doc, getDoc, increment } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { BookmarkResponse } from "../interface";
 //
 export const addBookmark = async (postId) => {
+  const response: BookmarkResponse = { data: { postId }, error: null };
   const auth = getAuth();
   const userId = auth.currentUser.uid;
   // setup batch write
@@ -29,17 +20,17 @@ export const addBookmark = async (postId) => {
     const postRef = doc(getFirestore(), "posts", postId);
     await batch.update(postRef, { bookmarks: increment(1) });
   }
-  let resp = {};
+  // commit batch
   try {
-    // commit batch
-    resp.response = await batch.commit();
+    await batch.commit();
   } catch (error) {
-    resp.error = error;
+    response.error = error;
   }
-  return resp;
+  return response;
 };
 
 export const deleteBookmark = async (postId) => {
+  const response: BookmarkResponse = { data: { postId }, error: null };
   const auth = getAuth();
   const userId = auth.currentUser.uid;
   const firebase = getFirestore();
@@ -58,11 +49,11 @@ export const deleteBookmark = async (postId) => {
   let resp = {};
   try {
     // commit batch
-    resp.response = await batch.commit();
+    await batch.commit();
   } catch (error) {
-    resp.error = error;
+    response.error = error;
   }
-  return resp;
+  return response;
 };
 
 export const isBookmarkedByUser = async (postId) => {
