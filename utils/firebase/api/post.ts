@@ -31,7 +31,7 @@ export const getPosts = async (orderBy = "likes", limit = 10, lastDoc) => {
   try {
     const querySnapshot = await getDocs(queryBuild);
     querySnapshot.forEach((doc) => {
-      response.data.push(parseData({ ...doc.data(), id: doc.id }));
+      response.data.push(parseData({ ...doc.data(), id: doc.id }) as Post);
     });
     response.lastDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
   } catch (error) {
@@ -147,7 +147,7 @@ export const searchPosts = async (tags = [], category: string, limit = 10) => {
     const querySnapshot = await getDocs(queryBuild);
 
     querySnapshot.forEach((doc) => {
-      response.data.push(parseData({ ...doc.data(), id: doc.id }));
+      response.data.push(parseData({ ...doc.data(), id: doc.id }) as Post);
     });
   } catch (error) {
     response.error = error;
