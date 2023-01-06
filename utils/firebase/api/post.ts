@@ -8,17 +8,17 @@ import {
   getDoc,
   getDocs,
   orderBy as fsOrderBy,
-  startAt as fsStartAt,
-  endAt as fsEndAt,
   limit as fsLimit,
   startAfter as fsStartAfter,
+  serverTimestamp,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { List, Post, PostsResponse } from "../interface";
 import { Lists, Steps } from "../type";
+import { parseData } from "../../firebaseUtils";
 
 export const getPosts = async (orderBy = "likes", limit = 10, lastDoc) => {
-  const response: PostsResponse = { data: [], error: null };
+  const response: PostsResponse = { data: [], error: null, lastDoc: null };
   //
   const firebase = getFirestore();
   const stepsRef = collection(firebase, "posts");
@@ -31,7 +31,7 @@ export const getPosts = async (orderBy = "likes", limit = 10, lastDoc) => {
   try {
     const querySnapshot = await getDocs(queryBuild);
     querySnapshot.forEach((doc) => {
-      response.data.push({ ...doc.data(), id: doc.id });
+      response.data.push(parseData({ ...doc.data(), id: doc.id }));
     });
     response.lastDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
   } catch (error) {
@@ -162,7 +162,7 @@ export const setPostAndSteps = async (id: string, post: Post, steps: Steps, list
   const batch = writeBatch(firebase);
   // Set the value of 'posts'
   const postsRef = doc(firebase, "posts", id);
-  const postData = { ...post, id, userId };
+  const postData = { ...post, id, userId, timeStamp: serverTimestamp() };
   batch.set(postsRef, postData);
   // Set the value of 'steps'
   const stepsRef = doc(firebase, "posts", id, "steps", id);

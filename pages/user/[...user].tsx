@@ -1,4 +1,4 @@
-import { getCreatedPosts, getFollows, useFollow, useUser } from "../../utils/firebase/api";
+import { getCreatedPosts, getFollows, getUser, useFollow, useUser } from "../../utils/firebase/api";
 import Head from "next/head";
 import Layout from "../../components/Layout";
 import { useRouter } from "next/router";
@@ -60,11 +60,11 @@ const tabProps = (index: number) => {
   };
 };
 
-const Index = ({ posts, userIds, uid, tabValue }) => {
+const Index = ({ posts, user, userIds, uid, tabValue }) => {
   const router = useRouter();
   const theme = useTheme();
-  const { data: user } = useUser(uid);
 
+  // ToDo: isFollowing is not showinng correct if uid changes!
   const { isFollowing, toggle, isLoading } = useFollow(uid);
 
   const onTabChangehandle = (event: SyntheticEvent, newValue: string) => {
@@ -108,6 +108,7 @@ const Index = ({ posts, userIds, uid, tabValue }) => {
 export async function getServerSideProps(props) {
   const { query } = props;
   const uid = query.user[0];
+  const user = await getUser(uid);
   const tabValue = query.user[1] || "created";
   let posts = [];
   let userIds = [];
@@ -129,6 +130,7 @@ export async function getServerSideProps(props) {
   return {
     props: {
       uid,
+      user,
       posts,
       userIds,
       tabValue,
