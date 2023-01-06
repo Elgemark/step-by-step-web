@@ -67,7 +67,7 @@ export const getBookmarkedPosts = async (uid, limit = 10, lastDoc = null) => {
     try {
       const querySnapshot = await getDocs(queryBuild);
       querySnapshot.forEach((doc) => {
-        posts.push({ ...doc.data(), id: doc.id });
+        posts.push(parseData({ ...doc.data(), id: doc.id }));
       });
     } catch (error) {
       error = error.toString();
@@ -88,7 +88,7 @@ export const getCreatedPosts = async (uid) => {
   try {
     const querySnapshot = await getDocs(queryBuild);
     querySnapshot.forEach((doc) => {
-      posts.push({ ...doc.data(), id: doc.id });
+      posts.push(parseData({ ...doc.data(), id: doc.id }));
     });
   } catch (error) {
     error = error.toString();
@@ -119,7 +119,7 @@ export const getPostsByState = async (uid, state) => {
     try {
       const querySnapshot = await getDocs(queryBuild);
       querySnapshot.forEach((doc) => {
-        posts.push({ ...doc.data(), id: doc.id });
+        posts.push(parseData({ ...doc.data(), id: doc.id }));
       });
     } catch (error) {
       error = error.toString();
@@ -147,7 +147,7 @@ export const searchPosts = async (tags = [], category: string, limit = 10) => {
     const querySnapshot = await getDocs(queryBuild);
 
     querySnapshot.forEach((doc) => {
-      response.data.push({ ...doc.data(), id: doc.id });
+      response.data.push(parseData({ ...doc.data(), id: doc.id }));
     });
   } catch (error) {
     response.error = error;
