@@ -1,31 +1,30 @@
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
-
-import * as dataModels from "../models";
-
+import { getFirestore, doc, getDoc, setDoc, collection, getDocs } from "firebase/firestore";
+import { Step, StepsResponse, StepResponse } from "../interface";
 import { Steps } from "../type";
 
-export const setSteps = async (id: string, data: Steps) => {
+export const setStep = async (postId, id, step: Step) => {
+  const response: StepResponse = { data: step, error: null };
   const firebase = getFirestore();
-  const result = { data, id, response: null, error: null };
   try {
-    result.response = await setDoc(doc(firebase, "posts", id, "steps", id), data);
-    result.data = { ...data, id };
-    result.id = id;
+    await setDoc(doc(firebase, "posts", postId, "steps", id), step);
   } catch (error) {
-    result.error = error;
+    response.error = error;
   }
-  return result;
+  return response;
 };
 
-export const getSteps = async (id: string) => {
+export const getSteps = async (postId: string) => {
+  const response: StepsResponse = { data: [], error: null };
   const firebase = getFirestore();
-  const result = { data: null, id, response: null, error: null };
+
   try {
-    const docRef = doc(firebase, "posts", id, "steps", id);
-    const docSnap = await getDoc(docRef);
-    result.data = docSnap.exists() ? { ...docSnap.data(), id } : dataModels.steps;
+    const collRef = collection(firebase, "posts", postId, "steps");
+    const docsSnap = await getDocs(collRef);
+    docsSnap.forEach((doc) => {
+      response.data.push({ ...doc.data(), id: doc.id } as Step);
+    });
   } catch (error) {
-    result.error = error;
+    response.error = error;
   }
-  return result;
+  return response;
 };

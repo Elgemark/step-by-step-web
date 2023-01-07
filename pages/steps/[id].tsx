@@ -1,11 +1,11 @@
 import Head from "next/head";
 import Layout from "../../components/Layout";
 import styled from "styled-components";
-import { getPost, getSteps, useUserStepsProgress, deletePost, likePost, getLists } from "../../utils/firebase/api";
+import { getPost, getSteps, deletePost, likePost, getLists } from "../../utils/firebase/api";
 import RevealNext from "../../components/RevealNext";
 import Step from "../../components/steps/Step";
 import Post from "../../components/posts/Post";
-import { post as postModel, steps as stepsModel } from "../../utils/firebase/models";
+import { post as postModel } from "../../utils/firebase/models";
 // Firebase related
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
@@ -14,7 +14,6 @@ import { useRouter } from "next/router";
 import { v4 as uuid } from "uuid";
 import Dialog from "../../components/primitives/Dialog";
 import { useState } from "react";
-import { Lists } from "../../utils/firebase/type";
 import { ListResponse } from "../../utils/firebase/interface";
 
 const StyledLayout = styled(Layout)`
@@ -44,9 +43,9 @@ const Steps = ({ post, steps, lists }) => {
   const [showDialog, setShowDialog] = useState({ open: false, content: "", onOkClick: () => {} });
   const router = useRouter();
   const [user] = useAuthState(getAuth());
-  const { step: stepIndex, setStep } = useUserStepsProgress(user?.uid, steps?.id);
-  const showButton = (index) => index == stepIndex - 1 && index != steps.steps.length - 1;
-  const showDone = (index) => index === steps.steps.length - 1;
+  const stepsCompleted = steps.filter((step) => step.completed);
+  const showButton = (index) => stepsCompleted.length < steps.length;
+  const showDone = (index) => index === steps.length - 1;
 
   const onEditHandler = ({ id }) => {
     router.push("/create/" + id);
@@ -66,7 +65,7 @@ const Steps = ({ post, steps, lists }) => {
   };
 
   const onStartOverHandler = async () => {
-    setStep(0, false);
+    debugger;
   };
 
   return (
@@ -74,7 +73,9 @@ const Steps = ({ post, steps, lists }) => {
       <Head>
         <title>{"STEPS | " + (post?.title || "untitled")}</title>
       </Head>
-      <StyledLayout propsTopbar={{ actions: <StyledStepsProgress label={`${stepIndex}/${steps.steps.length}`} /> }}>
+      <StyledLayout
+        propsTopbar={{ actions: <StyledStepsProgress label={`${stepsCompleted.length}/${steps.length}`} /> }}
+      >
         <Post
           {...post}
           currentUserId={user?.uid}
@@ -98,23 +99,22 @@ const Steps = ({ post, steps, lists }) => {
         />
         <RevealNext
           open
-          showButton={stepIndex === 0}
+          showButton={stepsCompleted.length === 0}
           label="Start"
           onClick={() => {
-            stepIndex < 1 && setStep(1);
+            debugger;
           }}
         />
-        {steps.steps.map((step, index) => {
+        {steps.map((step, index) => {
           return (
             <RevealNext
               key={"step-" + index}
               label="Next"
-              open={index < stepIndex}
+              open={index < stepsCompleted.length}
               showButton={showButton(index)}
               showDone={showDone(index)}
               onClick={() => {
-                const completed = index === steps.steps.length - 2;
-                setStep(index + 2, completed);
+                debugger;
               }}
             >
               <StyledStep {...step} index={index} />

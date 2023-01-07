@@ -16,8 +16,9 @@ import { FC, useEffect, useState } from "react";
 import * as dataModels from "../../utils/firebase/models";
 import { toSanitizedArray } from "../../utils/stringUtils";
 import { v4 as uuid } from "uuid";
-import { List, ListResponse, Post } from "../../utils/firebase/interface";
+import { List, ListResponse, Post, Step } from "../../utils/firebase/interface";
 import { Lists, Steps } from "../../utils/firebase/type";
+import { setStep } from "../../utils/firebase/api/step";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -61,13 +62,10 @@ const Create: FC<{ id: string; post: Post; steps: Steps; lists: Lists }> = ({ id
   const { object: dataPost, setValue: setPostValue, replace: replacePost } = useStateObject(post);
   // POST LISTS
   const [dataLists, setDataLists] = useState(lists);
-  // STEPS
-  const { object: dataSteps, setValue: setStepsValue, replace: replaceSteps } = useStateObject(steps);
 
   // Neccesery to force a reload of data if user clicks "CREATE"
   useEffect(() => {
     replacePost(post);
-    replaceSteps(steps);
     setDataLists(lists);
   }, [id]);
 
@@ -79,18 +77,17 @@ const Create: FC<{ id: string; post: Post; steps: Steps; lists: Lists }> = ({ id
       setShowSaveButton(false);
       setShowAddStepButton(false);
     }
-  }, [dataPost, dataLists, dataSteps]);
+  }, [dataPost, dataLists]);
 
-  const onClickAddStepHandler = () => {
-    const steps = [...dataSteps.steps];
-    const newStep = dataModels.createStep();
-    steps.push(newStep);
-    setStepsValue("steps", steps);
-    setCreatedStep(newStep);
+  const onClickAddStepHandler = async () => {
+    const stepId = uuid();
+    const index = steps.length;
+    const step: Step = { id: stepId, index, body: "", title: "", media: { imageURI: "" }, completed: false };
+    await setStep(id, uuid(), step);
   };
 
   const onClickSaveHandler = async () => {
-    const resp = await setPostAndSteps(id, dataPost, dataSteps, dataLists);
+    const resp = await setPostAndSteps(id, dataPost, [], dataLists);
     if (!resp.error) {
       // Success...
       setSuccessMessage("Post saved!");
@@ -106,18 +103,10 @@ const Create: FC<{ id: string; post: Post; steps: Steps; lists: Lists }> = ({ id
 
   const onDeleteStepHandler = (e) => {
     const { index } = e;
-    const steps = [...dataSteps.steps];
-    _.pullAt(steps, index);
-    setStepsValue("steps", steps);
   };
 
   const onAddStepAtIndexHandler = (e) => {
     const { index } = e;
-    const steps = [...dataSteps.steps];
-    const newStep = dataModels.createStep();
-    steps.splice(index + 1, 0, newStep);
-    setStepsValue("steps", steps);
-    setCreatedStep(newStep);
   };
 
   const onAddListHandler = () => {
@@ -179,7 +168,7 @@ const Create: FC<{ id: string; post: Post; steps: Steps; lists: Lists }> = ({ id
         />
         <StyledDivider />
         {/* STEPS */}
-        {dataSteps.steps.map((dataStep, index) => (
+        {steps.map((dataStep, index) => (
           <div key={"step-" + index + "-" + dataStep.id}>
             <StepEditable
               index={index}

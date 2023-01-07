@@ -15,6 +15,10 @@ https://github.com/manishboro/image-crop-and-zoom
 Access controll error:
 https://stackoverflow.com/questions/47309611/cant-add-allusers-to-gcp-project
 
+### Firebase alts
+
+- https://appwrite.io/
+
 ### Inspirations:
 
 https://homewithkelsey.com/diy-shelf/

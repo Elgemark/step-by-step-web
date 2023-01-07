@@ -25,10 +25,6 @@ export const updateUser = userApi.updateUser;
 export const getCurrentUser = userApi.getCurrentUser;
 export const getUser = userApi.getUser;
 export const useUser = userApi.useUser;
-///
-export const setUserStepsProgress = userApi.setUserStepsProgress;
-export const getUserStepsProgress = userApi.getUserStepsProgress;
-export const useUserStepsProgress = userApi.useUserStepsProgress;
 // ::: POSTS
 export const getPosts = postApi.getPosts;
 export const getBookmarkedPosts = postApi.getBookmarkedPosts;
