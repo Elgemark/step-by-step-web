@@ -18,7 +18,7 @@ import { toSanitizedArray } from "../../utils/stringUtils";
 import { v4 as uuid } from "uuid";
 import { List, ListResponse, Post, Step } from "../../utils/firebase/interface";
 import { Lists, Steps } from "../../utils/firebase/type";
-import { setStep } from "../../utils/firebase/api/step";
+import { setStep, useSteps } from "../../utils/firebase/api/step";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -53,15 +53,18 @@ const StyledBottomBar = styled.div`
   justify-content: center;
 `;
 
-const Create: FC<{ id: string; post: Post; steps: Steps; lists: Lists }> = ({ id, post, steps, lists }) => {
+const Create: FC<{ id: string; post: Post; _steps: Steps; lists: Lists }> = ({ id, post, _steps, lists }) => {
   const [successMessage, setSuccessMessage] = useState(null);
-  const [createdStep, setCreatedStep] = useState({ id: null });
   const [showSaveButton, setShowSaveButton] = useState(false);
   const [showAddStepButton, setShowAddStepButton] = useState(true);
   // POST
   const { object: dataPost, setValue: setPostValue, replace: replacePost } = useStateObject(post);
   // POST LISTS
   const [dataLists, setDataLists] = useState(lists);
+  // STEPS
+  const steps = useSteps(id);
+
+  console.log("steps", steps);
 
   // Neccesery to force a reload of data if user clicks "CREATE"
   useEffect(() => {
@@ -83,7 +86,7 @@ const Create: FC<{ id: string; post: Post; steps: Steps; lists: Lists }> = ({ id
     const stepId = uuid();
     const index = steps.length;
     const step: Step = { id: stepId, index, body: "", title: "", media: { imageURI: "" }, completed: false };
-    await setStep(id, uuid(), step);
+    await setStep(id, stepId, step);
   };
 
   const onClickSaveHandler = async () => {
@@ -182,7 +185,7 @@ const Create: FC<{ id: string; post: Post; steps: Steps; lists: Lists }> = ({ id
                 id,
                 _.kebabCase(dataPost.title) + "_step-" + (index + 1) + "_" + _.kebabCase(dataStep.title || "image"),
               ]}
-              scrollIntoView={createdStep.id === dataStep.id}
+              // scrollIntoView={}
               {...dataStep}
             />
             <StyledDivider />

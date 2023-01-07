@@ -13,8 +13,10 @@ import StepsProgress from "../../components/StepsProgress";
 import { useRouter } from "next/router";
 import { v4 as uuid } from "uuid";
 import Dialog from "../../components/primitives/Dialog";
-import { useState } from "react";
-import { ListResponse } from "../../utils/firebase/interface";
+import { FC, useState } from "react";
+import { ListResponse, Post as PostType } from "../../utils/firebase/interface";
+import { Lists, Steps } from "../../utils/firebase/type";
+import { updateStep, useSteps } from "../../utils/firebase/api/step";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -39,10 +41,14 @@ const StyledStepsProgress = styled(StepsProgress)`
   margin: 0, 40px;
 `;
 
-const Steps = ({ post, steps, lists }) => {
+const Steps: FC<{ id: string; post: PostType; _steps: Steps; lists: Lists }> = ({ id, post, _steps, lists }) => {
   const [showDialog, setShowDialog] = useState({ open: false, content: "", onOkClick: () => {} });
   const router = useRouter();
   const [user] = useAuthState(getAuth());
+  const steps = useSteps(id);
+
+  console.log("steps", steps);
+
   const stepsCompleted = steps.filter((step) => step.completed);
   const showButton = (index) => stepsCompleted.length < steps.length;
   const showDone = (index) => index === steps.length - 1;
@@ -66,6 +72,18 @@ const Steps = ({ post, steps, lists }) => {
 
   const onStartOverHandler = async () => {
     debugger;
+  };
+
+  const onRevelNextClickHandler = async ({ index }) => {
+    const nextStep = steps[index + 1];
+    debugger;
+    await updateStep(id, nextStep.id, { completed: true })
+      .then(() => {
+        debugger;
+      })
+      .catch((error) => {
+        debugger;
+      });
   };
 
   return (
@@ -102,7 +120,7 @@ const Steps = ({ post, steps, lists }) => {
           showButton={stepsCompleted.length === 0}
           label="Start"
           onClick={() => {
-            debugger;
+            onRevelNextClickHandler({ index: -1 });
           }}
         />
         {steps.map((step, index) => {
@@ -114,7 +132,7 @@ const Steps = ({ post, steps, lists }) => {
               showButton={showButton(index)}
               showDone={showDone(index)}
               onClick={() => {
-                debugger;
+                onRevelNextClickHandler({ index });
               }}
             >
               <StyledStep {...step} index={index} />
@@ -147,6 +165,7 @@ export async function getServerSideProps({ query }) {
       post: post?.data || { ...postModel, id },
       steps: stepsResponse.data,
       lists: listsResp.data,
+      id,
     },
   };
 }
