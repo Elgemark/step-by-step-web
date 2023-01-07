@@ -192,7 +192,7 @@ export const getPost = async (id: string) => {
   try {
     const docRef = doc(firebase, "posts", id);
     const docSnap = await getDoc(docRef);
-    result.data = docSnap.exists() ? { ...docSnap.data(), id } : null;
+    result.data = docSnap.exists() ? parseData({ ...docSnap.data(), id }) : null;
   } catch (error) {
     result.error = error;
   }

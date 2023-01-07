@@ -1,28 +1,14 @@
-import {
-  getFirestore,
-  writeBatch,
-  doc,
-  getDoc,
-  setDoc,
-  orderBy as fsOrderBy,
-  startAt as fsStartAt,
-  endAt as fsEndAt,
-  increment,
-  limit as fsLimit,
-  updateDoc,
-} from "firebase/firestore";
+import { getFirestore, writeBatch, doc, getDoc, setDoc, increment } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { useStateObject } from "../../object";
-import * as dataModels from "../models";
 //
 import * as userApi from "./user";
 import * as followApi from "./follow";
 import * as storageApi from "./storage";
 import * as postApi from "./post";
 import * as listApi from "./list";
+import * as stepApi from "./step";
 import * as bookmarksApi from "./bookmarks";
-import { StepsResponse } from "../interface";
 // User
 // Follow
 export const follow = followApi.follow;
@@ -64,35 +50,8 @@ export const setLists = listApi.setLists;
 export const setList = listApi.setList;
 export const deleteList = listApi.deleteList;
 // ::: STEPS
-export const setSteps = async (id, data) => {
-  const firebase = getFirestore();
-  const result = {};
-  try {
-    result.response = await setDoc(doc(firebase, "posts", id, "steps", id), data);
-    result.data = { ...data, id };
-    result.id = id;
-  } catch (error) {
-    result.error = error;
-  }
-  return result;
-};
-
-export const getSteps = async (id: string) => {
-  const response: StepsResponse = { data: { steps: [], id: null }, error: null };
-  const firebase = getFirestore();
-
-  try {
-    const docRef = doc(firebase, "posts", id, "steps", id);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      response.data = docSnap.data();
-    }
-  } catch (error) {
-    response.error = error;
-  }
-  return response;
-};
-
+export const setSteps = stepApi.setSteps;
+export const getSteps = stepApi.getSteps;
 // ::: LIKES POST
 
 export const likePost = async (postId) => {

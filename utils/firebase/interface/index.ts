@@ -72,6 +72,7 @@ export interface PostsResponse {
 }
 
 export interface StepsResponse {
+  id: string;
   data: Steps | null;
   error: string | null;
 }
