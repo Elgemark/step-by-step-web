@@ -6,21 +6,28 @@ import Avatar from "@mui/material/Avatar";
 import { red } from "@mui/material/colors";
 import TextField from "@mui/material/TextField";
 import MediaEditable from "../primitives/MediaEditable";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, FC } from "react";
 import StepMoreMenu from "../StepMoreMenu";
+import { Step } from "../../utils/firebase/interface";
 
-const StepEditable = ({
+const StepEditable: FC<{
+  mediaLocationPath: Array<string>;
+  step: Step;
+  scrollIntoView: boolean;
+  onChangeTitle: any;
+  onChangeBody: any;
+  onChangeImage: any;
+  onDelete: any;
+  onAddStep: any;
+}> = ({
   mediaLocationPath,
-  index,
-  title,
-  body,
-  media = {},
+  step,
+  scrollIntoView = false,
   onChangeTitle,
   onChangeBody,
   onChangeImage,
   onDelete,
   onAddStep,
-  scrollIntoView = false,
   ...props
 }) => {
   const ref = useRef<HTMLInputElement>(null);
@@ -40,7 +47,7 @@ const StepEditable = ({
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="post">
-            {index + 1}
+            {step.index + 1}
           </Avatar>
         }
         action={<StepMoreMenu onDelete={onDelete} onAddStep={onAddStep} />}
@@ -49,18 +56,18 @@ const StepEditable = ({
             fullWidth
             label="Title"
             placeholder="Title"
-            value={title}
+            value={step.title}
             onChange={(e) => onChangeTitle(e.target.value)}
           />
         }
       />
-      <MediaEditable onChangeImage={onChangeImage} media={media} locationPath={mediaLocationPath} />
+      <MediaEditable onChangeImage={onChangeImage} media={step.media} locationPath={mediaLocationPath} />
       <CardContent>
         <TextField
           fullWidth
           multiline
           label="body"
-          value={body}
+          value={step.body}
           placeholder="Description"
           onChange={(e) => onChangeBody(e.target.value)}
         />

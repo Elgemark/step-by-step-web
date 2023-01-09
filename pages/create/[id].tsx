@@ -174,7 +174,8 @@ const Create: FC<{ id: string; post: Post; _steps: Steps; lists: Lists }> = ({ i
         {steps.map((dataStep, index) => (
           <div key={"step-" + index + "-" + dataStep.id}>
             <StepEditable
-              index={index}
+              step={dataStep}
+              scrollIntoView={false}
               onChangeBody={(value) => setStepsValue("steps." + index + ".body", value)}
               onChangeTitle={(value) => setStepsValue("steps." + index + ".title", value)}
               onChangeImage={(value) => setStepsValue("steps." + index + ".media.imageURI", value)}
@@ -185,8 +186,6 @@ const Create: FC<{ id: string; post: Post; _steps: Steps; lists: Lists }> = ({ i
                 id,
                 _.kebabCase(dataPost.title) + "_step-" + (index + 1) + "_" + _.kebabCase(dataStep.title || "image"),
               ]}
-              // scrollIntoView={}
-              {...dataStep}
             />
             <StyledDivider />
           </div>
