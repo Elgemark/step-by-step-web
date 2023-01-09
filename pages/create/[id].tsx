@@ -182,9 +182,9 @@ const Create: FC<{ id: string; post: Post; lists: Lists }> = ({ id, post, lists 
               step={dataStep}
               index={index}
               scrollIntoView={false}
-              onChangeBody={(value) => setStepsValue("steps." + index + ".body", value)}
-              onChangeTitle={(value) => setStepsValue("steps." + index + ".title", value)}
-              onChangeImage={(value) => setStepsValue("steps." + index + ".media.imageURI", value)}
+              onChange={(data) => {
+                console.log(data);
+              }}
               onDelete={() => onDeleteStepHandler(dataStep)}
               onAddStep={() => onAddStepAtIndexHandler(index)}
               mediaLocationPath={[

@@ -9,30 +9,19 @@ import MediaEditable from "../primitives/MediaEditable";
 import { useRef, useEffect, FC } from "react";
 import StepMoreMenu from "../StepMoreMenu";
 import { Step } from "../../utils/firebase/interface";
+import { useStateObject } from "../../utils/object";
 
 const StepEditable: FC<{
   mediaLocationPath: Array<string>;
   step: Step;
   index: number;
   scrollIntoView: boolean;
-  onChangeTitle: any;
-  onChangeBody: any;
-  onChangeImage: any;
+  onChange: any;
   onDelete: any;
   onAddStep: any;
-}> = ({
-  mediaLocationPath,
-  step,
-  index,
-  scrollIntoView = false,
-  onChangeTitle,
-  onChangeBody,
-  onChangeImage,
-  onDelete,
-  onAddStep,
-  ...props
-}) => {
+}> = ({ mediaLocationPath, step, index, scrollIntoView = false, onChange, onDelete, onAddStep, ...props }) => {
   const ref = useRef<HTMLInputElement>(null);
+  const { object: data, setValue } = useStateObject(step);
 
   useEffect(() => {
     if (ref && scrollIntoView) {
@@ -58,20 +47,31 @@ const StepEditable: FC<{
             fullWidth
             label="Title"
             placeholder="Title"
-            value={step.title}
-            onChange={(e) => onChangeTitle(e.target.value)}
+            value={data.title}
+            onChange={(e) => setValue("title", e.target.value)}
           />
         }
       />
-      <MediaEditable onChangeImage={onChangeImage} media={step.media} locationPath={mediaLocationPath} />
+      <MediaEditable
+        onChangeImage={(e) => {
+          debugger;
+          // const updatedData = setValue("body", e.target.value);
+          // onChange(updatedData);
+        }}
+        media={data.media}
+        locationPath={mediaLocationPath}
+      />
       <CardContent>
         <TextField
           fullWidth
           multiline
           label="body"
-          value={step.body}
-          placeholder="Description"
-          onChange={(e) => onChangeBody(e.target.value)}
+          value={data.body}
+          placeholder="Body"
+          onChange={(e) => {
+            const updatedData = setValue("body", e.target.value);
+            onChange(updatedData);
+          }}
         />
       </CardContent>
       <CardActions disableSpacing>
