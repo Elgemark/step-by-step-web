@@ -74,14 +74,7 @@ const Steps: FC<{ id: string; post: PostType; lists: Lists }> = ({ id, post, lis
 
   const onRevelNextClickHandler = async ({ index }) => {
     const nextStep = steps[index + 1];
-    debugger;
-    await updateStep(id, nextStep.id, { completed: true })
-      .then(() => {
-        debugger;
-      })
-      .catch((error) => {
-        debugger;
-      });
+    await updateStep(id, nextStep.id, { completed: true });
   };
 
   return (
