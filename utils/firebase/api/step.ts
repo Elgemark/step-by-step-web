@@ -1,4 +1,16 @@
-import { getFirestore, doc, getDoc, setDoc, collection, getDocs, onSnapshot, updateDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  collection,
+  getDocs,
+  onSnapshot,
+  updateDoc,
+  orderBy,
+  query,
+  deleteDoc,
+} from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { Step, StepsResponse, StepResponse } from "../interface";
 import { Steps } from "../type";
@@ -25,6 +37,18 @@ export const updateStep = async (postId, id, updates: object) => {
   return response;
 };
 
+export const deleteStep = async (postId, stepId) => {
+  const response: StepResponse = { data: null, error: null };
+  const firebase = getFirestore();
+  const docRef = doc(firebase, "posts", postId, "steps", stepId);
+  try {
+    await deleteDoc(docRef);
+  } catch (error) {
+    response.error = error;
+  }
+  return response;
+};
+
 export const getSteps = async (postId: string) => {
   const response: StepsResponse = { data: [], error: null };
   const firebase = getFirestore();
@@ -45,8 +69,9 @@ export const useSteps = (postId: string): Steps => {
   const [data, setData] = useState([]);
   useEffect(() => {
     const firebase = getFirestore();
+    const stepsQuery = query(collection(firebase, "posts", postId, "steps"), orderBy("index", "desc"));
     const collRef = collection(firebase, "posts", postId, "steps");
-    const unsubscribe = onSnapshot(collRef, (querySnapshot) => {
+    const unsubscribe = onSnapshot(stepsQuery, (querySnapshot) => {
       const steps: Steps = [];
       querySnapshot.forEach((doc) => {
         steps.push(doc.data() as Step);

@@ -13,6 +13,7 @@ import { Step } from "../../utils/firebase/interface";
 const StepEditable: FC<{
   mediaLocationPath: Array<string>;
   step: Step;
+  index: number;
   scrollIntoView: boolean;
   onChangeTitle: any;
   onChangeBody: any;
@@ -22,6 +23,7 @@ const StepEditable: FC<{
 }> = ({
   mediaLocationPath,
   step,
+  index,
   scrollIntoView = false,
   onChangeTitle,
   onChangeBody,
@@ -47,7 +49,7 @@ const StepEditable: FC<{
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="post">
-            {step.index + 1}
+            {index + 1}
           </Avatar>
         }
         action={<StepMoreMenu onDelete={onDelete} onAddStep={onAddStep} />}

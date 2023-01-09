@@ -18,7 +18,7 @@ import { toSanitizedArray } from "../../utils/stringUtils";
 import { v4 as uuid } from "uuid";
 import { List, ListResponse, Post, Step } from "../../utils/firebase/interface";
 import { Lists, Steps } from "../../utils/firebase/type";
-import { setStep, useSteps } from "../../utils/firebase/api/step";
+import { deleteStep, setStep, useSteps } from "../../utils/firebase/api/step";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -53,7 +53,7 @@ const StyledBottomBar = styled.div`
   justify-content: center;
 `;
 
-const Create: FC<{ id: string; post: Post; _steps: Steps; lists: Lists }> = ({ id, post, _steps, lists }) => {
+const Create: FC<{ id: string; post: Post; lists: Lists }> = ({ id, post, lists }) => {
   const [successMessage, setSuccessMessage] = useState(null);
   const [showSaveButton, setShowSaveButton] = useState(false);
   const [showAddStepButton, setShowAddStepButton] = useState(true);
@@ -63,8 +63,6 @@ const Create: FC<{ id: string; post: Post; _steps: Steps; lists: Lists }> = ({ i
   const [dataLists, setDataLists] = useState(lists);
   // STEPS
   const steps = useSteps(id);
-
-  console.log("steps", steps);
 
   // Neccesery to force a reload of data if user clicks "CREATE"
   useEffect(() => {
@@ -84,7 +82,7 @@ const Create: FC<{ id: string; post: Post; _steps: Steps; lists: Lists }> = ({ i
 
   const onClickAddStepHandler = async () => {
     const stepId = uuid();
-    const index = steps.length;
+    const index = steps.length === 0 ? 0 : steps[steps.length - 1].index + 1;
     const step: Step = { id: stepId, index, body: "", title: "", media: { imageURI: "" }, completed: false };
     await setStep(id, stepId, step);
   };
@@ -104,12 +102,19 @@ const Create: FC<{ id: string; post: Post; _steps: Steps; lists: Lists }> = ({ i
     setPostValue("tags", toSanitizedArray(value, dataPost.tags));
   };
 
-  const onDeleteStepHandler = (e) => {
-    const { index } = e;
+  const onDeleteStepHandler = async (step) => {
+    await deleteStep(id, step.id);
   };
 
-  const onAddStepAtIndexHandler = (e) => {
-    const { index } = e;
+  const onAddStepAtIndexHandler = async (index) => {
+    // Calc index
+    const indexCurrStep = index;
+    const indexNextStep = index + 1 < steps.length && steps[index + 1].index;
+    const newIndex = indexNextStep ? (indexCurrStep + indexNextStep) * 0.5 : indexCurrStep + 1;
+    // Create step
+    const stepId = uuid();
+    const step: Step = { id: stepId, index: newIndex, body: "", title: "", media: { imageURI: "" }, completed: false };
+    await setStep(id, stepId, step);
   };
 
   const onAddListHandler = () => {
@@ -175,12 +180,13 @@ const Create: FC<{ id: string; post: Post; _steps: Steps; lists: Lists }> = ({ i
           <div key={"step-" + index + "-" + dataStep.id}>
             <StepEditable
               step={dataStep}
+              index={index}
               scrollIntoView={false}
               onChangeBody={(value) => setStepsValue("steps." + index + ".body", value)}
               onChangeTitle={(value) => setStepsValue("steps." + index + ".title", value)}
               onChangeImage={(value) => setStepsValue("steps." + index + ".media.imageURI", value)}
-              onDelete={() => onDeleteStepHandler({ ...dataStep, index })}
-              onAddStep={() => onAddStepAtIndexHandler({ ...dataStep, index })}
+              onDelete={() => onDeleteStepHandler(dataStep)}
+              onAddStep={() => onAddStepAtIndexHandler(index)}
               mediaLocationPath={[
                 "post",
                 id,
