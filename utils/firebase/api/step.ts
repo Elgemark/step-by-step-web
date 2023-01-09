@@ -70,7 +70,6 @@ export const useSteps = (postId: string): Steps => {
   useEffect(() => {
     const firebase = getFirestore();
     const stepsQuery = query(collection(firebase, "posts", postId, "steps"), orderBy("index", "desc"));
-    const collRef = collection(firebase, "posts", postId, "steps");
     const unsubscribe = onSnapshot(stepsQuery, (querySnapshot) => {
       const steps: Steps = [];
       querySnapshot.forEach((doc) => {

@@ -10,6 +10,7 @@ import { useRef, useEffect, FC } from "react";
 import StepMoreMenu from "../StepMoreMenu";
 import { Step } from "../../utils/firebase/interface";
 import { useStateObject } from "../../utils/object";
+import ImageEditable from "../primitives/ImageEditable";
 
 const StepEditable: FC<{
   mediaLocationPath: Array<string>;
@@ -52,11 +53,10 @@ const StepEditable: FC<{
           />
         }
       />
-      <MediaEditable
-        onChangeImage={(e) => {
-          debugger;
-          // const updatedData = setValue("body", e.target.value);
-          // onChange(updatedData);
+      <ImageEditable
+        onBlobChange={(blob) => {
+          const updatedData = setValue("blob", blob);
+          onChange(updatedData);
         }}
         media={data.media}
         locationPath={mediaLocationPath}

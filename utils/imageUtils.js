@@ -1,5 +1,28 @@
 import { useState } from "react";
 
+export const pasteHandler = (pasteEvent) => {
+  return new Promise((resolve, reject) => {
+    if (pasteEvent.clipboardData.files.length) {
+      const fileObject = pasteEvent.clipboardData.files[0];
+      const file = {
+        getRawFile: () => fileObject,
+        name: fileObject.name,
+        size: fileObject.size,
+        status: 2,
+        progress: 0,
+      };
+      var reader = new FileReader();
+      var blob = file.getRawFile();
+      reader.onloadend = (e) => {
+        resolve({ url: e.target.result, blob });
+      };
+      reader.readAsDataURL(blob);
+    } else {
+      reject({ error: "No image data was found in your clipboard. Copy an image first or take a screenshot." });
+    }
+  });
+};
+
 export const usePaste = () => {
   const [imageURI, setImageURI] = useState();
   const [file, setFile] = useState();
