@@ -15,7 +15,7 @@ import { v4 as uuid } from "uuid";
 import Dialog from "../../components/primitives/Dialog";
 import { FC, useState } from "react";
 import { ListResponse, Post as PostType } from "../../utils/firebase/interface";
-import { Lists, Steps } from "../../utils/firebase/type";
+import { Lists } from "../../utils/firebase/type";
 import { updateStep, useSteps } from "../../utils/firebase/api/step";
 
 const StyledLayout = styled(Layout)`
@@ -41,16 +41,14 @@ const StyledStepsProgress = styled(StepsProgress)`
   margin: 0, 40px;
 `;
 
-const Steps: FC<{ id: string; post: PostType; _steps: Steps; lists: Lists }> = ({ id, post, _steps, lists }) => {
+const Steps: FC<{ id: string; post: PostType; lists: Lists }> = ({ id, post, lists }) => {
   const [showDialog, setShowDialog] = useState({ open: false, content: "", onOkClick: () => {} });
   const router = useRouter();
   const [user] = useAuthState(getAuth());
   const steps = useSteps(id);
 
-  console.log("steps", steps);
-
   const stepsCompleted = steps.filter((step) => step.completed);
-  const showButton = (index) => stepsCompleted.length < steps.length;
+  const showButton = () => stepsCompleted.length < steps.length;
   const showDone = (index) => index === steps.length - 1;
 
   const onEditHandler = ({ id }) => {
@@ -96,6 +94,7 @@ const Steps: FC<{ id: string; post: PostType; _steps: Steps; lists: Lists }> = (
       >
         <Post
           {...post}
+          enableLink={false}
           currentUserId={user?.uid}
           lists={lists}
           onEdit={

@@ -41,7 +41,7 @@ export const getSteps = async (postId: string) => {
   return response;
 };
 
-export const useSteps = (postId: string) => {
+export const useSteps = (postId: string): Steps => {
   const [data, setData] = useState([]);
   useEffect(() => {
     const firebase = getFirestore();

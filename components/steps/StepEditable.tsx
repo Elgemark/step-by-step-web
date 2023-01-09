@@ -8,7 +8,6 @@ import TextField from "@mui/material/TextField";
 import MediaEditable from "../primitives/MediaEditable";
 import { useRef, useEffect } from "react";
 import StepMoreMenu from "../StepMoreMenu";
-import { step as stepModel } from "../../utils/firebase/models";
 
 const StepEditable = ({
   mediaLocationPath,
@@ -22,6 +21,7 @@ const StepEditable = ({
   onDelete,
   onAddStep,
   scrollIntoView = false,
+  ...props
 }) => {
   const ref = useRef<HTMLInputElement>(null);
 
@@ -36,7 +36,7 @@ const StepEditable = ({
   }, [ref, scrollIntoView]);
 
   return (
-    <Card ref={ref}>
+    <Card ref={ref} {...props}>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="post">

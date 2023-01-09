@@ -24,7 +24,7 @@ export interface Step {
   body: string;
   title: string;
   media: Media;
-  completed: boolean;
+  completed?: boolean;
 }
 
 export interface Bookmark {
