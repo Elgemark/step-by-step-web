@@ -18,7 +18,7 @@ import { toSanitizedArray } from "../../utils/stringUtils";
 import { v4 as uuid } from "uuid";
 import { List, ListResponse, Post, Step } from "../../utils/firebase/interface";
 import { ImageUploads, Lists, Steps } from "../../utils/firebase/type";
-import { deleteStep, setStep, useSteps } from "../../utils/firebase/api/step";
+import { deleteStep, setStep, setSteps, useSteps } from "../../utils/firebase/api/step";
 import { getAuth } from "firebase/auth";
 import { uploadImages } from "../../utils/firebase/api/storage";
 
@@ -100,22 +100,39 @@ const Create: FC<{ id: string; post: Post; lists: Lists }> = ({ id, post, lists 
   const onClickSaveHandler = async () => {
     const auth = getAuth();
     const userId = auth.currentUser.uid;
+    const saveDataCopy = { ...saveData };
     // Save post...
     // Save lists...
-    // Save steps...
+    // Upload images...
     const imageUploads: ImageUploads = [];
-    _.forIn(saveData.steps, (value) => {
+    _.forIn(saveDataCopy.steps, (value) => {
+      // Prepare image uploads...
       if (value.blob) {
         imageUploads.push({
           blob: value.blob,
           imageSize: "1024x1024",
           locationPath: ["users", userId, "post", id, `step_${value.id}`],
+          id: value.id,
         });
+        // Remove blob...
+        delete value.blob;
       }
     });
 
     const responseImageUploads = await uploadImages(imageUploads);
-    console.log("responseImageUploads", responseImageUploads);
+    // Get upload url
+    responseImageUploads.forEach((imageUpload) => {
+      debugger;
+      _.set(saveDataCopy, `steps.${imageUpload.id}.media.imageURI`, imageUpload.url);
+    });
+    // Save steps...
+    const steps: Steps = [];
+    _.forIn(saveDataCopy.steps, (value) => {
+      steps.push(value);
+    });
+    const stepsResponse = await setSteps(id, steps);
+
+    console.log({ responseImageUploads, saveDataCopy, stepsResponse });
   };
 
   const onAddTagHandler = (value) => {

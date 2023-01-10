@@ -81,6 +81,7 @@ export interface StepResponse {
 export interface UploadResponse {
   error: string | null;
   url: string | null;
+  id?: string;
 }
 
 export interface FollowResponse {
