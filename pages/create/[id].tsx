@@ -8,7 +8,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import { Button, Divider, Fade, Slide } from "@mui/material";
 import styled from "styled-components";
 import ButtonGroup from "@mui/material/ButtonGroup";
-import { getLists, getPost, getSteps, setPostAndSteps, deleteList, uploadImage } from "../../utils/firebase/api";
+import { getLists, getPost, getSteps, deleteList, uploadImage } from "../../utils/firebase/api";
 import _ from "lodash";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
@@ -55,7 +55,7 @@ const StyledBottomBar = styled.div`
   justify-content: center;
 `;
 
-let saveData = { steps: null, post: null, lists: null };
+let saveData = { settings: null, post: null, steps: null, lists: null };
 
 const Create: FC<{ id: string; post: Post; lists: Lists }> = ({ id, post, lists }) => {
   const [successMessage, setSuccessMessage] = useState(null);
@@ -75,7 +75,7 @@ const Create: FC<{ id: string; post: Post; lists: Lists }> = ({ id, post, lists 
   };
 
   const resetSaveData = () => {
-    saveData = { steps: null, post: null, lists: null };
+    saveData = { settings: null, post: null, steps: null, lists: null };
     setHasSaveData(false);
   };
 
@@ -200,23 +200,15 @@ const Create: FC<{ id: string; post: Post; lists: Lists }> = ({ id, post, lists 
       <StyledLayout>
         {/* SETTINGS & POST */}
         <PostEditable
+          post={post}
           lists={dataLists}
           onAddList={onAddListHandler}
           onAddListItem={onAddListItemHandler}
           onEditLists={onEditListsHandler}
           onDeleteList={onDeleteListHandler}
-          onChangeTitle={(value) => setPostValue("title", value)}
-          onChangeBody={(value) => setPostValue("descr", value)}
-          onChangeImage={(value) => setPostValue("media.imageURI", value)}
-          onChangeCategory={(value) => setPostValue("category", value)}
-          onAddTag={onAddTagHandler}
-          onRemoveTag={(value) => {
-            const tagsCopy = [...dataPost.tags];
-            _.remove(tagsCopy, (tag) => tag === value);
-            setPostValue("tags", tagsCopy);
+          onChange={(value) => {
+            setSaveData("post", value);
           }}
-          mediaLocationPath={["post", id, "splash-" + _.kebabCase(dataPost.title)]}
-          {...dataPost}
         />
         <StyledDivider />
         {/* STEPS */}

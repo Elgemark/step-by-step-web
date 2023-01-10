@@ -31,7 +31,6 @@ export const getBookmarkedPosts = postApi.getBookmarkedPosts;
 export const getCreatedPosts = postApi.getCreatedPosts;
 export const getPostsByState = postApi.getPostsByState;
 export const searchPosts = postApi.searchPosts;
-export const setPostAndSteps = postApi.setPostAndSteps;
 export const getPost = postApi.getPost;
 export const deletePost = postApi.deletePost;
 // BOOKMARKS

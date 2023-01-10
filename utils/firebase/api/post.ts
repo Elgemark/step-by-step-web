@@ -155,37 +155,6 @@ export const searchPosts = async (tags = [], category: string, limit = 10) => {
   return response;
 };
 
-export const setPostAndSteps = async (id: string, post: Post, steps: Steps, lists: Lists = []) => {
-  const auth = getAuth();
-  const userId = auth.currentUser.uid;
-  const firebase = getFirestore();
-  const batch = writeBatch(firebase);
-  // Set the value of 'posts'
-  const postsRef = doc(firebase, "posts", id);
-  const postData = { ...post, id, userId, timeStamp: serverTimestamp() };
-  batch.set(postsRef, postData);
-  // Set the value of 'steps'
-  const stepsRef = doc(firebase, "posts", id, "steps", id);
-  const stepsData = { ...steps, id, userId };
-  batch.set(stepsRef, stepsData);
-  // Set the value of 'lists'
-  lists.forEach((list: List) => {
-    const listsRef = doc(firebase, "posts", id, "lists", list.id);
-    const listsData = { ...list, userId };
-    batch.set(listsRef, listsData);
-  });
-  //
-  let resp = { response: null, stepsData: null, error: null, postData: null };
-  try {
-    resp.response = await batch.commit();
-    resp.stepsData = stepsData;
-    resp.postData = postData;
-  } catch (error) {
-    resp.error = error;
-  }
-  return resp;
-};
-
 export const getPost = async (id: string) => {
   const firebase = getFirestore();
   const result = { data: null, error: null };
