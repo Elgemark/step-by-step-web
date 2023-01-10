@@ -12,6 +12,12 @@ export const useStateObject = (obj = {}) => {
       setObject(updatedObject);
       return updatedObject;
     },
+    deleteValue: (path: Array<string | number> | string) => {
+      const updatedObject = _.cloneDeep(object);
+      _.unset(updatedObject, path);
+      setObject(updatedObject);
+      return updatedObject;
+    },
     replace: (object: object): object => {
       setObject(object);
       return object;

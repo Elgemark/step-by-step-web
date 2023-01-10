@@ -55,24 +55,29 @@ const StyledBottomBar = styled.div`
   justify-content: center;
 `;
 
+let saveData = { steps: null, post: null, lists: null };
+
 const Create: FC<{ id: string; post: Post; lists: Lists }> = ({ id, post, lists }) => {
   const [successMessage, setSuccessMessage] = useState(null);
   const [showSaveButton, setShowSaveButton] = useState(false);
   const [showAddStepButton, setShowAddStepButton] = useState(true);
+  const [hasSaveData, setHasSaveData] = useState(false);
   // POST
   const { object: dataPost, setValue: setPostValue, replace: replacePost } = useStateObject(post);
   // POST LISTS
   const [dataLists, setDataLists] = useState(lists);
   // STEPS
   const steps = useSteps(id);
-  // stores updated steps...
-  const {
-    object: saveData,
-    setValue: setSavedata,
-    replace: replaceSaveData,
-  } = useStateObject({ steps: null, post: null, lists: null });
+  // Set save data
+  const setSaveData = (path: Array<string | number> | string, value: any) => {
+    _.set(saveData, path, value);
+    setHasSaveData(true);
+  };
 
-  console.log("saveData", saveData);
+  const resetSaveData = () => {
+    saveData = { steps: null, post: null, lists: null };
+    setHasSaveData(false);
+  };
 
   // Neccesery to force a reload of data if user clicks "CREATE"
   useEffect(() => {
@@ -100,12 +105,12 @@ const Create: FC<{ id: string; post: Post; lists: Lists }> = ({ id, post, lists 
   const onClickSaveHandler = async () => {
     const auth = getAuth();
     const userId = auth.currentUser.uid;
-    const saveDataCopy = { ...saveData };
+
     // Save post...
     // Save lists...
     // Upload images...
     const imageUploads: ImageUploads = [];
-    _.forIn(saveDataCopy.steps, (value) => {
+    _.forIn(saveData.steps, (value) => {
       // Prepare image uploads...
       if (value.blob) {
         imageUploads.push({
@@ -122,17 +127,18 @@ const Create: FC<{ id: string; post: Post; lists: Lists }> = ({ id, post, lists 
     const responseImageUploads = await uploadImages(imageUploads);
     // Get upload url
     responseImageUploads.forEach((imageUpload) => {
-      debugger;
-      _.set(saveDataCopy, `steps.${imageUpload.id}.media.imageURI`, imageUpload.url);
+      _.set(saveData, `steps.${imageUpload.id}.media.imageURI`, imageUpload.url);
     });
     // Save steps...
     const steps: Steps = [];
-    _.forIn(saveDataCopy.steps, (value) => {
+    _.forIn(saveData.steps, (value) => {
       steps.push(value);
     });
     const stepsResponse = await setSteps(id, steps);
-
-    console.log({ responseImageUploads, saveDataCopy, stepsResponse });
+    // Reset all saveData
+    resetSaveData();
+    //
+    console.log({ responseImageUploads, saveData, stepsResponse });
   };
 
   const onAddTagHandler = (value) => {
@@ -141,6 +147,7 @@ const Create: FC<{ id: string; post: Post; lists: Lists }> = ({ id, post, lists 
 
   const onDeleteStepHandler = async (step) => {
     await deleteStep(id, step.id);
+    ["steps", step.id];
   };
 
   const onAddStepAtIndexHandler = async (index) => {
@@ -220,7 +227,7 @@ const Create: FC<{ id: string; post: Post; lists: Lists }> = ({ id, post, lists 
               index={index}
               scrollIntoView={false}
               onChange={(data) => {
-                setSavedata(["steps", data.id], data);
+                setSaveData(["steps", data.id], data);
               }}
               onDelete={() => onDeleteStepHandler(dataStep)}
               onAddStep={() => onAddStepAtIndexHandler(index)}
