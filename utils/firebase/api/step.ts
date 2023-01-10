@@ -92,7 +92,7 @@ export const useSteps = (postId: string): Steps => {
   const [data, setData] = useState([]);
   useEffect(() => {
     const firebase = getFirestore();
-    const stepsQuery = query(collection(firebase, "posts", postId, "steps"), orderBy("index", "desc"));
+    const stepsQuery = query(collection(firebase, "posts", postId, "steps"), orderBy("index", "asc"));
     const unsubscribe = onSnapshot(stepsQuery, (querySnapshot) => {
       const steps: Steps = [];
       querySnapshot.forEach((doc) => {
