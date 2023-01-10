@@ -1,3 +1,4 @@
+import { getAuth } from "firebase/auth";
 import {
   getFirestore,
   doc,
@@ -10,6 +11,7 @@ import {
   orderBy,
   query,
   deleteDoc,
+  writeBatch,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { Step, StepsResponse, StepResponse } from "../interface";
@@ -20,6 +22,27 @@ export const setStep = async (postId, id, step: Step) => {
   const firebase = getFirestore();
   try {
     await setDoc(doc(firebase, "posts", postId, "steps", id), step);
+  } catch (error) {
+    response.error = error;
+  }
+  return response;
+};
+
+export const setSteps = async (postId: string, steps: Steps) => {
+  const response: StepsResponse = { data: steps, error: null };
+  const auth = getAuth();
+  const userId = auth.currentUser.uid;
+  const firebase = getFirestore();
+  const batch = writeBatch(firebase);
+  // Batch set
+  steps.forEach((step) => {
+    const stepsRef = doc(firebase, "posts", postId, "steps", step.id);
+    const stepsData = { ...step, userId };
+    batch.set(stepsRef, stepsData);
+  });
+
+  try {
+    await batch.commit();
   } catch (error) {
     response.error = error;
   }

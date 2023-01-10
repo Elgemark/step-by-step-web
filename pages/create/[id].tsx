@@ -8,7 +8,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import { Button, Divider, Fade, Slide } from "@mui/material";
 import styled from "styled-components";
 import ButtonGroup from "@mui/material/ButtonGroup";
-import { getLists, getPost, getSteps, setPostAndSteps, deleteList } from "../../utils/firebase/api";
+import { getLists, getPost, getSteps, setPostAndSteps, deleteList, uploadImage } from "../../utils/firebase/api";
 import _ from "lodash";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
@@ -17,8 +17,10 @@ import * as dataModels from "../../utils/firebase/models";
 import { toSanitizedArray } from "../../utils/stringUtils";
 import { v4 as uuid } from "uuid";
 import { List, ListResponse, Post, Step } from "../../utils/firebase/interface";
-import { Lists, Steps } from "../../utils/firebase/type";
+import { ImageUploads, Lists, Steps } from "../../utils/firebase/type";
 import { deleteStep, setStep, useSteps } from "../../utils/firebase/api/step";
+import { getAuth } from "firebase/auth";
+import { uploadImages } from "../../utils/firebase/api/storage";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -96,14 +98,24 @@ const Create: FC<{ id: string; post: Post; lists: Lists }> = ({ id, post, lists 
   };
 
   const onClickSaveHandler = async () => {
-    const resp = await setPostAndSteps(id, dataPost, [], dataLists);
-    if (!resp.error) {
-      // Success...
-      setSuccessMessage("Post saved!");
-      setShowSaveButton(false);
-    } else {
-      console.warn(resp.error);
-    }
+    const auth = getAuth();
+    const userId = auth.currentUser.uid;
+    // Save post...
+    // Save lists...
+    // Save steps...
+    const imageUploads: ImageUploads = [];
+    _.forIn(saveData.steps, (value) => {
+      if (value.blob) {
+        imageUploads.push({
+          blob: value.blob,
+          imageSize: "1024x1024",
+          locationPath: ["users", userId, "post", id, `step_${value.id}`],
+        });
+      }
+    });
+
+    const responseImageUploads = await uploadImages(imageUploads);
+    console.log("responseImageUploads", responseImageUploads);
   };
 
   const onAddTagHandler = (value) => {
