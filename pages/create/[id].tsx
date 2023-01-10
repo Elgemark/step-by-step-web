@@ -63,6 +63,14 @@ const Create: FC<{ id: string; post: Post; lists: Lists }> = ({ id, post, lists 
   const [dataLists, setDataLists] = useState(lists);
   // STEPS
   const steps = useSteps(id);
+  // stores updated steps...
+  const {
+    object: saveData,
+    setValue: setSavedata,
+    replace: replaceSaveData,
+  } = useStateObject({ steps: null, post: null, lists: null });
+
+  console.log("saveData", saveData);
 
   // Neccesery to force a reload of data if user clicks "CREATE"
   useEffect(() => {
@@ -183,7 +191,7 @@ const Create: FC<{ id: string; post: Post; lists: Lists }> = ({ id, post, lists 
               index={index}
               scrollIntoView={false}
               onChange={(data) => {
-                console.log(data);
+                setSavedata(["steps", data.id], data);
               }}
               onDelete={() => onDeleteStepHandler(dataStep)}
               onAddStep={() => onAddStepAtIndexHandler(index)}
