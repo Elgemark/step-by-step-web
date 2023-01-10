@@ -21,6 +21,7 @@ import { ImageUploads, Lists, Steps } from "../../utils/firebase/type";
 import { deleteStep, setStep, setSteps, useSteps } from "../../utils/firebase/api/step";
 import { getAuth } from "firebase/auth";
 import { uploadImages } from "../../utils/firebase/api/storage";
+import { setPost } from "../../utils/firebase/api/post";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -59,11 +60,9 @@ let saveData = { settings: null, post: null, steps: null, lists: null };
 
 const Create: FC<{ id: string; post: Post; lists: Lists }> = ({ id, post, lists }) => {
   const [successMessage, setSuccessMessage] = useState(null);
-  const [showSaveButton, setShowSaveButton] = useState(false);
-  const [showAddStepButton, setShowAddStepButton] = useState(true);
+
+  const [postIsValid, setPostIsValid] = useState(false);
   const [hasSaveData, setHasSaveData] = useState(false);
-  // POST
-  const { object: dataPost, setValue: setPostValue, replace: replacePost } = useStateObject(post);
   // POST LISTS
   const [dataLists, setDataLists] = useState(lists);
   // STEPS
@@ -71,6 +70,7 @@ const Create: FC<{ id: string; post: Post; lists: Lists }> = ({ id, post, lists 
   // Set save data
   const setSaveData = (path: Array<string | number> | string, value: any) => {
     _.set(saveData, path, value);
+    validatePost();
     setHasSaveData(true);
   };
 
@@ -79,21 +79,22 @@ const Create: FC<{ id: string; post: Post; lists: Lists }> = ({ id, post, lists 
     setHasSaveData(false);
   };
 
+  const validatePost = () => {
+    setPostIsValid(
+      steps.length ||
+        (_.get(saveData, "post.category") &&
+          _.get(saveData, "post.tags") &&
+          _.get(saveData, "post.title") &&
+          _.get(saveData, "post.descr") &&
+          _.get(saveData, "post.blob")) ||
+        _.get(saveData, "post.media.imageURI")
+    );
+  };
+
   // Neccesery to force a reload of data if user clicks "CREATE"
   useEffect(() => {
-    replacePost(post);
-    setDataLists(lists);
+    validatePost();
   }, [id]);
-
-  useEffect(() => {
-    if (dataPost.title != "" && dataPost.descr != "" && dataPost.media.imageURI != "") {
-      setShowSaveButton(true);
-      setShowAddStepButton(true);
-    } else {
-      setShowSaveButton(false);
-      setShowAddStepButton(false);
-    }
-  }, [dataPost, dataLists]);
 
   const onClickAddStepHandler = async () => {
     const stepId = uuid();
@@ -105,10 +106,25 @@ const Create: FC<{ id: string; post: Post; lists: Lists }> = ({ id, post, lists 
   const onClickSaveHandler = async () => {
     const auth = getAuth();
     const userId = auth.currentUser.uid;
-
-    // Save post...
     // Save lists...
-    // Upload images...
+    // Upload splash image...
+    const splashImage = _.get(saveData, "post.blob");
+    if (splashImage) {
+      const responseUploadSplash = await uploadImage(splashImage, "1024x1024", [
+        "users",
+        userId,
+        "post",
+        id,
+        "splash_",
+      ]);
+      _.set(saveData, "media.imageURI", responseUploadSplash.url);
+      _.unset(saveData, "post.blob");
+    }
+    // Save post...
+    if (saveData.post) {
+      await setPost(id, saveData.post);
+    }
+    // Uploas steps images
     const imageUploads: ImageUploads = [];
     _.forIn(saveData.steps, (value) => {
       // Prepare image uploads...
@@ -139,10 +155,6 @@ const Create: FC<{ id: string; post: Post; lists: Lists }> = ({ id, post, lists 
     resetSaveData();
     //
     console.log({ responseImageUploads, saveData, stepsResponse });
-  };
-
-  const onAddTagHandler = (value) => {
-    setPostValue("tags", toSanitizedArray(value, dataPost.tags));
   };
 
   const onDeleteStepHandler = async (step) => {
@@ -223,23 +235,17 @@ const Create: FC<{ id: string; post: Post; lists: Lists }> = ({ id, post, lists 
               }}
               onDelete={() => onDeleteStepHandler(dataStep)}
               onAddStep={() => onAddStepAtIndexHandler(index)}
-              mediaLocationPath={[
-                "post",
-                id,
-                _.kebabCase(dataPost.title) + "_step-" + (index + 1) + "_" + _.kebabCase(dataStep.title || "image"),
-              ]}
             />
             <StyledDivider />
           </div>
         ))}
         {/* BUTTONS */}
-        <Slide className="bottom-bar" direction="up" in={showSaveButton || showAddStepButton}>
+        <Slide className="bottom-bar" direction="up" in={postIsValid}>
           <StyledBottomBar>
             <ButtonGroup variant="text" aria-label="text button group">
-              <Button disabled={!showSaveButton} endIcon={<SaveIcon />} onClick={onClickSaveHandler}>
+              <Button disabled={!hasSaveData} endIcon={<SaveIcon />} onClick={onClickSaveHandler}>
                 Save
               </Button>
-
               <Button endIcon={<AddIcon />} onClick={onClickAddStepHandler}>
                 Step
               </Button>

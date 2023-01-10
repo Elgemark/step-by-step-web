@@ -12,14 +12,13 @@ import { useStateObject } from "../../utils/object";
 import ImageEditable from "../primitives/ImageEditable";
 
 const StepEditable: FC<{
-  mediaLocationPath: Array<string>;
   step: Step;
   index: number;
   scrollIntoView: boolean;
   onChange: any;
   onDelete: any;
   onAddStep: any;
-}> = ({ mediaLocationPath, step, index, scrollIntoView = false, onChange, onDelete, onAddStep, ...props }) => {
+}> = ({ step, index, scrollIntoView = false, onChange, onDelete, onAddStep, ...props }) => {
   const ref = useRef<HTMLInputElement>(null);
   const { object: data, setValue } = useStateObject(step);
 

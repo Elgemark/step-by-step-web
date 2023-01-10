@@ -61,6 +61,10 @@ export interface BookmarkResponse {
   data: Bookmark | null;
   error: any;
 }
+export interface PostResponse {
+  data: Post;
+  error: string | null;
+}
 
 export interface PostsResponse {
   data: Posts;

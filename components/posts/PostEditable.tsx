@@ -8,7 +8,7 @@ import Fab from "@mui/material/Fab";
 import Stack from "@mui/material/Stack";
 import AddIcon from "@mui/icons-material/Add";
 import ImageEditable from "../primitives/ImageEditable";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import SelectCategory from "../SelectCategory";
 import SettingsIcon from "@mui/icons-material/Settings";
 import _ from "lodash";
@@ -35,9 +35,9 @@ const StyledImageEditable = styled(ImageEditable)`
 const PostEditable: FC<{
   post: Post;
   lists: Lists;
-  onAddList: (e: object) => {} | Function;
-  onDeleteList: (e: object) => {} | Function;
-  onEditLists: (e: object) => {} | Function;
+  onAddList: Function;
+  onDeleteList: Function;
+  onEditLists: Function;
   onChange: Function;
 }> = ({ post, lists = [], onAddList, onDeleteList, onEditLists, onChange }) => {
   const [tag, setTag] = useState("");
@@ -54,7 +54,7 @@ const PostEditable: FC<{
   };
 
   const removeTag = (value) => {
-    const tags = toSanitizedArray(value, _.get(data, "tags"));
+    const tags = _.get(data, "tags", []);
     _.remove(tags, (tag) => tag === value);
     updateData("tags", tags);
   };
@@ -79,7 +79,7 @@ const PostEditable: FC<{
               onChange={(value) => {
                 updateData("category", value);
               }}
-              value={data.category}
+              value={data.category || ""}
             />
             <Stack spacing={1} direction="row" flexWrap={"wrap"}>
               {data.tags.map((tag, index) => (

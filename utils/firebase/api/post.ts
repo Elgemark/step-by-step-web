@@ -11,11 +11,21 @@ import {
   limit as fsLimit,
   startAfter as fsStartAfter,
   serverTimestamp,
+  setDoc,
 } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
-import { List, Post, PostsResponse } from "../interface";
-import { Lists, Steps } from "../type";
+import { Post, PostResponse, PostsResponse } from "../interface";
 import { parseData } from "../../firebaseUtils";
+
+export const setPost = async (postId, post: Post) => {
+  const response: PostResponse = { data: post, error: null };
+  const firebase = getFirestore();
+  try {
+    await setDoc(doc(firebase, "posts", postId), { ...post, timeStamp: serverTimestamp() });
+  } catch (error) {
+    response.error = error;
+  }
+  return response;
+};
 
 export const getPosts = async (orderBy = "likes", limit = 10, lastDoc) => {
   const response: PostsResponse = { data: [], error: null, lastDoc: null };
