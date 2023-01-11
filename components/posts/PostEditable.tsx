@@ -19,6 +19,7 @@ import { List, Post } from "../../utils/firebase/interface";
 import ListEditable from "../lists/ListEditable";
 import { useStateObject } from "../../utils/object";
 import { toSanitizedArray } from "../../utils/stringUtils";
+import UserAvatar from "../UserAvatar";
 
 const Root = styled(Stack)`
   .card-actions {
@@ -64,11 +65,7 @@ const PostEditable: FC<{
       {/* SETTINGS */}
       <Card>
         <CardHeader
-          avatar={
-            <Avatar aria-label="settings" sx={{ bgcolor: "white" }}>
-              <SettingsIcon />
-            </Avatar>
-          }
+          avatar={<SettingsIcon fontSize="large" />}
           title="Settings"
           subheader="Choose category and add at least one tag. You can add upp to 5 tags."
         />
@@ -121,11 +118,7 @@ const PostEditable: FC<{
       <Collapse in={data.category && data.tags.length > 0}>
         <Card>
           <CardHeader
-            avatar={
-              <Avatar sx={{ bgcolor: red[500] }} aria-label="post">
-                A
-              </Avatar>
-            }
+            avatar={<UserAvatar size={48} />}
             title={
               <TextField
                 fullWidth
