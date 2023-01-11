@@ -5,7 +5,7 @@ import { Fade, Input, useTheme } from "@mui/material";
 import styled from "styled-components";
 import Paper from "@mui/material/Paper";
 import { FC } from "react";
-import { ListItem } from "../../utils/firebase/interface";
+import { List, ListItem } from "../../utils/firebase/interface";
 import { useStateObject } from "../../utils/object";
 import DeleteIcon from "@mui/icons-material/Delete";
 
@@ -67,15 +67,15 @@ const ListEditable: FC<{
   id: string;
   title: string;
   items: Array<ListItem>;
-  onEdit: (e: object) => {} | Function;
-  onDelete: (e: object) => {} | Function;
-}> = ({ id, title, items = [], onDelete, onEdit }) => {
+  onChange: (e: List) => void;
+  onDelete: (id: string) => void;
+}> = ({ id, title, items = [], onDelete, onChange }) => {
   const { object, setValue } = useStateObject({ title, items, id });
   const theme = useTheme();
 
   const updateValue = (path, value) => {
     const result: object = setValue(path, value);
-    onEdit(result);
+    onChange(result as List);
   };
 
   const onAddListItemHandler = ({ id, index }) => {
@@ -135,7 +135,7 @@ const ListEditable: FC<{
           ))}
           <tr className="list-buttons">
             <td colSpan={3}>
-              <IconButton edge="end" aria-label="remove" onClick={() => onDelete({ id })}>
+              <IconButton edge="end" aria-label="remove" onClick={() => onDelete(id)}>
                 <DeleteIcon />
               </IconButton>
             </td>

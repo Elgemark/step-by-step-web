@@ -7,7 +7,7 @@ import TextField from "@mui/material/TextField";
 import Fab from "@mui/material/Fab";
 import Stack from "@mui/material/Stack";
 import AddIcon from "@mui/icons-material/Add";
-import MediaEditable from "../primitives/MediaEditable";
+import ImageEditable from "../primitives/ImageEditable";
 import { FC, useState } from "react";
 import SelectCategory from "../SelectCategory";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -15,8 +15,10 @@ import _ from "lodash";
 import styled from "styled-components";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import { Lists } from "../../utils/firebase/type";
+import { List, Post } from "../../utils/firebase/interface";
 import ListEditable from "../lists/ListEditable";
-import { Media } from "../../utils/firebase/interface";
+import { useStateObject } from "../../utils/object";
+import { toSanitizedArray } from "../../utils/stringUtils";
 
 const Root = styled(Stack)`
   .card-actions {
@@ -24,48 +26,38 @@ const Root = styled(Stack)`
   }
 `;
 
-const StyledMediaEditable = styled(MediaEditable)`
+const StyledImageEditable = styled(ImageEditable)`
   img {
     object-fit: cover;
   }
 `;
 
 const PostEditable: FC<{
-  title: string;
-  descr: string;
-  media: Media;
-  tags: Array<string>;
-  mediaLocationPath: Array<any>;
-  category: string;
+  post: Post;
   lists: Lists;
-  onAddList: (e: object) => {} | Function;
-  onDeleteList: (e: object) => {} | Function;
-  onEditLists: (e: object) => {} | Function;
-  onChangeTitle: (e: string) => {} | Function;
-  onChangeBody: (e: string) => {} | Function;
-  onAddTag: (e: string) => {} | Function;
-  onRemoveTag: (e: string) => {} | Function;
-  onChangeImage: (e: object) => {} | Function;
-  onChangeCategory: (e: object) => {} | Function;
-}> = ({
-  title,
-  descr,
-  media = {},
-  tags = [],
-  lists = [],
-  mediaLocationPath = [],
-  category,
-  onAddList,
-  onDeleteList,
-  onEditLists,
-  onChangeTitle,
-  onChangeBody,
-  onAddTag,
-  onRemoveTag,
-  onChangeImage,
-  onChangeCategory,
-}) => {
+  onChangeList: (list: List) => void;
+  onDeleteList: (id: string) => void;
+  onAddList: Function;
+  onChange: Function;
+}> = ({ post, lists = [], onChangeList, onDeleteList, onAddList, onChange }) => {
   const [tag, setTag] = useState("");
+  const { object: data, setValue: setData } = useStateObject(post);
+
+  const updateData = (path, value) => {
+    const updatedData = setData(path, value);
+    onChange(updatedData);
+  };
+
+  const addTag = (value) => {
+    const tags = toSanitizedArray(value, _.get(data, "tags"));
+    updateData("tags", tags);
+  };
+
+  const removeTag = (value) => {
+    const tags = _.get(data, "tags", []);
+    _.remove(tags, (tag) => tag === value);
+    updateData("tags", tags);
+  };
 
   return (
     <Root spacing={2}>
@@ -82,10 +74,16 @@ const PostEditable: FC<{
         />
         <CardContent>
           <Stack spacing={2}>
-            <SelectCategory fullWidth onChange={onChangeCategory} value={category} />
+            <SelectCategory
+              fullWidth
+              onChange={(value) => {
+                updateData("category", value);
+              }}
+              value={data.category || ""}
+            />
             <Stack spacing={1} direction="row" flexWrap={"wrap"}>
-              {tags.map((tag, index) => (
-                <Chip key={"key-" + tag + index} label={tag} onDelete={() => onRemoveTag(tag)} />
+              {data.tags.map((tag, index) => (
+                <Chip key={"key-" + tag + index} label={tag} onDelete={() => removeTag(tag)} />
               ))}
             </Stack>
             <Stack direction="row" spacing={2}>
@@ -99,7 +97,7 @@ const PostEditable: FC<{
                 }}
                 onKeyDown={(e) => {
                   if (e.code === "Enter") {
-                    onAddTag(tag);
+                    addTag(tag);
                     setTag("");
                   }
                 }}
@@ -109,7 +107,7 @@ const PostEditable: FC<{
                 size="small"
                 disabled={!tag}
                 onClick={() => {
-                  onAddTag(tag);
+                  addTag(tag);
                   setTag("");
                 }}
               >
@@ -120,7 +118,7 @@ const PostEditable: FC<{
         </CardContent>
       </Card>
       {/* POST */}
-      <Collapse in={category && tags.length > 0}>
+      <Collapse in={data.category && data.tags.length > 0}>
         <Card>
           <CardHeader
             avatar={
@@ -128,24 +126,34 @@ const PostEditable: FC<{
                 A
               </Avatar>
             }
-            title={<TextField fullWidth label="Title" value={title} onChange={(e) => onChangeTitle(e.target.value)} />}
+            title={
+              <TextField
+                fullWidth
+                label="Title"
+                value={data.title}
+                onChange={(e) => updateData("title", e.target.value)}
+              />
+            }
           />
-          <StyledMediaEditable onChangeImage={onChangeImage} media={media} locationPath={mediaLocationPath} />
+          <StyledImageEditable
+            onBlobChange={(blob) => {
+              updateData("blob", blob);
+            }}
+            media={data.media}
+          />
           <CardContent>
             <Stack spacing={2}>
               <TextField
                 fullWidth
                 multiline
                 label="Description"
-                value={descr}
-                onChange={(e) => {
-                  onChangeBody(e.target.value);
-                }}
+                value={data.descr}
+                onChange={(e) => updateData("descr", e.target.value)}
                 size="small"
               />
               {lists.map((list) => (
                 <ListEditable
-                  onEdit={onEditLists}
+                  onChange={onChangeList}
                   onDelete={onDeleteList}
                   key={list.id}
                   id={list.id}
@@ -156,7 +164,7 @@ const PostEditable: FC<{
             </Stack>
           </CardContent>
           <CardActions className="card-actions">
-            <Button onClick={onAddList} endIcon={<PlaylistAddIcon></PlaylistAddIcon>}>
+            <Button onClick={() => onAddList()} endIcon={<PlaylistAddIcon></PlaylistAddIcon>}>
               Add List
             </Button>
           </CardActions>

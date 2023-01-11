@@ -2,7 +2,6 @@ import Head from "next/head";
 import Layout from "../../components/Layout";
 import PostEditable from "../../components/posts/PostEditable";
 import StepEditable from "../../components/steps/StepEditable";
-import { useStateObject } from "../../utils/object";
 import AddIcon from "@mui/icons-material/Add";
 import SaveIcon from "@mui/icons-material/Save";
 import { Button, Divider, Fade, Slide } from "@mui/material";
@@ -180,21 +179,14 @@ const Create: FC<{ id: string; post: Post; lists: Lists }> = ({ id, post, lists 
     setDataLists(newDataLists);
   };
 
-  const onAddListItemHandler = ({ id: listId, index }) => {
-    const newDataLists = _.cloneDeep(dataLists);
-    const listIndex = newDataLists.findIndex((list) => list.id === listId);
-    newDataLists[listIndex].items.splice(index, 0, { text: "", value: "" });
-    setDataLists(newDataLists);
-  };
-
-  const onEditListsHandler = (data) => {
+  const onChangeListHandler = (data: List) => {
     const newDataLists = [...dataLists];
     const index = newDataLists.findIndex((list) => list.id === data.id);
     newDataLists[index] = data;
     setDataLists(newDataLists);
   };
 
-  const onDeleteListHandler = ({ id: listId }) => {
+  const onDeleteListHandler = (listId) => {
     const newDataLists = _.cloneDeep(dataLists);
     const listIndex = newDataLists.findIndex((list) => list.id === listId);
     newDataLists.splice(listIndex, 1);
@@ -215,8 +207,7 @@ const Create: FC<{ id: string; post: Post; lists: Lists }> = ({ id, post, lists 
           post={post}
           lists={dataLists}
           onAddList={onAddListHandler}
-          onAddListItem={onAddListItemHandler}
-          onEditLists={onEditListsHandler}
+          onChangeList={onChangeListHandler}
           onDeleteList={onDeleteListHandler}
           onChange={(value) => {
             setSaveData("post", value);

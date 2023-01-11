@@ -8,14 +8,14 @@ import Fab from "@mui/material/Fab";
 import Stack from "@mui/material/Stack";
 import AddIcon from "@mui/icons-material/Add";
 import ImageEditable from "../primitives/ImageEditable";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import SelectCategory from "../SelectCategory";
 import SettingsIcon from "@mui/icons-material/Settings";
 import _ from "lodash";
 import styled from "styled-components";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import { Lists } from "../../utils/firebase/type";
-import { Post } from "../../utils/firebase/interface";
+import { List, Post } from "../../utils/firebase/interface";
 import ListEditable from "../lists/ListEditable";
 import { useStateObject } from "../../utils/object";
 import { toSanitizedArray } from "../../utils/stringUtils";
@@ -35,11 +35,11 @@ const StyledImageEditable = styled(ImageEditable)`
 const PostEditable: FC<{
   post: Post;
   lists: Lists;
+  onChangeList: (list: List) => void;
+  onDeleteList: (id: string) => void;
   onAddList: Function;
-  onDeleteList: Function;
-  onEditLists: Function;
   onChange: Function;
-}> = ({ post, lists = [], onAddList, onDeleteList, onEditLists, onChange }) => {
+}> = ({ post, lists = [], onChangeList, onDeleteList, onAddList, onChange }) => {
   const [tag, setTag] = useState("");
   const { object: data, setValue: setData } = useStateObject(post);
 
@@ -153,7 +153,7 @@ const PostEditable: FC<{
               />
               {lists.map((list) => (
                 <ListEditable
-                  onEdit={onEditLists}
+                  onChange={onChangeList}
                   onDelete={onDeleteList}
                   key={list.id}
                   id={list.id}
@@ -164,7 +164,7 @@ const PostEditable: FC<{
             </Stack>
           </CardContent>
           <CardActions className="card-actions">
-            <Button onClick={onAddList} endIcon={<PlaylistAddIcon></PlaylistAddIcon>}>
+            <Button onClick={() => onAddList()} endIcon={<PlaylistAddIcon></PlaylistAddIcon>}>
               Add List
             </Button>
           </CardActions>
