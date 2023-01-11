@@ -93,7 +93,7 @@ export const useLists = (postId: string): Lists => {
         unsubscribe();
       };
     });
-  }, []);
+  }, [postId]);
 
   return data;
 };

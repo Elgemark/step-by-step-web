@@ -4,17 +4,17 @@ import PostEditable from "../../components/posts/PostEditable";
 import StepEditable from "../../components/steps/StepEditable";
 import AddIcon from "@mui/icons-material/Add";
 import SaveIcon from "@mui/icons-material/Save";
-import { Button, Divider, Fade, Slide } from "@mui/material";
+import { Button, Divider, Slide } from "@mui/material";
 import styled from "styled-components";
 import ButtonGroup from "@mui/material/ButtonGroup";
-import { getLists, getPost, getSteps, deleteList, uploadImage, setLists } from "../../utils/firebase/api";
+import { getPost, deleteList, uploadImage, setLists } from "../../utils/firebase/api";
 import _ from "lodash";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { FC, useEffect, useState } from "react";
 import * as dataModels from "../../utils/firebase/models";
 import { v4 as uuid } from "uuid";
-import { List, ListResponse, Post, Step } from "../../utils/firebase/interface";
+import { List, Post, Step } from "../../utils/firebase/interface";
 import { ImageUploads, Lists, Steps } from "../../utils/firebase/type";
 import { deleteStep, setStep, setSteps, useSteps } from "../../utils/firebase/api/step";
 import { getAuth } from "firebase/auth";
@@ -63,20 +63,29 @@ const Create: FC<{ id: string; post: Post }> = ({ id, post }) => {
   const router = useRouter();
   const steps = useSteps(id);
   const lists = useLists(id);
+  const [prevId, setPrevId] = useState(id);
   const [successMessage, setSuccessMessage] = useState(null);
   const [postIsValid, setPostIsValid] = useState(false);
   const [hasSaveData, setHasSaveData] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
-  console.log({ lists, steps });
+  useEffect(() => {
+    if (prevId != id) {
+      router.replace(router.asPath);
+      console.log("refresh", router.asPath, post);
+      setPrevId(id);
+    }
+  }, [id]);
+
+  useEffect(() => {
+    validatePost();
+  }, []);
 
   // Set save data
   const setSaveData = (path: Array<string | number> | string, value: any) => {
     _.set(saveData, path, value);
     validatePost();
     setHasSaveData(true);
-
-    console.log("saveData", saveData);
   };
 
   const resetSaveData = () => {
@@ -95,15 +104,6 @@ const Create: FC<{ id: string; post: Post }> = ({ id, post }) => {
         _.get(saveData, "post.media.imageURI")
     );
   };
-
-  // Neccesery to force a reload of data if user clicks "CREATE"
-  useEffect(() => {
-    router.replace(router.asPath);
-  }, [id]);
-
-  useEffect(() => {
-    validatePost();
-  }, []);
 
   const onClickAddStepHandler = async () => {
     const stepId = uuid();

@@ -36,7 +36,9 @@ const TopBar: FC<{ className?: string; actions?: ReactNode }> = ({ className, ac
           <Button
             color="inherit"
             onClick={() => {
-              router.push("/create/" + uuid());
+              router.push("/create/" + uuid()).then(() => {
+                router.reload();
+              });
             }}
           >
             Create

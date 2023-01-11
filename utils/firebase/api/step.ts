@@ -103,7 +103,7 @@ export const useSteps = (postId: string): Steps => {
         unsubscribe();
       };
     });
-  }, []);
+  }, [postId]);
 
   return data;
 };
