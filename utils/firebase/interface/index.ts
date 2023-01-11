@@ -44,6 +44,7 @@ export interface List {
 
 export interface Progress {
   completed: boolean;
+  completions: number;
   id: string;
   step: number;
   userId: string;

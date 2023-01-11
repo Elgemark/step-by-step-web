@@ -21,6 +21,7 @@ import { getAuth } from "firebase/auth";
 import { uploadImages } from "../../utils/firebase/api/storage";
 import { setPost } from "../../utils/firebase/api/post";
 import { setList, useLists } from "../../utils/firebase/api/list";
+import { LoadingButton } from "@mui/lab";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -63,6 +64,7 @@ const Create: FC<{ id: string; post: Post }> = ({ id, post }) => {
   const [successMessage, setSuccessMessage] = useState(null);
   const [postIsValid, setPostIsValid] = useState(false);
   const [hasSaveData, setHasSaveData] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   console.log({ lists, steps });
 
@@ -105,6 +107,7 @@ const Create: FC<{ id: string; post: Post }> = ({ id, post }) => {
   };
 
   const onClickSaveHandler = async () => {
+    setIsSaving(true);
     const auth = getAuth();
     const userId = auth.currentUser.uid;
     // Save lists...
@@ -160,7 +163,7 @@ const Create: FC<{ id: string; post: Post }> = ({ id, post }) => {
     // Reset all saveData
     resetSaveData();
     //
-    console.log({ responseImageUploads, saveData, stepsResponse });
+    setIsSaving(false);
   };
 
   const onDeleteStepHandler = async (step) => {
@@ -233,9 +236,14 @@ const Create: FC<{ id: string; post: Post }> = ({ id, post }) => {
         <Slide className="bottom-bar" direction="up" in={postIsValid}>
           <StyledBottomBar>
             <ButtonGroup variant="text" aria-label="text button group">
-              <Button disabled={!hasSaveData} endIcon={<SaveIcon />} onClick={onClickSaveHandler}>
+              <LoadingButton
+                loading={isSaving}
+                disabled={!hasSaveData}
+                endIcon={<SaveIcon />}
+                onClick={onClickSaveHandler}
+              >
                 Save
-              </Button>
+              </LoadingButton>
               <Button endIcon={<AddIcon />} onClick={onClickAddStepHandler}>
                 Step
               </Button>
