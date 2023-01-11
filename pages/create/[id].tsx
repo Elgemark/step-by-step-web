@@ -79,7 +79,7 @@ const Create: FC<{ id: string; post: Post }> = ({ id, post }) => {
 
   useEffect(() => {
     validatePost();
-  }, []);
+  }, [steps, post]);
 
   // Set save data
   const setSaveData = (path: Array<string | number> | string, value: any) => {
@@ -228,7 +228,7 @@ const Create: FC<{ id: string; post: Post }> = ({ id, post }) => {
             <StepEditable
               step={dataStep}
               index={index}
-              scrollIntoView={false}
+              scrollIntoView={true}
               onChange={(data) => {
                 setSaveData(["steps", data.id], data);
               }}
