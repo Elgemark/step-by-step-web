@@ -22,6 +22,7 @@ import { uploadImages } from "../../utils/firebase/api/storage";
 import { setPost } from "../../utils/firebase/api/post";
 import { setList, useLists } from "../../utils/firebase/api/list";
 import { LoadingButton } from "@mui/lab";
+import { useRouter } from "next/router";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -59,6 +60,7 @@ const StyledBottomBar = styled.div`
 let saveData = { post: null, steps: null, lists: null };
 
 const Create: FC<{ id: string; post: Post }> = ({ id, post }) => {
+  const router = useRouter();
   const steps = useSteps(id);
   const lists = useLists(id);
   const [successMessage, setSuccessMessage] = useState(null);
@@ -96,8 +98,12 @@ const Create: FC<{ id: string; post: Post }> = ({ id, post }) => {
 
   // Neccesery to force a reload of data if user clicks "CREATE"
   useEffect(() => {
-    validatePost();
+    router.replace(router.asPath);
   }, [id]);
+
+  useEffect(() => {
+    validatePost();
+  }, []);
 
   const onClickAddStepHandler = async () => {
     const stepId = uuid();
@@ -159,7 +165,7 @@ const Create: FC<{ id: string; post: Post }> = ({ id, post }) => {
     _.forIn(saveData.steps, (value) => {
       steps.push(value);
     });
-    const stepsResponse = await setSteps(id, steps);
+    await setSteps(id, steps);
     // Reset all saveData
     resetSaveData();
     //
