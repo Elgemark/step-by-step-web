@@ -115,11 +115,15 @@ export const useUser = (uid, realtime = false) => {
     if (uid && realtime) {
       const firebase = getFirestore();
       const docRef = doc(firebase, "users", uid);
-      onSnapshot(docRef, (snapshot) => {
+      const unsubscribe = onSnapshot(docRef, (snapshot) => {
         if (snapshot.exists()) {
           replace({ ...data, ...snapshot.data() });
         }
       });
+
+      return () => {
+        unsubscribe();
+      };
     }
   }, [uid, realtime]);
 

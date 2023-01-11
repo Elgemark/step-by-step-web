@@ -15,7 +15,8 @@ const ProfileCardEditable: FC<{
   onSave: Function;
   onCancel: Function;
 }> = ({ userId, onSave, onCancel }) => {
-  const { data: user, update: updateUser, save: saveUser, isCurrentUser, isLoading } = useUser(userId);
+  const { data: user, update: updateUser, save: saveUser, isLoading } = useUser(userId);
+
   const { object: avatarData, update: updateAvatarObject } = useStateObject({
     url: null,
     file: null,
@@ -31,22 +32,23 @@ const ProfileCardEditable: FC<{
 
   const onSaveHandler = async () => {
     const update = { avatar: user.avatar, background: user.background };
-
+    // Avatar...
     if (avatarData.file) {
-      const avatarResp: UploadResponse = await uploadImage(avatarData.file, "1024x1024", "users", userId, "avatar");
+      const avatarResp: UploadResponse = await uploadImage(avatarData.file, "1024x1024", ["users", userId], "avatar");
       update.avatar = avatarResp.url;
+      updateAvatarObject({ url: avatarResp.url });
     }
+    // Background...
     if (backgroundData.file) {
       const backgroundResp: UploadResponse = await uploadImage(
         backgroundData.file,
         "1024x1024",
-        "users",
-        userId,
+        ["users", userId],
         "background"
       );
       update.background = backgroundResp.url;
+      updateBackgroundObject({ url: backgroundResp.url });
     }
-
     await saveUser(update);
     onSave();
   };
