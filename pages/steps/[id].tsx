@@ -44,7 +44,7 @@ const StyledStepsProgress = styled(StepsProgress)`
 const Steps: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> = ({ id, post, steps, lists }) => {
   const [showDialog, setShowDialog] = useState({ open: false, content: "", onOkClick: () => {} });
   const router = useRouter();
-  const { user, progress, isLoading } = useProgress(id);
+  const { user, progress, updateProgress, isLoading } = useProgress(id, true);
   console.log({ user, progress });
 
   const showButton = true;
@@ -68,11 +68,19 @@ const Steps: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> = ({
   };
 
   const onStartOverHandler = async () => {
-    debugger;
+    await updateProgress(user.uid, id, { step: -1, completed: false });
   };
 
   const onRevelNextClickHandler = async ({ index }) => {
     const nextStep = steps[index + 1];
+    const nextNextStep = steps[index + 2];
+    if (nextStep) {
+      await updateProgress(user.uid, id, {
+        step: index + 1,
+        completed: nextNextStep ? false : true,
+        completions: nextNextStep ? progress.completions : progress.completions + 1,
+      });
+    }
   };
 
   return (
@@ -105,7 +113,7 @@ const Steps: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> = ({
         />
         <RevealNext
           open
-          showButton={progress.step === 0}
+          showButton={progress.step === -1}
           label="Start"
           onClick={() => {
             onRevelNextClickHandler({ index: -1 });
@@ -117,7 +125,7 @@ const Steps: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> = ({
               isLoading={isLoading}
               key={"step-" + index}
               label="Next"
-              open={index < progress.step}
+              open={index <= progress.step}
               showButton={showButton}
               showDone={showDone(index)}
               onClick={() => {

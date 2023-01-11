@@ -1,12 +1,34 @@
 import { getAuth } from "firebase/auth";
-import { getFirestore, onSnapshot, doc } from "firebase/firestore";
+import { getFirestore, onSnapshot, doc, setDoc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { Progress } from "../interface";
+import { Progress, ProgressResponse } from "../interface";
 
-export const useProgress = (postId: string) => {
+export const setProgress = async (userId: string, postId: string, progress: Progress) => {
+  const response: ProgressResponse = { id: postId, data: progress, error: null };
+  const firebase = getFirestore();
+  try {
+    await setDoc(doc(firebase, "users", userId, "progress", postId), progress);
+  } catch (error) {
+    response.error = error;
+  }
+  return response;
+};
+
+export const updateProgress = async (userId: string, postId: string, updates: object) => {
+  const response: ProgressResponse = { id: postId, data: null, error: null };
+  const firebase = getFirestore();
+  try {
+    await updateDoc(doc(firebase, "users", userId, "progress", postId), updates);
+  } catch (error) {
+    response.error = error;
+  }
+  return response;
+};
+
+export const useProgress = (postId: string, createIfMissing = false) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState({ completed: false, step: 0 });
+  const [data, setData] = useState({ completed: false, step: -1, completions: 0 });
   const [user] = useAuthState(getAuth());
 
   useEffect(() => {
@@ -16,6 +38,8 @@ export const useProgress = (postId: string) => {
       const unsubscribe = onSnapshot(progressDoc, (doc) => {
         if (doc.exists()) {
           setData(doc.data() as Progress);
+        } else if (createIfMissing) {
+          setProgress(user.uid, postId, { completed: false, id: postId, step: -1, userId: user.uid, completions: 0 });
         }
       });
       setIsLoading(false);
@@ -25,5 +49,5 @@ export const useProgress = (postId: string) => {
     }
   }, [user?.uid]);
 
-  return { user, progress: data, isLoading };
+  return { user, progress: data, isLoading, setProgress, updateProgress };
 };
