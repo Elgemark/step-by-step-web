@@ -90,6 +90,8 @@ const ListEditable: FC<{
     updateValue("items", newItems);
   };
 
+  console.log("object.items", object.items);
+
   return (
     <StyledPaper elevation={3} theme={theme}>
       <StyledTable theme={theme}>

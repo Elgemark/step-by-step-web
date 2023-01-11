@@ -21,6 +21,7 @@ import { deleteStep, setStep, setSteps, useSteps } from "../../utils/firebase/ap
 import { getAuth } from "firebase/auth";
 import { uploadImages } from "../../utils/firebase/api/storage";
 import { setPost } from "../../utils/firebase/api/post";
+import { setList, useLists } from "../../utils/firebase/api/list";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -55,17 +56,17 @@ const StyledBottomBar = styled.div`
   justify-content: center;
 `;
 
-let saveData = { settings: null, post: null, steps: null, lists: null };
+let saveData = { post: null, steps: null, lists: null };
 
-const Create: FC<{ id: string; post: Post; lists: Lists }> = ({ id, post, lists }) => {
+const Create: FC<{ id: string; post: Post; lists: Lists }> = ({ id, post }) => {
+  const steps = useSteps(id);
+  const lists = useLists(id);
   const [successMessage, setSuccessMessage] = useState(null);
-
   const [postIsValid, setPostIsValid] = useState(false);
   const [hasSaveData, setHasSaveData] = useState(false);
-  // POST LISTS
-  const [dataLists, setDataLists] = useState(lists);
-  // STEPS
-  const steps = useSteps(id);
+
+  console.log("lists", lists);
+
   // Set save data
   const setSaveData = (path: Array<string | number> | string, value: any) => {
     _.set(saveData, path, value);
@@ -74,7 +75,7 @@ const Create: FC<{ id: string; post: Post; lists: Lists }> = ({ id, post, lists 
   };
 
   const resetSaveData = () => {
-    saveData = { settings: null, post: null, steps: null, lists: null };
+    saveData = { post: null, steps: null, lists: null };
     setHasSaveData(false);
   };
 
@@ -172,25 +173,20 @@ const Create: FC<{ id: string; post: Post; lists: Lists }> = ({ id, post, lists 
     await setStep(id, stepId, step);
   };
 
-  const onAddListHandler = () => {
+  const onAddListHandler = async () => {
     const listId = uuid();
-    const list: List = { id: listId, items: [{ text: "", value: "" }], title: "" };
-    const newDataLists = [...dataLists, list];
-    setDataLists(newDataLists);
+    const list: List = { id: listId, title: "", items: [] };
+    await setList(id, listId, list);
   };
 
   const onChangeListHandler = (data: List) => {
-    const newDataLists = [...dataLists];
-    const index = newDataLists.findIndex((list) => list.id === data.id);
-    newDataLists[index] = data;
-    setDataLists(newDataLists);
+    console.log("data", data);
   };
 
   const onDeleteListHandler = (listId) => {
     const newDataLists = _.cloneDeep(dataLists);
     const listIndex = newDataLists.findIndex((list) => list.id === listId);
     newDataLists.splice(listIndex, 1);
-    setDataLists(newDataLists);
     deleteList(id, listId).then((e) => {
       setSuccessMessage("List deleted!");
     });
@@ -205,7 +201,7 @@ const Create: FC<{ id: string; post: Post; lists: Lists }> = ({ id, post, lists 
         {/* SETTINGS & POST */}
         <PostEditable
           post={post}
-          lists={dataLists}
+          lists={lists}
           onAddList={onAddListHandler}
           onChangeList={onChangeListHandler}
           onDeleteList={onDeleteListHandler}

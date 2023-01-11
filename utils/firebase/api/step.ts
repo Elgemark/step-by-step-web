@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 import { Step, StepsResponse, StepResponse } from "../interface";
 import { Steps } from "../type";
 
-export const setStep = async (postId, id, step: Step) => {
+export const setStep = async (postId: string, id: string, step: Step) => {
   const response: StepResponse = { data: step, error: null };
   const firebase = getFirestore();
   try {

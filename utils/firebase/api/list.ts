@@ -1,18 +1,28 @@
-import { getFirestore, doc, getDoc, setDoc, collection, getDocs, deleteDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  collection,
+  getDocs,
+  deleteDoc,
+  query,
+  onSnapshot,
+  orderBy,
+} from "firebase/firestore";
+import { useEffect, useState } from "react";
 import { List, ListResponse } from "../interface";
 import { Lists } from "../type";
 
-export const setList = async (id: string, data: List) => {
+export const setList = async (postId: string, id: string, data: List) => {
+  const response: ListResponse = { id, data, error: null };
   const firebase = getFirestore();
-  const result = { data, id, response: null, error: null };
   try {
-    result.response = await setDoc(doc(firebase, "posts", id, "lists", id), data);
-    result.data = { ...data, id };
-    result.id = id;
+    await setDoc(doc(firebase, "posts", postId, "lists", id), data);
   } catch (error) {
-    result.error = error;
+    response.error = error;
   }
-  return result;
+  return response;
 };
 
 export const setLists = async (id: string, data: Lists) => {
@@ -69,4 +79,25 @@ export const getLists = async (id: string) => {
     result.data = [];
   }
   return result;
+};
+
+export const useLists = (postId: string): Lists => {
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    const firebase = getFirestore();
+    // const listsQuery = query(collection(firebase, "posts", postId, "lists"), orderBy("index", "asc"));
+    const listCollection = collection(firebase, "posts", postId, "lists");
+    const unsubscribe = onSnapshot(listCollection, (querySnapshot) => {
+      const lists: Lists = [];
+      querySnapshot.forEach((doc) => {
+        lists.push(doc.data() as List);
+      });
+      setData(lists);
+      return () => {
+        unsubscribe();
+      };
+    });
+  }, []);
+
+  return data;
 };
