@@ -40,10 +40,10 @@ export const useBookmarks = bookmarksApi.useBookmarks;
 export const isBookmarkedByUser = bookmarksApi.isBookmarkedByUser;
 // ::: LISTS
 export const getLists = listApi.getLists;
-export const getList = listApi.getList;
 export const setLists = listApi.setLists;
 export const setList = listApi.setList;
 export const deleteList = listApi.deleteList;
+export const useLists = listApi.useLists;
 // ::: STEPS
 export const setSteps = stepApi.setSteps;
 export const getSteps = stepApi.getSteps;

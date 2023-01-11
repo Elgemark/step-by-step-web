@@ -48,8 +48,14 @@ export interface List {
 
 export interface ListResponse {
   id: string;
-  data: Lists | [];
-  error: string | null;
+  data: List | [];
+  error: any;
+}
+
+export interface ListsResponse {
+  id: string;
+  data: Lists | null;
+  error: any;
 }
 
 export interface BookmarksResponse {

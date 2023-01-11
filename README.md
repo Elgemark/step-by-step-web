@@ -1,5 +1,7 @@
 # Resource links
 
+58366748-0938-43c7-9626-525bc939cc8d
+
 - https://medium.com/nextjs/how-to-use-material-ui-with-nextjs-and-react-18-6c054ceacf77
 - https://mui.com/material-ui/material-icons/
 - https://www.npmjs.com/package/re-position

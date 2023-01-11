@@ -7,13 +7,12 @@ import SaveIcon from "@mui/icons-material/Save";
 import { Button, Divider, Fade, Slide } from "@mui/material";
 import styled from "styled-components";
 import ButtonGroup from "@mui/material/ButtonGroup";
-import { getLists, getPost, getSteps, deleteList, uploadImage } from "../../utils/firebase/api";
+import { getLists, getPost, getSteps, deleteList, uploadImage, setLists } from "../../utils/firebase/api";
 import _ from "lodash";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { FC, useEffect, useState } from "react";
 import * as dataModels from "../../utils/firebase/models";
-import { toSanitizedArray } from "../../utils/stringUtils";
 import { v4 as uuid } from "uuid";
 import { List, ListResponse, Post, Step } from "../../utils/firebase/interface";
 import { ImageUploads, Lists, Steps } from "../../utils/firebase/type";
@@ -58,20 +57,22 @@ const StyledBottomBar = styled.div`
 
 let saveData = { post: null, steps: null, lists: null };
 
-const Create: FC<{ id: string; post: Post; lists: Lists }> = ({ id, post }) => {
+const Create: FC<{ id: string; post: Post }> = ({ id, post }) => {
   const steps = useSteps(id);
   const lists = useLists(id);
   const [successMessage, setSuccessMessage] = useState(null);
   const [postIsValid, setPostIsValid] = useState(false);
   const [hasSaveData, setHasSaveData] = useState(false);
 
-  console.log("lists", lists);
+  console.log({ lists, steps });
 
   // Set save data
   const setSaveData = (path: Array<string | number> | string, value: any) => {
     _.set(saveData, path, value);
     validatePost();
     setHasSaveData(true);
+
+    console.log("saveData", saveData);
   };
 
   const resetSaveData = () => {
@@ -107,6 +108,11 @@ const Create: FC<{ id: string; post: Post; lists: Lists }> = ({ id, post }) => {
     const auth = getAuth();
     const userId = auth.currentUser.uid;
     // Save lists...
+    const lists: Lists = [];
+    _.forIn(saveData.lists, (value) => {
+      lists.push(value);
+    });
+    await setLists(id, lists);
     // Upload splash image...
     const splashImage = _.get(saveData, "post.blob");
     if (splashImage) {
@@ -117,7 +123,7 @@ const Create: FC<{ id: string; post: Post; lists: Lists }> = ({ id, post }) => {
         id,
         "splash_",
       ]);
-      _.set(saveData, "media.imageURI", responseUploadSplash.url);
+      _.set(saveData, "post.media.imageURI", responseUploadSplash.url);
       _.unset(saveData, "post.blob");
     }
     // Save post...
@@ -180,13 +186,10 @@ const Create: FC<{ id: string; post: Post; lists: Lists }> = ({ id, post }) => {
   };
 
   const onChangeListHandler = (data: List) => {
-    console.log("data", data);
+    setSaveData(`lists.${data.id}`, data);
   };
 
   const onDeleteListHandler = (listId) => {
-    const newDataLists = _.cloneDeep(dataLists);
-    const listIndex = newDataLists.findIndex((list) => list.id === listId);
-    newDataLists.splice(listIndex, 1);
     deleteList(id, listId).then((e) => {
       setSuccessMessage("List deleted!");
     });
@@ -253,13 +256,9 @@ const Create: FC<{ id: string; post: Post; lists: Lists }> = ({ id, post }) => {
 export async function getServerSideProps({ query }) {
   const id = query.id;
   const post = await getPost(id);
-  const stepsResponse = await getSteps(id);
-  const listsResp: ListResponse = await getLists(id);
   return {
     props: {
       post: post?.data || dataModels.post,
-      steps: stepsResponse.data,
-      lists: listsResp.data,
       id,
     },
   };

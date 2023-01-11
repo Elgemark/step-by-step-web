@@ -1,3 +1,4 @@
+import { getAuth } from "firebase/auth";
 import {
   getFirestore,
   doc,
@@ -6,12 +7,12 @@ import {
   collection,
   getDocs,
   deleteDoc,
-  query,
   onSnapshot,
-  orderBy,
+  writeBatch,
+  query,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { List, ListResponse } from "../interface";
+import { List, ListResponse, ListsResponse } from "../interface";
 import { Lists } from "../type";
 
 export const setList = async (postId: string, id: string, data: List) => {
@@ -25,31 +26,25 @@ export const setList = async (postId: string, id: string, data: List) => {
   return response;
 };
 
-export const setLists = async (id: string, data: Lists) => {
+export const setLists = async (postId: string, data: Lists) => {
+  const response: ListsResponse = { data: data, id: postId, error: null };
+  const auth = getAuth();
+  const userId = auth.currentUser.uid;
   const firebase = getFirestore();
-  const result = { data, id, response: null, error: null };
-  try {
-    result.response = await setDoc(doc(firebase, "posts", id, "lists", id), data);
-    result.data = { ...data, id };
-    result.id = id;
-  } catch (error) {
-    result.error = error;
-  }
-  return result;
-};
+  const batch = writeBatch(firebase);
+  // Batch set
+  data.forEach((list) => {
+    const stepsRef = doc(firebase, "posts", postId, "lists", list.id);
+    const listsData = { ...list, userId };
+    batch.set(stepsRef, listsData);
+  });
 
-export const getList = async (postId, listId: string) => {
-  const firebase = getFirestore();
-  const result: ListResponse = { data: [], id: listId, error: null };
   try {
-    const docRef = doc(firebase, "posts", postId, "lists", listId);
-    const docSnap = await getDoc(docRef);
-    result.data = docSnap.exists() ? (docSnap.data() as Lists) : [];
+    await batch.commit();
   } catch (error) {
-    result.error = error;
-    result.data = [];
+    response.error = error;
   }
-  return result;
+  return response;
 };
 
 export const deleteList = async (postId, listId: string) => {
@@ -67,13 +62,14 @@ export const deleteList = async (postId, listId: string) => {
 
 export const getLists = async (id: string) => {
   const firebase = getFirestore();
-  const result: ListResponse = { data: [], id, error: null };
+  const result: ListsResponse = { data: [], id, error: null };
   try {
     const collRef = collection(firebase, "posts", id, "lists");
     const docsSnap = await getDocs(collRef);
     docsSnap.forEach((doc) => {
-      result.data.push({ ...doc.data(), id: doc.id });
+      result.data.push({ ...doc.data(), id: doc.id } as List);
     });
+    result.data = result.data.reverse();
   } catch (error) {
     result.error = error;
     result.data = [];
@@ -85,14 +81,14 @@ export const useLists = (postId: string): Lists => {
   const [data, setData] = useState([]);
   useEffect(() => {
     const firebase = getFirestore();
-    // const listsQuery = query(collection(firebase, "posts", postId, "lists"), orderBy("index", "asc"));
+    // const listsQuery = query(collection(firebase, "posts", postId, "lists"));
     const listCollection = collection(firebase, "posts", postId, "lists");
     const unsubscribe = onSnapshot(listCollection, (querySnapshot) => {
       const lists: Lists = [];
       querySnapshot.forEach((doc) => {
         lists.push(doc.data() as List);
       });
-      setData(lists);
+      setData(lists.reverse());
       return () => {
         unsubscribe();
       };

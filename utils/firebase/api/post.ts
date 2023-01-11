@@ -15,12 +15,15 @@ import {
 } from "firebase/firestore";
 import { Post, PostResponse, PostsResponse } from "../interface";
 import { parseData } from "../../firebaseUtils";
+import { getAuth } from "firebase/auth";
 
-export const setPost = async (postId, post: Post) => {
+export const setPost = async (id, post: Post) => {
   const response: PostResponse = { data: post, error: null };
+  const auth = getAuth();
+  const userId = auth.currentUser.uid;
   const firebase = getFirestore();
   try {
-    await setDoc(doc(firebase, "posts", postId), { ...post, timeStamp: serverTimestamp() });
+    await setDoc(doc(firebase, "posts", id), { ...post, userId, timeStamp: serverTimestamp() });
   } catch (error) {
     response.error = error;
   }
