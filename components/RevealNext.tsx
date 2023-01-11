@@ -1,4 +1,5 @@
 import { Button, Collapse, Divider } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { ReactNode, useRef } from "react";
 import { FC } from "react";
@@ -8,10 +9,20 @@ const RevealNext: FC<{
   onClick: Function;
   showButton?: boolean;
   showDone?: boolean;
+  isLoading?: boolean;
   children?: ReactNode;
   label: string;
   scrollIntoViewTimeout?: number;
-}> = ({ children, open, showButton = true, showDone = false, label, onClick, scrollIntoViewTimeout = 500 }) => {
+}> = ({
+  children,
+  open,
+  showButton = true,
+  showDone = false,
+  isLoading = false,
+  label,
+  onClick,
+  scrollIntoViewTimeout = 500,
+}) => {
   const ref = useRef<HTMLInputElement>(null);
 
   const onEndHandler = () => {
@@ -27,7 +38,9 @@ const RevealNext: FC<{
       {/* NEXT */}
       <Collapse in={showButton}>
         <Divider>
-          <Button onClick={() => onClick()}>{label}</Button>
+          <LoadingButton loading={isLoading} onClick={() => onClick()}>
+            {label}
+          </LoadingButton>
         </Divider>
       </Collapse>
       {/* DONE */}

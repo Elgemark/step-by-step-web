@@ -42,9 +42,22 @@ export interface List {
   items: Array<ListItem>;
 }
 
+export interface Progress {
+  completed: boolean;
+  id: string;
+  step: number;
+  userId: string;
+}
+
 //::::::
 //:::::: RESPONSE INTERFACES
 //::::::
+
+export interface ProgressResponse {
+  id: string;
+  data: Progress;
+  error: any;
+}
 
 export interface ListResponse {
   id: string;

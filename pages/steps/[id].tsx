@@ -14,9 +14,9 @@ import { useRouter } from "next/router";
 import { v4 as uuid } from "uuid";
 import Dialog from "../../components/primitives/Dialog";
 import { FC, useState } from "react";
-import { ListResponse, Post as PostType } from "../../utils/firebase/interface";
-import { Lists } from "../../utils/firebase/type";
-import { updateStep, useSteps } from "../../utils/firebase/api/step";
+import { ListsResponse, Post as PostType } from "../../utils/firebase/interface";
+import { Lists, Steps } from "../../utils/firebase/type";
+import { useProgress } from "../../utils/firebase/api/progress";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -41,14 +41,13 @@ const StyledStepsProgress = styled(StepsProgress)`
   margin: 0, 40px;
 `;
 
-const Steps: FC<{ id: string; post: PostType; lists: Lists }> = ({ id, post, lists }) => {
+const Steps: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> = ({ id, post, steps, lists }) => {
   const [showDialog, setShowDialog] = useState({ open: false, content: "", onOkClick: () => {} });
   const router = useRouter();
-  const [user] = useAuthState(getAuth());
-  const steps = useSteps(id);
+  const { user, progress, isLoading } = useProgress(id);
+  console.log({ user, progress });
 
-  const stepsCompleted = steps.filter((step) => step.completed);
-  const showButton = () => stepsCompleted.length < steps.length;
+  const showButton = true;
   const showDone = (index) => index === steps.length - 1;
 
   const onEditHandler = ({ id }) => {
@@ -74,7 +73,6 @@ const Steps: FC<{ id: string; post: PostType; lists: Lists }> = ({ id, post, lis
 
   const onRevelNextClickHandler = async ({ index }) => {
     const nextStep = steps[index + 1];
-    await updateStep(id, nextStep.id, { completed: true });
   };
 
   return (
@@ -82,9 +80,7 @@ const Steps: FC<{ id: string; post: PostType; lists: Lists }> = ({ id, post, lis
       <Head>
         <title>{"STEPS | " + (post?.title || "untitled")}</title>
       </Head>
-      <StyledLayout
-        propsTopbar={{ actions: <StyledStepsProgress label={`${stepsCompleted.length}/${steps.length}`} /> }}
-      >
+      <StyledLayout propsTopbar={{ actions: <StyledStepsProgress label={`${progress.step}/${steps.length}`} /> }}>
         <Post
           {...post}
           enableLink={false}
@@ -109,7 +105,7 @@ const Steps: FC<{ id: string; post: PostType; lists: Lists }> = ({ id, post, lis
         />
         <RevealNext
           open
-          showButton={stepsCompleted.length === 0}
+          showButton={progress.step === 0}
           label="Start"
           onClick={() => {
             onRevelNextClickHandler({ index: -1 });
@@ -118,10 +114,11 @@ const Steps: FC<{ id: string; post: PostType; lists: Lists }> = ({ id, post, lis
         {steps.map((step, index) => {
           return (
             <RevealNext
+              isLoading={isLoading}
               key={"step-" + index}
               label="Next"
-              open={index < stepsCompleted.length}
-              showButton={showButton(index)}
+              open={index < progress.step}
+              showButton={showButton}
               showDone={showDone(index)}
               onClick={() => {
                 onRevelNextClickHandler({ index });
@@ -151,7 +148,7 @@ export async function getServerSideProps({ query }) {
   const id = query.id || uuid();
   const post = await getPost(id);
   const stepsResponse = await getSteps(id);
-  const listsResp: ListResponse = await getLists(id);
+  const listsResp: ListsResponse = await getLists(id);
   return {
     props: {
       post: post?.data || { ...postModel, id },
