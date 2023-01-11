@@ -5,7 +5,7 @@ import Layout from "../../components/Layout";
 import ProfileCard from "../../components/profile/ProfileCard";
 import { useRouter } from "next/router";
 // Firebase related
-import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
 import Posts from "../../components/posts/Posts";
 import { useEffect, FC } from "react";

@@ -7,6 +7,7 @@ import TextField from "@mui/material/TextField";
 import { Button, ButtonGroup } from "@mui/material";
 import ImageIcon from "@mui/icons-material/Image";
 import OpenDialog from "../primitives/OpenDialog";
+import { LoadingButton } from "@mui/lab";
 
 const defaultStyle = css`
   border-radius: ${({ spacing }) => spacing(1)};
@@ -92,6 +93,7 @@ export const UserCardBigEditable: FC<{
   biography?: string;
   avatar?: string;
   background: string;
+  loading?: boolean;
   onAvatarSelect: any;
   onChangeAlias: any;
   onChangeBiography: any;
@@ -103,6 +105,7 @@ export const UserCardBigEditable: FC<{
   biography,
   avatar,
   background,
+  loading,
   onAvatarSelect,
   onChangeAlias,
   onChangeBiography,
@@ -139,7 +142,9 @@ export const UserCardBigEditable: FC<{
 
         <ButtonGroup variant="text">
           <Button onClick={onCancel}>Cancel</Button>
-          <Button onClick={onSave}>Save</Button>
+          <LoadingButton loading={loading} onClick={onSave}>
+            Save
+          </LoadingButton>
         </ButtonGroup>
       </Stack>
     </RootBig>

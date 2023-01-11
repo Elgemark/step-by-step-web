@@ -1,6 +1,6 @@
 import { useUser } from "../../utils/firebase/api";
 import { useState, FC } from "react";
-import { Button, ButtonGroup, Modal } from "@mui/material";
+import { Button, ButtonGroup, CircularProgress, Modal } from "@mui/material";
 import { useSignOut } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
 import { useStateObject } from "../../utils/object";
@@ -15,6 +15,7 @@ const ProfileCardEditable: FC<{
   onSave: Function;
   onCancel: Function;
 }> = ({ userId, onSave, onCancel }) => {
+  const [isSaving, setIsSaving] = useState(false);
   const { data: user, update: updateUser, save: saveUser, isLoading } = useUser(userId);
 
   const { object: avatarData, update: updateAvatarObject } = useStateObject({
@@ -31,12 +32,12 @@ const ProfileCardEditable: FC<{
   const [editImage, setEditImage] = useState<"avatar" | "background" | null>(null);
 
   const onSaveHandler = async () => {
+    setIsSaving(true);
     const update = { avatar: user.avatar, background: user.background };
     // Avatar...
     if (avatarData.file) {
       const avatarResp: UploadResponse = await uploadImage(avatarData.file, "1024x1024", ["users", userId], "avatar");
       update.avatar = avatarResp.url;
-      updateAvatarObject({ url: avatarResp.url });
     }
     // Background...
     if (backgroundData.file) {
@@ -47,9 +48,9 @@ const ProfileCardEditable: FC<{
         "background"
       );
       update.background = backgroundResp.url;
-      updateBackgroundObject({ url: backgroundResp.url });
     }
     await saveUser(update);
+    setIsSaving(false);
     onSave();
   };
 
@@ -96,6 +97,7 @@ const ProfileCardEditable: FC<{
         background={backgroundData.url || user.background}
         alias={user.alias}
         biography={user.biography}
+        loading={isLoading}
         onAvatarSelect={onAvatarSelectHandler}
         onChangeAlias={onChangeAliasHandler}
         onChangeBiography={onChangeBiographyHandler}
@@ -123,22 +125,27 @@ const ProfileCardDefault: FC<{
   onEdit: any;
   onSignOut: any;
 }> = ({ userId, onEdit, ...props }) => {
-  const [bgBurst] = useState<number>(Math.random());
-  const [avatarBurst] = useState<number>(Math.random());
-  const { data: user } = useUser(userId, true);
+  const [burst] = useState<number>(Math.random());
+  const { data: user, isLoading } = useUser(userId, true);
   const [signOut] = useSignOut(getAuth());
 
   const onSignOutHandler = () => {
     signOut();
   };
 
+  if (isLoading) {
+    return <CircularProgress />;
+  }
+
+  console.log(user.avatar);
+
   return (
     <UserCard
       variant="big"
       {...user}
-      avatar={`${user.avatar}&${avatarBurst}`}
-      background={`${user.background}&${bgBurst}`}
-      {...props}
+      avatar={`${user.avatar}&bust=${burst}`}
+      background={`${user.background}&bust=${burst}`}
+      // {...props}
     >
       <ButtonGroup variant="text">
         <Button onClick={onEdit}>Edit</Button>
