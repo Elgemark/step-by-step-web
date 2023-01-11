@@ -64,13 +64,15 @@ const AddButton = ({ onClick }) => {
 };
 
 const ListEditable: FC<{
-  id: string;
-  title: string;
-  items: Array<ListItem>;
+  list: List;
   onChange: (e: List) => void;
   onDelete: (id: string) => void;
-}> = ({ id, title, items = [], onDelete, onChange }) => {
-  const { object, setValue } = useStateObject({ title, items, id });
+}> = ({ list, onDelete, onChange }) => {
+  // Add a default item if items missing...
+  const { object, setValue } = useStateObject({
+    ...list,
+    items: list.items.length ? list.items : [{ text: "", value: "" }],
+  });
   const theme = useTheme();
 
   const updateValue = (path, value) => {
@@ -78,13 +80,13 @@ const ListEditable: FC<{
     onChange(result as List);
   };
 
-  const onAddListItemHandler = ({ id, index }) => {
+  const onAddListItemHandler = (index) => {
     const newItems = [...object.items];
     newItems.splice(index + 1, 0, { text: "", value: "" });
     updateValue("items", newItems);
   };
 
-  const onDeleteListItemHandler = ({ id, index }) => {
+  const onDeleteListItemHandler = (index) => {
     const newItems = [...object.items];
     newItems.splice(index, 1);
     updateValue("items", newItems);
@@ -106,7 +108,7 @@ const ListEditable: FC<{
         </thead>
         <tbody>
           {object.items.map((item: ListItem, index) => (
-            <Fade in={true} key={`${id}-${index}`}>
+            <Fade in={true} key={`${list.id}-${index}`}>
               <tr>
                 {/* TEXT Left */}
                 <th className="column-1">
@@ -126,18 +128,18 @@ const ListEditable: FC<{
                 </td>
                 {/* REMOVE BUTTON */}
                 <td className="column-3">
-                  <RemoveButton onClick={() => onDeleteListItemHandler({ id, index })} />
+                  <RemoveButton onClick={() => onDeleteListItemHandler(index)} />
                 </td>
                 {/* ADD BUTTON */}
                 <td className="column-4">
-                  <AddButton onClick={() => onAddListItemHandler({ id, index })} />
+                  <AddButton onClick={() => onAddListItemHandler(index)} />
                 </td>
               </tr>
             </Fade>
           ))}
           <tr className="list-buttons">
             <td colSpan={3}>
-              <IconButton edge="end" aria-label="remove" onClick={() => onDelete(id)}>
+              <IconButton edge="end" aria-label="remove" onClick={() => onDelete(list.id)}>
                 <DeleteIcon />
               </IconButton>
             </td>
