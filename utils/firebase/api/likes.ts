@@ -1,8 +1,10 @@
 import { getFirestore, writeBatch, doc, getDoc, increment } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
+import { LikeResponse } from "../interface";
 
 export const likePost = async (postId) => {
+  const response: LikeResponse = { error: null, data: null };
   const auth = getAuth();
   const userId = auth.currentUser.uid;
   const firebase = getFirestore();
@@ -19,14 +21,14 @@ export const likePost = async (postId) => {
   const incrementLikes = increment(likeSnap.exists() && userNewLikeValue === 0 ? -1 : 1);
   const postRef = doc(firebase, "posts", postId);
   await batch.update(postRef, { likes: incrementLikes });
-  let resp = {};
+
   try {
     // commit batch
-    resp.response = await batch.commit();
+    await batch.commit();
   } catch (error) {
-    resp.error = error;
+    response.error = error;
   }
-  return resp;
+  return response;
 };
 
 export const isPostLikedByUser = async (postId) => {

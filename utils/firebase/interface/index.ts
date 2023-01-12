@@ -117,3 +117,18 @@ export interface FollowersResponse {
   error: string | null;
   data: Array<any> | [];
 }
+
+export interface LikeResponse {
+  error: string | null;
+  data: object | null;
+}
+
+export interface LikesResponse {
+  error: string | null;
+  data: Array<any> | [];
+}
+
+export interface CategoriesResponse {
+  error: string | null;
+  data: Array<any> | [];
+}
