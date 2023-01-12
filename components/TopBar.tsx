@@ -6,6 +6,8 @@ import { getAuth } from "firebase/auth";
 import UserAvatar from "./UserAvatar";
 import { FC, ReactNode, useContext } from "react";
 import { v4 as uuid } from "uuid";
+import CreateIcon from "@mui/icons-material/Create";
+import LoginIcon from "@mui/icons-material/Login";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import { ColorModeContext } from "./Layout";
@@ -34,7 +36,9 @@ const TopBar: FC<{ className?: string; actions?: ReactNode }> = ({ className, ac
         {/* CREATE */}
         {user && (
           <Button
-            color="inherit"
+            size="small"
+            startIcon={<CreateIcon />}
+            variant="contained"
             onClick={() => {
               router.push("/create/" + uuid()).then(() => {
                 router.reload();
@@ -51,7 +55,9 @@ const TopBar: FC<{ className?: string; actions?: ReactNode }> = ({ className, ac
         {/* LOGIN */}
         {!user && (
           <Button
-            color="inherit"
+            size="small"
+            startIcon={<LoginIcon />}
+            variant="contained"
             onClick={() => {
               router.push("/login");
             }}
@@ -70,7 +76,7 @@ const TopBar: FC<{ className?: string; actions?: ReactNode }> = ({ className, ac
             }}
             color="inherit"
           >
-            <UserAvatar size={32} realtime />
+            <UserAvatar size={36} realtime />
           </IconButton>
         )}
       </Toolbar>

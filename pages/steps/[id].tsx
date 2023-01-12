@@ -45,7 +45,6 @@ const Steps: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> = ({
   const [showDialog, setShowDialog] = useState({ open: false, content: "", onOkClick: () => {} });
   const router = useRouter();
   const { user, progress, updateProgress, isLoading } = useProgress(id, true);
-  console.log({ user, progress });
 
   const showButton = true;
   const showDone = (index) => index === steps.length - 1;
@@ -159,7 +158,7 @@ export async function getServerSideProps({ query }) {
   const listsResp: ListsResponse = await getLists(id);
   return {
     props: {
-      post: post?.data || { ...postModel, id },
+      post: post.data || { ...postModel, id },
       steps: stepsResponse.data,
       lists: listsResp.data,
       id,

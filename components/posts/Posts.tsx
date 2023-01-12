@@ -13,7 +13,6 @@ import { Posts } from "../../utils/firebase/type";
 const Posts: FC<{
   posts: Posts;
   enableLink: boolean;
-  onDelete?: Function;
 }> = ({ posts = [], enableLink = false }) => {
   const router = useRouter();
   const [showDialog, setShowDialog] = useState({ open: false, content: "", onOkClick: () => {} });
@@ -32,7 +31,11 @@ const Posts: FC<{
       ...showDialog,
       open: true,
       content: "Are you sure you want to delete this post?",
-      onOkClick: () => deletePost(id),
+      onOkClick: () => {
+        deletePost(id).then(() => {
+          router.replace(router.asPath);
+        });
+      },
     });
   };
 
