@@ -11,6 +11,7 @@ export const useScrolledToBottom = (margin = 0) => {
         setIsBottom(false);
       }
     };
+
     // Clean up listener...
     return () => {
       window.onscroll = null;

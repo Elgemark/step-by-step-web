@@ -12,7 +12,6 @@ import Posts from "./posts/Posts";
 import { FC, useEffect } from "react";
 import { Posts as PostsType } from "../utils/firebase/type";
 import { useScrolledToBottom } from "../utils/scrollUtils";
-import { Collection, useCollection } from "../utils/collectionUtils";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -70,16 +69,14 @@ const PageMain: FC<{
   enableLink: boolean;
 }> = ({ search, posts = [], category, title, enableLink = false }) => {
   const isBottom = useScrolledToBottom(100);
-  const { collection: postsCollection, addItems } = useCollection(posts);
   const { set: setQuery, query } = useDebouncedQuery({ search });
   const router = useRouter();
 
   useEffect(() => {
-    addItems(posts as Collection);
-  }, [posts]);
-
-  useEffect(() => {
-    refreshData();
+    if (isBottom) {
+      console.log("isBottom");
+      refreshData();
+    }
   }, [isBottom]);
 
   const refreshData = () => {
@@ -93,10 +90,6 @@ const PageMain: FC<{
   const onCategoryChangeHandler = (value) => {
     router.push({ pathname: "/category/" + value, query: { search: query.search } });
   };
-
-  const postsByCategory = category
-    ? (postsCollection.filter((post) => post.category === category) as PostsType)
-    : (postsCollection as PostsType);
 
   return (
     <>
@@ -119,7 +112,7 @@ const PageMain: FC<{
           </Search>
           <SelectCategory onChange={onCategoryChangeHandler} value={category} />
         </StyledSearchBar>
-        <Posts enableLink={enableLink} posts={postsByCategory} />
+        <Posts enableLink={enableLink} posts={posts as PostsType} />
       </Layout>
     </>
   );

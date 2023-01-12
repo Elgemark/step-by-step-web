@@ -3,7 +3,9 @@ import PageMain from "../components/PageMain";
 import { PostsResponse } from "../utils/firebase/interface";
 import { limit, orderBy, startAfter, where } from "firebase/firestore";
 import { getPostsByQuery } from "../utils/firebase/api/post";
+import Collection from "../classes/Collection";
 
+const collection = new Collection();
 let lastDoc;
 
 export default function IndexPage(props) {
@@ -15,7 +17,8 @@ export async function getServerSideProps({ query }) {
   const category = query.category;
 
   // Build query...
-  let postsQuery = [orderBy("likes", "desc"), limit(10)];
+  let postsQuery = [limit(10)];
+  // postsQuery.push(orderBy("likes", "asc")); // NOT WORKING
   if (lastDoc) {
     postsQuery.push(startAfter(lastDoc));
   }
@@ -26,9 +29,13 @@ export async function getServerSideProps({ query }) {
   if (tags.length) {
     postsQuery.push(where("tags", "array-contains-any", tags));
   }
-
   //
   const response: PostsResponse = await getPostsByQuery(postsQuery);
   lastDoc = response.lastDoc;
-  return { props: { posts: response.data, search: tags } };
+  //
+  const items = collection.union(response.data, [category, ...tags], () => {
+    lastDoc = null;
+  });
+
+  return { props: { posts: items, search: tags } };
 }

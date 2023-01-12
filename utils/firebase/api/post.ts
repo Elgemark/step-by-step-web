@@ -16,6 +16,8 @@ import {
 import { Post, PostResponse, PostsResponse } from "../interface";
 import { parseData } from "../../firebaseUtils";
 import { getAuth } from "firebase/auth";
+import { useEffect, useState } from "react";
+import { Posts } from "../type";
 
 export const setPost = async (id, post: Post) => {
   const response: PostResponse = { data: post, error: null };
@@ -41,7 +43,7 @@ export const getPostsByQuery = async (queries: Array<any>) => {
     querySnapshot.forEach((doc) => {
       response.data.push(parseData({ ...doc.data(), id: doc.id }) as Post);
     });
-    response.lastDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
+    response.lastDoc = querySnapshot.docs.length && querySnapshot.docs[querySnapshot.docs.length - 1];
   } catch (error) {
     response.error = error;
   }
@@ -156,4 +158,16 @@ export const deletePost = async (id: string) => {
   batch.delete(doc(firebase, "posts", id));
   batch.delete(doc(firebase, "posts", id, "steps", id));
   return await batch.commit();
+};
+
+export const useGetPostsByQuery = () => {
+  const [posts, setPosts] = useState<Posts>([]);
+
+  const _getPostsByQuery = (queries) => {
+    getPostsByQuery(queries).then((response) => {
+      setPosts(response.data);
+    });
+  };
+
+  return { posts, getPostsByQuery: _getPostsByQuery };
 };
