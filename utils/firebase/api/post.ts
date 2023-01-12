@@ -30,15 +30,10 @@ export const setPost = async (id, post: Post) => {
   return response;
 };
 
-export const getPosts = async (orderBy = "likes", limit = 10, lastDoc) => {
+export const getPostsByQuery = async (queries: Array<any>) => {
   const response: PostsResponse = { data: [], error: null, lastDoc: null };
-  //
   const firebase = getFirestore();
   const stepsRef = collection(firebase, "posts");
-  const queries = [fsOrderBy(orderBy, "desc"), fsLimit(limit)];
-  if (lastDoc) {
-    queries.push(fsStartAfter(lastDoc));
-  }
   const queryBuild = query(stepsRef, ...queries);
 
   try {
@@ -140,32 +135,6 @@ export const getPostsByState = async (uid, state) => {
   }
 
   return { error, posts, postIds };
-};
-
-export const searchPosts = async (tags = [], category: string, limit = 10) => {
-  const response: PostsResponse = { data: [], error: null };
-  //
-  const firebase = getFirestore();
-  const stepsRef = collection(firebase, "posts");
-  const tagsQuery = where("tags", "array-contains-any", tags);
-  const categoryQuery = where("category", "==", category);
-  // push queries
-  const queries = [];
-  tags.length && queries.push(tagsQuery);
-  category && queries.push(categoryQuery);
-  // build query
-  const queryBuild = query(stepsRef, ...queries, fsLimit(limit));
-
-  try {
-    const querySnapshot = await getDocs(queryBuild);
-
-    querySnapshot.forEach((doc) => {
-      response.data.push(parseData({ ...doc.data(), id: doc.id }) as Post);
-    });
-  } catch (error) {
-    response.error = error;
-  }
-  return response;
 };
 
 export const getPost = async (id: string) => {

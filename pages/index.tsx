@@ -1,7 +1,8 @@
-import { searchPosts, getPosts } from "../utils/firebase/api";
 import { toSanitizedArray } from "../utils/stringUtils";
 import PageMain from "../components/PageMain";
 import { PostsResponse } from "../utils/firebase/interface";
+import { limit, orderBy, startAfter, where } from "firebase/firestore";
+import { getPostsByQuery } from "../utils/firebase/api/post";
 
 let lastDoc;
 
@@ -12,9 +13,22 @@ export default function IndexPage(props) {
 export async function getServerSideProps({ query }) {
   const tags = toSanitizedArray(query.search);
   const category = query.category;
-  const response: PostsResponse = tags.length
-    ? await searchPosts(tags, category, lastDoc)
-    : await getPosts("likes", 10, lastDoc);
+
+  // Build query...
+  let postsQuery = [orderBy("likes", "desc"), limit(10)];
+  if (lastDoc) {
+    postsQuery.push(startAfter(lastDoc));
+  }
+  // search
+  if (category) {
+    postsQuery.push(where("category", "==", category));
+  }
+  if (tags.length) {
+    postsQuery.push(where("tags", "array-contains-any", tags));
+  }
+
+  //
+  const response: PostsResponse = await getPostsByQuery(postsQuery);
   lastDoc = response.lastDoc;
   return { props: { posts: response.data, search: tags } };
 }

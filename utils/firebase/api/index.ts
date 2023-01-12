@@ -26,11 +26,9 @@ export const getCurrentUser = userApi.getCurrentUser;
 export const getUser = userApi.getUser;
 export const useUser = userApi.useUser;
 // ::: POSTS
-export const getPosts = postApi.getPosts;
 export const getBookmarkedPosts = postApi.getBookmarkedPosts;
 export const getCreatedPosts = postApi.getCreatedPosts;
 export const getPostsByState = postApi.getPostsByState;
-export const searchPosts = postApi.searchPosts;
 export const getPost = postApi.getPost;
 export const deletePost = postApi.deletePost;
 // BOOKMARKS
