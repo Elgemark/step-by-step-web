@@ -20,7 +20,7 @@ export async function getServerSideProps({ query }) {
   const category = query.category[0];
 
   // Build query...
-  let postsQuery = [limit(10)];
+  let postsQuery: Array<any> = [limit(10)];
   // postsQuery.push(orderBy("likes", "asc")); // NOT WORKING
   if (lastDoc) {
     postsQuery.push(startAfter(lastDoc));
