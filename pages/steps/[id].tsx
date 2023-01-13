@@ -6,9 +6,6 @@ import RevealNext from "../../components/RevealNext";
 import Step from "../../components/steps/Step";
 import Post from "../../components/posts/Post";
 import { post as postModel } from "../../utils/firebase/models";
-// Firebase related
-import { useAuthState } from "react-firebase-hooks/auth";
-import { getAuth } from "firebase/auth";
 import StepsProgress from "../../components/StepsProgress";
 import { useRouter } from "next/router";
 import { v4 as uuid } from "uuid";
@@ -45,9 +42,6 @@ const Steps: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> = ({
   const [showDialog, setShowDialog] = useState({ open: false, content: "", onOkClick: () => {} });
   const router = useRouter();
   const { user, progress, updateProgress, isLoading } = useProgress(id, true);
-
-  const showButton = true;
-  const showDone = (index) => index === steps.length - 1;
 
   const onEditHandler = ({ id }) => {
     router.push("/create/" + id);
@@ -110,6 +104,7 @@ const Steps: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> = ({
           onLike={() => onLikeHandler(post)}
           onStartOver={onStartOverHandler}
         />
+        {/* START BUTTON */}
         <RevealNext
           open
           showButton={progress.step === -1}
@@ -118,6 +113,7 @@ const Steps: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> = ({
             onRevelNextClickHandler({ index: -1 });
           }}
         />
+        {/* NEXT BUTTON */}
         {steps.map((step, index) => {
           return (
             <RevealNext
@@ -125,8 +121,8 @@ const Steps: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> = ({
               key={"step-" + index}
               label="Next"
               open={index <= progress.step}
-              showButton={showButton}
-              showDone={showDone(index)}
+              showButton={index == progress.step && index !== steps.length - 1}
+              showDone={index === steps.length - 1}
               onClick={() => {
                 onRevelNextClickHandler({ index });
               }}
