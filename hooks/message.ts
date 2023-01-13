@@ -11,9 +11,10 @@ export const useMessages = () => {
 
   useEffect(() => {
     const messageCallback = (event) => {
-      console.log(`Received message: ${event.data}`);
       const message = event.data as Message;
-      setValue(message.id, message);
+      if (typeof message.id === "string") {
+        setValue(message.id, message);
+      }
     };
 
     window.addEventListener("message", messageCallback);
@@ -27,7 +28,7 @@ export const useMessages = () => {
     addMessage: (message: Message) => {
       window.postMessage(message);
     },
-    removeMessage: (id: strings) => {
+    removeMessage: (id: string) => {
       deleteValue(id);
     },
   };
