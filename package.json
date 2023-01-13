@@ -30,11 +30,5 @@
   },
   "resolutions": {
     "styled-components": "^5"
-  },
-  "_functions": {
-    "runtime": "nodejs14"
-  },
-  "_engines": {
-    "node": "16"
   }
 }

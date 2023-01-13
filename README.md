@@ -14,8 +14,14 @@ https://www.npmjs.com/package/react-easy-crop
 https://markerjs.com/
 https://github.com/manishboro/image-crop-and-zoom
 
-Access controll error:
+### Access controll error:
+
 https://stackoverflow.com/questions/47309611/cant-add-allusers-to-gcp-project
+https://dev.to/rowaxl/what-i-struggled-with-next-js-using-firebase-hosting-and-enable-ssr-4e67
+
+### Similar sites
+
+https://www.hobbyideas.in/diy/
 
 ### Firebase alts
 
