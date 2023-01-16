@@ -20,6 +20,10 @@ import { Lists } from "../../utils/firebase/type";
 import List from "../lists/List";
 import { Media } from "../../utils/firebase/interface";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import ReportDialogContent from "../primitives/ReportDialogContent";
+import Dialog from "@mui/material/Dialog";
+import { setReport } from "../../utils/firebase/api/report";
+import { Message, useMessages } from "../../hooks/message";
 
 const Root = styled(Card)`
   .button-link {
@@ -58,7 +62,6 @@ const Post: FC<{
   currentUserId?: string;
   onEdit?: Function;
   onDelete?: Function;
-  onReport?: Function;
   onLike?: Function;
   onBookmark?: Function;
   onStartOver?: Function;
@@ -75,7 +78,6 @@ const Post: FC<{
   likes = 0,
   onEdit,
   onDelete,
-  onReport,
   onLike,
   onStartOver,
   onClickAvatar,
@@ -83,6 +85,8 @@ const Post: FC<{
   const [numLikes, setNumLikes] = useState(likes);
   const { isLiked, toggle: toggleLike } = useLikes(id);
   const { isBookmarked, toggle: toogleBookmark } = useBookmarks(id);
+  const [showReportDialog, setShowReportDialog] = useState(false);
+  const { addMessage } = useMessages();
 
   const onLikeHandler = () => {
     setNumLikes(numLikes + (isLiked ? -1 : 1));
@@ -94,6 +98,25 @@ const Post: FC<{
     toogleBookmark(id);
   };
 
+  const onReportHandler = () => {
+    setShowReportDialog(true);
+  };
+
+  const onClickSendReportHandler = (report) => {
+    setShowReportDialog(false);
+    setReport(id, userId, report)
+      .then((e) => {
+        if (!e.error) {
+          addMessage({ id: "alert", message: "Report sent successfully!" });
+        } else {
+          addMessage({ id: "alert", message: "An error occured. Please try againg!" });
+        }
+      })
+      .catch((e) => {
+        addMessage({ id: "alert", message: "An error occured. Please try againg!" });
+      });
+  };
+
   return (
     <Root>
       <CardHeader
@@ -102,7 +125,9 @@ const Post: FC<{
             <UserAvatar userId={userId} />
           </IconButton>
         }
-        action={<PostMoreMenu onEdit={onEdit} onDelete={onDelete} onReport={onReport} onStartOver={onStartOver} />}
+        action={
+          <PostMoreMenu onEdit={onEdit} onDelete={onDelete} onReport={onReportHandler} onStartOver={onStartOver} />
+        }
         title={<Typography>{title}</Typography>}
       />
 
@@ -154,6 +179,11 @@ const Post: FC<{
           ))}
         </CardContent>
       ) : null}
+
+      {/* REPORT */}
+      <Dialog open={showReportDialog} onClose={() => setShowReportDialog(false)}>
+        <ReportDialogContent onClickCancel={() => setShowReportDialog(false)} onClickSend={onClickSendReportHandler} />
+      </Dialog>
     </Root>
   );
 };

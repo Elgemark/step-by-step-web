@@ -1,12 +1,14 @@
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { v4 as uuid } from "uuid";
 
 export interface Report {
-  messsage: string;
-  timeStamp: any;
-  userId: string;
-  postId: string;
+  code: number;
+  body: number;
+  comment: string;
+  timeStamp?: any;
+  userId?: string;
+  postId?: string;
 }
 
 export interface ReportCode {
@@ -37,12 +39,13 @@ export const getReportCodes = async () => {
   return response;
 };
 
-export const setReport = async (data: Report) => {
-  const response: ReportResponse = { data, error: null };
+export const setReport = async (postId: string, userId: string, data: Report) => {
+  const reportData: Report = { ...data, postId, userId, timeStamp: serverTimestamp() };
+  const response: ReportResponse = { data: reportData, error: null };
   const firebase = getFirestore();
   try {
-    const docRef = doc(firebase, "reports", uuid());
-    await setDoc(docRef, data);
+    const docRef = doc(firebase, "reports", postId, userId, uuid());
+    await setDoc(docRef, reportData);
   } catch (error) {
     response.error = error;
   }

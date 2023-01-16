@@ -10,14 +10,28 @@ const Root = styled.div`
 `;
 
 const TextField: FC<{
-  value: string;
-  onChange: any;
+  value?: string;
+  onChange?: any;
+  className?: string;
+  label?: string;
+  variant?: "standard" | "outlined" | "filled";
   maxLength?: number;
   multiline?: boolean;
   fullWidth?: boolean;
   rest?: TextFieldProps;
   maxLengthTextProps?: TypographyProps;
-}> = ({ maxLength, maxLengthTextProps, value, multiline = false, fullWidth = false, onChange }) => {
+}> = ({
+  maxLength,
+  maxLengthTextProps,
+  value = "",
+  label,
+  className,
+  multiline = false,
+  variant = "outlined",
+  fullWidth = false,
+  onChange,
+  ...rest
+}) => {
   const [textValue, setTextValue] = useState(value);
 
   const onChangeHandler = (e) => {
@@ -30,7 +44,16 @@ const TextField: FC<{
 
   return (
     <Root>
-      <MUITextField fullWidth={fullWidth} multiline={multiline} value={textValue} onChange={onChangeHandler} />
+      <MUITextField
+        {...rest}
+        className={className}
+        variant={variant}
+        fullWidth={fullWidth}
+        multiline={multiline}
+        value={textValue}
+        label={label}
+        onChange={onChangeHandler}
+      />
       {maxLength > 0 && (
         <Typography variant="body2" {...maxLengthTextProps}>
           {`${textValue.length}/${maxLength}`}
