@@ -3,13 +3,13 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useReport } from "../../utils/firebase/api/report";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import TextField from "./TextField";
 
 const ReportDialogContent: FC<{
   labelButtonSend?: string;
@@ -26,23 +26,32 @@ const ReportDialogContent: FC<{
   onClickSend,
   onClickCancel,
 }) => {
+  const [comment, setComment] = useState("");
   const { codes, isLoading } = useReport();
-  console.log("reportData", codes);
 
   return (
     <>
-      <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
+      <DialogTitle sx={{ minWidth: "400px" }} id="alert-dialog-title">
+        {title}
+      </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">{body}</DialogContentText>
         <List>
           {codes.map((data) => (
-            <ListItem disablePadding>
+            <ListItem disablePadding dense>
               <ListItemButton>
                 <ListItemText primary={data.body} />
               </ListItemButton>
             </ListItem>
           ))}
         </List>
+        <TextField
+          maxLength={10}
+          multiline
+          fullWidth
+          value={comment}
+          onChange={(e) => setComment(e.currentTarget.value)}
+        ></TextField>
       </DialogContent>
       <DialogActions>
         <Button onClick={() => onClickCancel()}>{labelButtonCancel}</Button>

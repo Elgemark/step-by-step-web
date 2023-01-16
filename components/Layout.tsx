@@ -81,7 +81,6 @@ const Layout: FC<{
             </Alert>
           </Snackbar>
           {/* REPORT */}
-
           <MUIDialog open={messages.report} onClose={() => removeMessage("report")}>
             <ReportDialogContent onClickCancel={() => {}} onClickSend={() => {}} />
           </MUIDialog>
