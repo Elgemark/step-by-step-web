@@ -108,7 +108,8 @@ const Index = ({ posts, user, userIds, uid, tabValue }) => {
 export async function getServerSideProps(props) {
   const { query } = props;
   const uid = query.user[0];
-  const user = await getUser(uid);
+  const userResp = await getUser(uid);
+  const user = userResp.data;
   const tabValue = query.user[1] || "created";
   let posts = [];
   let userIds = [];

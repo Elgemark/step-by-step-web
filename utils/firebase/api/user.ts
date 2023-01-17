@@ -5,6 +5,22 @@ import { useStateObject } from "../../object";
 import * as dataModels from "../models";
 import { useAuthState } from "react-firebase-hooks/auth";
 
+interface User {
+  alias?: string;
+  avatar?: string;
+  background?: string;
+  biography?: string;
+  interests: Array<string>;
+  roles: Array<string>;
+  theme: Array<string>;
+  uid: string;
+}
+
+interface UserResponse {
+  error: any;
+  data: User | null;
+}
+
 export const setUser = async (currentUser) => {
   const { uid } = currentUser;
   const firebase = getFirestore();
@@ -32,14 +48,18 @@ export const getCurrentUser = async () => {
 };
 
 export const getUser = async (uid) => {
+  const response: UserResponse = { data: null, error: null };
   const firebase = getFirestore();
   const userRef = doc(firebase, "users", uid);
-  const userProfile = await getDoc(userRef);
-  if (userProfile.exists()) {
-    return { ...userProfile.data(), uid };
-  } else {
-    return { error: { message: "User not found!" }, uid };
+
+  try {
+    const doc = await getDoc(userRef);
+    response.data = doc.exists() ? (doc.data() as User) : null;
+  } catch (error) {
+    response.error = error;
   }
+
+  return response;
 };
 
 export const useCurrentUser = (realtime = false) => {
@@ -51,7 +71,7 @@ export const useCurrentUser = (realtime = false) => {
     if (user) {
       getUser(user.uid)
         .then((res) => {
-          updateData({ ...res, uid: user.uid });
+          updateData({ ...res.data, uid: user.uid });
           setIsLoading(false);
         })
         .catch((error) => {
@@ -101,7 +121,7 @@ export const useUser = (uid, realtime = false) => {
     setIsLoading(true);
     getUserFunc(uid)
       .then((res) => {
-        replace(res);
+        replace(res.data);
         setIsLoading(false);
       })
       .catch((error) => {
