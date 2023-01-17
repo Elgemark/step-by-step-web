@@ -34,7 +34,7 @@ const defaultStyle = css`
     border: 8px solid ${({ palette }) => (palette.mode === "dark" ? "black" : "white")};
     box-sizing: content-box;
   }
-  .user-biography {
+  .user-interests {
     flex-grow: 1;
   }
   .user-wallpaper {
@@ -72,7 +72,8 @@ const UserCardBig: FC<{
   biography?: string;
   avatar?: string;
   background: string;
-}> = ({ alias, biography, avatar, background, children, ...props }) => {
+  interests?: Array<string>;
+}> = ({ alias, biography, avatar, interests = [], background, children, ...props }) => {
   const theme = useTheme();
 
   return (
@@ -85,6 +86,11 @@ const UserCardBig: FC<{
         <Typography className="user-biography" variant="body1" color="text.secondary">
           {biography}
         </Typography>
+        <Stack className="user-interests" direction={"row"}>
+          {interests.map((interest) => (
+            <Chip className="chip" label={interest} color="primary" />
+          ))}
+        </Stack>
         {children}
       </Stack>
     </RootBig>

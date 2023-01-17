@@ -156,8 +156,6 @@ const ProfileCardDefault: FC<{
     return <CircularProgress />;
   }
 
-  console.log(user.avatar);
-
   return (
     <UserCard
       variant="big"
