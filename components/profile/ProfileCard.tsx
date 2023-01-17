@@ -9,6 +9,8 @@ import appSettings from "../../config";
 import { uploadImage } from "../../utils/firebase/api/storage";
 import { UploadResponse } from "../../utils/firebase/interface";
 import UserCard, { UserCardBigEditable } from "../primitives/UserCard";
+import { useCategories } from "../../utils/firebase/api/categories";
+import _ from "lodash";
 
 const ProfileCardEditable: FC<{
   userId?: string;
@@ -17,6 +19,7 @@ const ProfileCardEditable: FC<{
 }> = ({ userId, onSave, onCancel }) => {
   const [isSaving, setIsSaving] = useState(false);
   const { data: user, update: updateUser, save: saveUser, isLoading } = useUser(userId);
+  const { categories } = useCategories();
 
   const { object: avatarData, update: updateAvatarObject } = useStateObject({
     url: null,
@@ -76,6 +79,19 @@ const ProfileCardEditable: FC<{
     setEditImage("background");
   };
 
+  const onInterestSelectHandler = ({ category }) => {
+    const newUserInterests = user.interests ? [...user.interests] : [];
+    if (newUserInterests.includes(category)) {
+      _.pull(newUserInterests, category);
+    } else {
+      newUserInterests.push(category);
+    }
+    // Max 3!
+    if (newUserInterests.length <= 3) {
+      updateUser("interests", newUserInterests);
+    }
+  };
+
   const onCropDoneHandler = ({ blob, url, settings }) => {
     if (editImage === "avatar") {
       updateAvatarObject({ file: blob, url, cropSettings: settings });
@@ -97,7 +113,10 @@ const ProfileCardEditable: FC<{
         background={backgroundData.url || user.background}
         alias={user.alias}
         biography={user.biography}
+        interests={user.interests}
+        categories={categories}
         loading={isLoading}
+        onInterestSelect={onInterestSelectHandler}
         onAvatarSelect={onAvatarSelectHandler}
         onChangeAlias={onChangeAliasHandler}
         onChangeBiography={onChangeBiographyHandler}

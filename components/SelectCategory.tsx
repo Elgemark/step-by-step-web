@@ -1,8 +1,8 @@
-import { useGetCategories } from "../utils/firebase/api";
+import { useCategories } from "../utils/firebase/api";
 import SelectDropDown from "./primitives/SelectDropDown";
 
 const SelectCategory = ({ onChange, ...props }) => {
-  const { categories, isLoading } = useGetCategories();
+  const { categories, isLoading } = useCategories();
   if (isLoading) {
     return null;
   } else {

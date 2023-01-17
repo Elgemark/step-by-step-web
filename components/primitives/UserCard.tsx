@@ -1,7 +1,7 @@
 import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
 import { FC } from "react";
-import { Stack, useTheme } from "@mui/material";
+import { Chip, InputLabel, Stack, useTheme } from "@mui/material";
 import styled, { css } from "styled-components";
 import TextField from "@mui/material/TextField";
 import { Button, ButtonGroup } from "@mui/material";
@@ -42,6 +42,10 @@ const defaultStyle = css`
     bottom: 0;
     width: 100%;
     filter: brightness(0.8);
+  }
+  .chip {
+    margin-right: ${({ spacing }) => spacing(1)};
+    margin-bottom: ${({ spacing }) => spacing(1)};
   }
 `;
 
@@ -92,9 +96,12 @@ export const UserCardBigEditable: FC<{
   alias?: string;
   biography?: string;
   avatar?: string;
+  interests?: Array<string>;
+  categories: Array<string>;
   background: string;
   loading?: boolean;
   onAvatarSelect: any;
+  onInterestSelect: any;
   onChangeAlias: any;
   onChangeBiography: any;
   onBackgroundSelect: any;
@@ -104,8 +111,11 @@ export const UserCardBigEditable: FC<{
   alias,
   biography,
   avatar,
+  interests = [],
+  categories,
   background,
   loading,
+  onInterestSelect,
   onAvatarSelect,
   onChangeAlias,
   onChangeBiography,
@@ -139,7 +149,20 @@ export const UserCardBigEditable: FC<{
           maxRows={3}
           onChange={onChangeBiography}
         />
-
+        <InputLabel disableAnimation shrink sx={{ width: "100%" }}>
+          {"Interests (max 3)"}
+        </InputLabel>
+        <Stack direction="row" flexWrap="wrap">
+          {categories &&
+            categories.map((category) => (
+              <Chip
+                className="chip"
+                onClick={() => onInterestSelect({ category })}
+                label={category}
+                color={interests.includes(category) ? "primary" : undefined}
+              />
+            ))}
+        </Stack>
         <ButtonGroup variant="text">
           <Button onClick={onCancel}>Cancel</Button>
           <LoadingButton loading={loading} onClick={onSave}>

@@ -15,7 +15,7 @@ export const getCategories = async () => {
   return response;
 };
 
-export const useGetCategories = () => {
+export const useCategories = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [categories, setCategories] = useState([]);
   useEffect(() => {

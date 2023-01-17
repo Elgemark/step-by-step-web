@@ -49,4 +49,4 @@ export const isPostLikedByUser = likesApi.isPostLikedByUser;
 export const useLikes = likesApi.useLikes;
 // ::: CATEGORIES
 export const getCategories = categoriesApi.getCategories;
-export const useGetCategories = categoriesApi.useGetCategories;
+export const useCategories = categoriesApi.useCategories;
