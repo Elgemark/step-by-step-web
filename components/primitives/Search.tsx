@@ -2,7 +2,6 @@ import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import { alpha, useTheme } from "@mui/material/styles";
 import styled from "styled-components";
-
 import { FC } from "react";
 
 const Root = styled.div`

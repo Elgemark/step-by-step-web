@@ -14,6 +14,10 @@ import { ColorModeContext } from "./Layout";
 import Search from "./primitives/Search";
 import styled from "styled-components";
 
+const StyledSearch = styled(Search)`
+  margin: 0 ${({ theme }) => theme.spacing(2)};
+`;
+
 const TopBar: FC<{ className?: string; actions?: ReactNode; search?: string }> = ({
   className,
   actions,
@@ -33,20 +37,26 @@ const TopBar: FC<{ className?: string; actions?: ReactNode; search?: string }> =
   return (
     <AppBar {...props}>
       <Toolbar>
+        {/* LOGO */}
         <Button
           color="inherit"
           onClick={() => {
-            router.push("/");
+            if (user) {
+              router.push("/posts/user/" + user.uid);
+            } else {
+              router.push("/posts/");
+            }
           }}
         >
           <StepsLogo width={100}></StepsLogo>
         </Button>
         {/* SEARCH */}
-        <Search
+        <StyledSearch
+          theme={theme}
           onEnter={onSearchEnterHandler}
-          onChange={(e) => setSearchStr(e.currentTarget.value)}
+          onChange={(e) => setSearchStr(e.currentTarget.value.toLowerCase())}
           value={search}
-        ></Search>
+        ></StyledSearch>
         {/* CREATE */}
         {user && (
           <Button
