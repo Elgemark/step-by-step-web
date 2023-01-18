@@ -9,7 +9,7 @@ import {
   getDocs,
   orderBy as fsOrderBy,
   limit as fsLimit,
-  startAfter as fsStartAfter,
+  startAfter,
   serverTimestamp,
   setDoc,
 } from "firebase/firestore";
@@ -18,6 +18,8 @@ import { parseData } from "../../firebaseUtils";
 import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { Posts } from "../type";
+import { getUser } from "./user";
+import { toSanitizedArray } from "../../stringUtils";
 
 export const setPost = async (id, post: Post) => {
   const response: PostResponse = { data: post, error: null };
@@ -170,4 +172,57 @@ export const useGetPostsByQuery = () => {
   };
 
   return { posts, getPostsByQuery: _getPostsByQuery };
+};
+
+// ::: Custom query functions...
+
+export const getPostsForAnonymousUser = async (excludeIds: Array<string>, limit = 10, lastDoc) => {
+  // Build query...
+  let postsQuery: Array<any> = [fsLimit(limit)];
+  // postsQuery.push(orderBy("likes", "asc")); // NOT WORKING
+  if (excludeIds) {
+    postsQuery.push(where("id", "not-in", excludeIds));
+  }
+  // paginate...
+  if (lastDoc) {
+    postsQuery.push(startAfter(lastDoc));
+  }
+
+  return await getPostsByQuery(postsQuery);
+};
+
+export const getPostsForUser = async (userId: string, limit = 10, lastDoc) => {
+  // Build query...
+  let postsQuery: Array<any> = [fsLimit(limit)];
+  // Personal query...
+  const userProfile = await getUser(userId);
+  if (userProfile?.data?.interests) {
+    postsQuery.push(where("category", "in", userProfile.data.interests));
+    // paginate...
+    if (lastDoc) {
+      postsQuery.push(startAfter(lastDoc));
+    }
+    return await getPostsByQuery(postsQuery);
+  } else {
+    return { data: [], error: null };
+  }
+};
+
+export const getPostsBySearch = async (search: string, category = null, limit = 10, lastDoc) => {
+  const tags = toSanitizedArray(search);
+  // Build query...
+  let postsQuery: Array<any> = [fsLimit(limit)];
+  // search...
+  if (category) {
+    postsQuery.push(where("category", "==", category));
+  }
+  if (tags.length) {
+    postsQuery.push(where("tags", "array-contains-any", tags));
+  }
+  // paginate...
+  if (lastDoc) {
+    postsQuery.push(startAfter(lastDoc));
+  }
+
+  return await getPostsByQuery(postsQuery);
 };
