@@ -1,11 +1,11 @@
-import { getPostsByQuery } from "../../utils/firebase/api/post";
-import { toSanitizedArray } from "../../utils/stringUtils";
-import PageMain from "../../components/PageMain";
+import { getPostsByQuery } from "../../../utils/firebase/api/post";
+import { toSanitizedArray } from "../../../utils/stringUtils";
+import PageMain from "../../../components/PageMain";
 import _ from "lodash";
-import { PostsResponse } from "../../utils/firebase/interface";
+import { PostsResponse } from "../../../utils/firebase/interface";
 import { limit, startAfter, where, orderBy } from "firebase/firestore";
 import { useEffect } from "react";
-import Collection from "../../classes/Collection";
+import Collection from "../../../classes/Collection";
 
 const collection = new Collection();
 let lastDoc;

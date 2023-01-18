@@ -176,12 +176,20 @@ export const useGetPostsByQuery = () => {
 
 // ::: Custom query functions...
 
-export const getPostsForAnonymousUser = async (excludeIds: Array<string>, limit = 10, lastDoc) => {
+type PostsForAnonymousUserOptions = {
+  excludeIds?: Array<string>;
+};
+
+export const getPostsForAnonymousUser = async (
+  limit = 10,
+  lastDoc = null,
+  options: PostsForAnonymousUserOptions = {}
+) => {
   // Build query...
   let postsQuery: Array<any> = [fsLimit(limit)];
   // postsQuery.push(orderBy("likes", "asc")); // NOT WORKING
-  if (excludeIds) {
-    postsQuery.push(where("id", "not-in", excludeIds));
+  if (options.excludeIds) {
+    postsQuery.push(where("id", "not-in", options.excludeIds));
   }
   // paginate...
   if (lastDoc) {
@@ -191,7 +199,7 @@ export const getPostsForAnonymousUser = async (excludeIds: Array<string>, limit 
   return await getPostsByQuery(postsQuery);
 };
 
-export const getPostsForUser = async (userId: string, limit = 10, lastDoc) => {
+export const getPostsForUser = async (userId: string, limit = 10, lastDoc = null) => {
   // Build query...
   let postsQuery: Array<any> = [fsLimit(limit)];
   // Personal query...
@@ -208,7 +216,7 @@ export const getPostsForUser = async (userId: string, limit = 10, lastDoc) => {
   }
 };
 
-export const getPostsBySearch = async (search: string, category = null, limit = 10, lastDoc) => {
+export const getPostsBySearch = async (search: string, category = null, limit = 10, lastDoc = null) => {
   const tags = toSanitizedArray(search);
   // Build query...
   let postsQuery: Array<any> = [fsLimit(limit)];

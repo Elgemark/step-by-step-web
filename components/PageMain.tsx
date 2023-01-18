@@ -88,7 +88,7 @@ const PageMain: FC<{
   };
 
   const onCategoryChangeHandler = (value) => {
-    router.push({ pathname: "/category/" + value, query: { search: query.search } });
+    router.push({ pathname: "/posts/category/" + value, query: { search: query.search } });
   };
 
   return (
