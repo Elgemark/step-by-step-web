@@ -4,19 +4,31 @@ import StepsLogo from "./primitives/StepsLogo";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
 import UserAvatar from "./UserAvatar";
-import { FC, ReactNode, useContext } from "react";
+import { FC, ReactNode, useContext, useState } from "react";
 import { v4 as uuid } from "uuid";
 import CreateIcon from "@mui/icons-material/Create";
 import LoginIcon from "@mui/icons-material/Login";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import { ColorModeContext } from "./Layout";
+import Search from "./primitives/Search";
+import styled from "styled-components";
 
-const TopBar: FC<{ className?: string; actions?: ReactNode }> = ({ className, actions, ...props }) => {
+const TopBar: FC<{ className?: string; actions?: ReactNode; search?: string }> = ({
+  className,
+  actions,
+  search,
+  ...props
+}) => {
   const [user] = useAuthState(getAuth());
   const router = useRouter();
+  const [searchStr, setSearchStr] = useState();
   const theme = useTheme();
   const colorMode = useContext(ColorModeContext);
+
+  const onSearchEnterHandler = () => {
+    router.push({ pathname: "/posts/search/", query: { search: searchStr } });
+  };
 
   return (
     <AppBar {...props}>
@@ -29,10 +41,12 @@ const TopBar: FC<{ className?: string; actions?: ReactNode }> = ({ className, ac
         >
           <StepsLogo width={100}></StepsLogo>
         </Button>
-        {/* SPACER */}
-        <div style={{ flexGrow: 1 }}>{actions}</div>
-        <Typography component="div" />
-
+        {/* SEARCH */}
+        <Search
+          onEnter={onSearchEnterHandler}
+          onChange={(e) => setSearchStr(e.currentTarget.value)}
+          value={search}
+        ></Search>
         {/* CREATE */}
         {user && (
           <Button

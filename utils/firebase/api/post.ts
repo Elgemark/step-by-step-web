@@ -234,3 +234,16 @@ export const getPostsBySearch = async (search: string, category = null, limit = 
 
   return await getPostsByQuery(postsQuery);
 };
+
+export const getPostsByCategory = async (category = null, limit = 10, lastDoc = null) => {
+  // Build query...
+  let postsQuery: Array<any> = [fsLimit(limit)];
+  // category...
+  postsQuery.push(where("category", "==", category));
+  // paginate...
+  if (lastDoc) {
+    postsQuery.push(startAfter(lastDoc));
+  }
+
+  return await getPostsByQuery(postsQuery);
+};

@@ -1,12 +1,12 @@
-import PageMain from "../../components/PageMain";
-import { PostsResponse } from "../../utils/firebase/interface";
-import { getPostsBySearch, getPostsForAnonymousUser } from "../../utils/firebase/api/post";
-import Collection from "../../classes/Collection";
+import PageMain from "../../../components/PageMain";
+import { PostsResponse } from "../../../utils/firebase/interface";
+import { getPostsBySearch, getPostsForAnonymousUser } from "../../../utils/firebase/api/post";
+import Collection from "../../../classes/Collection";
 
 const collection = new Collection();
 let lastDoc;
 
-export default function IndexPage(props) {
+export default function SearchPage(props) {
   return <PageMain {...props} title="STEPS" enableLink={true} />;
 }
 
