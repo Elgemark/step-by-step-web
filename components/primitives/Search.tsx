@@ -18,12 +18,14 @@ const Root = styled.div`
   }
 `;
 
-const Search: FC<{ onChange: (e: any) => void; onEnter?: () => void; value: string | null }> = ({
-  onChange,
-  onEnter,
-  value,
-  ...rest
-}) => {
+const Search: FC<{
+  onChange: (e: any) => void;
+  onFocus: (e: any) => void;
+  onBlur: (e: any) => void;
+  onEnter?: () => void;
+  value: string | null;
+  fwdRef: HTMLElement | null;
+}> = ({ onChange, onEnter, onFocus, onBlur, value, fwdRef, ...rest }) => {
   const theme = useTheme();
 
   const onKeyUpHandler = (e) => {
@@ -33,11 +35,13 @@ const Search: FC<{ onChange: (e: any) => void; onEnter?: () => void; value: stri
   };
 
   return (
-    <Root theme={theme} {...rest}>
+    <Root theme={theme} ref={fwdRef} {...rest}>
       <SearchIcon />
       <InputBase
         value={value}
         onChange={onChange}
+        onFocus={onFocus}
+        onBlur={onBlur}
         placeholder="Search…"
         inputProps={{ "aria-label": "search" }}
         onKeyUp={onKeyUpHandler}
