@@ -14,6 +14,8 @@ import { ColorModeContext } from "./Layout";
 import Search from "./primitives/Search";
 import styled from "styled-components";
 import SearchFilter from "./SearchFilter";
+import { useDebouncedQuery } from "../utils/queryUtils";
+import _ from "lodash";
 
 const StyledSearch = styled(Search)`
   margin: 0 ${({ theme }) => theme.spacing(2)};
@@ -62,20 +64,36 @@ const TopBar: FC<{ className?: string; actions?: ReactNode; search?: string }> =
   const colorMode = useContext(ColorModeContext);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const refArrrow = useRef();
-  const refSearch = useRef();
+  const { query, set: setQuery } = useDebouncedQuery();
 
   const onSearchEnterHandler = () => {
     router.push({ pathname: "/posts/search/", query: { search: searchStr } });
     setAnchorEl(null);
   };
 
-  const onSearchFocusHandler = (e) => {
-    console.log("refSearch.current", refSearch);
-    setAnchorEl(refSearch.current);
-  };
+  console.log("query", query);
+  const onSearchFocusHandler = (e) => {};
 
   const onFocusBlurHandler = (e) => {
     // setAnchorEl(null);
+  };
+
+  const handleFilterClose = () => {
+    setAnchorEl(null);
+  };
+
+  const onClickFilterHandler = (e) => {
+    setAnchorEl(anchorEl ? null : e.currentTarget);
+  };
+
+  const onSelectCategoryHandler = (category) => {
+    const categories = _.get(query, "categories", []);
+    if (categories.includes(category)) {
+      _.remove(categories, (item) => category === item);
+    } else {
+      categories.push(category);
+    }
+    setQuery({ categories });
   };
 
   return (
@@ -96,26 +114,38 @@ const TopBar: FC<{ className?: string; actions?: ReactNode; search?: string }> =
         </Button>
         {/* SEARCH */}
         <StyledSearch
-          fwdRef={refSearch}
           theme={theme}
           onEnter={onSearchEnterHandler}
           onChange={(e) => setSearchStr(e.currentTarget.value.toLowerCase())}
           onFocus={onSearchFocusHandler}
           onBlur={onFocusBlurHandler}
+          onClickFilter={onClickFilterHandler}
           value={search}
         ></StyledSearch>
         {/* FILTER */}
-        <Popper
-          style={{ zIndex: 9999 }}
+        <Popover
+          // style={{ zIndex: 9999 }}
           open={Boolean(anchorEl)}
           anchorEl={anchorEl}
-          placement="bottom"
-          disablePortal={false}
-          modifiers={popperModifiers}
+          onClose={handleFilterClose}
+          marginThreshold={42}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "center",
+          }}
+          transformOrigin={{
+            vertical: "bottom",
+            horizontal: "left",
+          }}
+          // disablePortal={false}
+          // modifiers={popperModifiers}
         >
           <div data-popper-arrow ref={refArrrow}></div>
-          <SearchFilter></SearchFilter>
-        </Popper>
+          <SearchFilter
+            selectedCategories={_.get(query, "categories", [])}
+            onSelectCategory={onSelectCategoryHandler}
+          ></SearchFilter>
+        </Popover>
         {/* CREATE */}
         {user && (
           <Button

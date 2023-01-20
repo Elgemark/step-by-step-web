@@ -21,6 +21,10 @@ import { Posts } from "../type";
 import { getUser } from "./user";
 import { toSanitizedArray } from "../../stringUtils";
 
+interface SearchFilter {
+  categories?: Array<string>;
+}
+
 export const setPost = async (id, post: Post) => {
   const response: PostResponse = { data: post, error: null };
   const auth = getAuth();
@@ -216,17 +220,21 @@ export const getPostsForUser = async (userId: string, limit = 10, lastDoc = null
   }
 };
 
-export const getPostsBySearch = async (search: string, category = null, limit = 10, lastDoc = null) => {
+export const getPostsBySearch = async (search: string, filter: SearchFilter = {}, limit = 10, lastDoc = null) => {
   const tags = toSanitizedArray(search);
   // Build query...
   let postsQuery: Array<any> = [fsLimit(limit)];
-  // search...
-  if (category) {
-    postsQuery.push(where("category", "==", category));
+  // categories...
+  if (filter.categories) {
+    postsQuery.push(
+      where("category", "in", typeof filter.categories === "string" ? [filter.categories] : filter.categories)
+    );
   }
-  if (tags.length) {
-    postsQuery.push(where("tags", "array-contains-any", tags));
-  }
+  // search by tags... (can not combine "in" and "array-contains-any")
+  if (!filter.categories)
+    if (tags && tags.length) {
+      postsQuery.push(where("tags", "array-contains-any", tags));
+    }
   // paginate...
   if (lastDoc) {
     postsQuery.push(startAfter(lastDoc));

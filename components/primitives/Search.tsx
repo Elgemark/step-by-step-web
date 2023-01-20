@@ -3,6 +3,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import { alpha, useTheme } from "@mui/material/styles";
 import styled from "styled-components";
 import { FC } from "react";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import { IconButton } from "@mui/material";
 
 const Root = styled.div`
   border-radius: ${({ theme }) => theme.shape.borderRadius + "px"};
@@ -23,9 +25,10 @@ const Search: FC<{
   onFocus: (e: any) => void;
   onBlur: (e: any) => void;
   onEnter?: () => void;
+  onClickFilter?: (e: any) => void;
   value: string | null;
-  fwdRef: HTMLElement | null;
-}> = ({ onChange, onEnter, onFocus, onBlur, value, fwdRef, ...rest }) => {
+  fwdRef?: HTMLElement | null;
+}> = ({ onChange, onEnter, onFocus, onBlur, onClickFilter, value, fwdRef, ...rest }) => {
   const theme = useTheme();
 
   const onKeyUpHandler = (e) => {
@@ -46,6 +49,9 @@ const Search: FC<{
         inputProps={{ "aria-label": "search" }}
         onKeyUp={onKeyUpHandler}
       />
+      <IconButton onClick={onClickFilter}>
+        <FilterListIcon />
+      </IconButton>
     </Root>
   );
 };
