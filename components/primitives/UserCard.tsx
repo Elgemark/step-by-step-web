@@ -8,7 +8,7 @@ import { Button, ButtonGroup } from "@mui/material";
 import ImageIcon from "@mui/icons-material/Image";
 import OpenDialog from "../primitives/OpenDialog";
 import { LoadingButton } from "@mui/lab";
-import SelectCategories from "./SelectCategories";
+import SelectChips from "./SelectChips";
 
 const defaultStyle = css`
   border-radius: ${({ spacing }) => spacing(1)};
@@ -159,9 +159,9 @@ export const UserCardBigEditable: FC<{
         <InputLabel disableAnimation shrink sx={{ width: "100%" }}>
           {"Interests (max 3)"}
         </InputLabel>
-        <SelectCategories
-          categories={categories}
-          selectedCategories={interests}
+        <SelectChips
+          items={categories}
+          selectedItems={interests}
           onSelect={(category) => onInterestSelect({ category })}
         />
         <ButtonGroup variant="text">

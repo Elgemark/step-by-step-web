@@ -15,17 +15,16 @@ export const useDebouncedQuery = (query = {}) => {
   const [_query, setQuery] = useState<Query>(query);
 
   useEffect(() => {
-    router.query;
     setQuery({ ...router.query, ...query });
   }, []);
 
   return {
     set: (query) => {
-      setQuery(query);
+      setQuery({ ...router.query, ...query });
       debouncedSetQuery(router, query);
     },
     get: () => {
-      return router.query;
+      return _query;
     },
     query: _query,
   };

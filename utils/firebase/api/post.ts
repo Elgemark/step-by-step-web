@@ -7,7 +7,7 @@ import {
   doc,
   getDoc,
   getDocs,
-  orderBy as fsOrderBy,
+  orderBy,
   limit as fsLimit,
   startAfter,
   serverTimestamp,
@@ -23,7 +23,7 @@ import { toSanitizedArray } from "../../stringUtils";
 
 interface SearchFilter {
   category?: string;
-  sortBy?: "likes" | "completions";
+  orderBy?: "likes" | "latest" | "completions";
 }
 
 export const setPost = async (id, post: Post) => {
@@ -229,9 +229,13 @@ export const getPostsBySearch = async (search: string, filter: SearchFilter = {}
   if (filter.category) {
     postsQuery.push(where("category", "==", filter.category));
   }
-  // search by tags... (can not combine "in" and "array-contains-any")
+  // search by tags...
   if (tags && tags.length) {
     postsQuery.push(where("tags", "array-contains-any", tags));
+  }
+  // order by
+  if (filter.orderBy) {
+    postsQuery.push(orderBy(filter.orderBy, "asc"));
   }
   // paginate...
   if (lastDoc) {

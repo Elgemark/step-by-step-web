@@ -51,15 +51,10 @@ const popperModifiers = [
   // },
 ];
 
-const TopBar: FC<{ className?: string; actions?: ReactNode; search?: string }> = ({
-  className,
-  actions,
-  search,
-  ...props
-}) => {
+const TopBar: FC<{ className?: string; actions?: ReactNode }> = ({ className, actions, ...props }) => {
   const [user] = useAuthState(getAuth());
   const router = useRouter();
-  const [searchStr, setSearchStr] = useState();
+  const [searchStr, setSearchStr] = useState(router.query.search);
   const theme = useTheme();
   const colorMode = useContext(ColorModeContext);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -71,7 +66,6 @@ const TopBar: FC<{ className?: string; actions?: ReactNode; search?: string }> =
     setAnchorEl(null);
   };
 
-  console.log("query", query);
   const onSearchFocusHandler = (e) => {};
 
   const onFocusBlurHandler = (e) => {
@@ -91,6 +85,14 @@ const TopBar: FC<{ className?: string; actions?: ReactNode; search?: string }> =
       setQuery({ category: null });
     } else {
       setQuery({ category });
+    }
+  };
+
+  const onSelecteOrderBy = (orderBy) => {
+    if (_.get(query, "orderBy") === orderBy) {
+      setQuery({ orderBy: null });
+    } else {
+      setQuery({ orderBy });
     }
   };
 
@@ -118,7 +120,7 @@ const TopBar: FC<{ className?: string; actions?: ReactNode; search?: string }> =
           onFocus={onSearchFocusHandler}
           onBlur={onFocusBlurHandler}
           onClickFilter={onClickFilterHandler}
-          value={search}
+          value={searchStr}
         ></StyledSearch>
         {/* FILTER */}
         <Popover
@@ -140,8 +142,10 @@ const TopBar: FC<{ className?: string; actions?: ReactNode; search?: string }> =
         >
           <div data-popper-arrow ref={refArrrow}></div>
           <SearchFilter
-            selectedCategories={[_.get(query, "category")]}
+            selectedCategory={_.get(query, "category")}
+            selectedOrderBy={_.get(query, "orderBy")}
             onSelectCategory={onSelectCategoryHandler}
+            onSelectOrderBy={onSelecteOrderBy}
           ></SearchFilter>
         </Popover>
         {/* CREATE */}

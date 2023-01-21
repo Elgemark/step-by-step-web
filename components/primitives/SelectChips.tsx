@@ -11,25 +11,32 @@ const StyledStack = styled(Stack)`
   }
 `;
 
-const SelectCategories: FC<{
-  onSelect?: (category: string) => void;
-  categories: Array<string>;
-  selectedCategories: Array<string>;
-}> = ({ categories, onSelect, selectedCategories = [] }) => {
+interface ChipItem {
+  label: string;
+  value: string;
+}
+
+type ChipItems = Array<ChipItem>;
+
+const SelectChips: FC<{
+  onSelect?: (category: string | ChipItem) => void;
+  items: Array<string> | ChipItems;
+  selectedItems: Array<string>;
+}> = ({ items, onSelect, selectedItems = [] }) => {
   const theme = useTheme();
   return (
     <StyledStack theme={theme} direction="row" flexWrap="wrap">
-      {categories &&
-        categories.map((category) => (
+      {items &&
+        items.map((item) => (
           <Chip
             className="chip"
-            onClick={() => onSelect && onSelect(category)}
-            label={category}
-            color={selectedCategories.includes(category) ? "primary" : undefined}
+            onClick={() => onSelect && onSelect(item)}
+            label={item?.label || item}
+            color={selectedItems.includes(item) ? "primary" : undefined}
           />
         ))}
     </StyledStack>
   );
 };
 
-export default SelectCategories;
+export default SelectChips;
