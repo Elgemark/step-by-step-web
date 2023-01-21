@@ -87,13 +87,11 @@ const TopBar: FC<{ className?: string; actions?: ReactNode; search?: string }> =
   };
 
   const onSelectCategoryHandler = (category) => {
-    const categories = _.get(query, "categories", []);
-    if (categories.includes(category)) {
-      _.remove(categories, (item) => category === item);
+    if (_.get(query, "category") === category) {
+      setQuery({ category: null });
     } else {
-      categories.push(category);
+      setQuery({ category });
     }
-    setQuery({ categories });
   };
 
   return (
@@ -142,7 +140,7 @@ const TopBar: FC<{ className?: string; actions?: ReactNode; search?: string }> =
         >
           <div data-popper-arrow ref={refArrrow}></div>
           <SearchFilter
-            selectedCategories={_.get(query, "categories", [])}
+            selectedCategories={[_.get(query, "category")]}
             onSelectCategory={onSelectCategoryHandler}
           ></SearchFilter>
         </Popover>

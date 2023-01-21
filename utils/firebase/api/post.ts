@@ -22,7 +22,8 @@ import { getUser } from "./user";
 import { toSanitizedArray } from "../../stringUtils";
 
 interface SearchFilter {
-  categories?: Array<string>;
+  category?: string;
+  sortBy?: "likes" | "completions";
 }
 
 export const setPost = async (id, post: Post) => {
@@ -224,17 +225,14 @@ export const getPostsBySearch = async (search: string, filter: SearchFilter = {}
   const tags = toSanitizedArray(search);
   // Build query...
   let postsQuery: Array<any> = [fsLimit(limit)];
-  // categories...
-  if (filter.categories) {
-    postsQuery.push(
-      where("category", "in", typeof filter.categories === "string" ? [filter.categories] : filter.categories)
-    );
+  // category...
+  if (filter.category) {
+    postsQuery.push(where("category", "==", filter.category));
   }
   // search by tags... (can not combine "in" and "array-contains-any")
-  if (!filter.categories)
-    if (tags && tags.length) {
-      postsQuery.push(where("tags", "array-contains-any", tags));
-    }
+  if (tags && tags.length) {
+    postsQuery.push(where("tags", "array-contains-any", tags));
+  }
   // paginate...
   if (lastDoc) {
     postsQuery.push(startAfter(lastDoc));
