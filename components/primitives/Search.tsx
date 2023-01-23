@@ -18,6 +18,11 @@ const Root = styled.div`
     margin: 0 ${({ theme }) => theme.spacing(2)};
     flex-grow: 1;
   }
+  .filter-button {
+    opacity: ${({ showFilterButton }) => (showFilterButton ? 1 : 0)};
+    pointer-events: ${({ showFilterButton }) => (showFilterButton ? "auto" : "none")};
+    transition: opacity 0.4s;
+  }
 `;
 
 const Search: FC<{
@@ -27,8 +32,8 @@ const Search: FC<{
   onEnter?: () => void;
   onClickFilter?: (e: any) => void;
   value: string | null;
-  fwdRef?: HTMLElement | null;
-}> = ({ onChange, onEnter, onFocus, onBlur, onClickFilter, value, fwdRef, ...rest }) => {
+  showFilterButton?: boolean;
+}> = ({ onChange, onEnter, onFocus, onBlur, onClickFilter, value, showFilterButton = true, ...rest }) => {
   const theme = useTheme();
 
   const onKeyUpHandler = (e) => {
@@ -38,7 +43,7 @@ const Search: FC<{
   };
 
   return (
-    <Root theme={theme} ref={fwdRef} {...rest}>
+    <Root theme={theme} {...rest} showFilterButton={showFilterButton}>
       <SearchIcon />
       <InputBase
         value={value}
@@ -49,7 +54,7 @@ const Search: FC<{
         inputProps={{ "aria-label": "search" }}
         onKeyUp={onKeyUpHandler}
       />
-      <IconButton onClick={onClickFilter}>
+      <IconButton className="filter-button" onClick={onClickFilter}>
         <FilterListIcon />
       </IconButton>
     </Root>

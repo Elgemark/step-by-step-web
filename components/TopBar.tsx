@@ -66,6 +66,8 @@ const TopBar: FC<{ className?: string; actions?: ReactNode }> = ({ className, ac
     setAnchorEl(null);
   };
 
+  console.log("path", router.asPath);
+
   const onSearchFocusHandler = (e) => {};
 
   const onFocusBlurHandler = (e) => {
@@ -120,6 +122,7 @@ const TopBar: FC<{ className?: string; actions?: ReactNode }> = ({ className, ac
           onFocus={onSearchFocusHandler}
           onBlur={onFocusBlurHandler}
           onClickFilter={onClickFilterHandler}
+          showFilterButton={router.asPath.includes("/search")}
           value={searchStr}
         ></StyledSearch>
         {/* FILTER */}

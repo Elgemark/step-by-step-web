@@ -192,10 +192,12 @@ export const getPostsForAnonymousUser = async (
 ) => {
   // Build query...
   let postsQuery: Array<any> = [fsLimit(limit)];
-  // postsQuery.push(orderBy("likes", "asc")); // NOT WORKING
+
   if (options.excludeIds) {
     postsQuery.push(where("id", "not-in", options.excludeIds));
   }
+  //
+  postsQuery.push(orderBy("likes", "desc"));
   // paginate...
   if (lastDoc) {
     postsQuery.push(startAfter(lastDoc));
@@ -209,7 +211,8 @@ export const getPostsForUser = async (userId: string, limit = 10, lastDoc = null
   let postsQuery: Array<any> = [fsLimit(limit)];
   // Personal query...
   const userProfile = await getUser(userId);
-  if (userProfile?.data?.interests) {
+  const interests = userProfile?.data?.interests;
+  if (interests && interests.length) {
     postsQuery.push(where("category", "in", userProfile.data.interests));
     // paginate...
     if (lastDoc) {
@@ -217,7 +220,7 @@ export const getPostsForUser = async (userId: string, limit = 10, lastDoc = null
     }
     return await getPostsByQuery(postsQuery);
   } else {
-    return { data: [], error: null };
+    return await getPostsForAnonymousUser();
   }
 };
 
@@ -235,7 +238,7 @@ export const getPostsBySearch = async (search: string, filter: SearchFilter = {}
   }
   // order by
   if (filter.orderBy) {
-    postsQuery.push(orderBy(filter.orderBy, "asc"));
+    postsQuery.push(orderBy(filter.orderBy, "desc"));
   }
   // paginate...
   if (lastDoc) {
