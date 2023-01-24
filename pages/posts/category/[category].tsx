@@ -1,8 +1,7 @@
-import { getPostsByCategory, getPostsByQuery } from "../../../utils/firebase/api/post";
+import { getPostsByCategory } from "../../../utils/firebase/api/post";
 import PageMain from "../../../components/PageMain";
 import _ from "lodash";
 import { PostsResponse } from "../../../utils/firebase/interface";
-import { limit, startAfter, where, orderBy } from "firebase/firestore";
 import Collection from "../../../classes/Collection";
 
 const collection = new Collection();

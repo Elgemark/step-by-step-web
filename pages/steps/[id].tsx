@@ -105,9 +105,6 @@ const Steps: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> = ({
           }
           onLike={() => onLikeHandler(post)}
           onStartOver={onStartOverHandler}
-          onReport={() => {
-            addMessage({ id: "report", postId: id });
-          }}
         />
         {/* START BUTTON */}
         <RevealNext

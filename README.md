@@ -16,6 +16,11 @@ https://github.com/manishboro/image-crop-and-zoom
 
 ### Access controll error:
 
+SOLVED BY:
+https://console.cloud.google.com/run?hl=en-au&project=step-by-step-37f76
+
+"As you are using a 2nd generation function, you will need to go to the Cloud Run Permission tab to make the function invokable for allUsers, please try to do it there and let me know how it goes."
+
 https://stackoverflow.com/questions/47309611/cant-add-allusers-to-gcp-project
 https://dev.to/rowaxl/what-i-struggled-with-next-js-using-firebase-hosting-and-enable-ssr-4e67
 
