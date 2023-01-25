@@ -10,8 +10,6 @@ import firebase from "firebase/compat/app";
 import { config as uiConfig } from "../../config/firebaseAuthUI";
 // CSS
 import "firebaseui/dist/firebaseui.css";
-import FirebaseWrapper from "../../components/FirebaseWrapper";
-import { useUser } from "reactfire";
 
 const StyledContainer = styled.div`
   height: calc(100vh - 50%);
@@ -27,7 +25,7 @@ interface Props {
 }
 
 const LogIn: FC<Props> = ({ firebaseClient, config }) => {
-  const { status } = useUser();
+  const [loading] = useAuthState(getAuth());
 
   const loadFirebaseui = useCallback(async () => {
     const firebaseui = await import("firebaseui");
@@ -36,23 +34,23 @@ const LogIn: FC<Props> = ({ firebaseClient, config }) => {
   }, [firebaseClient, config]);
 
   useEffect(() => {
-    if (status !== "loading") {
+    if (!loading) {
       loadFirebaseui();
     }
-  }, [status]);
+  }, [loading]);
 
   return (
-    <FirebaseWrapper>
+    <>
       <Head>
         <title>STEPS | LogIn</title>
       </Head>
       <Layout>
         <StyledContainer>
-          {status === "loading" && <CircularProgress />}
+          {loading && <CircularProgress />}
           <div className="firebaseui-auth-container" />
         </StyledContainer>
       </Layout>
-    </FirebaseWrapper>
+    </>
   );
 };
 
