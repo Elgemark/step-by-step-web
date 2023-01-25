@@ -16,9 +16,6 @@ export async function getServerSideProps({ query }) {
 
   response = await getPostsForUser(id);
 
-  //response = await getPostsForAnonymousUser();
-
-  //
   const items = collection.union(response.data, [], () => {
     lastDoc = null;
   });

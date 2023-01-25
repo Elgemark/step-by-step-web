@@ -11,7 +11,7 @@
     "@mui/icons-material": "^5.10.9",
     "@mui/lab": "^5.0.0-alpha.107",
     "@mui/material": "^5.10.13",
-    "firebase": "^9.15.0",
+    "firebase": "^9.16.0",
     "firebaseui": "^6.0.2",
     "lodash": "^4.17.21",
     "next": "latest",
@@ -19,6 +19,7 @@
     "react-dom": "^18.2.0",
     "react-easy-crop": "^4.6.3",
     "react-firebase-hooks": "^5.1.1",
+    "reactfire": "^4.2.2",
     "styled-components": "^5.3.6",
     "uuid": "^9.0.0"
   },

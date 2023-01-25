@@ -14,6 +14,14 @@ https://www.npmjs.com/package/react-easy-crop
 https://markerjs.com/
 https://github.com/manishboro/image-crop-and-zoom
 
+### Firebase
+
+https://medium.com/firebase-developers/what-does-it-mean-that-firestore-security-rules-are-not-filters-68ec14f3d003
+
+### Skapa STEPS:
+
+https://www.pinterest.se/pin/1062075524598982027/feedback/?invite_code=4dd88946ce944339b9524ae002b0b142&sender_id=920353011258116876
+
 ### Access controll error:
 
 SOLVED BY:

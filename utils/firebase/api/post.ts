@@ -44,7 +44,6 @@ export const getPostsByQuery = async (queries: Array<any>) => {
   const firebase = getFirestore();
   const stepsRef = collection(firebase, "posts");
   const queryBuild = query(stepsRef, ...queries);
-
   try {
     const querySnapshot = await getDocs(queryBuild);
     querySnapshot.forEach((doc) => {
@@ -191,13 +190,18 @@ export const getPostsForAnonymousUser = async (
   options: PostsForAnonymousUserOptions = {}
 ) => {
   // Build query...
-  let postsQuery: Array<any> = [fsLimit(limit)];
+  let postsQuery: Array<any> = [];
+  // Get only public posts
+  postsQuery.push(where("visibility", "==", "public"));
 
+  //
   if (options.excludeIds) {
     postsQuery.push(where("id", "not-in", options.excludeIds));
   }
-  //
-  postsQuery.push(orderBy("likes", "desc"));
+  // Order by likes // Not working!
+  // postsQuery.push(orderBy("likes", "desc"));
+  // Limit
+  postsQuery.push(fsLimit(limit));
   // paginate...
   if (lastDoc) {
     postsQuery.push(startAfter(lastDoc));
@@ -209,6 +213,8 @@ export const getPostsForAnonymousUser = async (
 export const getPostsForUser = async (userId: string, limit = 10, lastDoc = null) => {
   // Build query...
   let postsQuery: Array<any> = [fsLimit(limit)];
+  // Get only public posts
+  postsQuery.push(where("visibility", "==", "public"));
   // Personal query...
   const userProfile = await getUser(userId);
   const interests = userProfile?.data?.interests;
@@ -228,6 +234,8 @@ export const getPostsBySearch = async (search: string, filter: SearchFilter = {}
   const tags = toSanitizedArray(search);
   // Build query...
   let postsQuery: Array<any> = [fsLimit(limit)];
+  // Get only public posts
+  postsQuery.push(where("visibility", "==", "public"));
   // category...
   if (filter.category) {
     postsQuery.push(where("category", "==", filter.category));
@@ -251,6 +259,8 @@ export const getPostsBySearch = async (search: string, filter: SearchFilter = {}
 export const getPostsByCategory = async (category = null, limit = 10, lastDoc = null) => {
   // Build query...
   let postsQuery: Array<any> = [fsLimit(limit)];
+  // Get only public posts
+  postsQuery.push(where("visibility", "==", "public"));
   // category...
   postsQuery.push(where("category", "==", category));
   // paginate...
