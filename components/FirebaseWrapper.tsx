@@ -1,23 +1,45 @@
-import React from "react";
+import { getAuth, connectAuthEmulator } from "firebase/auth"; // Firebase v9+
+import { getDatabase, connectDatabaseEmulator } from "firebase/database"; // Firebase v9+
 
-import { getFirestore } from "firebase/firestore";
-import { FirebaseAppProvider, FirestoreProvider, useFirebaseApp } from "reactfire";
+import { FirebaseAppProvider, DatabaseProvider, AuthProvider, useFirebaseApp } from "reactfire";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCu6npVk3xMGmViQ3AWSD_RHLLkEoDkyKk",
-  authDomain: "step-by-step-37f76.firebaseapp.com",
-  projectId: "step-by-step-37f76",
-  storageBucket: "step-by-step-37f76.appspot.com",
-  messagingSenderId: "287035538812",
-  appId: "1:287035538812:web:d7fd06045136234ee538f9",
-  measurementId: "G-HVTSGKF4F6",
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_PUBLIC_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGE_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-export function FirebaseWrapper({ children }) {
-  const firestoreInstance = getFirestore(useFirebaseApp());
+const FirebaseCredentials = {
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_PUBLIC_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+};
+
+const FirebaseAppProviderWrapper = ({ children }) => {
+  return <FirebaseAppProvider firebaseConfig={firebaseConfig}>{children}</FirebaseAppProvider>;
+};
+
+const AuthAndDatabaseProviderWrapper = ({ children }) => {
+  const app = useFirebaseApp(); // a parent component contains a `FirebaseAppProvider`
+  // initialize Database and Auth with the normal Firebase SDK functions
+  const database = getDatabase(app);
+  const auth = getAuth(app);
+
   return (
-    <FirebaseAppProvider firebaseConfig={firebaseConfig}>
-      <FirestoreProvider sdk={firestoreInstance}>{children}</FirestoreProvider>
-    </FirebaseAppProvider>
+    <AuthProvider sdk={auth}>
+      <DatabaseProvider sdk={database}>{children}</DatabaseProvider>
+    </AuthProvider>
+  );
+};
+
+export default function FirebaseWrapper({ children }) {
+  return (
+    <FirebaseAppProviderWrapper>
+      <AuthAndDatabaseProviderWrapper>{children}</AuthAndDatabaseProviderWrapper>
+    </FirebaseAppProviderWrapper>
   );
 }

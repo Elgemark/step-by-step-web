@@ -1,22 +1,30 @@
-import { useAuthState } from "react-firebase-hooks/auth";
-import { getAuth } from "firebase/auth";
 import { CircularProgress } from "@mui/material";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import FirebaseWrapper from "../components/FirebaseWrapper";
+import { useUser } from "reactfire";
 
-export default function IndexPage() {
-  const [user, isLoading] = useAuthState(getAuth());
+const Content = () => {
+  const { status, data: user } = useUser();
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoading) {
+    if (status !== "loading") {
       if (user) {
         router.replace("/posts/user/" + user.uid);
       } else {
         router.replace("/posts/");
       }
     }
-  }, [user, isLoading]);
+  }, [user, status]);
 
   return <CircularProgress></CircularProgress>;
+};
+
+export default function IndexPage() {
+  return (
+    <FirebaseWrapper>
+      <Content />
+    </FirebaseWrapper>
+  );
 }

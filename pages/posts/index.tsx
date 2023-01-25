@@ -2,12 +2,17 @@ import PageMain from "../../components/PageMain";
 import { PostsResponse } from "../../utils/firebase/interface";
 import { getPostsBySearch, getPostsForAnonymousUser } from "../../utils/firebase/api/post";
 import Collection from "../../classes/Collection";
+import FirebaseWrapper from "../../components/FirebaseWrapper";
 
 const collection = new Collection();
 let lastDoc;
 
 export default function IndexPage(props) {
-  return <PageMain {...props} title="STEPS" enableLink={true} />;
+  return (
+    <FirebaseWrapper>
+      <PageMain {...props} title="STEPS" enableLink={true} />
+    </FirebaseWrapper>
+  );
 }
 
 export async function getServerSideProps({ query }) {
