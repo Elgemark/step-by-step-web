@@ -1,9 +1,9 @@
 import Post from "./Post";
-import Masonry from "@mui/lab/Masonry";
 import { useState } from "react";
 import Dialog from "../primitives/Dialog";
 import { FC } from "react";
 import { deletePost, likePost } from "../../utils/firebase/api";
+import Masonry from "../primitives/Masonry";
 // Firebase related
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
@@ -53,14 +53,7 @@ const Posts: FC<{
 
   return (
     <>
-      <Masonry
-        spacing={{ lg: 2, md: 2, sm: 1, xs: 1 }}
-        columns={{ md: 3, sm: 2, xs: 1 }}
-        defaultHeight={450}
-        defaultColumns={3}
-        defaultSpacing={2}
-        sx={{ width: "auto" }}
-      >
+      <Masonry>
         {posts.map((data, index) => (
           <Post
             key={index}
