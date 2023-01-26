@@ -1,10 +1,10 @@
-import { CircularProgress } from "@mui/material";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import FirebaseWrapper from "../components/FirebaseWrapper";
 import { useUser } from "reactfire";
+import Loader from "../components/Loader";
 
-const Content = () => {
+const IndexPage = () => {
   const { status, data: user } = useUser();
   const router = useRouter();
 
@@ -18,13 +18,11 @@ const Content = () => {
     }
   }, [user, status]);
 
-  return <CircularProgress></CircularProgress>;
+  return <Loader message="Loading..."></Loader>;
 };
 
-export default function IndexPage() {
-  return (
-    <FirebaseWrapper>
-      <Content />
-    </FirebaseWrapper>
-  );
-}
+export default () => (
+  <FirebaseWrapper>
+    <IndexPage />
+  </FirebaseWrapper>
+);

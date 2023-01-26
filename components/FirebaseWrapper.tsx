@@ -1,8 +1,11 @@
 import { getApp } from "firebase/app";
 import { getAuth } from "firebase/auth"; // Firebase v9+
 import { getDatabase } from "firebase/database"; // Firebase v9+
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
-import { FirebaseAppProvider, DatabaseProvider, AuthProvider, useFirebaseApp } from "reactfire";
+import { FirebaseAppProvider, DatabaseProvider, AuthProvider, useFirebaseApp, useUser } from "reactfire";
+import Loader from "./Loader";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_PUBLIC_API_KEY,
@@ -43,10 +46,29 @@ const AuthAndDatabaseProviderWrapper = ({ children }) => {
   );
 };
 
+const LoginCheck = ({ children }) => {
+  const { status, data: user } = useUser();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (status !== "loading") {
+      if (!user) {
+        router.replace("/login");
+      }
+    }
+  }, [status]);
+
+  return <Loader message="Checking login status..." />;
+
+  return status === "loading" ? <Loader message="Checking login status..." /> : children;
+};
+
 export default function FirebaseWrapper({ children }) {
   return (
     <FirebaseAppProviderWrapper>
-      <AuthAndDatabaseProviderWrapper>{children}</AuthAndDatabaseProviderWrapper>
+      <AuthAndDatabaseProviderWrapper>
+        <LoginCheck>{children}</LoginCheck>
+      </AuthAndDatabaseProviderWrapper>
     </FirebaseAppProviderWrapper>
   );
 }
