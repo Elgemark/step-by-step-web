@@ -14,6 +14,8 @@ import styled from "styled-components";
 import { Divider, useTheme } from "@mui/material";
 import ResponsiveGrid from "../../components/primitives/ResponsiveGrid";
 import UserCard from "../../components/primitives/UserCard";
+import FirebaseWrapper from "../../components/wrappers/FirebaseWrapper";
+import MUIWrapper from "../../components/wrappers/MUIWrapper";
 
 const UserCardControlled: FC<{ userId: string }> = styled(({ userId, ...props }) => {
   const router = useRouter();
@@ -60,7 +62,7 @@ const tabProps = (index: number) => {
   };
 };
 
-const Index = ({ posts, user, userIds, uid, tabValue }) => {
+const UserPage = ({ posts, user, userIds, uid, tabValue }) => {
   const router = useRouter();
   const theme = useTheme();
 
@@ -139,4 +141,10 @@ export async function getServerSideProps(props) {
   };
 }
 
-export default Index;
+export default (props) => (
+  <MUIWrapper>
+    <FirebaseWrapper>
+      <UserPage {...props} />
+    </FirebaseWrapper>
+  </MUIWrapper>
+);

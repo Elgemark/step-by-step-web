@@ -19,6 +19,8 @@ import AssistantDirectionIcon from "@mui/icons-material/AssistantDirection";
 import styled from "styled-components";
 import ResponsiveGrid from "../../components/primitives/ResponsiveGrid";
 import UserCard from "../../components/primitives/UserCard";
+import FirebaseWrapper from "../../components/wrappers/FirebaseWrapper";
+import MUIWrapper from "../../components/wrappers/MUIWrapper";
 
 const UserCardControlled: FC<{ userId: string }> = styled(({ userId, ...props }) => {
   const router = useRouter();
@@ -67,7 +69,7 @@ const tabProps = (index: number) => {
   };
 };
 
-const Index = ({ tabValue, uid, posts = [], userIds = [] }) => {
+const ProfilePage = ({ tabValue, uid, posts = [], userIds = [] }) => {
   const theme = useTheme();
   const [user, userLoading, userError] = useAuthState(getAuth());
   const router = useRouter();
@@ -136,4 +138,10 @@ export async function getServerSideProps({ query }) {
   return { props: { tabValue, uid, posts, userIds } };
 }
 
-export default Index;
+export default (props) => (
+  <MUIWrapper>
+    <FirebaseWrapper>
+      <ProfilePage {...props} />
+    </FirebaseWrapper>
+  </MUIWrapper>
+);

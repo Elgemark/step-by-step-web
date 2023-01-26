@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
-import FirebaseWrapper from "../components/FirebaseWrapper";
+import FirebaseWrapper from "../components/wrappers/FirebaseWrapper";
 import { useUser } from "reactfire";
 import Loader from "../components/Loader";
+import MUIWrapper from "../components/wrappers/MUIWrapper";
 
 const IndexPage = () => {
   const { status, data: user } = useUser();
@@ -22,7 +23,9 @@ const IndexPage = () => {
 };
 
 export default () => (
-  <FirebaseWrapper>
-    <IndexPage />
-  </FirebaseWrapper>
+  <MUIWrapper>
+    <FirebaseWrapper>
+      <IndexPage />
+    </FirebaseWrapper>
+  </MUIWrapper>
 );

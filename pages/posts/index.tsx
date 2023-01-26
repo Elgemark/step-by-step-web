@@ -2,18 +2,19 @@ import PageMain from "../../components/PageMain";
 import { PostsResponse } from "../../utils/firebase/interface";
 import { getPostsBySearch, getPostsForAnonymousUser } from "../../utils/firebase/api/post";
 import Collection from "../../classes/Collection";
-import FirebaseWrapper from "../../components/FirebaseWrapper";
+import FirebaseWrapper from "../../components/wrappers/FirebaseWrapper";
+import MUIWrapper from "../../components/wrappers/MUIWrapper";
 
 const collection = new Collection();
 let lastDoc;
 
-export default function IndexPage(props) {
+const PostsPage = (props) => {
   return (
     <FirebaseWrapper>
       <PageMain {...props} title="STEPS" enableLink={true} />
     </FirebaseWrapper>
   );
-}
+};
 
 export async function getServerSideProps({ query }) {
   const { search, category } = query;
@@ -34,3 +35,11 @@ export async function getServerSideProps({ query }) {
 
   return { props: { posts: items } };
 }
+
+export default (props) => (
+  <MUIWrapper>
+    <FirebaseWrapper>
+      <PostsPage {...props} />
+    </FirebaseWrapper>
+  </MUIWrapper>
+);

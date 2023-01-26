@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 import { FirebaseAppProvider, DatabaseProvider, AuthProvider, useFirebaseApp, useUser } from "reactfire";
-import Loader from "./Loader";
+import Loader from "../Loader";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_PUBLIC_API_KEY,
@@ -60,7 +60,7 @@ const LoginCheck = ({ children }) => {
 
   return <Loader message="Checking login status..." />;
 
-  return status === "loading" ? <Loader message="Checking login status..." /> : children;
+  // return status === "loading" ? <Loader message="Checking login status..." /> : children;
 };
 
 export default function FirebaseWrapper({ children }) {

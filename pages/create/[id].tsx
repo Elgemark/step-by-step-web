@@ -23,7 +23,8 @@ import { setPost } from "../../utils/firebase/api/post";
 import { setList, useLists } from "../../utils/firebase/api/list";
 import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/router";
-import FirebaseWrapper from "../../components/FirebaseWrapper";
+import FirebaseWrapper from "../../components/wrappers/FirebaseWrapper";
+import MUIWrapper from "../../components/wrappers/MUIWrapper";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -60,7 +61,7 @@ const StyledBottomBar = styled.div`
 
 let saveData = { post: null, steps: null, lists: null };
 
-const Create: FC<{ id: string; post: Post }> = ({ id, post }) => {
+const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
   const router = useRouter();
   const steps = useSteps(id);
   const lists = useLists(id);
@@ -282,7 +283,9 @@ export async function getServerSideProps({ query }) {
 }
 
 export default (props) => (
-  <FirebaseWrapper>
-    <Create {...props} />
-  </FirebaseWrapper>
+  <MUIWrapper>
+    <FirebaseWrapper>
+      <CreatePage {...props} />
+    </FirebaseWrapper>
+  </MUIWrapper>
 );

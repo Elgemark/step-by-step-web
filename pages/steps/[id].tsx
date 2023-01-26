@@ -14,7 +14,8 @@ import { FC, useState } from "react";
 import { ListsResponse, Post as PostType } from "../../utils/firebase/interface";
 import { Lists, Steps } from "../../utils/firebase/type";
 import { useProgress } from "../../utils/firebase/api/progress";
-import FirebaseWrapper from "../../components/FirebaseWrapper";
+import FirebaseWrapper from "../../components/wrappers/FirebaseWrapper";
+import MUIWrapper from "../../components/wrappers/MUIWrapper";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -39,7 +40,7 @@ const StyledStepsProgress = styled(StepsProgress)`
   margin: 0, 40px;
 `;
 
-const Steps: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> = ({ id, post, steps, lists }) => {
+const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> = ({ id, post, steps, lists }) => {
   const [showDialog, setShowDialog] = useState({ open: false, content: "", onOkClick: () => {} });
   const router = useRouter();
   const { user, progress, updateProgress, isLoading } = useProgress(id, true);
@@ -164,7 +165,9 @@ export async function getServerSideProps({ query }) {
 }
 
 export default (props) => (
-  <FirebaseWrapper>
-    <Steps {...props} />
-  </FirebaseWrapper>
+  <MUIWrapper>
+    <FirebaseWrapper>
+      <StepsPage {...props} />
+    </FirebaseWrapper>
+  </MUIWrapper>
 );

@@ -10,7 +10,8 @@ import { config as uiConfig } from "../../config/firebaseAuthUI";
 // CSS
 import "firebaseui/dist/firebaseui.css";
 import { useUser } from "reactfire";
-import FirebaseWrapper from "../../components/FirebaseWrapper";
+import FirebaseWrapper from "../../components/wrappers/FirebaseWrapper";
+import MUIWrapper from "../../components/wrappers/MUIWrapper";
 
 const StyledContainer = styled.div`
   height: calc(100vh - 50%);
@@ -20,7 +21,7 @@ const StyledContainer = styled.div`
   align-items: center;
 `;
 
-const LogIn = () => {
+const LogInPage = () => {
   const { status } = useUser();
 
   const loadFirebaseui = useCallback(async () => {
@@ -51,7 +52,9 @@ const LogIn = () => {
 };
 
 export default () => (
-  <FirebaseWrapper>
-    <LogIn></LogIn>
-  </FirebaseWrapper>
+  <MUIWrapper>
+    <FirebaseWrapper>
+      <LogInPage></LogInPage>
+    </FirebaseWrapper>
+  </MUIWrapper>
 );

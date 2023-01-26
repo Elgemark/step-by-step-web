@@ -1,6 +1,4 @@
 import TopBar from "./TopBar";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import styled from "styled-components";
 import { FC, ReactNode, createContext, useMemo, useState } from "react";
@@ -32,53 +30,20 @@ const Layout: FC<{
   children?: ReactNode;
 }> = ({ children, propsTopbar, propsContent, ...props }) => {
   const { messages, removeMessage } = useMessages();
-  // const { data: user, save: saveUser, update: updateUser, isLoading: isLoadingUser } = useCurrentUser(false);
-  const [mode, setMode] = useState<"light" | "dark">("dark");
-  // const mode: "dark" | "light" = (!isLoadingUser && user?.theme) || "dark";
-
-  const colorMode = useMemo(
-    () => ({
-      toggleColorMode: () => {
-        const newMode = mode === "light" ? "dark" : "light";
-        setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
-        // if (user?.id) {
-        //   saveUser({ theme: newMode });
-        // } else {
-        //   updateUser({ theme: newMode });
-        // }
-      },
-    }),
-    [mode]
-  );
-
-  const theme = useMemo(
-    () =>
-      createTheme({
-        palette: {
-          mode,
-        },
-      }),
-    [mode]
-  );
 
   return (
-    <ColorModeContext.Provider value={colorMode}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Root {...props}>
-          <TopBar className="top-bar" {...propsTopbar} />
-          <Content className="content" {...propsContent}>
-            {children}
-          </Content>
-          {/* SNACKBAR */}
-          <Snackbar open={messages.alert} autoHideDuration={6000} onClose={() => removeMessage("alert")}>
-            <Alert onClose={() => removeMessage("alert")} severity="success" sx={{ width: "100%" }}>
-              {messages.alert?.message}
-            </Alert>
-          </Snackbar>
-        </Root>
-      </ThemeProvider>
-    </ColorModeContext.Provider>
+    <Root {...props}>
+      <TopBar className="top-bar" {...propsTopbar} />
+      <Content className="content" {...propsContent}>
+        {children}
+      </Content>
+      {/* SNACKBAR */}
+      <Snackbar open={messages.alert} autoHideDuration={6000} onClose={() => removeMessage("alert")}>
+        <Alert onClose={() => removeMessage("alert")} severity="success" sx={{ width: "100%" }}>
+          {messages.alert?.message}
+        </Alert>
+      </Snackbar>
+    </Root>
   );
 };
 

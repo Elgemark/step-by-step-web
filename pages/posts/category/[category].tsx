@@ -3,14 +3,16 @@ import PageMain from "../../../components/PageMain";
 import _ from "lodash";
 import { PostsResponse } from "../../../utils/firebase/interface";
 import Collection from "../../../classes/Collection";
+import FirebaseWrapper from "../../../components/wrappers/FirebaseWrapper";
+import MUIWrapper from "../../../components/wrappers/MUIWrapper";
 
 const collection = new Collection();
 let lastDoc;
 
-export default function CategoryPage(props) {
+const CategoryPage = (props) => {
   const { category } = props;
   return <PageMain {...props} title={"STEPS | " + _.capitalize(category)} enableLink={true} />;
-}
+};
 
 export async function getServerSideProps({ query }) {
   const { category } = query;
@@ -24,3 +26,11 @@ export async function getServerSideProps({ query }) {
 
   return { props: { posts: items, category } };
 }
+
+export default (props) => (
+  <MUIWrapper>
+    <FirebaseWrapper>
+      <CategoryPage {...props} />
+    </FirebaseWrapper>
+  </MUIWrapper>
+);
