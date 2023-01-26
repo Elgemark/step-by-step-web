@@ -60,12 +60,10 @@ const LoginCheck = ({ children, enable = false }) => {
   const router = useRouter();
 
   useEffect(() => {
-    if (status !== "loading" && enable) {
-      if (!user) {
-        router.replace("/login");
-      }
+    if (enable && status !== "loading" && !user) {
+      router.replace("/login");
     }
-  }, [status, enable]);
+  }, [status, enable, user]);
 
   return status === "loading" && enable ? (
     <Root>
