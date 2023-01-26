@@ -16,9 +16,15 @@ const firebaseConfig = {
 
 const FirebaseAppProviderWrapper = ({ children }) => {
   // Check if app already initialized...
-  const app = getApp();
+  let app;
+  try {
+    app = getApp();
+  } catch (error) {
+    console.log("No app found...");
+  }
+
   return (
-    <FirebaseAppProvider firebaseApp={app || undefined} firebaseConfig={app ? undefined : firebaseConfig}>
+    <FirebaseAppProvider firebaseApp={app} firebaseConfig={app ? undefined : firebaseConfig}>
       {children}
     </FirebaseAppProvider>
   );
