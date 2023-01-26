@@ -18,7 +18,7 @@ const Root = styled.div`
     margin-top: 68px;
     width: 1024px;
     @media (min-width: 600px) {
-      margin-top: 74px;
+      margin: 74px ${({ theme }) => theme.spacing(1)};
     }
   }
 `;
