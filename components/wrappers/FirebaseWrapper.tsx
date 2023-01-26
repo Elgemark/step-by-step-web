@@ -55,25 +55,19 @@ const Root = styled.div`
   align-items: center;
 `;
 
-const LoginCheck = ({ children }) => {
+const LoginCheck = ({ children, enable = false }) => {
   const { status, data: user } = useUser();
   const router = useRouter();
 
   useEffect(() => {
-    if (status !== "loading") {
+    if (status !== "loading" && enable) {
       if (!user) {
         router.replace("/login");
       }
     }
-  }, [status]);
+  }, [status, enable]);
 
-  // return (
-  //   <Root>
-  //     <Loader message="Checking login status..." />
-  //   </Root>
-  // );
-
-  return status === "loading" ? (
+  return status === "loading" && enable ? (
     <Root>
       <Loader message="Checking login status..." />
     </Root>
