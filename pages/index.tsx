@@ -4,6 +4,14 @@ import FirebaseWrapper from "../components/wrappers/FirebaseWrapper";
 import { useUser } from "reactfire";
 import Loader from "../components/Loader";
 import MUIWrapper from "../components/wrappers/MUIWrapper";
+import styled from "styled-components";
+
+const Root = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
 
 const IndexPage = () => {
   const { status, data: user } = useUser();
@@ -19,7 +27,11 @@ const IndexPage = () => {
     }
   }, [user, status]);
 
-  return <Loader message="Loading..."></Loader>;
+  return (
+    <Root>
+      <Loader message="Loading..."></Loader>
+    </Root>
+  );
 };
 
 export default () => (

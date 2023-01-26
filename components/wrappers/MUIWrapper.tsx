@@ -1,4 +1,5 @@
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { GlobalStyles } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import { FC, ReactNode, createContext, useMemo, useState } from "react";
 export const ColorModeContext = createContext({ toggleColorMode: () => {} });
@@ -39,6 +40,11 @@ const MUIWrapper: FC<{
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
+        <GlobalStyles
+          styles={{
+            body: { backgroundColor: mode === "light" ? "white" : "dark", transition: "1s background-color" },
+          }}
+        />
         {children}
       </ThemeProvider>
     </ColorModeContext.Provider>

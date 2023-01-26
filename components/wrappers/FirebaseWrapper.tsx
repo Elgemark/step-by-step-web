@@ -3,6 +3,7 @@ import { getAuth } from "firebase/auth"; // Firebase v9+
 import { getDatabase } from "firebase/database"; // Firebase v9+
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import styled from "styled-components";
 
 import { FirebaseAppProvider, DatabaseProvider, AuthProvider, useFirebaseApp, useUser } from "reactfire";
 import Loader from "../Loader";
@@ -46,6 +47,14 @@ const AuthAndDatabaseProviderWrapper = ({ children }) => {
   );
 };
 
+const Root = styled.div`
+  height: ;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
 const LoginCheck = ({ children }) => {
   const { status, data: user } = useUser();
   const router = useRouter();
@@ -58,9 +67,19 @@ const LoginCheck = ({ children }) => {
     }
   }, [status]);
 
-  return <Loader message="Checking login status..." />;
+  // return (
+  //   <Root>
+  //     <Loader message="Checking login status..." />
+  //   </Root>
+  // );
 
-  // return status === "loading" ? <Loader message="Checking login status..." /> : children;
+  return status === "loading" ? (
+    <Root>
+      <Loader message="Checking login status..." />
+    </Root>
+  ) : (
+    children
+  );
 };
 
 export default function FirebaseWrapper({ children }) {

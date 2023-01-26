@@ -28,6 +28,7 @@ const LogInPage = () => {
     const firebaseui = await import("firebaseui");
     const firebaseUi = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(getAuth());
     firebaseUi.start(".firebaseui-auth-container", uiConfig(firebase));
+    // firebaseUi.disableAutoSignIn();
   }, []);
 
   useEffect(() => {
