@@ -53,7 +53,14 @@ const Posts: FC<{
 
   return (
     <>
-      <Masonry spacing={2} columns={{ lg: 4, md: 3, sm: 2, xs: 1 }}>
+      <Masonry
+        spacing={{ lg: 2, md: 2, sm: 1, xs: 1 }}
+        columns={{ md: 3, sm: 2, xs: 1 }}
+        defaultHeight={450}
+        defaultColumns={3}
+        defaultSpacing={2}
+        sx={{ width: "auto" }}
+      >
         {posts.map((data, index) => (
           <Post
             key={index}
