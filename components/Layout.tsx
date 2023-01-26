@@ -1,11 +1,10 @@
 import TopBar from "./TopBar";
 import Box from "@mui/material/Box";
 import styled from "styled-components";
-import { FC, ReactNode, createContext, useMemo, useState } from "react";
-import { useUser } from "../utils/firebase/api";
-import { useCurrentUser } from "../utils/firebase/api/user";
+import { FC, ReactNode, createContext } from "react";
 import { useMessages } from "../hooks/message";
 import { Alert, Snackbar } from "@mui/material";
+import { useTheme } from "@emotion/react";
 
 export const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
@@ -15,12 +14,12 @@ const Root = styled.div`
   .firebaseui-card-content:nth-child(1) {
     display: none;
   }
-`;
-const Content = styled(Box)`
-  margin: 62px 10px 0;
-  width: 1024px;
-  @media (min-width: 600px) {
-    margin: 74px 10px 0;
+  .content {
+    margin-top: 68px;
+    width: 1024px;
+    @media (min-width: 600px) {
+      margin-top: 74px;
+    }
   }
 `;
 
@@ -29,14 +28,15 @@ const Layout: FC<{
   propsContent?: Object;
   children?: ReactNode;
 }> = ({ children, propsTopbar, propsContent, ...props }) => {
+  const theme = useTheme();
   const { messages, removeMessage } = useMessages();
 
   return (
-    <Root {...props}>
+    <Root theme={theme} {...props}>
       <TopBar className="top-bar" {...propsTopbar} />
-      <Content className="content" {...propsContent}>
+      <Box className="content" {...propsContent}>
         {children}
-      </Content>
+      </Box>
       {/* SNACKBAR */}
       <Snackbar open={messages.alert} autoHideDuration={6000} onClose={() => removeMessage("alert")}>
         <Alert onClose={() => removeMessage("alert")} severity="success" sx={{ width: "100%" }}>
