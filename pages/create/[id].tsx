@@ -23,6 +23,7 @@ import { setPost } from "../../utils/firebase/api/post";
 import { setList, useLists } from "../../utils/firebase/api/list";
 import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/router";
+import FirebaseWrapper from "../../components/FirebaseWrapper";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -94,14 +95,16 @@ const Create: FC<{ id: string; post: Post }> = ({ id, post }) => {
 
   const validatePost = () => {
     setPostIsValid(
-      steps.length ||
-        (post.category && post.tags?.length && post.media?.imageURI) ||
-        (_.get(saveData, "post.category") &&
-          _.get(saveData, "post.tags") &&
-          _.get(saveData, "post.title") &&
-          _.get(saveData, "post.descr") &&
-          _.get(saveData, "post.blob")) ||
-        _.get(saveData, "post.media.imageURI")
+      Boolean(
+        steps.length > 0 ||
+          (post.category && post.tags?.length && post.media?.imageURI) ||
+          (_.get(saveData, "post.category") &&
+            _.get(saveData, "post.tags") &&
+            _.get(saveData, "post.title") &&
+            _.get(saveData, "post.descr") &&
+            _.get(saveData, "post.blob")) ||
+          _.get(saveData, "post.media.imageURI")
+      )
     );
   };
 
@@ -278,4 +281,8 @@ export async function getServerSideProps({ query }) {
   };
 }
 
-export default Create;
+export default (props) => (
+  <FirebaseWrapper>
+    <Create {...props} />
+  </FirebaseWrapper>
+);

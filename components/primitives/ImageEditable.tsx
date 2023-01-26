@@ -135,12 +135,14 @@ const ImageEditable: FC<{
       </Stack>
 
       <Modal open={openEditor} onClose={onCloseEditorHandle}>
-        <ImageEditor
-          src={selectedImageURI}
-          onDone={onCropDoneHandler}
-          onClose={() => setOpenEditor(false)}
-          settings={cropSettings}
-        />
+        <>
+          <ImageEditor
+            src={selectedImageURI}
+            onDone={onCropDoneHandler}
+            onClose={() => setOpenEditor(false)}
+            settings={cropSettings}
+          />
+        </>
       </Modal>
     </StyledCardMediaContainer>
   );

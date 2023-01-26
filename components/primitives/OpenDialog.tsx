@@ -1,7 +1,7 @@
 import { useRef } from "react";
 
 const OpenDialog = ({ children, accept = "image/png, image/jpeg", onFileSelected, ...props }) => {
-  const inputRef = useRef<HTMLInputElement>();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const onClickHandler = () => {
     inputRef.current.click();

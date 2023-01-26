@@ -101,9 +101,10 @@ const ImageEditor: FC<{
 
         <Button onClick={onDoneHandler}>Done</Button>
       </div>
-      <IconButton className="button-close" onClick={onClose}>
+      {/* FORCE CROP... (disable close button) */}
+      {/* <IconButton className="button-close" onClick={onClose}>
         <CancelIcon />
-      </IconButton>
+      </IconButton> */}
     </Root>
   );
 };
