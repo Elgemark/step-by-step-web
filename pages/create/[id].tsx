@@ -72,7 +72,6 @@ const Create: FC<{ id: string; post: Post }> = ({ id, post }) => {
   useEffect(() => {
     if (prevId != id) {
       router.replace(router.asPath);
-      console.log("refresh", router.asPath, post);
       setPrevId(id);
     }
   }, [id]);
@@ -96,6 +95,7 @@ const Create: FC<{ id: string; post: Post }> = ({ id, post }) => {
   const validatePost = () => {
     setPostIsValid(
       steps.length ||
+        (post.category && post.tags?.length && post.media?.imageURI) ||
         (_.get(saveData, "post.category") &&
           _.get(saveData, "post.tags") &&
           _.get(saveData, "post.title") &&

@@ -14,7 +14,7 @@ import { FC, useState } from "react";
 import { ListsResponse, Post as PostType } from "../../utils/firebase/interface";
 import { Lists, Steps } from "../../utils/firebase/type";
 import { useProgress } from "../../utils/firebase/api/progress";
-import { useMessages } from "../../hooks/message";
+import FirebaseWrapper from "../../components/FirebaseWrapper";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -43,7 +43,6 @@ const Steps: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> = ({
   const [showDialog, setShowDialog] = useState({ open: false, content: "", onOkClick: () => {} });
   const router = useRouter();
   const { user, progress, updateProgress, isLoading } = useProgress(id, true);
-  const { addMessage } = useMessages();
 
   const onEditHandler = ({ id }) => {
     router.push("/create/" + id);
@@ -164,4 +163,8 @@ export async function getServerSideProps({ query }) {
   };
 }
 
-export default Steps;
+export default (props) => (
+  <FirebaseWrapper>
+    <Steps {...props} />
+  </FirebaseWrapper>
+);
