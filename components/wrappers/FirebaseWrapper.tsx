@@ -5,7 +5,14 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import styled from "styled-components";
 
-import { FirebaseAppProvider, DatabaseProvider, AuthProvider, useFirebaseApp, useUser } from "reactfire";
+import {
+  FirebaseAppProvider,
+  DatabaseProvider,
+  AuthProvider,
+  useFirebaseApp,
+  useUser,
+  useSigninCheck,
+} from "reactfire";
 import Loader from "../Loader";
 
 const firebaseConfig = {
@@ -55,15 +62,16 @@ const Root = styled.div`
   align-items: center;
 `;
 
-const LoginCheck = ({ children, enable = false }) => {
-  const { status, data: user } = useUser();
+const LoginCheck = ({ children, enable = true }) => {
+  const { status, data: signInCheckResult } = useSigninCheck();
+
   const router = useRouter();
 
   useEffect(() => {
-    if (enable && status !== "loading" && !user) {
+    if (enable && status !== "loading" && !signInCheckResult.signedIn) {
       router.replace("/login");
     }
-  }, [status, enable, user]);
+  }, [status, enable, signInCheckResult]);
 
   return status === "loading" && enable ? (
     <Root>

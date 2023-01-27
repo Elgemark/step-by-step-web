@@ -1,8 +1,8 @@
 import { getFirestore, writeBatch, doc, getDoc, increment } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { BookmarkResponse } from "../interface";
+import { useUser } from "reactfire";
 //
 export const addBookmark = async (postId) => {
   const response: BookmarkResponse = { data: { postId }, error: null };
@@ -67,7 +67,7 @@ export const isBookmarkedByUser = async (postId) => {
 };
 
 export const useBookmarks = (postId) => {
-  const [user] = useAuthState(getAuth());
+  const { data: user } = useUser();
   const [isBookmarked, setIsBookmarked] = useState(false);
   useEffect(() => {
     if (postId && user) {

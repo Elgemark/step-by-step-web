@@ -3,7 +3,7 @@ import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { useStateObject } from "../../object";
 import * as dataModels from "../models";
-import { useAuthState } from "react-firebase-hooks/auth";
+import { useUser as rfUseUser } from "reactfire";
 
 interface User {
   alias?: string;
@@ -63,22 +63,26 @@ export const getUser = async (uid) => {
 };
 
 export const useCurrentUser = (realtime = false) => {
-  const [user] = useAuthState(getAuth());
+  const { status, data: user } = rfUseUser();
   const { object: data, update: updateData } = useStateObject();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (user) {
-      getUser(user.uid)
-        .then((res) => {
-          updateData({ ...res.data, uid: user.uid });
-          setIsLoading(false);
-        })
-        .catch((error) => {
-          setIsLoading(false);
-        });
+    if (status !== "loading") {
+      if (status === "success") {
+        getUser(user.uid)
+          .then((res) => {
+            updateData({ ...res.data, uid: user.uid });
+            setIsLoading(false);
+          })
+          .catch((error) => {
+            setIsLoading(false);
+          });
+      } else {
+        setIsLoading(false);
+      }
     }
-  }, [user]);
+  }, [status, user]);
 
   // Add realtime listener
   useEffect(() => {
@@ -111,24 +115,33 @@ export const useUser = (uid, realtime = false) => {
   const { object: data, setValue: update, replace, update: updateObject } = useStateObject();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  //
-  const auth = getAuth();
-  const { uid: currentUserId } = auth.currentUser || {};
-
-  const getUserFunc = uid ? getUser : getCurrentUser;
+  const { status: statusCurrentUser, data: currentUser } = rfUseUser();
 
   useEffect(() => {
-    setIsLoading(true);
-    getUserFunc(uid)
-      .then((res) => {
-        replace(res.data);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        setError(error);
-        setIsLoading(false);
-      });
-  }, []);
+    if (statusCurrentUser !== "loading") {
+      if (statusCurrentUser === "success" && currentUser.uid) {
+        getUser(currentUser.uid)
+          .then((res) => {
+            replace(res.data);
+            setIsLoading(false);
+          })
+          .catch((error) => {
+            setError(error);
+            setIsLoading(false);
+          });
+      } else {
+        getUser(uid)
+          .then((res) => {
+            replace(res.data);
+            setIsLoading(false);
+          })
+          .catch((error) => {
+            setError(error);
+            setIsLoading(false);
+          });
+      }
+    }
+  }, [statusCurrentUser, currentUser]);
 
   // Add realtime listener
   useEffect(() => {
@@ -152,5 +165,5 @@ export const useUser = (uid, realtime = false) => {
     return await updateUser(data.uid, { ...data, ...update });
   };
 
-  return { data, isLoading, isCurrentUser: currentUserId === data?.uid, error, update, save };
+  return { data, isLoading, isCurrentUser: currentUser?.uid === data?.uid, error, update, save };
 };

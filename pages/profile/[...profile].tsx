@@ -1,12 +1,15 @@
-import { getCreatedPosts, getFollows, getPostsByState, getBookmarkedPosts, useUser } from "../../utils/firebase/api";
+import {
+  getCreatedPosts,
+  getFollows,
+  getPostsByState,
+  getBookmarkedPosts,
+  useUser as fbUseUser,
+} from "../../utils/firebase/api";
 import { Divider, useTheme } from "@mui/material";
 import Head from "next/head";
 import Layout from "../../components/Layout";
 import ProfileCard from "../../components/profile/ProfileCard";
 import { useRouter } from "next/router";
-// Firebase related
-import { useAuthState } from "react-firebase-hooks/auth";
-import { getAuth } from "firebase/auth";
 import Posts from "../../components/posts/Posts";
 import { useEffect, FC } from "react";
 import Tabs from "@mui/material/Tabs";
@@ -21,10 +24,11 @@ import ResponsiveGrid from "../../components/primitives/ResponsiveGrid";
 import UserCard from "../../components/primitives/UserCard";
 import FirebaseWrapper from "../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../components/wrappers/MUIWrapper";
+import { useUser } from "reactfire";
 
 const UserCardControlled: FC<{ userId: string }> = styled(({ userId, ...props }) => {
   const router = useRouter();
-  const { data: user } = useUser(userId);
+  const { data: user } = fbUseUser(userId);
   const onClickHandler = () => {
     router.push(`/user/${userId}`);
   };
@@ -71,14 +75,16 @@ const tabProps = (index: number) => {
 
 const ProfilePage = ({ tabValue, uid, posts = [], userIds = [] }) => {
   const theme = useTheme();
-  const [user, userLoading, userError] = useAuthState(getAuth());
+
+  const { status, data: user } = useUser();
+
   const router = useRouter();
 
   useEffect(() => {
-    if (!userLoading && !user) {
+    if (status !== "loading" && !user) {
       router.replace("/");
     }
-  }, [userLoading, user]);
+  }, [status, user]);
 
   const onTabChangeHandler = (event: React.SyntheticEvent, newValue: string) => {
     router.push("/profile/" + uid + "/" + newValue);

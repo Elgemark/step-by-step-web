@@ -4,11 +4,9 @@ import Dialog from "../primitives/Dialog";
 import { FC } from "react";
 import { deletePost, likePost } from "../../utils/firebase/api";
 import Masonry from "../primitives/Masonry";
-// Firebase related
-import { useAuthState } from "react-firebase-hooks/auth";
-import { getAuth } from "firebase/auth";
 import { useRouter } from "next/router";
 import { Posts } from "../../utils/firebase/type";
+import { useUser } from "reactfire";
 
 const Posts: FC<{
   posts: Posts;
@@ -16,7 +14,7 @@ const Posts: FC<{
 }> = ({ posts = [], enableLink = false }) => {
   const router = useRouter();
   const [showDialog, setShowDialog] = useState({ open: false, content: "", onOkClick: () => {} });
-  const [user] = useAuthState(getAuth());
+  const { data: user } = useUser();
 
   if (!posts.length) {
     return null;

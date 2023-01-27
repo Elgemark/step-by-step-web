@@ -1,8 +1,6 @@
 import { AppBar, Toolbar, Button, Typography, IconButton, Box, useTheme, Popover, Popper, Paper } from "@mui/material";
 import { useRouter } from "next/router";
 import StepsLogo from "./primitives/StepsLogo";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { getAuth } from "firebase/auth";
 import UserAvatar from "./UserAvatar";
 import { FC, ReactNode, useContext, useRef, useState } from "react";
 import { v4 as uuid } from "uuid";
@@ -16,6 +14,7 @@ import styled from "styled-components";
 import SearchFilter from "./SearchFilter";
 import { useDebouncedQuery } from "../utils/queryUtils";
 import _ from "lodash";
+import { useUser } from "reactfire";
 
 const StyledSearch = styled(Search)`
   margin: 0 ${({ theme }) => theme.spacing(2)};
@@ -52,11 +51,10 @@ const popperModifiers = [
 ];
 
 const TopBar: FC<{ className?: string; actions?: ReactNode }> = ({ className, actions, ...props }) => {
-  const [user] = useAuthState(getAuth());
+  const { data: user } = useUser();
   const router = useRouter();
   const [searchStr, setSearchStr] = useState(router.query.search);
   const theme = useTheme();
-  const colorMode = useContext(ColorModeContext);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const refArrrow = useRef();
   const { query, set: setQuery } = useDebouncedQuery();

@@ -1,8 +1,8 @@
 import { getFirestore, writeBatch, collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { FollowResponse, FollowersResponse } from "../interface";
+import { useUser } from "reactfire";
 
 export const follow = async (userId: string, follow = true) => {
   const auth = getAuth();
@@ -96,7 +96,7 @@ export const getLeaderForFollower = async (leaderUserId, followerUserId) => {
 };
 
 export const useFollow = (leaderUserId) => {
-  const [currentUser] = useAuthState(getAuth());
+  const { data: currentUser } = useUser();
   const [isLoading, setIsLoading] = useState(true);
   const [isFollowing, setIsFollowing] = useState(false);
 
