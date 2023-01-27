@@ -108,7 +108,7 @@ const TopBar: FC<{ className?: string; actions?: ReactNode }> = ({ className, ac
             }
           }}
         >
-          <StepsLogo width={100}></StepsLogo>
+          <StepsLogo width={80}></StepsLogo>
         </Button>
         {/* SEARCH */}
         <StyledSearch
