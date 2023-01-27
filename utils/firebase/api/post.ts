@@ -60,7 +60,7 @@ export const getBookmarkedPosts = async (uid, limit = 10, lastDoc = null) => {
   let error = null;
   const posts = [];
   const firebase = getFirestore();
-  // get saved posts for user
+  // get saved posts for user as list of id:s
   const bookmarksRef = collection(firebase, "users", uid, "bookmarks");
 
   const queries = [fsLimit(limit)];
@@ -78,8 +78,7 @@ export const getBookmarkedPosts = async (uid, limit = 10, lastDoc = null) => {
   // Get posts saved by user (if any)
   if (bookmarksIds.length) {
     const postsRef = collection(firebase, "posts");
-    const queryBuild = query(postsRef, where("id", "in", bookmarksIds));
-
+    const queryBuild = query(postsRef, where("id", "in", bookmarksIds), where("visibility", "==", "public"));
     try {
       const querySnapshot = await getDocs(queryBuild);
       querySnapshot.forEach((doc) => {
@@ -99,7 +98,7 @@ export const getCreatedPosts = async (uid) => {
   //
   const firebase = getFirestore();
   const postsRef = collection(firebase, "posts");
-  const queryBuild = query(postsRef, where("userId", "==", uid));
+  const queryBuild = query(postsRef, where("uid", "==", uid), where("visibility", "in", ["draft", "public"]));
 
   try {
     const querySnapshot = await getDocs(queryBuild);

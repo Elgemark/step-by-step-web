@@ -1,5 +1,4 @@
 import Avatar from "@mui/material/Avatar";
-// Firebase related
 import { FC } from "react";
 import { useUser } from "../utils/firebase/api";
 

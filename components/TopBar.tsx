@@ -64,8 +64,6 @@ const TopBar: FC<{ className?: string; actions?: ReactNode }> = ({ className, ac
     setAnchorEl(null);
   };
 
-  console.log("path", router.asPath);
-
   const onSearchFocusHandler = (e) => {};
 
   const onFocusBlurHandler = (e) => {

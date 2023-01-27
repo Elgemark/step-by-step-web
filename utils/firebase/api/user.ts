@@ -119,27 +119,15 @@ export const useUser = (uid, realtime = false) => {
 
   useEffect(() => {
     if (statusCurrentUser !== "loading") {
-      if (statusCurrentUser === "success" && currentUser.uid) {
-        getUser(currentUser.uid)
-          .then((res) => {
-            replace(res.data);
-            setIsLoading(false);
-          })
-          .catch((error) => {
-            setError(error);
-            setIsLoading(false);
-          });
-      } else {
-        getUser(uid)
-          .then((res) => {
-            replace(res.data);
-            setIsLoading(false);
-          })
-          .catch((error) => {
-            setError(error);
-            setIsLoading(false);
-          });
-      }
+      getUser(uid || currentUser.uid)
+        .then((res) => {
+          replace({ ...data, ...res.data });
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          setError(error);
+          setIsLoading(false);
+        });
     }
   }, [statusCurrentUser, currentUser]);
 

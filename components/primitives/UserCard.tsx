@@ -89,7 +89,7 @@ const UserCardBig: FC<{
         </Typography>
         <Stack className="user-interests" direction={"row"}>
           {interests.map((interest) => (
-            <Chip className="chip" label={interest} color="primary" />
+            <Chip key={interest} className="chip" label={interest} color="primary" />
           ))}
         </Stack>
         {children}
