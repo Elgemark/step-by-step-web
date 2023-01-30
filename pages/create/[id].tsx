@@ -17,14 +17,19 @@ import { v4 as uuid } from "uuid";
 import { List, Post, Step } from "../../utils/firebase/interface";
 import { ImageUploads, Lists, Steps } from "../../utils/firebase/type";
 import { deleteStep, setStep, setSteps, useSteps } from "../../utils/firebase/api/step";
-import { getAuth } from "firebase/auth";
 import { uploadImages } from "../../utils/firebase/api/storage";
-import { setPost } from "../../utils/firebase/api/post";
+import { setPost, updatePost } from "../../utils/firebase/api/post";
 import { setList, useLists } from "../../utils/firebase/api/list";
 import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/router";
 import FirebaseWrapper from "../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../components/wrappers/MUIWrapper";
+import { useUser } from "../../utils/firebase/api/user";
+import Loader from "../../components/Loader";
+import PublishIcon from "@mui/icons-material/Publish";
+import Dialog from "../../components/primitives/Dialog";
+import UnpublishedIcon from "@mui/icons-material/Unpublished";
+import { useRefresh } from "../../utils/firebaseUtils";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -70,6 +75,9 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
   const [postIsValid, setPostIsValid] = useState(false);
   const [hasSaveData, setHasSaveData] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const { isLoading: isLoadingUser, data: user } = useUser();
+  const [openPublishDialog, setOpenPublishDialog] = useState(false);
+  const refresh = useRefresh();
 
   useEffect(() => {
     if (prevId != id) {
@@ -118,8 +126,7 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
 
   const onClickSaveHandler = async () => {
     setIsSaving(true);
-    const auth = getAuth();
-    const userId = auth.currentUser.uid;
+    const userId = user.uid;
     // Save lists...
     const lists: Lists = [];
     _.forIn(saveData.lists, (value) => {
@@ -208,65 +215,115 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
     });
   };
 
+  const onClickPublishHandler = () => {
+    setOpenPublishDialog(true);
+  };
+
+  const onClickPublish = async () => {
+    const resp = await updatePost(post.id, { visibility: "audit" });
+    if (!resp.error) {
+      setSuccessMessage("Post sent for audit!");
+      refresh();
+    }
+  };
+  const onClickUnpublish = async () => {
+    const resp = await updatePost(post.id, { visibility: "draft" });
+    if (!resp.error) {
+      setSuccessMessage("Post unpublished!");
+      refresh();
+    }
+  };
+
   return (
     <>
       <Head>
         <title>STEPS | Create</title>
       </Head>
-      <StyledLayout>
-        {/* SETTINGS & POST */}
-        <PostEditable
-          post={post}
-          lists={lists}
-          onAddList={onAddListHandler}
-          onChangeList={onChangeListHandler}
-          onDeleteList={onDeleteListHandler}
-          onChange={(value) => {
-            setSaveData("post", value);
-          }}
-        />
-        <StyledDivider />
-        {/* STEPS */}
-        {steps.map((dataStep, index) => (
-          <div key={"step-" + index + "-" + dataStep.id}>
-            <StepEditable
-              step={dataStep}
-              index={index}
-              scrollIntoView={true}
-              onChange={(data) => {
-                setSaveData(["steps", data.id], data);
-              }}
-              onDelete={() => onDeleteStepHandler(dataStep)}
-              onAddStep={() => onAddStepAtIndexHandler(index)}
-            />
-            <StyledDivider />
-          </div>
-        ))}
-        {/* BUTTONS */}
-        <Slide className="bottom-bar" direction="up" in={postIsValid}>
-          <StyledBottomBar>
-            <ButtonGroup variant="text" aria-label="text button group">
-              <LoadingButton
-                loading={isSaving}
-                disabled={!hasSaveData}
-                endIcon={<SaveIcon />}
-                onClick={onClickSaveHandler}
-              >
-                Save
-              </LoadingButton>
-              <Button endIcon={<AddIcon />} onClick={onClickAddStepHandler}>
-                Step
-              </Button>
-            </ButtonGroup>
-          </StyledBottomBar>
-        </Slide>
-        {/* SNACKBAR */}
-        <Snackbar open={successMessage != null} autoHideDuration={6000} onClose={() => setSuccessMessage(null)}>
-          <Alert onClose={() => setSuccessMessage(null)} severity="success" sx={{ width: "100%" }}>
-            {successMessage}
-          </Alert>
-        </Snackbar>
-      </StyledLayout>
+      {isLoadingUser ? (
+        <Loader />
+      ) : (
+        <StyledLayout>
+          {/* SETTINGS & POST */}
+          <PostEditable
+            post={post}
+            lists={lists}
+            onAddList={onAddListHandler}
+            onChangeList={onChangeListHandler}
+            onDeleteList={onDeleteListHandler}
+            onChange={(value) => {
+              setSaveData("post", value);
+            }}
+          />
+          <StyledDivider />
+          {/* STEPS */}
+          {steps.map((dataStep, index) => (
+            <div key={"step-" + index + "-" + dataStep.id}>
+              <StepEditable
+                step={dataStep}
+                index={index}
+                scrollIntoView={true}
+                onChange={(data) => {
+                  setSaveData(["steps", data.id], data);
+                }}
+                onDelete={() => onDeleteStepHandler(dataStep)}
+                onAddStep={() => onAddStepAtIndexHandler(index)}
+              />
+              <StyledDivider />
+            </div>
+          ))}
+          {/* BUTTONS */}
+          <Slide className="bottom-bar" direction="up" in={postIsValid}>
+            <StyledBottomBar>
+              <ButtonGroup variant="text" aria-label="text button group">
+                {/* BUTTON SAVE */}
+                <LoadingButton
+                  loading={isSaving}
+                  disabled={!hasSaveData}
+                  endIcon={<SaveIcon />}
+                  onClick={onClickSaveHandler}
+                >
+                  Save
+                </LoadingButton>
+                {/* BUTTON ADD STEP */}
+                <Button endIcon={<AddIcon />} onClick={onClickAddStepHandler}>
+                  Step
+                </Button>
+                {/* BUTTON PUBLISH / UNPUBLISH */}
+                <Button
+                  endIcon={post.visibility === "draft" ? <PublishIcon /> : <UnpublishedIcon />}
+                  onClick={onClickPublishHandler}
+                >
+                  {post.visibility === "draft" ? "Publish" : "Unpublish"}
+                </Button>
+              </ButtonGroup>
+            </StyledBottomBar>
+          </Slide>
+          {/* SNACKBAR */}
+          <Snackbar open={successMessage != null} autoHideDuration={6000} onClose={() => setSuccessMessage(null)}>
+            <Alert onClose={() => setSuccessMessage(null)} severity="success" sx={{ width: "100%" }}>
+              {successMessage}
+            </Alert>
+          </Snackbar>
+          {/* DIALOG PUBLISH */}
+          <Dialog
+            open={openPublishDialog}
+            title={post.visibility === "draft" ? "Publish?" : "Unpublish?"}
+            labelButtonOk={post.visibility === "draft" ? "Publish" : "Unpublish"}
+            content={
+              post.visibility === "draft"
+                ? "Every published posts must first reviewed. The review can take up to 48 hours. You will recevie a mail when the post is live or if the post was rejected. Ready to publish?"
+                : "Are you sure you want to unpublis this post? The post must be audited once you decide to publish the post again."
+            }
+            onClose={() => {
+              setOpenPublishDialog(false);
+            }}
+            onClickCancel={() => {
+              setOpenPublishDialog(false);
+            }}
+            onClickOk={post.visibility === "draft" ? onClickPublish : onClickUnpublish}
+          />
+        </StyledLayout>
+      )}
     </>
   );
 };

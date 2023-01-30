@@ -111,14 +111,14 @@ export const useCurrentUser = (realtime = false) => {
   };
 };
 
-export const useUser = (uid, realtime = false) => {
+export const useUser = (uid = null, realtime = false) => {
   const { object: data, setValue: update, replace, update: updateObject } = useStateObject();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const { status: statusCurrentUser, data: currentUser } = rfUseUser();
 
   useEffect(() => {
-    if (statusCurrentUser !== "loading") {
+    if ((statusCurrentUser !== "loading" && currentUser !== null) || uid) {
       getUser(uid || currentUser.uid)
         .then((res) => {
           replace({ ...data, ...res.data });
@@ -129,7 +129,7 @@ export const useUser = (uid, realtime = false) => {
           setIsLoading(false);
         });
     }
-  }, [statusCurrentUser, currentUser]);
+  }, [statusCurrentUser, currentUser, uid]);
 
   // Add realtime listener
   useEffect(() => {

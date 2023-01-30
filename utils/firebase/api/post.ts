@@ -12,6 +12,7 @@ import {
   startAfter,
   serverTimestamp,
   setDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { Post, PostResponse, PostsResponse } from "../interface";
 import { parseData } from "../../firebaseUtils";
@@ -33,6 +34,19 @@ export const setPost = async (id, post: Post) => {
   const firebase = getFirestore();
   try {
     await setDoc(doc(firebase, "posts", id), { ...post, userId, timeStamp: serverTimestamp() });
+  } catch (error) {
+    response.error = error;
+  }
+  return response;
+};
+
+export const updatePost = async (id, data = {}) => {
+  const response: any = { data: { id, ...data }, error: null };
+  const auth = getAuth();
+  const userId = auth.currentUser.uid;
+  const firebase = getFirestore();
+  try {
+    await updateDoc(doc(firebase, "posts", id), { ...data, userId, timeStamp: serverTimestamp() });
   } catch (error) {
     response.error = error;
   }
@@ -92,13 +106,51 @@ export const getBookmarkedPosts = async (uid, limit = 10, lastDoc = null) => {
   return { error, posts, bookmarksIds };
 };
 
-export const getCreatedPosts = async (uid) => {
+export const getPublishedPosts = async (uid) => {
   let error = null;
   const posts = [];
   //
   const firebase = getFirestore();
   const postsRef = collection(firebase, "posts");
-  const queryBuild = query(postsRef, where("uid", "==", uid), where("visibility", "in", ["draft", "public"]));
+  const queryBuild = query(postsRef, where("uid", "==", uid), where("visibility", "==", "public"));
+
+  try {
+    const querySnapshot = await getDocs(queryBuild);
+    querySnapshot.forEach((doc) => {
+      posts.push(parseData({ ...doc.data(), id: doc.id }));
+    });
+  } catch (error) {
+    error = error.toString();
+  }
+  return { error, posts };
+};
+
+export const getDraftedPosts = async (uid) => {
+  let error = null;
+  const posts = [];
+  //
+  const firebase = getFirestore();
+  const postsRef = collection(firebase, "posts");
+  const queryBuild = query(postsRef, where("uid", "==", uid), where("visibility", "==", "draft"));
+
+  try {
+    const querySnapshot = await getDocs(queryBuild);
+    querySnapshot.forEach((doc) => {
+      posts.push(parseData({ ...doc.data(), id: doc.id }));
+    });
+  } catch (error) {
+    error = error.toString();
+  }
+  return { error, posts };
+};
+
+export const getAuditPosts = async (uid) => {
+  let error = null;
+  const posts = [];
+  //
+  const firebase = getFirestore();
+  const postsRef = collection(firebase, "posts");
+  const queryBuild = query(postsRef, where("uid", "==", uid), where("visibility", "==", "audit"));
 
   try {
     const querySnapshot = await getDocs(queryBuild);

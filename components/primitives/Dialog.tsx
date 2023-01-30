@@ -12,9 +12,9 @@ const Dialog: FC<{
   content: string;
   labelButtonOk?: string;
   labelButtonCancel?: string;
-  onClose: (value: string) => void;
-  onClickOk: Function;
-  onClickCancel: Function;
+  onClose: () => void;
+  onClickOk: () => void;
+  onClickCancel: () => void;
 }> = ({
   open = false,
   title = "",
@@ -38,8 +38,22 @@ const Dialog: FC<{
           <DialogContentText id="alert-dialog-description">{content}</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => onClickCancel()}>{labelButtonCancel}</Button>
-          <Button onClick={() => onClickOk()} autoFocus>
+          <Button
+            onClick={() => {
+              onClickCancel();
+              onClose();
+            }}
+          >
+            {labelButtonCancel}
+          </Button>
+
+          <Button
+            onClick={() => {
+              onClickOk();
+              onClose();
+            }}
+            autoFocus
+          >
             {labelButtonOk}
           </Button>
         </DialogActions>

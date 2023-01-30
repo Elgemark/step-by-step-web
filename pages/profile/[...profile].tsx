@@ -1,10 +1,4 @@
-import {
-  getCreatedPosts,
-  getFollows,
-  getPostsByState,
-  getBookmarkedPosts,
-  useUser as fbUseUser,
-} from "../../utils/firebase/api";
+import { getFollows, getPostsByState, getBookmarkedPosts, useUser as fbUseUser } from "../../utils/firebase/api";
 import { Divider, useTheme } from "@mui/material";
 import Head from "next/head";
 import Layout from "../../components/Layout";
@@ -18,6 +12,7 @@ import BookmarkIcon from "@mui/icons-material/Bookmark";
 import CreateIcon from "@mui/icons-material/Create";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import UnpublishedIcon from "@mui/icons-material/Unpublished";
+import PublishIcon from "@mui/icons-material/Publish";
 import AssistantDirectionIcon from "@mui/icons-material/AssistantDirection";
 import styled from "styled-components";
 import ResponsiveGrid from "../../components/primitives/ResponsiveGrid";
@@ -25,6 +20,8 @@ import UserCard from "../../components/primitives/UserCard";
 import FirebaseWrapper from "../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../components/wrappers/MUIWrapper";
 import { useUser } from "reactfire";
+import { getAuditPosts, getDraftedPosts, getPublishedPosts } from "../../utils/firebase/api/post";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 const UserCardControlled: FC<{ userId: string }> = styled(({ userId, ...props }) => {
   const router = useRouter();
@@ -81,10 +78,12 @@ const ProfilePage = ({ tabValue, uid, posts = [], userIds = [] }) => {
   const router = useRouter();
 
   useEffect(() => {
-    if (status !== "loading" && !user) {
+    if (status !== "loading" && user === undefined) {
       router.replace("/");
     }
   }, [status, user]);
+
+  console.log({ status, user });
 
   const onTabChangeHandler = (event: React.SyntheticEvent, newValue: string) => {
     router.push("/profile/" + uid + "/" + newValue);
@@ -101,10 +100,12 @@ const ProfilePage = ({ tabValue, uid, posts = [], userIds = [] }) => {
         <Divider className="divider" />
         <Tabs className="tabs" value={tabValue} onChange={onTabChangeHandler} aria-label="tabs">
           <Tab label="Saved" icon={<BookmarkIcon />} {...tabProps(0)} value="saved" />
-          <Tab label="Created" icon={<CreateIcon />} {...tabProps(1)} value="created" />
-          <Tab label="Completed" icon={<CheckCircleIcon />} {...tabProps(2)} value="completed" />
-          <Tab label="Incompleted" icon={<UnpublishedIcon />} {...tabProps(3)} value="incompleted" />
-          <Tab label="Follows" icon={<AssistantDirectionIcon />} {...tabProps(4)} value="follows" />
+          <Tab label="Published" icon={<PublishIcon />} {...tabProps(1)} value="published" />
+          <Tab label="Drafts" icon={<CreateIcon />} {...tabProps(2)} value="drafts" />
+          <Tab label="Reviews" icon={<VisibilityIcon />} {...tabProps(3)} value="audits" />
+          <Tab label="Completed" icon={<CheckCircleIcon />} {...tabProps(4)} value="completed" />
+          <Tab label="Incompleted" icon={<UnpublishedIcon />} {...tabProps(5)} value="incompleted" />
+          <Tab label="Follows" icon={<AssistantDirectionIcon />} {...tabProps(6)} value="follows" />
         </Tabs>
         <Posts posts={posts} enableLink />
         <Users userIds={userIds} />
@@ -123,9 +124,17 @@ export async function getServerSideProps({ query }) {
       const { posts: savedPosts } = await getBookmarkedPosts(uid);
       posts = savedPosts;
       break;
-    case "created":
-      const { posts: createdPosts } = await getCreatedPosts(uid);
+    case "published":
+      const { posts: createdPosts } = await getPublishedPosts(uid);
       posts = createdPosts;
+      break;
+    case "drafts":
+      const { posts: draftedPosts } = await getDraftedPosts(uid);
+      posts = draftedPosts;
+      break;
+    case "audits":
+      const { posts: auditPosts } = await getAuditPosts(uid);
+      posts = auditPosts;
       break;
     case "completed":
       const { posts: completedPosts } = await getPostsByState(uid, "completed");

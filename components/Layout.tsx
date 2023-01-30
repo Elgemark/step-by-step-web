@@ -39,7 +39,14 @@ const Layout: FC<{
       </Box>
       {/* SNACKBAR */}
       <Snackbar open={messages.alert} autoHideDuration={6000} onClose={() => removeMessage("alert")}>
-        <Alert onClose={() => removeMessage("alert")} severity="success" sx={{ width: "100%" }}>
+        <Alert
+          onClose={() => {
+            removeMessage("alert");
+            messages.alert?.onRemove();
+          }}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
           {messages.alert?.message}
         </Alert>
       </Snackbar>

@@ -3,6 +3,7 @@ import { useStateObject } from "../utils/object";
 
 export interface Message {
   id: string;
+  onRemove?: Function;
   [key: string]: any;
 }
 
@@ -25,9 +26,7 @@ export const useMessages = () => {
 
   return {
     messages,
-    addMessage: (message: Message) => {
-      window.postMessage(message);
-    },
+    addMessage: (message: Message) => {},
     removeMessage: (id: string) => {
       deleteValue(id);
     },

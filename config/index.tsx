@@ -1,4 +1,5 @@
-const imageAspect = 16 / 9;
+const _imageAspect = 16 / 9;
+const imageAspect = 4 / 3;
 const avatarImageAspect = 2 / 1;
 
 const settings = {
