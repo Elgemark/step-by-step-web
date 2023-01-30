@@ -1,5 +1,5 @@
 import { getFollows, getPostsByState, getBookmarkedPosts, useUser as fbUseUser } from "../../utils/firebase/api";
-import { Divider, useTheme } from "@mui/material";
+import { Divider, useTheme, Box } from "@mui/material";
 import Head from "next/head";
 import Layout from "../../components/Layout";
 import ProfileCard from "../../components/profile/ProfileCard";
@@ -53,7 +53,7 @@ const StyledLayout = styled(Layout)`
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
+    /* width: 100%; */
   }
   .tabs {
     margin: ${({ theme }) => theme.spacing(4)} 0;
@@ -98,16 +98,28 @@ const ProfilePage = ({ tabValue, uid, posts = [], userIds = [] }) => {
         {/* LOGGED IN */}
         <ProfileCard userId={uid} />
         <Divider className="divider" />
-        <Tabs className="tabs" value={tabValue} onChange={onTabChangeHandler} aria-label="tabs">
-          <Tab label="Saved" icon={<BookmarkIcon />} {...tabProps(0)} value="saved" />
-          <Tab label="Published" icon={<PublishIcon />} {...tabProps(1)} value="published" />
-          <Tab label="Drafts" icon={<CreateIcon />} {...tabProps(2)} value="drafts" />
-          <Tab label="Reviews" icon={<VisibilityIcon />} {...tabProps(3)} value="audits" />
-          <Tab label="Completed" icon={<CheckCircleIcon />} {...tabProps(4)} value="completed" />
-          <Tab label="Incompleted" icon={<UnpublishedIcon />} {...tabProps(5)} value="incompleted" />
-          <Tab label="Follows" icon={<AssistantDirectionIcon />} {...tabProps(6)} value="follows" />
-        </Tabs>
+        <Box sx={{ maxWidth: { xs: 360, sm: 480, md: 600, lg: 1024 }, bgcolor: "background.paper" }}>
+          <Tabs
+            className="tabs"
+            value={tabValue}
+            onChange={onTabChangeHandler}
+            aria-label="tabs"
+            variant="scrollable"
+            scrollButtons
+            allowScrollButtonsMobile
+          >
+            <Tab label="Saved" icon={<BookmarkIcon />} {...tabProps(0)} value="saved" />
+            <Tab label="Published" icon={<PublishIcon />} {...tabProps(1)} value="published" />
+            <Tab label="Drafts" icon={<CreateIcon />} {...tabProps(2)} value="drafts" />
+            <Tab label="Reviews" icon={<VisibilityIcon />} {...tabProps(3)} value="audits" />
+            <Tab label="Completed" icon={<CheckCircleIcon />} {...tabProps(4)} value="completed" />
+            <Tab label="Incompleted" icon={<UnpublishedIcon />} {...tabProps(5)} value="incompleted" />
+            <Tab label="Follows" icon={<AssistantDirectionIcon />} {...tabProps(6)} value="follows" />
+          </Tabs>
+        </Box>
+
         <Posts posts={posts} enableLink />
+
         <Users userIds={userIds} />
       </StyledLayout>
     </>

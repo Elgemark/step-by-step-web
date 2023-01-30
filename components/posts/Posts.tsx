@@ -50,7 +50,7 @@ const Posts: FC<{
   };
 
   return (
-    <>
+    <div style={{ width: "100%" }}>
       <Masonry>
         {posts.map((data, index) => (
           <Post
@@ -89,7 +89,7 @@ const Posts: FC<{
         onClickCancel={() => setShowDialog({ ...showDialog, open: false })}
         content={showDialog.content}
       />
-    </>
+    </div>
   );
 };
 
