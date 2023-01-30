@@ -9,11 +9,7 @@ const collection = new Collection();
 let lastDoc;
 
 const PostsPage = (props) => {
-  return (
-    <FirebaseWrapper>
-      <PageMain {...props} title="STEPS" enableLink={true} />
-    </FirebaseWrapper>
-  );
+  return <PageMain {...props} title="STEPS" enableLink={true} />;
 };
 
 export async function getServerSideProps({ query }) {
