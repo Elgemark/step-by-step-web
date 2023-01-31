@@ -20,10 +20,6 @@ import { Lists } from "../../utils/firebase/type";
 import List from "../lists/List";
 import { Media } from "../../utils/firebase/interface";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import ReportDialogContent from "../primitives/ReportDialogContent";
-import Dialog from "@mui/material/Dialog";
-import { setReport } from "../../utils/firebase/api/report";
-import { useMessages } from "../../hooks/message";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 
 const Root = styled(Card)`
@@ -40,11 +36,9 @@ const StyledCardMedia = styled(CardMedia)`
 const MediaContainer = ({ children, href, enableLink }) => {
   if (enableLink) {
     return (
-      // <Link href={href} >
       <a href={`/steps/${href.query.slug}`}>
         <CardActionArea>{children}</CardActionArea>
       </a>
-      // </Link>
     );
   } else {
     return children;
@@ -82,8 +76,6 @@ const Post: FC<{
   const [numLikes, setNumLikes] = useState(likes);
   const { isLiked, toggle: toggleLike } = useLikes(id);
   const { isBookmarked, toggle: toogleBookmark } = useBookmarks(id);
-  const [showReportDialog, setShowReportDialog] = useState(false);
-  const { addMessage } = useMessages();
 
   const onLikeHandler = () => {
     setNumLikes(numLikes + (isLiked ? -1 : 1));
