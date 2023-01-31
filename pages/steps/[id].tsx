@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Layout from "../../components/Layout";
 import styled from "styled-components";
-import { getPost, getSteps, deletePost, likePost, getLists } from "../../utils/firebase/api";
+import { getPost, getSteps, likePost, getLists } from "../../utils/firebase/api";
 import RevealNext from "../../components/RevealNext";
 import Step from "../../components/steps/Step";
 import Post from "../../components/posts/Post";
@@ -9,7 +9,6 @@ import { post as postModel } from "../../utils/firebase/models";
 import StepsProgress from "../../components/StepsProgress";
 import { useRouter } from "next/router";
 import { v4 as uuid } from "uuid";
-import Dialog from "../../components/primitives/Dialog";
 import { FC, useState } from "react";
 import { ListsResponse, Post as PostType } from "../../utils/firebase/interface";
 import { Lists, Steps } from "../../utils/firebase/type";
@@ -17,6 +16,7 @@ import { useProgress } from "../../utils/firebase/api/progress";
 import FirebaseWrapper from "../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../components/wrappers/MUIWrapper";
 import PostMoreMenu from "../../components/PostMoreMenu";
+import DialogDeletePost from "../../components/DialogDeletePost";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -42,7 +42,7 @@ const StyledStepsProgress = styled(StepsProgress)`
 `;
 
 const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> = ({ id, post, steps, lists }) => {
-  const [showDialog, setShowDialog] = useState({ open: false, content: "", onOkClick: () => {} });
+  const [showDeleteDialog, setShowDeleteDialog] = useState<string>();
   const router = useRouter();
   const { user, progress, updateProgress, isLoading } = useProgress(id, true);
 
@@ -51,12 +51,7 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> 
   };
 
   const onDeleteHandler = ({ id }) => {
-    setShowDialog({
-      ...showDialog,
-      open: true,
-      content: "Are you sure you want to delete this post?",
-      onOkClick: () => deletePost(id),
-    });
+    setShowDeleteDialog(id);
   };
 
   const onLikeHandler = async ({ id }) => {
@@ -140,16 +135,7 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> 
         })}
       </StyledLayout>
       {/* DELETE DIALOG */}
-      <Dialog
-        open={showDialog.open}
-        onClose={() => setShowDialog({ ...showDialog, open: false })}
-        onClickOk={() => {
-          showDialog.onOkClick();
-          setShowDialog({ ...showDialog, open: false });
-        }}
-        onClickCancel={() => setShowDialog({ ...showDialog, open: false })}
-        content={showDialog.content}
-      />
+      <DialogDeletePost open={showDeleteDialog} onClose={() => setShowDeleteDialog(null)} />
     </>
   );
 };
