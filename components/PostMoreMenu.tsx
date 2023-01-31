@@ -86,21 +86,26 @@ const PostMoreMenu: FC<{ onEdit?: Function; onDelete?: Function; onStartOver?: F
             Start Over
           </MenuItem>
         )}
-        <Divider sx={{ my: 0.5 }} />
+
         {/* REPORT */}
-        <MenuItem
-          onClick={
-            onReport &&
-            (() => {
-              onReport();
-              handleClose();
-            })
-          }
-          disableRipple
-        >
-          <FlagIcon />
-          Report
-        </MenuItem>
+        {onReport && (
+          <>
+            <Divider sx={{ my: 0.5 }} />
+            <MenuItem
+              onClick={
+                onReport &&
+                (() => {
+                  onReport();
+                  handleClose();
+                })
+              }
+              disableRipple
+            >
+              <FlagIcon />
+              Report
+            </MenuItem>
+          </>
+        )}
       </Menu>
     </>
   );

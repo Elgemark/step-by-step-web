@@ -1,19 +1,24 @@
 import Post from "./Post";
 import { useState } from "react";
-import Dialog from "../primitives/Dialog";
 import { FC } from "react";
-import { deletePost, likePost } from "../../utils/firebase/api";
+import { likePost } from "../../utils/firebase/api";
 import Masonry from "../primitives/Masonry";
 import { useRouter } from "next/router";
 import { Posts } from "../../utils/firebase/type";
 import { useUser } from "reactfire";
+import PostMoreMenu from "../PostMoreMenu";
+import DialogReport, { ReportData } from "../DialogReport";
+import DialogDeletePost from "../DialogDeletePost";
 
 const Posts: FC<{
   posts: Posts;
   enableLink: boolean;
 }> = ({ posts = [], enableLink = false }) => {
   const router = useRouter();
-  const [showDialog, setShowDialog] = useState({ open: false, content: "", onOkClick: () => {} });
+
+  const [report, setReport] = useState<ReportData>();
+  const [deletePost, setDeletePost] = useState<string>();
+
   const { data: user } = useUser();
 
   if (!posts.length) {
@@ -22,19 +27,6 @@ const Posts: FC<{
 
   const onEditHandler = ({ id }) => {
     router.push("/create/" + id);
-  };
-
-  const onDeleteHandler = ({ id }) => {
-    setShowDialog({
-      ...showDialog,
-      open: true,
-      content: "Are you sure you want to delete this post?",
-      onOkClick: () => {
-        deletePost(id).then(() => {
-          router.replace(router.asPath);
-        });
-      },
-    });
   };
 
   const onLikeHandler = async ({ id }) => {
@@ -57,38 +49,35 @@ const Posts: FC<{
             key={index}
             currentUserId={user?.uid}
             enableLink={enableLink}
-            onEdit={
-              user?.uid === data.userId
-                ? () => {
-                    onEditHandler(data);
-                  }
-                : undefined
-            }
-            onDelete={
-              user?.uid === data.userId
-                ? () => {
-                    onDeleteHandler(data);
-                  }
-                : undefined
+            action={
+              <PostMoreMenu
+                onEdit={
+                  user?.uid === data.userId
+                    ? () => {
+                        onEditHandler(data);
+                      }
+                    : undefined
+                }
+                onDelete={
+                  user?.uid === data.userId
+                    ? () => {
+                        setDeletePost(data.id);
+                      }
+                    : undefined
+                }
+                onReport={() => setReport({ postId: data.id, userId: user.uid })}
+              />
             }
             onLike={() => onLikeHandler(data)}
             onClickAvatar={() => onClickAvatarHandler(data)}
-            // onReport={(() => onReportHandler(data))}
             {...data}
           />
         ))}
       </Masonry>
       {/* DELETE DIALOG */}
-      <Dialog
-        open={showDialog.open}
-        onClose={() => setShowDialog({ ...showDialog, open: false })}
-        onClickOk={() => {
-          showDialog.onOkClick();
-          setShowDialog({ ...showDialog, open: false });
-        }}
-        onClickCancel={() => setShowDialog({ ...showDialog, open: false })}
-        content={showDialog.content}
-      />
+      <DialogDeletePost open={deletePost} onClose={() => setDeletePost(null)} />
+      {/* REPORT DIALOG */}
+      <DialogReport open={report} onClose={() => setReport(null)} />
     </div>
   );
 };

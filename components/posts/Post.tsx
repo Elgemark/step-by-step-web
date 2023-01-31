@@ -14,7 +14,7 @@ import UserAvatar from "../UserAvatar";
 import Badge from "@mui/material/Badge";
 import { useLikes, useBookmarks } from "../../utils/firebase/api";
 import styled from "styled-components";
-import { useState, FC } from "react";
+import { useState, FC, ReactNode } from "react";
 import { CardActionArea } from "@mui/material";
 import { Lists } from "../../utils/firebase/type";
 import List from "../lists/List";
@@ -24,6 +24,7 @@ import ReportDialogContent from "../primitives/ReportDialogContent";
 import Dialog from "@mui/material/Dialog";
 import { setReport } from "../../utils/firebase/api/report";
 import { useMessages } from "../../hooks/message";
+import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 
 const Root = styled(Card)`
   .button-link {
@@ -60,11 +61,9 @@ const Post: FC<{
   media: Media;
   likes: number;
   currentUserId?: string;
-  onEdit?: Function;
-  onDelete?: Function;
+  action?: ReactNode | ReactJSXElement;
   onLike?: Function;
   onBookmark?: Function;
-  onStartOver?: Function;
   onClickAvatar?: Function;
 }> = ({
   userId,
@@ -75,11 +74,9 @@ const Post: FC<{
   enableLink,
   lists = [],
   media = { imageURI: "" },
+  action,
   likes = 0,
-  onEdit,
-  onDelete,
   onLike,
-  onStartOver,
   onClickAvatar,
 }) => {
   const [numLikes, setNumLikes] = useState(likes);
@@ -98,25 +95,6 @@ const Post: FC<{
     toogleBookmark(id);
   };
 
-  const onReportHandler = () => {
-    setShowReportDialog(true);
-  };
-
-  const onClickSendReportHandler = (report) => {
-    setShowReportDialog(false);
-    setReport(id, userId, report)
-      .then((e) => {
-        if (!e.error) {
-          addMessage({ id: "alert", message: "Report sent successfully!" });
-        } else {
-          addMessage({ id: "alert", message: "An error occured. Please try againg!" });
-        }
-      })
-      .catch((e) => {
-        addMessage({ id: "alert", message: "An error occured. Please try againg!" });
-      });
-  };
-
   return (
     <Root>
       <CardHeader
@@ -125,9 +103,7 @@ const Post: FC<{
             <UserAvatar userId={userId} />
           </IconButton>
         }
-        action={
-          <PostMoreMenu onEdit={onEdit} onDelete={onDelete} onReport={onReportHandler} onStartOver={onStartOver} />
-        }
+        action={action}
         title={<Typography>{title}</Typography>}
       />
 
@@ -179,11 +155,6 @@ const Post: FC<{
           ))}
         </CardContent>
       ) : null}
-
-      {/* REPORT */}
-      <Dialog open={showReportDialog} onClose={() => setShowReportDialog(false)}>
-        <ReportDialogContent onClickCancel={() => setShowReportDialog(false)} onClickSend={onClickSendReportHandler} />
-      </Dialog>
     </Root>
   );
 };

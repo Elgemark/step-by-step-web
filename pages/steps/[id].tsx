@@ -16,6 +16,7 @@ import { Lists, Steps } from "../../utils/firebase/type";
 import { useProgress } from "../../utils/firebase/api/progress";
 import FirebaseWrapper from "../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../components/wrappers/MUIWrapper";
+import PostMoreMenu from "../../components/PostMoreMenu";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -86,25 +87,29 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> 
       <StyledLayout propsTopbar={{ actions: <StyledStepsProgress label={`${progress.step}/${steps.length}`} /> }}>
         <Post
           {...post}
+          action={
+            <PostMoreMenu
+              onEdit={
+                user?.uid === post.userId
+                  ? () => {
+                      onEditHandler(post);
+                    }
+                  : undefined
+              }
+              onDelete={
+                user?.uid === post.userId
+                  ? () => {
+                      onDeleteHandler(post);
+                    }
+                  : undefined
+              }
+              onStartOver={onStartOverHandler}
+            />
+          }
           enableLink={false}
           currentUserId={user?.uid}
           lists={lists}
-          onEdit={
-            user?.uid === post.userId
-              ? () => {
-                  onEditHandler(post);
-                }
-              : undefined
-          }
-          onDelete={
-            user?.uid === post.userId
-              ? () => {
-                  onDeleteHandler(post);
-                }
-              : undefined
-          }
           onLike={() => onLikeHandler(post)}
-          onStartOver={onStartOverHandler}
         />
         {/* START BUTTON */}
         <RevealNext
