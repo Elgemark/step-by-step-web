@@ -23,7 +23,7 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import ReportDialogContent from "../primitives/ReportDialogContent";
 import Dialog from "@mui/material/Dialog";
 import { setReport } from "../../utils/firebase/api/report";
-import { Message, useMessages } from "../../hooks/message";
+import { useMessages } from "../../hooks/message";
 
 const Root = styled(Card)`
   .button-link {
