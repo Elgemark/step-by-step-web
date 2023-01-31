@@ -14,6 +14,11 @@ https://www.npmjs.com/package/react-easy-crop
 https://markerjs.com/
 https://github.com/manishboro/image-crop-and-zoom
 
+### Mail
+
+https://react.email/docs/integrations/nodemailer
+https://edigleyssonsilva.medium.com/cloud-functions-for-firebase-sending-e-mail-1f2631d1022e
+
 ### Firebase
 
 https://medium.com/firebase-developers/what-does-it-mean-that-firestore-security-rules-are-not-filters-68ec14f3d003
