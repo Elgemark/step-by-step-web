@@ -60,7 +60,7 @@ const ReviewPage = ({ posts }) => {
     <>
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
-        <title>{"Admin"}</title>
+        <title>{"STEPS | Admin"}</title>
       </Head>
       <Layout>
         <Masonry>
