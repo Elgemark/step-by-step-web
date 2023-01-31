@@ -33,10 +33,10 @@ const StyledCardMedia = styled(CardMedia)`
   max-height: 320px;
 `;
 
-const MediaContainer = ({ children, href, enableLink }) => {
+const MediaContainer = ({ children, hrefBasePath, slug, enableLink }) => {
   if (enableLink) {
     return (
-      <a href={`/steps/${href.query.slug}`}>
+      <a href={`${hrefBasePath}${slug}`}>
         <CardActionArea>{children}</CardActionArea>
       </a>
     );
@@ -51,6 +51,7 @@ const Post: FC<{
   title: string;
   descr?: string;
   enableLink: boolean;
+  hrefBasePath?: string;
   lists?: Lists;
   media: Media;
   likes: number;
@@ -66,6 +67,7 @@ const Post: FC<{
   descr = "Body",
   id,
   enableLink,
+  hrefBasePath = "/steps/",
   lists = [],
   media = { imageURI: "" },
   action,
@@ -99,13 +101,7 @@ const Post: FC<{
         title={<Typography>{title}</Typography>}
       />
 
-      <MediaContainer
-        href={{
-          pathname: "/steps/[slug]",
-          query: { slug: id },
-        }}
-        enableLink={enableLink}
-      >
+      <MediaContainer slug={id} hrefBasePath={hrefBasePath} enableLink={enableLink}>
         {media?.imageURI && <StyledCardMedia component="img" image={media?.imageURI} />}
       </MediaContainer>
 
