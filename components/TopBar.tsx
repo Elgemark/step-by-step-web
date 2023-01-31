@@ -15,6 +15,7 @@ import SearchFilter from "./SearchFilter";
 import { useDebouncedQuery } from "../utils/queryUtils";
 import _ from "lodash";
 import { useUser } from "reactfire";
+import StepsLogoIconFold from "./primitives/StepsLogoIconFold";
 
 const StyledSearch = styled(Search)`
   margin: 0 ${({ theme }) => theme.spacing(2)};
@@ -108,7 +109,7 @@ const TopBar: FC<{ className?: string; actions?: ReactNode }> = ({ className, ac
             }
           }}
         >
-          <StepsLogo width={80}></StepsLogo>
+          <StepsLogoIconFold height={40} />
         </Button>
         {/* SEARCH */}
         <StyledSearch
