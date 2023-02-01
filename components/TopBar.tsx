@@ -1,14 +1,10 @@
-import { AppBar, Toolbar, Button, Typography, IconButton, Box, useTheme, Popover, Popper, Paper } from "@mui/material";
+import { AppBar, Toolbar, Button, IconButton, useTheme, Popover } from "@mui/material";
 import { useRouter } from "next/router";
-import StepsLogo from "./primitives/StepsLogo";
 import UserAvatar from "./UserAvatar";
 import { FC, ReactNode, useContext, useRef, useState } from "react";
 import { v4 as uuid } from "uuid";
 import CreateIcon from "@mui/icons-material/Create";
 import LoginIcon from "@mui/icons-material/Login";
-import Brightness4Icon from "@mui/icons-material/Brightness4";
-import Brightness7Icon from "@mui/icons-material/Brightness7";
-import { ColorModeContext } from "./Layout";
 import Search from "./primitives/Search";
 import styled from "styled-components";
 import SearchFilter from "./SearchFilter";
@@ -91,6 +87,7 @@ const TopBar: FC<{ className?: string; actions?: ReactNode }> = ({ className, ac
           onClickFilter={onClickFilterHandler}
           showFilterButton={router.asPath.includes("/search")}
           value={searchStr}
+          numFilters={(_.get(query, "category") ? 1 : 0) + (_.get(query, "orderBy") ? 1 : 0)}
         ></StyledSearch>
         {/* FILTER */}
         <Popover

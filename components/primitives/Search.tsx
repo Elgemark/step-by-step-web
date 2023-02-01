@@ -4,7 +4,7 @@ import { alpha, useTheme } from "@mui/material/styles";
 import styled from "styled-components";
 import { FC } from "react";
 import FilterListIcon from "@mui/icons-material/FilterList";
-import { IconButton } from "@mui/material";
+import { Badge, IconButton } from "@mui/material";
 
 const Root = styled.div`
   border-radius: ${({ theme }) => theme.shape.borderRadius + "px"};
@@ -33,7 +33,8 @@ const Search: FC<{
   onClickFilter?: (e: any) => void;
   value: string | null;
   showFilterButton?: boolean;
-}> = ({ onChange, onEnter, onFocus, onBlur, onClickFilter, value, showFilterButton = true, ...rest }) => {
+  numFilters?: number;
+}> = ({ onChange, onEnter, onFocus, onBlur, onClickFilter, value, numFilters, showFilterButton = true, ...rest }) => {
   const theme = useTheme();
 
   const onKeyUpHandler = (e) => {
@@ -54,9 +55,11 @@ const Search: FC<{
         inputProps={{ "aria-label": "search" }}
         onKeyUp={onKeyUpHandler}
       />
-      <IconButton className="filter-button" onClick={onClickFilter}>
-        <FilterListIcon />
-      </IconButton>
+      <Badge badgeContent={numFilters} color="primary" overlap="circular">
+        <IconButton className="filter-button" onClick={onClickFilter}>
+          <FilterListIcon />
+        </IconButton>
+      </Badge>
     </Root>
   );
 };

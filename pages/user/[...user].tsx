@@ -1,4 +1,4 @@
-import { getCreatedPosts, getFollows, getUser, useFollow, useUser } from "../../utils/firebase/api";
+import { getFollows, getUser, useFollow, useUser } from "../../utils/firebase/api";
 import Head from "next/head";
 import Layout from "../../components/Layout";
 import { useRouter } from "next/router";
@@ -16,6 +16,7 @@ import ResponsiveGrid from "../../components/primitives/ResponsiveGrid";
 import UserCard from "../../components/primitives/UserCard";
 import FirebaseWrapper from "../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../components/wrappers/MUIWrapper";
+import { getBookmarkedPosts, getDraftedPosts, getPublishedPosts } from "../../utils/firebase/api/post";
 
 const UserCardControlled: FC<{ userId: string }> = styled(({ userId, ...props }) => {
   const router = useRouter();
@@ -96,7 +97,7 @@ const UserPage = ({ posts, user, userIds, uid, tabValue }) => {
         </UserCard>
         <Divider className="divider" />
         <Tabs className="tabs" value={tabValue} onChange={onTabChangehandle} aria-label="post tabs">
-          <Tab label="Created" icon={<CreateIcon />} {...tabProps(1)} value="created" />
+          <Tab label="Steps" icon={<CreateIcon />} {...tabProps(1)} value="created" />
           <Tab label="Saved" icon={<BookmarkIcon />} {...tabProps(0)} value="saved" />
           <Tab label="Follows" icon={<AssistantDirectionIcon />} {...tabProps(2)} value="follows" />
         </Tabs>
@@ -117,11 +118,12 @@ export async function getServerSideProps(props) {
   let userIds = [];
   switch (tabValue) {
     case "created":
-      const { posts: createdPosts } = await getCreatedPosts(uid);
+      const { posts: createdPosts } = await getPublishedPosts(uid);
       posts = createdPosts;
       break;
     case "saved":
-      posts = [];
+      const { posts: bookmarkedPosts } = await getBookmarkedPosts(uid);
+      posts = bookmarkedPosts;
       break;
     case "follows":
       const { data: follows } = await getFollows(uid);
