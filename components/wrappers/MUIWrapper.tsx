@@ -7,7 +7,7 @@ export const ColorModeContext = createContext({ toggleColorMode: () => {} });
 const MUIWrapper: FC<{
   children?: ReactNode;
 }> = ({ children }) => {
-  // const { data: user, save: saveUser, update: updateUser, isLoading: isLoadingUser } = useCurrentUser(false);
+  // const { data: user, save: saveUser, update: updateUser, isLoading: isLoadingUser } = useUser(false);
   const [mode, setMode] = useState<"light" | "dark">("dark");
   // const mode: "dark" | "light" = (!isLoadingUser && user?.theme) || "dark";
 

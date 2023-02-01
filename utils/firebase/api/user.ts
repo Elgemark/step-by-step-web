@@ -62,57 +62,8 @@ export const getUser = async (uid) => {
   return response;
 };
 
-export const useCurrentUser = (realtime = false) => {
-  const { status, data: user } = rfUseUser();
-  const { object: data, update: updateData } = useStateObject({ uid: null, roles: [] });
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    if (status !== "loading" && user) {
-      if (status === "success" && user) {
-        getUser(user.uid)
-          .then((res) => {
-            updateData({ ...user, ...res.data, uid: user.uid });
-            setIsLoading(false);
-          })
-          .catch((error) => {
-            setIsLoading(false);
-          });
-      } else {
-        setIsLoading(false);
-      }
-    }
-  }, [status, user]);
-
-  // Add realtime listener
-  useEffect(() => {
-    if (status !== "loading" && user && realtime) {
-      const { uid } = user;
-      const firebase = getFirestore();
-      const docRef = doc(firebase, "users", uid);
-      onSnapshot(docRef, (snapshot) => {
-        if (snapshot.exists()) {
-          updateData({ ...user, ...snapshot.data(), uid });
-        }
-      });
-    }
-  }, [status, user, realtime]);
-
-  const save = async (update = {}) => {
-    updateData(update);
-    return await updateUser(data.uid, { ...data, ...update });
-  };
-
-  return {
-    data,
-    isLoading,
-    save,
-    update: updateData,
-  };
-};
-
 export const useUser = (uid = null, realtime = false) => {
-  const { object: data, setValue: update, replace, update: updateObject } = useStateObject();
+  const { object: data, setValue: update, replace, update: updateObject } = useStateObject({ uid: null, roles: [] });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const { status: statusCurrentUser, data: currentUser } = rfUseUser();
@@ -121,7 +72,7 @@ export const useUser = (uid = null, realtime = false) => {
     if ((statusCurrentUser !== "loading" && currentUser !== null) || uid) {
       getUser(uid || currentUser.uid)
         .then((res) => {
-          replace({ ...data, ...res.data });
+          replace({ ...currentUser, ...data, ...res.data });
           setIsLoading(false);
         })
         .catch((error) => {
@@ -138,10 +89,9 @@ export const useUser = (uid = null, realtime = false) => {
       const docRef = doc(firebase, "users", uid);
       const unsubscribe = onSnapshot(docRef, (snapshot) => {
         if (snapshot.exists()) {
-          replace({ ...data, ...snapshot.data() });
+          replace({ ...currentUser, ...data, ...snapshot.data() });
         }
       });
-
       return () => {
         unsubscribe();
       };

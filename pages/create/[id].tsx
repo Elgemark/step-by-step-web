@@ -216,8 +216,6 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
     if (!resp.error) {
       setSuccessMessage("Post sent for review!");
       refresh();
-    } else {
-      debugger;
     }
   };
 
