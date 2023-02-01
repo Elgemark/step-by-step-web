@@ -145,13 +145,13 @@ export const getDraftedPosts = async (uid) => {
   return { error, posts };
 };
 
-export const getAuditPosts = async (uid) => {
+export const getReviewPosts = async (uid) => {
   let error = null;
   const posts = [];
   //
   const firebase = getFirestore();
   const postsRef = collection(firebase, "posts");
-  const queryBuild = query(postsRef, where("uid", "==", uid), where("visibility", "==", "audit"));
+  const queryBuild = query(postsRef, where("uid", "==", uid), where("visibility", "==", "review"));
 
   try {
     const querySnapshot = await getDocs(queryBuild);

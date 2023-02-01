@@ -8,15 +8,17 @@ import Divider from "@mui/material/Divider";
 import FlagIcon from "@mui/icons-material/Flag";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import TroubleshootIcon from "@mui/icons-material/Troubleshoot";
 import Menu from "./primitives/Menu";
 import { FC } from "react";
 
-const PostMoreMenu: FC<{ onEdit?: Function; onDelete?: Function; onStartOver?: Function; onReport?: Function }> = ({
-  onEdit,
-  onDelete,
-  onStartOver,
-  onReport,
-}) => {
+const PostMoreMenu: FC<{
+  onEdit?: Function;
+  onDelete?: Function;
+  onStartOver?: Function;
+  onReport?: Function;
+  onReview?: Function;
+}> = ({ onEdit, onDelete, onStartOver, onReport, onReview }) => {
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -86,25 +88,39 @@ const PostMoreMenu: FC<{ onEdit?: Function; onDelete?: Function; onStartOver?: F
             Start Over
           </MenuItem>
         )}
-
+        {/* DIVIDER */}
+        {onReport || onReview ? <Divider sx={{ my: 0.5 }} /> : null}
         {/* REPORT */}
         {onReport && (
-          <>
-            <Divider sx={{ my: 0.5 }} />
-            <MenuItem
-              onClick={
-                onReport &&
-                (() => {
-                  onReport();
-                  handleClose();
-                })
-              }
-              disableRipple
-            >
-              <FlagIcon />
-              Report
-            </MenuItem>
-          </>
+          <MenuItem
+            onClick={
+              onReport &&
+              (() => {
+                onReport();
+                handleClose();
+              })
+            }
+            disableRipple
+          >
+            <FlagIcon />
+            Report
+          </MenuItem>
+        )}
+        {/* Review */}
+        {onReview && (
+          <MenuItem
+            onClick={
+              onReport &&
+              (() => {
+                onReview();
+                handleClose();
+              })
+            }
+            disableRipple
+          >
+            <TroubleshootIcon />
+            Review
+          </MenuItem>
         )}
       </Menu>
     </>

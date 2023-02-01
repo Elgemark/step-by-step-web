@@ -28,10 +28,6 @@ const ReviewPage = ({ posts }) => {
 
   const { isLoading, data: user } = useUser();
 
-  if (!posts.length) {
-    return null;
-  }
-
   const onEditHandler = ({ id }) => {
     router.push("/create/" + id);
   };
@@ -108,7 +104,7 @@ export async function getServerSideProps({ query }) {
   const { search, category } = query;
   let response: PostsResponse = { data: [], error: null };
 
-  const queries: Array<any> = [limit(10), where("visibility", "==", "audit")];
+  const queries: Array<any> = [limit(10), where("visibility", "==", "review")];
 
   if (lastDoc) {
     queries.push(startAfter(lastDoc));

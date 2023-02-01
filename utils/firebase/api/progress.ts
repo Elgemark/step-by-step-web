@@ -1,7 +1,7 @@
 import { getFirestore, onSnapshot, doc, setDoc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { useUser } from "reactfire";
 import { Progress, ProgressResponse } from "../interface";
+import { useCurrentUser } from "./user";
 
 export const setProgress = async (userId: string, postId: string, progress: Progress) => {
   const response: ProgressResponse = { id: postId, data: progress, error: null };
@@ -28,7 +28,7 @@ export const updateProgress = async (userId: string, postId: string, updates: ob
 export const useProgress = (postId: string, createIfMissing = false) => {
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState({ completed: false, step: -1, completions: 0 });
-  const { data: user } = useUser();
+  const { data: user } = useCurrentUser(true);
 
   useEffect(() => {
     if (user?.uid) {

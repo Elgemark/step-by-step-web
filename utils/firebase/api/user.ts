@@ -1,6 +1,6 @@
 import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { useStateObject } from "../../object";
 import * as dataModels from "../models";
 import { useUser as rfUseUser } from "reactfire";
@@ -64,15 +64,15 @@ export const getUser = async (uid) => {
 
 export const useCurrentUser = (realtime = false) => {
   const { status, data: user } = rfUseUser();
-  const { object: data, update: updateData } = useStateObject();
+  const { object: data, update: updateData } = useStateObject({ uid: null, roles: [] });
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (status !== "loading") {
-      if (status === "success") {
+    if (status !== "loading" && user) {
+      if (status === "success" && user) {
         getUser(user.uid)
           .then((res) => {
-            updateData({ ...res.data, uid: user.uid });
+            updateData({ ...user, ...res.data, uid: user.uid });
             setIsLoading(false);
           })
           .catch((error) => {
@@ -86,17 +86,17 @@ export const useCurrentUser = (realtime = false) => {
 
   // Add realtime listener
   useEffect(() => {
-    if (user && realtime) {
+    if (status !== "loading" && user && realtime) {
       const { uid } = user;
       const firebase = getFirestore();
       const docRef = doc(firebase, "users", uid);
       onSnapshot(docRef, (snapshot) => {
         if (snapshot.exists()) {
-          updateData(snapshot.data());
+          updateData({ ...user, ...snapshot.data(), uid });
         }
       });
     }
-  }, [user, realtime]);
+  }, [status, user, realtime]);
 
   const save = async (update = {}) => {
     updateData(update);

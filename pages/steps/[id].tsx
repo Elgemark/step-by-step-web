@@ -17,6 +17,7 @@ import FirebaseWrapper from "../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../components/wrappers/MUIWrapper";
 import PostMoreMenu from "../../components/PostMoreMenu";
 import DialogDeletePost from "../../components/DialogDeletePost";
+import DialogReport, { ReportData } from "../../components/DialogReport";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -45,6 +46,7 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> 
   const [showDeleteDialog, setShowDeleteDialog] = useState<string>();
   const router = useRouter();
   const { user, progress, updateProgress, isLoading } = useProgress(id, true);
+  const [report, setReport] = useState<ReportData>();
 
   const onEditHandler = ({ id }) => {
     router.push("/create/" + id);
@@ -73,6 +75,9 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> 
       });
     }
   };
+  const onReviewHandler = () => {
+    router.push("/admin/review/post/" + id);
+  };
 
   return (
     <>
@@ -99,6 +104,8 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> 
                   : undefined
               }
               onStartOver={onStartOverHandler}
+              onReport={() => setReport({ postId: id, userId: user.uid })}
+              onReview={user.roles.includes("admin") && onReviewHandler}
             />
           }
           enableLink={false}
@@ -136,6 +143,8 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> 
       </StyledLayout>
       {/* DELETE DIALOG */}
       <DialogDeletePost open={showDeleteDialog} onClose={() => setShowDeleteDialog(null)} />
+      {/* REPORT DIALOG */}
+      <DialogReport open={report} onClose={() => setReport(null)} />
     </>
   );
 };

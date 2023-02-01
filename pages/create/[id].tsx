@@ -136,7 +136,7 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
     }
     // Save post...
     if (saveData.post) {
-      await setPost(id, saveData.post);
+      await setPost(id, { ...saveData.post, uid: userId });
     }
     // Uploas steps images
     const imageUploads: ImageUploads = [];
@@ -208,15 +208,21 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
   };
 
   const onClickPublish = async () => {
-    const resp = await updatePost(post.id, { visibility: "audit" });
+    if (hasSaveData) {
+      await onClickSaveHandler();
+    }
+
+    const resp = await updatePost(id, { visibility: "review" });
     if (!resp.error) {
-      setSuccessMessage("Post sent for audit!");
+      setSuccessMessage("Post sent for review!");
       refresh();
+    } else {
+      debugger;
     }
   };
 
   const onClickUnpublish = async () => {
-    const resp = await updatePost(post.id, { visibility: "draft" });
+    const resp = await updatePost(id, { visibility: "draft" });
     if (!resp.error) {
       setSuccessMessage("Post unpublished!");
       refresh();
@@ -299,7 +305,7 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
             content={
               post.visibility === "draft"
                 ? "Every published posts must first reviewed. The review can take up to 48 hours. You will recevie a mail when the post is live or if the post was rejected. Ready to publish?"
-                : "Are you sure you want to unpublis this post? The post must be audited once you decide to publish the post again."
+                : "Are you sure you want to unpublis this post? The post must be reviewed again once you decide to publish the post again."
             }
             onClose={() => {
               setOpenPublishDialog(false);

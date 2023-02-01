@@ -21,36 +21,6 @@ const StyledSearch = styled(Search)`
   margin: 0 ${({ theme }) => theme.spacing(2)};
 `;
 
-const popperModifiers = [
-  {
-    name: "flip",
-    enabled: true,
-    options: {
-      altBoundary: true,
-      rootBoundary: "document",
-      padding: 8,
-    },
-  },
-  {
-    name: "preventOverflow",
-    enabled: true,
-    options: {
-      altAxis: true,
-      altBoundary: true,
-      tether: true,
-      rootBoundary: "document",
-      padding: 8,
-    },
-  },
-  // {
-  //   name: "arrow",
-  //   enabled: true,
-  //   options: {
-  //     element: refArrrow,
-  //   },
-  // },
-];
-
 const TopBar: FC<{ className?: string; actions?: ReactNode }> = ({ className, actions, ...props }) => {
   const { data: user } = useUser();
   const router = useRouter();
@@ -124,7 +94,6 @@ const TopBar: FC<{ className?: string; actions?: ReactNode }> = ({ className, ac
         ></StyledSearch>
         {/* FILTER */}
         <Popover
-          // style={{ zIndex: 9999 }}
           open={Boolean(anchorEl)}
           anchorEl={anchorEl}
           onClose={handleFilterClose}
@@ -137,8 +106,6 @@ const TopBar: FC<{ className?: string; actions?: ReactNode }> = ({ className, ac
             vertical: "bottom",
             horizontal: "left",
           }}
-          // disablePortal={false}
-          // modifiers={popperModifiers}
         >
           <div data-popper-arrow ref={refArrrow}></div>
           <SearchFilter
@@ -150,18 +117,16 @@ const TopBar: FC<{ className?: string; actions?: ReactNode }> = ({ className, ac
         </Popover>
         {/* CREATE */}
         {user && (
-          <Button
+          <IconButton
             size="small"
-            startIcon={<CreateIcon />}
-            variant="contained"
             onClick={() => {
               router.push("/create/" + uuid()).then(() => {
                 router.reload();
               });
             }}
           >
-            Create
-          </Button>
+            <CreateIcon />
+          </IconButton>
         )}
         {/* THEME */}
         {/* <IconButton size="small" onClick={colorMode.toggleColorMode} color="inherit">

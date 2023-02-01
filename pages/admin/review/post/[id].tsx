@@ -6,7 +6,7 @@ import Step from "../../../../components/steps/Step";
 import Post from "../../../../components/posts/Post";
 import { v4 as uuid } from "uuid";
 import { FC, useState } from "react";
-import { ListsResponse, Post as PostType } from "../../../../utils/firebase/interface";
+import { ListsResponse } from "../../../../utils/firebase/interface";
 import { Lists, PostVisibility, Steps } from "../../../../utils/firebase/type";
 import FirebaseWrapper from "../../../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../../../components/wrappers/MUIWrapper";
@@ -18,6 +18,7 @@ import PublishIcon from "@mui/icons-material/Publish";
 import BlockIcon from "@mui/icons-material/Block";
 import { updatePost, useGetPost } from "../../../../utils/firebase/api/post";
 import Loader from "../../../../components/Loader";
+import DoneIcon from "@mui/icons-material/Done";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -74,7 +75,7 @@ const ReviewPostPage: FC<{ id: string; lists: Lists; steps: Steps }> = ({ id, st
             <LoadingButton
               disabled={post.visibility === "public"}
               loading={isLoading}
-              endIcon={<PublishIcon />}
+              endIcon={<DoneIcon />}
               onClick={() => changeVisibility("public")}
             >
               {"Publish"}

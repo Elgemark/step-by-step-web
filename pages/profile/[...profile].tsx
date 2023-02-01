@@ -20,7 +20,7 @@ import UserCard from "../../components/primitives/UserCard";
 import FirebaseWrapper from "../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../components/wrappers/MUIWrapper";
 import { useUser } from "reactfire";
-import { getAuditPosts, getDraftedPosts, getPublishedPosts } from "../../utils/firebase/api/post";
+import { getReviewPosts, getDraftedPosts, getPublishedPosts } from "../../utils/firebase/api/post";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
 const UserCardControlled: FC<{ userId: string }> = styled(({ userId, ...props }) => {
@@ -111,7 +111,7 @@ const ProfilePage = ({ tabValue, uid, posts = [], userIds = [] }) => {
             <Tab label="Saved" icon={<BookmarkIcon />} {...tabProps(0)} value="saved" />
             <Tab label="Published" icon={<PublishIcon />} {...tabProps(1)} value="published" />
             <Tab label="Drafts" icon={<CreateIcon />} {...tabProps(2)} value="drafts" />
-            <Tab label="Reviews" icon={<VisibilityIcon />} {...tabProps(3)} value="audits" />
+            <Tab label="Reviews" icon={<VisibilityIcon />} {...tabProps(3)} value="reviews" />
             <Tab label="Completed" icon={<CheckCircleIcon />} {...tabProps(4)} value="completed" />
             <Tab label="Incompleted" icon={<UnpublishedIcon />} {...tabProps(5)} value="incompleted" />
             <Tab label="Follows" icon={<AssistantDirectionIcon />} {...tabProps(6)} value="follows" />
@@ -144,9 +144,9 @@ export async function getServerSideProps({ query }) {
       const { posts: draftedPosts } = await getDraftedPosts(uid);
       posts = draftedPosts;
       break;
-    case "audits":
-      const { posts: auditPosts } = await getAuditPosts(uid);
-      posts = auditPosts;
+    case "reviews":
+      const { posts: reviewPosts } = await getReviewPosts(uid);
+      posts = reviewPosts;
       break;
     case "completed":
       const { posts: completedPosts } = await getPostsByState(uid, "completed");
