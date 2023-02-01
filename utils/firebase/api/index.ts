@@ -25,7 +25,6 @@ export const getUser = userApi.getUser;
 export const useUser = userApi.useUser;
 // ::: POSTS
 export const getBookmarkedPosts = postApi.getBookmarkedPosts;
-export const getCreatedPosts = postApi.getCreatedPosts;
 export const getPostsByState = postApi.getPostsByState;
 export const getPost = postApi.getPost;
 export const deletePost = postApi.deletePost;

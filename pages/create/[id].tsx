@@ -4,7 +4,7 @@ import PostEditable from "../../components/posts/PostEditable";
 import StepEditable from "../../components/steps/StepEditable";
 import AddIcon from "@mui/icons-material/Add";
 import SaveIcon from "@mui/icons-material/Save";
-import { Button, Divider, Slide } from "@mui/material";
+import { Button, Divider } from "@mui/material";
 import styled from "styled-components";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { getPost, deleteList, uploadImage, setLists } from "../../utils/firebase/api";
@@ -30,6 +30,7 @@ import PublishIcon from "@mui/icons-material/Publish";
 import Dialog from "../../components/primitives/Dialog";
 import UnpublishedIcon from "@mui/icons-material/Unpublished";
 import { useRefresh } from "../../utils/firebaseUtils";
+import BottomBar from "../../components/primitives/BottomBar";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -45,23 +46,10 @@ const StyledLayout = styled(Layout)`
     display: flex;
     justify-content: center;
   }
-  .bottom-bar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    backdrop-filter: blur(5px);
-    background-color: rgba(18, 18, 18, 0.4);
-  }
 `;
 
 const StyledDivider = styled(Divider)`
   margin: 20px 0;
-`;
-
-const StyledBottomBar = styled.div`
-  display: flex;
-  justify-content: center;
 `;
 
 let saveData = { post: null, steps: null, lists: null };
@@ -226,6 +214,7 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
       refresh();
     }
   };
+
   const onClickUnpublish = async () => {
     const resp = await updatePost(post.id, { visibility: "draft" });
     if (!resp.error) {
@@ -272,32 +261,30 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
             </div>
           ))}
           {/* BUTTONS */}
-          <Slide className="bottom-bar" direction="up" in={postIsValid}>
-            <StyledBottomBar>
-              <ButtonGroup variant="text" aria-label="text button group">
-                {/* BUTTON SAVE */}
-                <LoadingButton
-                  loading={isSaving}
-                  disabled={!hasSaveData}
-                  endIcon={<SaveIcon />}
-                  onClick={onClickSaveHandler}
-                >
-                  Save
-                </LoadingButton>
-                {/* BUTTON ADD STEP */}
-                <Button endIcon={<AddIcon />} onClick={onClickAddStepHandler}>
-                  Step
-                </Button>
-                {/* BUTTON PUBLISH / UNPUBLISH */}
-                <Button
-                  endIcon={post.visibility === "draft" ? <PublishIcon /> : <UnpublishedIcon />}
-                  onClick={onClickPublishHandler}
-                >
-                  {post.visibility === "draft" ? "Publish" : "Unpublish"}
-                </Button>
-              </ButtonGroup>
-            </StyledBottomBar>
-          </Slide>
+          <BottomBar show={postIsValid}>
+            <ButtonGroup variant="text" aria-label="text button group">
+              {/* BUTTON SAVE */}
+              <LoadingButton
+                loading={isSaving}
+                disabled={!hasSaveData}
+                endIcon={<SaveIcon />}
+                onClick={onClickSaveHandler}
+              >
+                Save
+              </LoadingButton>
+              {/* BUTTON ADD STEP */}
+              <Button endIcon={<AddIcon />} onClick={onClickAddStepHandler}>
+                Step
+              </Button>
+              {/* BUTTON PUBLISH / UNPUBLISH */}
+              <Button
+                endIcon={post.visibility === "draft" ? <PublishIcon /> : <UnpublishedIcon />}
+                onClick={onClickPublishHandler}
+              >
+                {post.visibility === "draft" ? "Publish" : "Unpublish"}
+              </Button>
+            </ButtonGroup>
+          </BottomBar>
           {/* SNACKBAR */}
           <Snackbar open={successMessage != null} autoHideDuration={6000} onClose={() => setSuccessMessage(null)}>
             <Alert onClose={() => setSuccessMessage(null)} severity="success" sx={{ width: "100%" }}>

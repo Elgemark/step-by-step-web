@@ -1,4 +1,4 @@
-import { Bookmarks, Lists, Posts, Steps } from "../type";
+import { Bookmarks, Lists, Posts, PostVisibility, Steps } from "../type";
 
 export interface Media {
   imageURI: string | null;
@@ -15,7 +15,7 @@ export interface Post {
   likes: number;
   stepsCompleted: number;
   userId: string;
-  visibility: "draft" | "public";
+  visibility: PostVisibility;
 }
 
 export interface Step {

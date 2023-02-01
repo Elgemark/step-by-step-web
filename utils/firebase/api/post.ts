@@ -13,6 +13,7 @@ import {
   serverTimestamp,
   setDoc,
   updateDoc,
+  onSnapshot,
 } from "firebase/firestore";
 import { Post, PostResponse, PostsResponse } from "../interface";
 import { parseData } from "../../firebaseUtils";
@@ -215,6 +216,31 @@ export const deletePost = async (id: string) => {
   batch.delete(doc(firebase, "posts", id));
   batch.delete(doc(firebase, "posts", id, "steps", id));
   return await batch.commit();
+};
+
+export const useGetPost = (id: string) => {
+  const [data, setData] = useState<Post>(null);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    const firebase = getFirestore();
+    const docRef = doc(firebase, "posts", id);
+
+    const unsub = onSnapshot(docRef, (doc) => {
+      if (doc.exists()) {
+        setData(parseData({ ...doc.data(), id }) as Post);
+      } else {
+        setError({ message: "no data!" });
+      }
+      setIsLoading(false);
+    });
+
+    return () => {
+      unsub();
+    };
+  }, [id]);
+
+  return { data, isLoading, error };
 };
 
 export const useGetPostsByQuery = () => {

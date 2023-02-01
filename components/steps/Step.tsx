@@ -23,10 +23,9 @@ const Step: FC<{ index: number; title: string; body: string; className: string; 
   body,
   media,
   className,
-  ...props
 }) => {
   return (
-    <Card {...props} className={className}>
+    <Card className={className}>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="post">
