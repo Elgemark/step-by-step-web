@@ -10,6 +10,7 @@ const Root = styled.div`
   border-radius: ${({ theme }) => theme.shape.borderRadius + "px"};
   background-color: ${({ theme }) => alpha(theme.palette.common.white, 0.1)};
   flex-grow: 1;
+
   display: flex;
   align-items: center;
   max-height: 32px;
@@ -55,7 +56,7 @@ const Search: FC<{
         inputProps={{ "aria-label": "search" }}
         onKeyUp={onKeyUpHandler}
       />
-      <Badge badgeContent={numFilters} color="primary" overlap="circular">
+      <Badge className="badge" badgeContent={numFilters} color="primary" overlap="circular">
         <IconButton className="filter-button" onClick={onClickFilter}>
           <FilterListIcon />
         </IconButton>

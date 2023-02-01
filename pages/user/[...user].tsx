@@ -97,7 +97,7 @@ const UserPage = ({ posts, user, userIds, uid, tabValue }) => {
         </UserCard>
         <Divider className="divider" />
         <Tabs className="tabs" value={tabValue} onChange={onTabChangehandle} aria-label="post tabs">
-          <Tab label="Steps" icon={<CreateIcon />} {...tabProps(1)} value="created" />
+          <Tab label="Steps" icon={<CreateIcon />} {...tabProps(1)} value="published" />
           <Tab label="Saved" icon={<BookmarkIcon />} {...tabProps(0)} value="saved" />
           <Tab label="Follows" icon={<AssistantDirectionIcon />} {...tabProps(2)} value="follows" />
         </Tabs>
@@ -117,7 +117,7 @@ export async function getServerSideProps(props) {
   let posts = [];
   let userIds = [];
   switch (tabValue) {
-    case "created":
+    case "published":
       const { posts: createdPosts } = await getPublishedPosts(uid);
       posts = createdPosts;
       break;

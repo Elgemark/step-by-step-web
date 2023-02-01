@@ -12,9 +12,11 @@ import { useDebouncedQuery } from "../utils/queryUtils";
 import _ from "lodash";
 import { useUser } from "reactfire";
 import StepsLogoIconFold from "./primitives/StepsLogoIconFold";
+import IconStepsFoldLogo from "./primitives/IconStepsFoldLogo";
 
 const StyledSearch = styled(Search)`
-  margin: 0 ${({ theme }) => theme.spacing(2)};
+  margin-left: ${({ theme }) => theme.spacing(1)};
+  margin-right: ${({ theme }) => theme.spacing(2)};
 `;
 
 const TopBar: FC<{ className?: string; actions?: ReactNode }> = ({ className, actions, ...props }) => {
@@ -65,8 +67,7 @@ const TopBar: FC<{ className?: string; actions?: ReactNode }> = ({ className, ac
     <AppBar {...props}>
       <Toolbar>
         {/* LOGO */}
-        <Button
-          color="inherit"
+        <IconButton
           onClick={() => {
             if (user) {
               router.push("/posts/user/" + user.uid);
@@ -75,8 +76,9 @@ const TopBar: FC<{ className?: string; actions?: ReactNode }> = ({ className, ac
             }
           }}
         >
-          <StepsLogoIconFold height={40} />
-        </Button>
+          {/* <StepsLogoIconFold height={36} /> */}
+          <IconStepsFoldLogo fontSize="large"></IconStepsFoldLogo>
+        </IconButton>
         {/* SEARCH */}
         <StyledSearch
           theme={theme}
