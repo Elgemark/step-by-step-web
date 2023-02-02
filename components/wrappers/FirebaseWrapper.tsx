@@ -5,14 +5,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import styled from "styled-components";
 
-import {
-  FirebaseAppProvider,
-  DatabaseProvider,
-  AuthProvider,
-  useFirebaseApp,
-  useUser,
-  useSigninCheck,
-} from "reactfire";
+import { FirebaseAppProvider, DatabaseProvider, AuthProvider, useFirebaseApp, useSigninCheck } from "reactfire";
 import Loader from "../Loader";
 
 const firebaseConfig = {
@@ -64,7 +57,6 @@ const Root = styled.div`
 
 const LoginCheck = ({ children, enable = false }) => {
   const { status, data: signInCheckResult } = useSigninCheck();
-
   const router = useRouter();
 
   useEffect(() => {
