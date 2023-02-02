@@ -9,11 +9,6 @@ import SelectChips from "./primitives/SelectChips";
 import styled from "styled-components";
 import { Divider } from "@mui/material";
 
-const StyledNav = styled.nav`
-  display: flex;
-  justify-content: center;
-`;
-
 const StyledDivider = styled(Divider)`
   margin-bottom: 2rem;
 `;
@@ -52,14 +47,14 @@ const PageMain: FC<{
       <Layout>
         {categories ? (
           <>
-            <StyledNav>
+            <nav>
               <SelectChips
                 items={categories}
                 selectedItems={[category]}
                 onSelect={onSelectCategoryHandler}
                 justifyContent="center"
               />
-            </StyledNav>
+            </nav>
             <StyledDivider />
           </>
         ) : null}

@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import styled from "styled-components";
 import { FC, ReactNode, createContext } from "react";
 import { useMessages } from "../hooks/message";
-import { Alert, Snackbar } from "@mui/material";
+import { Alert, Snackbar, Stack } from "@mui/material";
 import { useTheme } from "@emotion/react";
 
 export const ColorModeContext = createContext({ toggleColorMode: () => {} });
@@ -38,9 +38,11 @@ const Layout: FC<{
     <Root theme={theme} {...props}>
       <TopBar className="top-bar" {...propsTopbar} />
       <Box className="content" {...propsContent}>
-        <Alert className="info" severity="info">
-          This is site is under development. Please come back later!
-        </Alert>
+        <Stack direction={"row"} justifyContent="center">
+          <Alert className="info" severity="info" color="warning">
+            This is site is under development. Please come back later!
+          </Alert>
+        </Stack>
         {children}
       </Box>
       {/* SNACKBAR */}
