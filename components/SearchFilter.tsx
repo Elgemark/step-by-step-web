@@ -1,7 +1,7 @@
 import { Divider, Paper, Typography, useTheme } from "@mui/material";
 import { FC } from "react";
 import { useCategories } from "../utils/firebase/api/categories";
-import SelectChips from "./primitives/SelectChips";
+import SelectChips, { ChipItem } from "./primitives/SelectChips";
 import styled from "styled-components";
 
 const StyledPaper = styled(Paper)`
@@ -15,9 +15,9 @@ const StyledPaper = styled(Paper)`
 `;
 
 const SearchFilter: FC<{
-  onSelectCategory: (category: string) => void;
+  onSelectCategory: (category: string | ChipItem) => void;
   selectedCategory: string;
-  onSelectOrderBy: (category: string) => void;
+  onSelectOrderBy: (category: string | ChipItem) => void;
   selectedOrderBy: string;
 }> = ({ onSelectCategory, selectedCategory, onSelectOrderBy, selectedOrderBy }) => {
   const theme = useTheme();
@@ -27,13 +27,13 @@ const SearchFilter: FC<{
     <StyledPaper theme={theme} elevation={3}>
       <Typography variant="body1">Category</Typography>
       <Divider></Divider>
-      <SelectChips items={categories} selectedItems={[selectedCategory]} onSelect={onSelectCategory} />
+      <SelectChips items={categories} selectedItems={[selectedCategory]} onSelect={(e) => onSelectCategory(e)} />
       <Typography variant="body1">Order by</Typography>
       <Divider></Divider>
       <SelectChips
         items={["likes", "latest", "completions"]}
         selectedItems={[selectedOrderBy]}
-        onSelect={onSelectOrderBy}
+        onSelect={(e) => onSelectOrderBy(e)}
       />
     </StyledPaper>
   );

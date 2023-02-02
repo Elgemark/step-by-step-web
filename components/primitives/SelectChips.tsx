@@ -11,7 +11,7 @@ const StyledStack = styled(Stack)`
   }
 `;
 
-interface ChipItem {
+export interface ChipItem {
   label: string;
   value: string;
 }
