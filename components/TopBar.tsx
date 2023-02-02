@@ -1,4 +1,4 @@
-import { AppBar, Toolbar, Button, IconButton, useTheme, Popover } from "@mui/material";
+import { AppBar, Toolbar, Button, IconButton, useTheme, Popover, useMediaQuery } from "@mui/material";
 import { useRouter } from "next/router";
 import UserAvatar from "./UserAvatar";
 import { FC, ReactNode, useContext, useRef, useState } from "react";
@@ -14,12 +14,24 @@ import { useUser } from "reactfire";
 import StepsLogoIconFold from "./primitives/StepsLogoIconFold";
 import IconStepsFoldLogo from "./primitives/IconStepsFoldLogo";
 
+const StyledAppbar = styled(AppBar)`
+  align-items: center;
+`;
+
+const StyledToolbar = styled(Toolbar)`
+  width: 100%;
+  @media (min-width: 1024px) {
+    width: 1024px;
+  }
+`;
+
 const StyledSearch = styled(Search)`
   margin-left: ${({ theme }) => theme.spacing(1)};
   margin-right: ${({ theme }) => theme.spacing(2)};
 `;
 
 const TopBar: FC<{ className?: string; actions?: ReactNode }> = ({ className, actions, ...props }) => {
+  const isDesktop = useMediaQuery("(min-width:600px)");
   const { data: user } = useUser();
   const router = useRouter();
   const [searchStr, setSearchStr] = useState(router.query.search);
@@ -64,8 +76,8 @@ const TopBar: FC<{ className?: string; actions?: ReactNode }> = ({ className, ac
   };
 
   return (
-    <AppBar {...props}>
-      <Toolbar>
+    <StyledAppbar {...props}>
+      <StyledToolbar disableGutters theme={theme}>
         {/* LOGO */}
         <IconButton
           onClick={() => {
@@ -132,18 +144,27 @@ const TopBar: FC<{ className?: string; actions?: ReactNode }> = ({ className, ac
           {theme.palette.mode === "dark" ? <Brightness7Icon fontSize="12px" /> : <Brightness4Icon fontSize="12px" />}
         </IconButton> */}
         {/* LOGIN */}
-        {!user && (
-          <Button
-            size="small"
-            startIcon={<LoginIcon />}
-            variant="contained"
-            onClick={() => {
-              router.push("/login");
-            }}
-          >
-            Login
-          </Button>
-        )}
+        {!user &&
+          (isDesktop ? (
+            <Button
+              size="small"
+              startIcon={<LoginIcon />}
+              variant="contained"
+              onClick={() => {
+                router.push("/login");
+              }}
+            >
+              Login
+            </Button>
+          ) : (
+            <IconButton
+              onClick={() => {
+                router.push("/login");
+              }}
+            >
+              <LoginIcon />
+            </IconButton>
+          ))}
         {/* PROFILE */}
         {user && (
           <IconButton
@@ -158,8 +179,8 @@ const TopBar: FC<{ className?: string; actions?: ReactNode }> = ({ className, ac
             <UserAvatar size={36} realtime />
           </IconButton>
         )}
-      </Toolbar>
-    </AppBar>
+      </StyledToolbar>
+    </StyledAppbar>
   );
 };
 
