@@ -4,7 +4,7 @@ import { alpha, useTheme } from "@mui/material/styles";
 import styled from "styled-components";
 import { FC } from "react";
 import FilterListIcon from "@mui/icons-material/FilterList";
-import { Badge, IconButton } from "@mui/material";
+import { Badge, IconButton, Fade } from "@mui/material";
 
 const Root = styled.div`
   border-radius: ${({ theme }) => theme.shape.borderRadius + "px"};
@@ -16,13 +16,8 @@ const Root = styled.div`
   max-height: 32px;
   padding: ${({ theme }) => theme.spacing(1)};
   .MuiInputBase-root {
-    margin: 0 ${({ theme }) => theme.spacing(2)};
+    margin-left: ${({ theme }) => theme.spacing(2)};
     flex-grow: 1;
-  }
-  .filter-button {
-    opacity: ${({ showFilterButton }) => (showFilterButton ? 1 : 0)};
-    pointer-events: ${({ showFilterButton }) => (showFilterButton ? "auto" : "none")};
-    transition: opacity 0.4s;
   }
 `;
 
@@ -56,11 +51,13 @@ const Search: FC<{
         inputProps={{ "aria-label": "search" }}
         onKeyUp={onKeyUpHandler}
       />
-      <Badge className="badge" badgeContent={numFilters} color="primary" overlap="circular">
-        <IconButton className="filter-button" onClick={onClickFilter}>
-          <FilterListIcon />
-        </IconButton>
-      </Badge>
+      {showFilterButton ? (
+        <Badge className="badge" badgeContent={numFilters} color="primary" overlap="circular">
+          <IconButton className="filter-button" onClick={onClickFilter}>
+            <FilterListIcon />
+          </IconButton>
+        </Badge>
+      ) : null}
     </Root>
   );
 };
