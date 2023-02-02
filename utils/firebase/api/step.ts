@@ -78,7 +78,8 @@ export const getSteps = async (postId: string) => {
 
   try {
     const collRef = collection(firebase, "posts", postId, "steps");
-    const docsSnap = await getDocs(collRef);
+    const stepsQuery = query(collRef, orderBy("index", "asc"));
+    const docsSnap = await getDocs(stepsQuery);
     docsSnap.forEach((doc) => {
       response.data.push({ ...doc.data(), id: doc.id } as Step);
     });
