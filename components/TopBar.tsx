@@ -26,8 +26,13 @@ const StyledToolbar = styled(Toolbar)`
 `;
 
 const StyledSearch = styled(Search)`
-  margin-left: ${({ theme }) => theme.spacing(1)};
-  margin-right: ${({ theme }) => theme.spacing(2)};
+  @media (min-width: 600px) {
+    margin-left: ${({ theme }) => theme.spacing(3)};
+    margin-right: ${({ theme }) => theme.spacing(4)};
+  }
+  margin-left: ${({ theme }) => theme.spacing(0)};
+  margin-right: ${({ theme }) => theme.spacing(1)};
+  border-radius: 16px;
 `;
 
 const TopBar: FC<{ className?: string; actions?: ReactNode }> = ({ className, actions, ...props }) => {
