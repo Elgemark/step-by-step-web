@@ -41,7 +41,7 @@ const PageMain: FC<{
   return (
     <>
       <Head>
-        <meta name="viewport" content="initial-scale=1, width=device-width" />
+        <meta content="noindex, nofollow, initial-scale=1, width=device-width" name="robots" />
         <title>{title}</title>
       </Head>
       <Layout>
