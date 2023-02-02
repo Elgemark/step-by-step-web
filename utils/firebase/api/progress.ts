@@ -1,5 +1,6 @@
 import { getFirestore, onSnapshot, doc, setDoc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
+import { useSigninCheck } from "reactfire";
 import { Progress, ProgressResponse } from "../interface";
 import { useUser } from "./user";
 
@@ -27,6 +28,7 @@ export const updateProgress = async (userId: string, postId: string, updates: ob
 
 export const useProgress = (postId: string, createIfMissing = false) => {
   const [isLoading, setIsLoading] = useState(true);
+  const { data: signInCheckResult } = useSigninCheck();
   const [data, setData] = useState({ completed: false, step: -1, completions: 0 });
   const { data: user } = useUser(null, true);
 
@@ -48,5 +50,14 @@ export const useProgress = (postId: string, createIfMissing = false) => {
     }
   }, [user?.uid]);
 
-  return { user, progress: data, isLoading, setProgress, updateProgress };
+  const _updateProgress = (userId: string, postId: string, updates: object) => {
+    if (signInCheckResult.signedIn) {
+      return updateProgress(userId, postId, updates);
+    } else {
+      setData(updates as Progress);
+      setIsLoading(false);
+    }
+  };
+
+  return { user, progress: data, isLoading, setProgress, updateProgress: _updateProgress };
 };
