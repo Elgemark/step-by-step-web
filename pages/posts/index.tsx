@@ -4,6 +4,7 @@ import { getPostsBySearch, getPostsForAnonymousUser } from "../../utils/firebase
 import Collection from "../../classes/Collection";
 import FirebaseWrapper from "../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../components/wrappers/MUIWrapper";
+import { getCategories } from "../../utils/firebase/api";
 
 const collection = new Collection();
 let lastDoc;
@@ -15,6 +16,8 @@ const PostsPage = (props) => {
 export async function getServerSideProps({ query }) {
   const { search, category } = query;
   let response: PostsResponse = { data: [], error: null };
+
+  const categories = await getCategories();
 
   if (search || category) {
     // Search...
@@ -29,7 +32,7 @@ export async function getServerSideProps({ query }) {
     lastDoc = null;
   });
 
-  return { props: { posts: items } };
+  return { props: { posts: items, categories: categories.data } };
 }
 
 export default (props) => (

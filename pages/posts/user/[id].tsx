@@ -4,6 +4,7 @@ import { getPostsForUser } from "../../../utils/firebase/api/post";
 import Collection from "../../../classes/Collection";
 import FirebaseWrapper from "../../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../../components/wrappers/MUIWrapper";
+import { getCategories } from "../../../utils/firebase/api";
 
 const collection = new Collection();
 let lastDoc;
@@ -14,15 +15,17 @@ const UserPage = (props) => {
 
 export async function getServerSideProps({ query }) {
   const { id } = query;
-  let response: PostsResponse = { data: [], error: null };
 
+  const categories = await getCategories();
+
+  let response: PostsResponse = { data: [], error: null };
   response = await getPostsForUser(id);
 
   const items = collection.union(response.data, [], () => {
     lastDoc = null;
   });
 
-  return { props: { posts: items } };
+  return { props: { posts: items, categories: categories.data } };
 }
 
 export default (props) => (

@@ -14,6 +14,10 @@ https://www.npmjs.com/package/react-easy-crop
 https://markerjs.com/
 https://github.com/manishboro/image-crop-and-zoom
 
+### Slow connection
+
+https://medium.com/@Frikkylikeme/how-i-fixed-slow-function-startups-in-google-cloud-a7482056a415
+
 ### Mail
 
 https://react.email/docs/integrations/nodemailer

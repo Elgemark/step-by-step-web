@@ -21,6 +21,9 @@ const Root = styled.div`
       margin: 74px ${({ theme }) => theme.spacing(1)};
     }
   }
+  .info {
+    margin-bottom: ${({ theme }) => theme.spacing(2)};
+  }
 `;
 
 const Layout: FC<{
@@ -35,6 +38,9 @@ const Layout: FC<{
     <Root theme={theme} {...props}>
       <TopBar className="top-bar" {...propsTopbar} />
       <Box className="content" {...propsContent}>
+        <Alert className="info" severity="info">
+          This is site is under development. Please come back later!
+        </Alert>
         {children}
       </Box>
       {/* SNACKBAR */}

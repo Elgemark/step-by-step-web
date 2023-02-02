@@ -1,4 +1,4 @@
-import { Stack, useTheme } from "@mui/material";
+import { Stack, useTheme, StackProps } from "@mui/material";
 import { FC } from "react";
 import { Chip } from "@mui/material";
 import styled from "styled-components";
@@ -18,14 +18,16 @@ interface ChipItem {
 
 type ChipItems = Array<ChipItem>;
 
-const SelectChips: FC<{
+type propTypes = {
   onSelect?: (category: string | ChipItem) => void;
   items: Array<string> | ChipItems;
   selectedItems: Array<string>;
-}> = ({ items, onSelect, selectedItems = [] }) => {
+};
+
+const SelectChips: FC<propTypes & StackProps> = ({ items, onSelect, selectedItems = [], ...rest }) => {
   const theme = useTheme();
   return (
-    <StyledStack theme={theme} direction="row" flexWrap="wrap">
+    <StyledStack theme={theme} direction="row" flexWrap="wrap" {...rest}>
       {items &&
         items.map((item) => (
           <Chip
