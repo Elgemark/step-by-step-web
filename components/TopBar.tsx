@@ -97,17 +97,20 @@ const TopBar: FC<{ className?: string; actions?: ReactNode }> = ({ className, ac
           <IconStepsFoldLogo fontSize="large"></IconStepsFoldLogo>
         </IconButton>
         {/* SEARCH */}
-        <StyledSearch
-          theme={theme}
-          onEnter={onSearchEnterHandler}
-          onChange={(e) => setSearchStr(e.currentTarget.value.toLowerCase())}
-          onFocus={onSearchFocusHandler}
-          onBlur={onFocusBlurHandler}
-          onClickFilter={onClickFilterHandler}
-          showFilterButton={router.asPath.includes("/search")}
-          value={searchStr}
-          numFilters={(_.get(query, "category") ? 1 : 0) + (_.get(query, "orderBy") ? 1 : 0)}
-        ></StyledSearch>
+        {actions || (
+          <StyledSearch
+            theme={theme}
+            onEnter={onSearchEnterHandler}
+            onChange={(e) => setSearchStr(e.currentTarget.value.toLowerCase())}
+            onFocus={onSearchFocusHandler}
+            onBlur={onFocusBlurHandler}
+            onClickFilter={onClickFilterHandler}
+            showFilterButton={router.asPath.includes("/search")}
+            value={searchStr}
+            numFilters={(_.get(query, "category") ? 1 : 0) + (_.get(query, "orderBy") ? 1 : 0)}
+          ></StyledSearch>
+        )}
+
         {/* FILTER */}
         <Popover
           open={Boolean(anchorEl)}

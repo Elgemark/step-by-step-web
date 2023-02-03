@@ -31,11 +31,11 @@ const MUIWrapper: FC<{
       createTheme({
         palette: {
           mode,
-          primary: {
-            light: "#2277FF",
-            main: "#0056E0",
-            dark: "#004ABF",
-          },
+          // primary: {
+          //   light: "#2277FF",
+          //   main: "#0056E0",
+          //   dark: "#004ABF",
+          // },
         },
       }),
     [mode]

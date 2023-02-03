@@ -52,9 +52,6 @@ const List: FC<{
   items: Array<ListItem>;
 }> = ({ id, title, items = [] }) => {
   const theme = useTheme();
-
-  console.log(alpha(theme.palette.background.paper, 0.2));
-
   const [pin, setPin] = useState(false);
   const [collapse, setCollapse] = useState(false);
 
@@ -81,7 +78,7 @@ const List: FC<{
               <th className="column-2"></th>
             </tr>
           </thead>
-          <Collapse in={!collapse}>
+          <Collapse in={!collapse} timeout={600} sx={{ width: "100%" }}>
             <tbody>
               {items.map((item: ListItem, index) => (
                 <tr key={`${id}-${index}`}>
