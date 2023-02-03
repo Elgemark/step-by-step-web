@@ -1,4 +1,4 @@
-import { IconButton, Typography, useTheme } from "@mui/material";
+import { Collapse, IconButton, Typography, useTheme } from "@mui/material";
 import styled from "styled-components";
 import Paper from "@mui/material/Paper";
 import { FC, useState } from "react";
@@ -56,9 +56,14 @@ const List: FC<{
   console.log(alpha(theme.palette.background.paper, 0.2));
 
   const [pin, setPin] = useState(false);
+  const [collapse, setCollapse] = useState(false);
 
   const onClickPinHandler = () => {
     setPin(!pin);
+  };
+
+  const onHeaderClickHandler = () => {
+    setCollapse(!collapse);
   };
 
   return (
@@ -68,7 +73,7 @@ const List: FC<{
           <PushPinIcon />
         </IconButton>
         <StyledTable theme={theme}>
-          <thead>
+          <thead onClick={onHeaderClickHandler}>
             <tr>
               <th className="column-1" colSpan={2}>
                 <Typography variant="h6">{title}</Typography>
@@ -76,20 +81,22 @@ const List: FC<{
               <th className="column-2"></th>
             </tr>
           </thead>
-          <tbody>
-            {items.map((item: ListItem, index) => (
-              <tr key={`${id}-${index}`}>
-                {/* TEXT Left */}
-                <td className="column-1">
-                  <Typography variant="body2">{item.text}</Typography>
-                </td>
-                {/* TEXT Right */}
-                <td className="column-2">
-                  <Typography variant="body2">{item.value}</Typography>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+          <Collapse in={!collapse}>
+            <tbody>
+              {items.map((item: ListItem, index) => (
+                <tr key={`${id}-${index}`}>
+                  {/* TEXT Left */}
+                  <td className="column-1">
+                    <Typography variant="body2">{item.text}</Typography>
+                  </td>
+                  {/* TEXT Right */}
+                  <td className="column-2">
+                    <Typography variant="body2">{item.value}</Typography>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Collapse>
         </StyledTable>
       </StyledPaper>
     </Portal>
