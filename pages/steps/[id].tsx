@@ -32,6 +32,12 @@ const StyledLayout = styled(Layout)`
     display: flex;
     justify-content: center;
   }
+  #pinned-lists {
+    position: sticky;
+    top: 60px;
+    z-index: 999;
+    backdrop-filter: blur(5px);
+  }
 `;
 
 const StyledStep = styled(Step)`
@@ -85,6 +91,8 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> 
         <title>{"STEPS | " + (post?.title || "untitled")}</title>
       </Head>
       <StyledLayout propsTopbar={{ actions: <StyledStepsProgress label={`${progress.step}/${steps.length}`} /> }}>
+        {/* This div is the portal target for pinned lists */}
+        <div id="pinned-lists"></div>
         <Post
           {...post}
           action={

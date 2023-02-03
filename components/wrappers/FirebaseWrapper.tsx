@@ -55,7 +55,7 @@ const Root = styled.div`
   align-items: center;
 `;
 
-const LoginCheck = ({ children, enable = false }) => {
+const LoginCheck = ({ children, enable = true }) => {
   const { status, data: signInCheckResult } = useSigninCheck();
   const router = useRouter();
 
