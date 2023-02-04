@@ -35,7 +35,12 @@ const StyledSearch = styled(Search)`
   border-radius: 16px;
 `;
 
-const TopBar: FC<{ className?: string; actions?: ReactNode }> = ({ className, actions, ...props }) => {
+const TopBar: FC<{ onClickLogo: () => void; className?: string; actions?: ReactNode }> = ({
+  onClickLogo,
+  className,
+  actions,
+  ...props
+}) => {
   const isDesktop = useMediaQuery("(min-width:600px)");
   const { data: user } = useUser();
   const router = useRouter();
@@ -86,11 +91,7 @@ const TopBar: FC<{ className?: string; actions?: ReactNode }> = ({ className, ac
         {/* LOGO */}
         <IconButton
           onClick={() => {
-            if (user) {
-              router.push("/posts/user/" + user.uid);
-            } else {
-              router.push("/posts/");
-            }
+            onClickLogo();
           }}
         >
           {/* <StepsLogoIconFold height={36} /> */}

@@ -1,10 +1,13 @@
 import TopBar from "./TopBar";
 import Box from "@mui/material/Box";
 import styled from "styled-components";
-import { FC, ReactNode, createContext } from "react";
+import { FC, ReactNode, createContext, useState } from "react";
 import { useMessages } from "../hooks/message";
-import { Alert, Snackbar, Stack } from "@mui/material";
+import { Alert, Drawer, Snackbar, Stack } from "@mui/material";
 import { useTheme } from "@emotion/react";
+import SideMenu from "./primitives/SideMenu";
+import { useUser } from "reactfire";
+import { useRouter } from "next/router";
 
 export const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
@@ -31,12 +34,16 @@ const Layout: FC<{
   propsContent?: Object;
   children?: ReactNode;
 }> = ({ children, propsTopbar, propsContent, ...props }) => {
+  const { data: user } = useUser();
+  const router = useRouter();
   const theme = useTheme();
   const { messages, removeMessage } = useMessages();
+  const [showSideMenu, setShowSideMenu] = useState(false);
 
   return (
     <Root theme={theme} {...props}>
-      <TopBar className="top-bar" {...propsTopbar} />
+      {/* TOPBAR */}
+      <TopBar onClickLogo={() => setShowSideMenu(true)} className="top-bar" {...propsTopbar} />
       <Box className="content" {...propsContent}>
         <Stack direction={"row"} justifyContent="center">
           <Alert className="info" severity="info" color="warning">
@@ -45,6 +52,34 @@ const Layout: FC<{
         </Stack>
         {children}
       </Box>
+      {/* SIDEMENU */}
+      <Drawer anchor={"left"} open={showSideMenu} onClose={() => setShowSideMenu(false)}>
+        <SideMenu
+          onClose={() => setShowSideMenu(false)}
+          onClickHome={() => {
+            if (user) {
+              router.push("/posts/user/" + user.uid);
+            } else {
+              router.push("/posts/");
+            }
+          }}
+          onClickSearch={() => {
+            router.push("/posts/search/");
+          }}
+          onClickLogin={
+            !user &&
+            (() => {
+              router.push("/login/");
+            })
+          }
+          onClickProfile={
+            user &&
+            (() => {
+              router.push("/profile/" + user.uid);
+            })
+          }
+        />
+      </Drawer>
       {/* SNACKBAR */}
       <Snackbar open={messages.alert} autoHideDuration={6000} onClose={() => removeMessage("alert")}>
         <Alert
