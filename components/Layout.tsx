@@ -6,8 +6,8 @@ import { useMessages } from "../hooks/message";
 import { Alert, Drawer, Snackbar, Stack } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import SideMenu from "./primitives/SideMenu";
-import { useUser } from "reactfire";
 import { useRouter } from "next/router";
+import { useUser } from "../utils/firebase/api/user";
 
 export const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
@@ -76,6 +76,12 @@ const Layout: FC<{
             user &&
             (() => {
               router.push("/profile/" + user.uid);
+            })
+          }
+          onClickBookmarks={
+            user &&
+            (() => {
+              router.push("/profile/" + user.uid + "/saved/");
             })
           }
         />

@@ -1,7 +1,6 @@
 import { FC, useState, Fragment, MouseEventHandler } from "react";
 import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
-import Button from "@mui/material/Button";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 import ListItem from "@mui/material/ListItem";
@@ -37,7 +36,8 @@ const SideMenu: FC<{
   onClickSearch: MouseEventHandler;
   onClickLogin?: MouseEventHandler;
   onClickProfile?: MouseEventHandler;
-}> = ({ onClose, onClickHome, onClickSearch, onClickLogin, onClickProfile }) => {
+  onClickBookmarks?: MouseEventHandler;
+}> = ({ onClose, onClickHome, onClickSearch, onClickLogin, onClickProfile, onClickBookmarks }) => {
   return (
     <Box sx={{ width: 200 }} role="presentation" onClick={onClose}>
       <List>
@@ -49,9 +49,11 @@ const SideMenu: FC<{
         <SideMenuItem onClick={onClickSearch} label="Search" icon={<SearchIcon />} />
         {onClickLogin && <SideMenuItem onClick={onClickLogin} label="Login" icon={<LoginIcon />} />}
         {onClickProfile && <SideMenuItem onClick={onClickProfile} label="Profile" icon={<PersonIcon />} />}
+        {onClickBookmarks && <SideMenuItem onClick={onClickProfile} label="Saved" icon={<BookmarkIcon />} />}
       </List>
       {/* USER */}
       <List>{/* <SideMenuItem onClick={onClickHome} label="Home" icon={<MailIcon />} /> */}</List>
+      {/* ADMIN */}
     </Box>
   );
 };
