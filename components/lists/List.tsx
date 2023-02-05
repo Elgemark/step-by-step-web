@@ -13,12 +13,10 @@ const StyledAccordion = styled(Accordion)`
   top: ${({ pin }) => (pin ? "70px" : "auto")};
   background-color: ${({ theme, pin }) =>
     pin ? alpha(theme.palette.background.paper, 0.8) : theme.palette.background.paper};
+
   .button-pin {
     transform: rotate(-45deg);
-    margin-bottom: 2px;
-  }
-  h6 {
-    margin-bottom: ${({ theme }) => theme.spacing(1)};
+    margin: 3px 5px 0 -5px;
   }
   h6,
   p {
@@ -31,7 +29,6 @@ const StyledTable = styled.table`
   text-align: left;
   width: 100%;
   border-collapse: collapse;
-
   .column-1 {
     text-align: left;
   }
@@ -59,6 +56,7 @@ const List: FC<{
   return (
     <Portal show={pin} target={document.getElementById("pinned-lists")}>
       <StyledAccordion
+        disableGutters
         expanded={!collapse}
         onChange={() => setCollapse(!collapse)}
         elevation={3}
