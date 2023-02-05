@@ -9,7 +9,6 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
-import PostMoreMenu from "../PostMoreMenu";
 import UserAvatar from "../UserAvatar";
 import Badge from "@mui/material/Badge";
 import { useLikes, useBookmarks } from "../../utils/firebase/api";

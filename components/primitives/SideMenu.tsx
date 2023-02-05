@@ -7,10 +7,10 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
 import LoginIcon from "@mui/icons-material/Login";
 import PersonIcon from "@mui/icons-material/Person";
+import FeedIcon from "@mui/icons-material/Feed";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 
 export type Anchor = "top" | "left" | "bottom" | "right";
@@ -32,16 +32,16 @@ const SideMenuItem: FC<{ onClick: MouseEventHandler; label: string; icon: ReactJ
 
 const SideMenu: FC<{
   onClose: MouseEventHandler;
-  onClickHome: MouseEventHandler;
+  onClickFeed: MouseEventHandler;
   onClickSearch: MouseEventHandler;
   onClickLogin?: MouseEventHandler;
   onClickProfile?: MouseEventHandler;
   onClickBookmarks?: MouseEventHandler;
-}> = ({ onClose, onClickHome, onClickSearch, onClickLogin, onClickProfile, onClickBookmarks }) => {
+}> = ({ onClose, onClickFeed, onClickSearch, onClickLogin, onClickProfile, onClickBookmarks }) => {
   return (
     <Box sx={{ width: 200 }} role="presentation" onClick={onClose}>
       <List>
-        <SideMenuItem onClick={onClickHome} label="Home" icon={<HomeIcon />} />
+        <SideMenuItem onClick={onClickFeed} label="Feed" icon={<FeedIcon />} />
       </List>
       <Divider />
       {/* ... */}

@@ -56,7 +56,7 @@ const Layout: FC<{
       <Drawer anchor={"left"} open={showSideMenu} onClose={() => setShowSideMenu(false)}>
         <SideMenu
           onClose={() => setShowSideMenu(false)}
-          onClickHome={() => {
+          onClickFeed={() => {
             if (user) {
               router.push("/posts/user/" + user.uid);
             } else {
