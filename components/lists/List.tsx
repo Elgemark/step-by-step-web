@@ -1,4 +1,14 @@
-import { Collapse, IconButton, Typography, useTheme } from "@mui/material";
+import {
+  Accordion,
+  AccordionActions,
+  AccordionDetails,
+  AccordionSummary,
+  Button,
+  Collapse,
+  IconButton,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import styled from "styled-components";
 import Paper from "@mui/material/Paper";
 import { FC, useState } from "react";
@@ -6,20 +16,29 @@ import { ListItem } from "../../utils/firebase/interface";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import Portal from "../primitives/Portal";
 import { alpha } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-const StyledPaper = styled(Paper)`
+const StyledAccordion = styled(Accordion)`
   position: ${({ pin }) => (pin ? "sticky" : "relative")};
   top: ${({ pin }) => (pin ? "70px" : "auto")};
-  _background-color: ${({ theme }) => theme.palette.background.paper};
   background-color: ${({ theme, pin }) =>
     pin ? alpha(theme.palette.background.paper, 0.8) : theme.palette.background.paper};
-  padding: ${({ theme }) => theme.spacing(1)};
-  padding-bottom: ${({ theme }) => theme.spacing(2)};
-  margin-bottom: ${({ theme }) => theme.spacing(2)};
+
   .button-pin {
-    position: absolute;
+    /* position: absolute;
     right: 0;
-    top: 0;
+    top: 0; */
+    /* margin-top: ${({ theme }) => theme.spacing(2)}; */
+    transform: rotate(-45deg);
+    margin-bottom: 2px;
+  }
+  h6 {
+    /* pointer-events: auto; */
+    margin-bottom: ${({ theme }) => theme.spacing(1)};
+  }
+  h6,
+  p {
+    opacity: 0.7;
   }
 `;
 
@@ -28,13 +47,7 @@ const StyledTable = styled.table`
   text-align: left;
   width: 100%;
   border-collapse: collapse;
-  h6 {
-    margin-bottom: ${({ theme }) => theme.spacing(1)};
-  }
-  h6,
-  p {
-    opacity: 0.7;
-  }
+
   .column-1 {
     text-align: left;
   }
@@ -59,26 +72,30 @@ const List: FC<{
     setPin(!pin);
   };
 
-  const onHeaderClickHandler = () => {
-    setCollapse(!collapse);
-  };
-
   return (
     <Portal show={pin} target={document.getElementById("pinned-lists")}>
-      <StyledPaper elevation={3} theme={theme} pin={pin}>
-        <IconButton className="button-pin" onClick={onClickPinHandler}>
-          <PushPinIcon />
-        </IconButton>
-        <StyledTable theme={theme}>
-          <thead onClick={onHeaderClickHandler}>
-            <tr>
-              <th className="column-1" colSpan={2}>
-                <Typography variant="h6">{title}</Typography>
-              </th>
-              <th className="column-2"></th>
-            </tr>
-          </thead>
-          <Collapse in={!collapse} timeout={600} sx={{ width: "100%" }}>
+      <StyledAccordion
+        expanded={!collapse}
+        onChange={() => setCollapse(!collapse)}
+        elevation={3}
+        theme={theme}
+        pin={pin}
+      >
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <IconButton
+            size="small"
+            className="button-pin"
+            onClick={(e) => {
+              onClickPinHandler();
+              e.stopPropagation();
+            }}
+          >
+            <PushPinIcon fontSize="small" />
+          </IconButton>
+          <Typography variant="h6">{title}</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <StyledTable theme={theme}>
             <tbody>
               {items.map((item: ListItem, index) => (
                 <tr key={`${id}-${index}`}>
@@ -93,9 +110,9 @@ const List: FC<{
                 </tr>
               ))}
             </tbody>
-          </Collapse>
-        </StyledTable>
-      </StyledPaper>
+          </StyledTable>
+        </AccordionDetails>
+      </StyledAccordion>
     </Portal>
   );
 };
