@@ -1,14 +1,4 @@
-import {
-  Accordion,
-  AccordionActions,
-  AccordionDetails,
-  AccordionSummary,
-  Button,
-  Collapse,
-  IconButton,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, IconButton, Typography, useTheme } from "@mui/material";
 import styled from "styled-components";
 import Paper from "@mui/material/Paper";
 import { FC, useState } from "react";
@@ -23,17 +13,11 @@ const StyledAccordion = styled(Accordion)`
   top: ${({ pin }) => (pin ? "70px" : "auto")};
   background-color: ${({ theme, pin }) =>
     pin ? alpha(theme.palette.background.paper, 0.8) : theme.palette.background.paper};
-
   .button-pin {
-    /* position: absolute;
-    right: 0;
-    top: 0; */
-    /* margin-top: ${({ theme }) => theme.spacing(2)}; */
     transform: rotate(-45deg);
     margin-bottom: 2px;
   }
   h6 {
-    /* pointer-events: auto; */
     margin-bottom: ${({ theme }) => theme.spacing(1)};
   }
   h6,
