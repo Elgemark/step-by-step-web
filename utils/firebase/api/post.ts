@@ -298,7 +298,7 @@ export const getPostsForUser = async (userId: string, limit = 10, lastDoc = null
   let postsQuery: Array<any> = [fsLimit(limit)];
   // Get only public posts
   postsQuery.push(where("visibility", "==", "public"));
-  // Get posts from  follows...
+  // Get posts from follows... (from last login)
   const followsResp: FollowersResponse = await getFollows(userId);
   const followsIds = followsResp.data.map((data) => data.id);
   console.log("followsIds", followsIds);
@@ -306,7 +306,7 @@ export const getPostsForUser = async (userId: string, limit = 10, lastDoc = null
     postsQuery.push(where("uid", "in", followsIds));
   }
   // Get posts by interests...
-  // !!!can only use one in query!
+  // !!!can only use one "in" query!
   const interests = userProfile?.data?.interests || [];
   if (interests.length) {
     // postsQuery.push(where("category", "in", userProfile.data.interests));
