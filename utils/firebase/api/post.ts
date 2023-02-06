@@ -291,6 +291,17 @@ export const getPostsForAnonymousUser = async (
   return await getPostsByQuery(postsQuery);
 };
 
+export const getPostByInterests = async (interests = [], limit = 10, lastDoc = null) => {
+  // Build query...
+  let postsQuery: Array<any> = [fsLimit(limit)];
+  postsQuery.push(where("category", "in", interests));
+  if (lastDoc) {
+    postsQuery.push(startAfter(lastDoc));
+  }
+
+  return await getPostsByQuery(postsQuery);
+};
+
 export const getPostsForUser = async (userId: string, limit = 10, lastDoc = null) => {
   const userProfile = await getUser(userId);
 

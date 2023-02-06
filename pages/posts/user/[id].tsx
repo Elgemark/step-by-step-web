@@ -1,11 +1,11 @@
 import PageMain from "../../../components/PageMain";
 import { PostsResponse } from "../../../utils/firebase/interface";
-import { getPostsForUser } from "../../../utils/firebase/api/post";
+import { getPostByInterests, getPostsForUser } from "../../../utils/firebase/api/post";
 import Collection from "../../../classes/Collection";
 import FirebaseWrapper from "../../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../../components/wrappers/MUIWrapper";
 import { getCategories } from "../../../utils/firebase/api";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useCollection } from "../../../utils/collectionUtils";
 import SelectChips from "../../../components/primitives/SelectChips";
 import { Divider } from "@mui/material";
@@ -16,20 +16,39 @@ import Head from "next/head";
 import Layout from "../../../components/Layout";
 import Posts from "../../../components/posts/Posts";
 import { Posts as PostsType } from "../../../utils/firebase/type";
+import { useUser } from "../../../utils/firebase/api/user";
 
 const collection = new Collection();
 let lastDoc;
 
+const getPostsByInterest = async () => {};
+
 const UserPage = ({ categories }) => {
-  const { collection: postsByIntersts } = useCollection();
+  const { data: user, isLoading: isLoadingUser } = useUser();
   const isBottom = useScrolledToBottom(100);
   const router = useRouter();
+  //
+  const { collection: postsByIntersts, addItems: addPostsByInterests } = useCollection();
+  const [lastDocByInterests, setLastDocByInterests] = useState();
 
-  useEffect(() => {}, []);
+  const fetchPostsByInterests = () => {
+    getPostByInterests(user.interests, 2, lastDocByInterests).then((response) => {
+      addPostsByInterests(response.data);
+      setLastDocByInterests(response.lastDoc);
+    });
+  };
+
+  useEffect(() => {
+    if (!isLoadingUser && user.interests && user.interests.length) {
+      fetchPostsByInterests();
+    }
+  }, [isLoadingUser, user]);
 
   useEffect(() => {
     if (isBottom) {
-      //
+      if (!isLoadingUser && user.interests && user.interests.length) {
+        fetchPostsByInterests();
+      }
     }
   }, [isBottom]);
 
