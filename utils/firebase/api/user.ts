@@ -102,9 +102,9 @@ export const useUser = (uid = null, realtime = false) => {
 
   // Add realtime listener
   useEffect(() => {
-    if (uid && realtime) {
+    if (data.uid && realtime) {
       const firebase = getFirestore();
-      const docRef = doc(firebase, "users", uid);
+      const docRef = doc(firebase, "users", data.uid);
       const unsubscribe = onSnapshot(docRef, (snapshot) => {
         if (snapshot.exists()) {
           replace({ ...currentUser, ...data, ...snapshot.data() });
@@ -114,7 +114,7 @@ export const useUser = (uid = null, realtime = false) => {
         unsubscribe();
       };
     }
-  }, [uid, realtime]);
+  }, [data.uid, realtime]);
 
   const save = async (update = {}) => {
     updateObject(update);
