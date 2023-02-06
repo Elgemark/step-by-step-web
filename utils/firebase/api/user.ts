@@ -45,6 +45,7 @@ export const updateUser = async (uid, data) => {
     response.error = error;
   }
   // create user if error
+  /*
   if (response.error) {
     try {
       const currentUser = getCurrentUser();
@@ -53,6 +54,7 @@ export const updateUser = async (uid, data) => {
       response.error = error;
     }
   }
+  */
 
   return response;
 };
