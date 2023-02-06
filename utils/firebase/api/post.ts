@@ -15,13 +15,14 @@ import {
   updateDoc,
   onSnapshot,
 } from "firebase/firestore";
-import { Post, PostResponse, PostsResponse } from "../interface";
+import { FollowersResponse, Post, PostResponse, PostsResponse } from "../interface";
 import { parseData } from "../../firebaseUtils";
 import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { Posts } from "../type";
 import { getUser } from "./user";
 import { toSanitizedArray } from "../../stringUtils";
+import { getFollows } from "./follow";
 
 interface SearchFilter {
   category?: string;
@@ -31,23 +32,26 @@ interface SearchFilter {
 export const setPost = async (id, post: Post) => {
   const response: PostResponse = { data: post, error: null };
   const auth = getAuth();
-  const userId = auth.currentUser.uid;
+  // never change owner
+  const uid = post.uid || auth.currentUser.uid;
   const firebase = getFirestore();
   try {
-    await setDoc(doc(firebase, "posts", id), { ...post, userId, timeStamp: serverTimestamp() });
+    await setDoc(doc(firebase, "posts", id), { ...post, uid, timeStamp: serverTimestamp() });
   } catch (error) {
     response.error = error;
   }
   return response;
 };
 
-export const updatePost = async (id, data = {}) => {
+export const updatePost = async (id, data: any = {}) => {
   const response: any = { data: { id, ...data }, error: null };
   const auth = getAuth();
-  const userId = auth.currentUser.uid;
+  // never change owner
+  const uid = data.uid || auth.currentUser.uid;
+
   const firebase = getFirestore();
   try {
-    await updateDoc(doc(firebase, "posts", id), { ...data, userId, timeStamp: serverTimestamp() });
+    await updateDoc(doc(firebase, "posts", id), { ...data, uid, timeStamp: serverTimestamp() });
   } catch (error) {
     response.error = error;
   }
