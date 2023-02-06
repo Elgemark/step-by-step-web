@@ -45,7 +45,7 @@ const MediaContainer = ({ children, hrefBasePath, slug, enableLink }) => {
 };
 
 const Post: FC<{
-  userId: string;
+  uid: string;
   id: string;
   title: string;
   descr?: string;
@@ -60,7 +60,7 @@ const Post: FC<{
   onBookmark?: Function;
   onClickAvatar?: Function;
 }> = ({
-  userId,
+  uid,
   currentUserId,
   title = "Title",
   descr = "Body",
@@ -92,8 +92,8 @@ const Post: FC<{
     <Root>
       <CardHeader
         avatar={
-          <IconButton sx={{ padding: 0 }} onClick={() => onClickAvatar(userId)}>
-            <UserAvatar userId={userId} />
+          <IconButton sx={{ padding: 0 }} onClick={() => onClickAvatar(uid)}>
+            <UserAvatar userId={uid} />
           </IconButton>
         }
         action={action}

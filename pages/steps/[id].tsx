@@ -86,6 +86,14 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> 
     router.push("/admin/review/post/" + id);
   };
 
+  const onClickAvatarHandler = () => {
+    if (user.isCurrentUser) {
+      router.push("/profile/" + user.uid);
+    } else {
+      router.push("/user/" + user.uid);
+    }
+  };
+
   return (
     <>
       <Head>
@@ -131,6 +139,7 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> 
           currentUserId={user?.uid}
           lists={lists}
           onLike={() => onLikeHandler(post)}
+          onClickAvatar={onClickAvatarHandler}
         />
         {/* START BUTTON */}
         <RevealNext

@@ -14,7 +14,7 @@ export interface Post {
   category: string;
   likes: number;
   stepsCompleted: number;
-  userId: string;
+  uid: string;
   visibility: PostVisibility;
 }
 
