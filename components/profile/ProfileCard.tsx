@@ -21,6 +21,8 @@ const ProfileCardEditable: FC<{
   const { data: user, update: updateUser, save: saveUser, isLoading } = useUser(userId);
   const { categories } = useCategories();
 
+  console.log("user", user);
+
   const { object: avatarData, update: updateAvatarObject } = useStateObject({
     url: null,
     file: null,
@@ -36,7 +38,7 @@ const ProfileCardEditable: FC<{
 
   const onSaveHandler = async () => {
     setIsSaving(true);
-    const update = { avatar: user.avatar, background: user.background };
+    const update = _.pick(user, ["biography", "alias"]);
     // Avatar...
     if (avatarData.file) {
       const avatarResp: UploadResponse = await uploadImage(avatarData.file, "1024x1024", ["users", userId], "avatar");
@@ -52,7 +54,9 @@ const ProfileCardEditable: FC<{
       );
       update.background = backgroundResp.url;
     }
-    await saveUser(update);
+
+    const resp = await saveUser(update);
+    console.log("resp", { resp, update });
     setIsSaving(false);
     onSave();
   };

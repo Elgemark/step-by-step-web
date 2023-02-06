@@ -36,9 +36,25 @@ export const setUser = async (currentUser) => {
 };
 
 export const updateUser = async (uid, data) => {
+  const response: UserResponse = { data, error: null };
   const firebase = getFirestore();
   const userRef = doc(firebase, "users", uid);
-  return await updateDoc(userRef, data);
+  try {
+    await updateDoc(userRef, data);
+  } catch (error) {
+    response.error = error;
+  }
+  // create user if error
+  if (response.error) {
+    try {
+      const currentUser = getCurrentUser();
+      await setUser({ ...currentUser, ...data });
+    } catch (error) {
+      response.error = error;
+    }
+  }
+
+  return response;
 };
 
 export const getCurrentUser = async () => {
@@ -63,7 +79,7 @@ export const getUser = async (uid) => {
 };
 
 export const useUser = (uid = null, realtime = false) => {
-  const { object: data, setValue: update, replace, update: updateObject } = useStateObject({ uid: null, roles: [] });
+  const { object: data, setValue: update, replace, update: updateObject } = useStateObject({ uid, roles: [] });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const { status: statusCurrentUser, data: currentUser } = rfUseUser();
@@ -100,7 +116,7 @@ export const useUser = (uid = null, realtime = false) => {
 
   const save = async (update = {}) => {
     updateObject(update);
-    return await updateUser(data.uid, { ...data, ...update });
+    return await updateUser(data.uid, update);
   };
 
   return { data, isLoading, isCurrentUser: currentUser?.uid === data?.uid, error, update, save };
