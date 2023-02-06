@@ -292,15 +292,28 @@ export const getPostsForAnonymousUser = async (
 };
 
 export const getPostsForUser = async (userId: string, limit = 10, lastDoc = null) => {
+  const userProfile = await getUser(userId);
+
   // Build query...
   let postsQuery: Array<any> = [fsLimit(limit)];
   // Get only public posts
   postsQuery.push(where("visibility", "==", "public"));
-  // Personal query...
-  const userProfile = await getUser(userId);
-  const interests = userProfile?.data?.interests;
-  if (interests && interests.length) {
-    postsQuery.push(where("category", "in", userProfile.data.interests));
+  // Get posts from  follows...
+  const followsResp: FollowersResponse = await getFollows(userId);
+  const followsIds = followsResp.data.map((data) => data.id);
+  console.log("followsIds", followsIds);
+  if (followsIds.length) {
+    postsQuery.push(where("uid", "in", followsIds));
+  }
+  // Get posts by interests...
+  // !!!can only use one in query!
+  const interests = userProfile?.data?.interests || [];
+  if (interests.length) {
+    // postsQuery.push(where("category", "in", userProfile.data.interests));
+  }
+  // Get poersonal feed if intersts or follows are set....
+  const enabledPersonalFeeed = true;
+  if (enabledPersonalFeeed && (interests.length || followsIds.length)) {
     // paginate...
     if (lastDoc) {
       postsQuery.push(startAfter(lastDoc));
