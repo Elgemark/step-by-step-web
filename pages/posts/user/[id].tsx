@@ -27,14 +27,18 @@ const UserPage = ({ categories }) => {
   const { data: user, isLoading: isLoadingUser } = useUser();
   const isBottom = useScrolledToBottom(100);
   const router = useRouter();
-  //
-  const { collection: postsByIntersts, addItems: addPostsByInterests } = useCollection();
+  const { collection: posts, addItems: addPosts } = useCollection();
+  // posts by follows...
+
+  // posts by interests...
   const [lastDocByInterests, setLastDocByInterests] = useState();
+  const [hasMorePostsByInterests, setHasMorePostsByInterests] = useState(true);
 
   const fetchPostsByInterests = () => {
     getPostByInterests(user.interests, 2, lastDocByInterests).then((response) => {
-      addPostsByInterests(response.data);
+      addPosts(response.data);
       setLastDocByInterests(response.lastDoc);
+      setHasMorePostsByInterests(response.data.length > 0);
     });
   };
 
@@ -47,7 +51,8 @@ const UserPage = ({ categories }) => {
   useEffect(() => {
     if (isBottom) {
       if (!isLoadingUser && user.interests && user.interests.length) {
-        fetchPostsByInterests();
+        // posts by interests...
+        hasMorePostsByInterests && fetchPostsByInterests();
       }
     }
   }, [isBottom]);
@@ -59,7 +64,7 @@ const UserPage = ({ categories }) => {
         <title>{"Title"}</title>
       </Head>
       <Layout>
-        <Posts enableLink={true} posts={postsByIntersts as PostsType} />
+        <Posts enableLink={true} posts={posts as PostsType} />
       </Layout>
     </>
   );
