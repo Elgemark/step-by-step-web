@@ -298,7 +298,16 @@ export const getPostByInterests = async (interests = [], limit = 10, lastDoc = n
   if (lastDoc) {
     postsQuery.push(startAfter(lastDoc));
   }
+  return await getPostsByQuery(postsQuery);
+};
 
+export const getPostByFollows = async (follows = [], limit = 10, lastDoc = null) => {
+  // Build query...
+  let postsQuery: Array<any> = [fsLimit(limit)];
+  postsQuery.push(where("uid", "in", follows));
+  if (lastDoc) {
+    postsQuery.push(startAfter(lastDoc));
+  }
   return await getPostsByQuery(postsQuery);
 };
 

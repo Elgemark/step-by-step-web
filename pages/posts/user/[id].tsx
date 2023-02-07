@@ -1,10 +1,10 @@
 import PageMain from "../../../components/PageMain";
 import { PostsResponse } from "../../../utils/firebase/interface";
-import { getPostByInterests, getPostsForUser } from "../../../utils/firebase/api/post";
+import { getPostByFollows, getPostByInterests, getPostsForUser } from "../../../utils/firebase/api/post";
 import Collection from "../../../classes/Collection";
 import FirebaseWrapper from "../../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../../components/wrappers/MUIWrapper";
-import { getCategories } from "../../../utils/firebase/api";
+import { getCategories, getFollows } from "../../../utils/firebase/api";
 import { useEffect, useState } from "react";
 import { useCollection } from "../../../utils/collectionUtils";
 import SelectChips from "../../../components/primitives/SelectChips";
@@ -23,23 +23,34 @@ let lastDoc;
 
 const getPostsByInterest = async () => {};
 
-const UserPage = ({ categories }) => {
+const UserPage = ({ categories, follows }) => {
   const { data: user, isLoading: isLoadingUser } = useUser();
   const isBottom = useScrolledToBottom(100);
   const router = useRouter();
   const { collection: posts, addItems: addPosts } = useCollection();
   // posts by follows...
-
+  const [lastDocByFollows, setLastDocByFollows] = useState();
+  const [hasMorePostsByFollows, setHasMorePostsByFollows] = useState(true);
   // posts by interests...
   const [lastDocByInterests, setLastDocByInterests] = useState();
   const [hasMorePostsByInterests, setHasMorePostsByInterests] = useState(true);
 
-  const fetchPostsByInterests = () => {
-    getPostByInterests(user.interests, 2, lastDocByInterests).then((response) => {
-      addPosts(response.data);
-      setLastDocByInterests(response.lastDoc);
-      setHasMorePostsByInterests(response.data.length > 0);
-    });
+  const fetchPostsByFollows = async () => {
+    const response = await getPostByFollows(follows, 2, lastDocByFollows);
+    addPosts(response.data);
+    setLastDocByFollows(response.lastDoc);
+    const hasMorePosts = response.data.length > 0;
+    setHasMorePostsByFollows(hasMorePosts);
+    return { hasMorePosts };
+  };
+
+  const fetchPostsByInterests = async () => {
+    const response = await getPostByInterests(user.interests, 2, lastDocByInterests);
+    addPosts(response.data);
+    setLastDocByInterests(response.lastDoc);
+    const hasMorePosts = response.data.length > 0;
+    setHasMorePostsByInterests(hasMorePosts);
+    return { hasMorePosts };
   };
 
   useEffect(() => {
@@ -70,8 +81,11 @@ const UserPage = ({ categories }) => {
   );
 };
 
-export async function getServerSideProps() {
+export async function getServerSideProps({ query }) {
+  const uid = query.id;
   const categories = await getCategories();
+  const followsResp = await getFollows(uid);
+  const follows = followsResp.data.map((doc) => doc.id);
 
   // let response: PostsResponse = { data: [], error: null };
   // response = await getPostsForUser(id);
@@ -80,7 +94,7 @@ export async function getServerSideProps() {
   //   lastDoc = null;
   // });
 
-  return { props: { categories: categories.data } };
+  return { props: { categories: categories.data, follows } };
 }
 
 export default (props) => (
