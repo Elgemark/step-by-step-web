@@ -1,15 +1,23 @@
-import { Card } from "@mui/material";
+import { Card, Collapse, IconButton } from "@mui/material";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
 import Avatar from "@mui/material/Avatar";
 import { red } from "@mui/material/colors";
 import TextField from "@mui/material/TextField";
-import { useRef, useEffect, FC } from "react";
+import { useRef, useEffect, FC, useState } from "react";
 import StepMoreMenu from "../StepMoreMenu";
 import { Step } from "../../utils/firebase/interface";
 import { useStateObject } from "../../utils/object";
 import ImageEditable from "../primitives/ImageEditable";
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import styled from "styled-components";
+
+const ButtonAddMediaContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+`;
 
 const StepEditable: FC<{
   step: Step;
@@ -21,6 +29,7 @@ const StepEditable: FC<{
 }> = ({ step, index, scrollIntoView = false, onChange, onDelete, onAddStep, ...props }) => {
   const ref = useRef<HTMLInputElement>(null);
   const { object: data, setValue } = useStateObject(step);
+  const [openMediaEdit, setOpenMediaEdit] = useState(false);
 
   useEffect(() => {
     if (ref && scrollIntoView) {
@@ -31,6 +40,10 @@ const StepEditable: FC<{
       }, 100);
     }
   }, [ref, scrollIntoView]);
+
+  const onClickAlternatePhoto = () => {
+    setOpenMediaEdit(!openMediaEdit);
+  };
 
   return (
     <Card ref={ref} {...props}>
@@ -54,13 +67,20 @@ const StepEditable: FC<{
           />
         }
       />
-      <ImageEditable
-        onBlobChange={(blob) => {
-          const updatedData = setValue("blob", blob);
-          onChange(updatedData);
-        }}
-        media={data.media}
-      />
+      <ButtonAddMediaContainer>
+        <IconButton className="button-add-media" onClick={onClickAlternatePhoto}>
+          {openMediaEdit ? <ExpandLessIcon /> : <AddPhotoAlternateIcon />}
+        </IconButton>
+      </ButtonAddMediaContainer>
+      <Collapse in={openMediaEdit}>
+        <ImageEditable
+          onBlobChange={(blob) => {
+            const updatedData = setValue("blob", blob);
+            onChange(updatedData);
+          }}
+          media={data.media}
+        />
+      </Collapse>
       <CardContent>
         <TextField
           fullWidth
@@ -74,11 +94,6 @@ const StepEditable: FC<{
           }}
         />
       </CardContent>
-      <CardActions disableSpacing>
-        {/* <IconButton aria-label="save">
-          <SaveIcon />
-        </IconButton> */}
-      </CardActions>
     </Card>
   );
 };
