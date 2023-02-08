@@ -20,7 +20,7 @@ import { useUser } from "../../../utils/firebase/api/user";
 
 type FetchResponse = {
   hasMorePosts: boolean;
-  numPosts: number;
+  posts: PostsType;
 };
 
 const UserPage = ({ follows }) => {
@@ -43,7 +43,7 @@ const UserPage = ({ follows }) => {
 
   const fetchPostsByFollows = async (fromTimeStamp) => {
     if (!hasMorePostsByFollows) {
-      return { hasMorePosts: false, numPosts: 0 };
+      return { hasMorePosts: false, posts: [] };
     }
     //
     console.log({ follows });
@@ -53,12 +53,12 @@ const UserPage = ({ follows }) => {
     const hasMorePosts = response.data.length > 0;
     setHasMorePostsByFollows(hasMorePosts);
     console.log("fetch by follows", response.data.length);
-    return { hasMorePosts, numPosts: response.data.length };
+    return { hasMorePosts, posts: response.data };
   };
 
   const fetchPostsByInterests = async (fromTimeStamp) => {
     if (!hasMorePostsByInterests) {
-      return { hasMorePosts: false, numPosts: 0 };
+      return { hasMorePosts: false, posts: [] };
     }
     //
     const response = await getPostByInterests(user.interests, fromTimeStamp, LIMIT, lastDocByInterests);
@@ -67,38 +67,41 @@ const UserPage = ({ follows }) => {
     const hasMorePosts = response.data.length > 0;
     setHasMorePostsByInterests(hasMorePosts);
     console.log("fetch by interests", response.data.length);
-    return { hasMorePosts, numPosts: response.data.length };
+    return { hasMorePosts, posts: response.data };
   };
 
-  const fetchPostsByExclude = async () => {
+  const fetchPostsByExclude = async (exclude, fromTimeStamp = null) => {
     if (!hasMorePostsByExclude) {
-      return { hasMorePosts: false, numPosts: 0 };
+      return { hasMorePosts: false, posts: [] };
     }
     //
-    const exclude = posts.map((post) => post.id);
-    const response = await getPostByExclude(exclude, LIMIT, lastDocByExclude);
+    const response = await getPostByExclude(exclude, fromTimeStamp, LIMIT, lastDocByExclude);
     addPosts(response.data);
     setLastDocByExclude(response.lastDoc);
     const hasMorePosts = response.data.length > 0;
     setHasMorePostsByExclude(hasMorePosts);
     console.log("fetch by exclude", response.data.length);
-    return { hasMorePosts, numPosts: response.data.length };
+    return { hasMorePosts, posts: response.data };
   };
 
   const fetchPosts = async (fromTimeStamp) => {
     setIsFetching(true);
-    let resp: FetchResponse = { hasMorePosts: false, numPosts: 0 };
+    let resp: FetchResponse = { hasMorePosts: false, posts: [] };
+    let aggregatedPosts: Posts = [];
     // posts by follows
-    if (!resp.hasMorePosts) {
+    if (!resp.hasMorePosts || aggregatedPosts.length < LIMIT) {
       resp = await fetchPostsByFollows(fromTimeStamp);
+      aggregatedPosts = aggregatedPosts.concat(resp.posts);
     }
     // posts by interests
-    if (!resp.hasMorePosts) {
+    if (!resp.hasMorePosts || aggregatedPosts.length < LIMIT) {
       resp = await fetchPostsByInterests(fromTimeStamp);
+      aggregatedPosts = aggregatedPosts.concat(resp.posts);
     }
-    // posts by follows
-    if (!resp.hasMorePosts) {
-      resp = await fetchPostsByExclude();
+    // posts by exclude
+    if (!resp.hasMorePosts || aggregatedPosts.length < LIMIT) {
+      const exclude = posts.concat(aggregatedPosts).map((post) => post.id);
+      resp = await fetchPostsByExclude(exclude);
     }
     setIsFetching(false);
   };

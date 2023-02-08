@@ -326,16 +326,19 @@ export const getPostByInterests = async (interests = [], fromTimeStamp = null, l
   return await getPostsByQuery(postsQuery);
 };
 
-export const getPostByExclude = async (exclude = [], limit = 10, lastDoc = null) => {
-  console.log("exclude", exclude);
+export const getPostByExclude = async (exclude = [], fromTimeStamp = null, limit = 10, lastDoc = null) => {
   // Build query...
   let postsQuery: Array<any> = [fsLimit(limit)];
+  // From timestamp NOT WORKING
+  if (fromTimeStamp) {
+    postsQuery.push(where("timeStamp", ">", timeToTimeStamp(fromTimeStamp)));
+  }
   // Get only public posts
   postsQuery.push(where("visibility", "==", "public"));
-  //
-  if (exclude.length) {
-    postsQuery.push(where("id", "not-in", exclude));
-  }
+  // NOT WORKING
+  // if (exclude.length) {
+  //   postsQuery.push(where("id", "not-in", exclude));
+  // }
   if (lastDoc) {
     postsQuery.push(startAfter(lastDoc));
   }
