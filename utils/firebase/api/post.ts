@@ -294,6 +294,9 @@ export const getPostsForAnonymousUser = async (
 export const getPostByInterests = async (interests = [], limit = 10, lastDoc = null) => {
   // Build query...
   let postsQuery: Array<any> = [fsLimit(limit)];
+  // Get only public posts
+  postsQuery.push(where("visibility", "==", "public"));
+  //
   postsQuery.push(where("category", "in", interests));
   if (lastDoc) {
     postsQuery.push(startAfter(lastDoc));
@@ -304,6 +307,9 @@ export const getPostByInterests = async (interests = [], limit = 10, lastDoc = n
 export const getPostByFollows = async (follows = [], limit = 10, lastDoc = null) => {
   // Build query...
   let postsQuery: Array<any> = [fsLimit(limit)];
+  // Get only public posts
+  postsQuery.push(where("visibility", "==", "public"));
+  //
   postsQuery.push(where("uid", "in", follows));
   if (lastDoc) {
     postsQuery.push(startAfter(lastDoc));
@@ -311,37 +317,17 @@ export const getPostByFollows = async (follows = [], limit = 10, lastDoc = null)
   return await getPostsByQuery(postsQuery);
 };
 
-export const getPostsForUser = async (userId: string, limit = 10, lastDoc = null) => {
-  const userProfile = await getUser(userId);
-
+export const getPostByExlude = async (exclude = [], limit = 10, lastDoc = null) => {
   // Build query...
   let postsQuery: Array<any> = [fsLimit(limit)];
   // Get only public posts
   postsQuery.push(where("visibility", "==", "public"));
-  // Get posts from follows... (from last login)
-  const followsResp: FollowersResponse = await getFollows(userId);
-  const followsIds = followsResp.data.map((data) => data.id);
-  console.log("followsIds", followsIds);
-  if (followsIds.length) {
-    postsQuery.push(where("uid", "in", followsIds));
+  //
+  postsQuery.push(where("id", "not-in", exclude));
+  if (lastDoc) {
+    postsQuery.push(startAfter(lastDoc));
   }
-  // Get posts by interests...
-  // !!!can only use one "in" query!
-  const interests = userProfile?.data?.interests || [];
-  if (interests.length) {
-    // postsQuery.push(where("category", "in", userProfile.data.interests));
-  }
-  // Get poersonal feed if intersts or follows are set....
-  const enabledPersonalFeeed = true;
-  if (enabledPersonalFeeed && (interests.length || followsIds.length)) {
-    // paginate...
-    if (lastDoc) {
-      postsQuery.push(startAfter(lastDoc));
-    }
-    return await getPostsByQuery(postsQuery);
-  } else {
-    return await getPostsForAnonymousUser();
-  }
+  return await getPostsByQuery(postsQuery);
 };
 
 export const getPostsBySearch = async (search: string, filter: SearchFilter = {}, limit = 10, lastDoc = null) => {

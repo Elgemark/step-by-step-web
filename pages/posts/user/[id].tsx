@@ -1,6 +1,6 @@
 import PageMain from "../../../components/PageMain";
 import { PostsResponse } from "../../../utils/firebase/interface";
-import { getPostByFollows, getPostByInterests, getPostsForUser } from "../../../utils/firebase/api/post";
+import { getPostByExlude, getPostByFollows, getPostByInterests } from "../../../utils/firebase/api/post";
 import Collection from "../../../classes/Collection";
 import FirebaseWrapper from "../../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../../components/wrappers/MUIWrapper";
@@ -23,7 +23,7 @@ let lastDoc;
 
 const getPostsByInterest = async () => {};
 
-const UserPage = ({ categories, follows }) => {
+const UserPage = ({ follows }) => {
   const { data: user, isLoading: isLoadingUser } = useUser();
   const isBottom = useScrolledToBottom(100);
   const router = useRouter();
@@ -34,28 +34,66 @@ const UserPage = ({ categories, follows }) => {
   // posts by interests...
   const [lastDocByInterests, setLastDocByInterests] = useState();
   const [hasMorePostsByInterests, setHasMorePostsByInterests] = useState(true);
+  // posts by exclude...
+  const [lastDocByExclude, setLastDocByExclude] = useState();
+  const [hasMorePostsByExclude, setHasMorePostsByExclude] = useState(true);
 
   const fetchPostsByFollows = async () => {
-    const response = await getPostByFollows(follows, 2, lastDocByFollows);
+    if (!hasMorePostsByFollows) {
+      return { hasMorePosts: false };
+    }
+    //
+    const response = await getPostByFollows(follows, 5, lastDocByFollows);
     addPosts(response.data);
     setLastDocByFollows(response.lastDoc);
     const hasMorePosts = response.data.length > 0;
     setHasMorePostsByFollows(hasMorePosts);
+    console.log("fetch by follows");
     return { hasMorePosts };
   };
 
   const fetchPostsByInterests = async () => {
-    const response = await getPostByInterests(user.interests, 2, lastDocByInterests);
+    if (!hasMorePostsByInterests) {
+      return { hasMorePosts: false };
+    }
+    //
+    const response = await getPostByInterests(user.interests, 5, lastDocByInterests);
     addPosts(response.data);
     setLastDocByInterests(response.lastDoc);
     const hasMorePosts = response.data.length > 0;
     setHasMorePostsByInterests(hasMorePosts);
+    console.log("fetch by interests");
     return { hasMorePosts };
+  };
+
+  const fetchPostsByExclude = async () => {
+    if (!hasMorePostsByExclude) {
+      return { hasMorePosts: false };
+    }
+    //
+    const exclude = posts.map((post) => post.id);
+    const response = await getPostByExlude(exclude, 5, lastDocByInterests);
+    addPosts(response.data);
+    setLastDocByExclude(response.lastDoc);
+    const hasMorePosts = response.data.length > 0;
+    setHasMorePostsByExclude(hasMorePosts);
+    console.log("fetch by exclude");
+    return { hasMorePosts };
+  };
+
+  const fetchPosts = async () => {
+    let resp = await fetchPostsByInterests();
+    if (!resp.hasMorePosts) {
+      resp = await fetchPostsByFollows();
+    }
+    if (!resp.hasMorePosts) {
+      resp = await fetchPostsByExclude();
+    }
   };
 
   useEffect(() => {
     if (!isLoadingUser && user.interests && user.interests.length) {
-      fetchPostsByInterests();
+      fetchPosts();
     }
   }, [isLoadingUser, user]);
 
@@ -63,7 +101,7 @@ const UserPage = ({ categories, follows }) => {
     if (isBottom) {
       if (!isLoadingUser && user.interests && user.interests.length) {
         // posts by interests...
-        hasMorePostsByInterests && fetchPostsByInterests();
+        fetchPosts();
       }
     }
   }, [isBottom]);
@@ -83,18 +121,10 @@ const UserPage = ({ categories, follows }) => {
 
 export async function getServerSideProps({ query }) {
   const uid = query.id;
-  const categories = await getCategories();
   const followsResp = await getFollows(uid);
   const follows = followsResp.data.map((doc) => doc.id);
 
-  // let response: PostsResponse = { data: [], error: null };
-  // response = await getPostsForUser(id);
-
-  // const items = collection.union(response.data, [], () => {
-  //   lastDoc = null;
-  // });
-
-  return { props: { categories: categories.data, follows } };
+  return { props: { follows } };
 }
 
 export default (props) => (
