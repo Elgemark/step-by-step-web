@@ -84,6 +84,13 @@ const Layout: FC<{
               router.push("/profile/" + user.uid + "/saved/");
             })
           }
+          onClickReview={
+            user &&
+            user?.roles?.includes("admin") &&
+            (() => {
+              router.push("/admin/review");
+            })
+          }
         />
       </Drawer>
       {/* SNACKBAR */}

@@ -11,6 +11,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import LoginIcon from "@mui/icons-material/Login";
 import PersonIcon from "@mui/icons-material/Person";
 import FeedIcon from "@mui/icons-material/Feed";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 
 export type Anchor = "top" | "left" | "bottom" | "right";
@@ -37,7 +38,8 @@ const SideMenu: FC<{
   onClickLogin?: MouseEventHandler;
   onClickProfile?: MouseEventHandler;
   onClickBookmarks?: MouseEventHandler;
-}> = ({ onClose, onClickFeed, onClickSearch, onClickLogin, onClickProfile, onClickBookmarks }) => {
+  onClickReview?: MouseEventHandler;
+}> = ({ onClose, onClickFeed, onClickSearch, onClickLogin, onClickProfile, onClickBookmarks, onClickReview }) => {
   return (
     <Box sx={{ width: 200 }} role="presentation" onClick={onClose}>
       <List>
@@ -54,6 +56,8 @@ const SideMenu: FC<{
       {/* USER */}
       <List>{/* <SideMenuItem onClick={onClickHome} label="Home" icon={<MailIcon />} /> */}</List>
       {/* ADMIN */}
+      {onClickReview ? <Divider /> : null}
+      {onClickReview && <SideMenuItem onClick={onClickReview} label="Review" icon={<VisibilityIcon />} />}
     </Box>
   );
 };
