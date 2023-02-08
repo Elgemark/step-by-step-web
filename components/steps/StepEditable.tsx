@@ -53,7 +53,7 @@ const StepEditable: FC<{
             {index + 1}
           </Avatar>
         }
-        action={<StepMoreMenu onDelete={onDelete} onAddStep={onAddStep} />}
+        action={<StepMoreMenu index={index} onDelete={onDelete} onAddStep={onAddStep} />}
         title={
           <TextField
             fullWidth

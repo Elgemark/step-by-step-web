@@ -7,8 +7,16 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import Menu from "./primitives/Menu";
 import { FC } from "react";
+import { Lists } from "../utils/firebase/type";
+import CheckboxList from "./primitives/CheckboxList";
+import { Divider } from "@mui/material";
 
-const StepMoreMenu: FC<{ onDelete?: Function; onAddStep?: Function }> = ({ onDelete, onAddStep }) => {
+const StepMoreMenu: FC<{ index: number; onDelete?: Function; onAddStep?: Function; lists?: Lists }> = ({
+  index,
+  onDelete,
+  onAddStep,
+  lists = [],
+}) => {
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -65,6 +73,9 @@ const StepMoreMenu: FC<{ onDelete?: Function; onAddStep?: Function }> = ({ onDel
             Delete
           </MenuItem>
         )}
+        {/* LISTS */}
+        <Divider />
+        <CheckboxList></CheckboxList>
       </Menu>
     </>
   );
