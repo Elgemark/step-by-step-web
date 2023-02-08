@@ -1,3 +1,4 @@
+import { Timestamp } from "firebase/firestore";
 import _ from "lodash";
 import { useRouter } from "next/router";
 
@@ -7,9 +8,17 @@ interface Data {
 
 export const parseData = (data: Data) => {
   if (data.timeStamp) {
-    data.timeStamp = data.timeStamp.toDate().toString();
+    data.timeStamp = timeStampToTime(data.timeStamp);
   }
   return data;
+};
+
+export const timeStampToTime = (timeStamp) => {
+  return timeStamp.toDate();
+};
+
+export const timeToTimeStamp = (time = { seconds: 0, nanoseconds: 0 }) => {
+  return Timestamp.fromDate(new Date(time.seconds * 1000 + time.nanoseconds / 1000000));
 };
 
 export const useRefresh = () => {

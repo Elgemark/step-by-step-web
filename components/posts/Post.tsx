@@ -87,7 +87,6 @@ const Post: FC<{
   const onBookmarkHandler = () => {
     toogleBookmark(id);
   };
-  console.log("uid", uid);
 
   return (
     <Root>

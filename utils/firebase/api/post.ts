@@ -14,9 +14,10 @@ import {
   setDoc,
   updateDoc,
   onSnapshot,
+  Timestamp,
 } from "firebase/firestore";
 import { FollowersResponse, Post, PostResponse, PostsResponse } from "../interface";
-import { parseData } from "../../firebaseUtils";
+import { parseData, timeToTimeStamp } from "../../firebaseUtils";
 import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { Posts } from "../type";
@@ -291,22 +292,13 @@ export const getPostsForAnonymousUser = async (
   return await getPostsByQuery(postsQuery);
 };
 
-export const getPostByInterests = async (interests = [], limit = 10, lastDoc = null) => {
+export const getPostByFollows = async (follows = [], fromTimeStamp = null, limit = 10, lastDoc = null) => {
   // Build query...
   let postsQuery: Array<any> = [fsLimit(limit)];
-  // Get only public posts
-  postsQuery.push(where("visibility", "==", "public"));
-  //
-  postsQuery.push(where("category", "in", interests));
-  if (lastDoc) {
-    postsQuery.push(startAfter(lastDoc));
+  // From timestamp !!! Funkar inte i kombo
+  if (fromTimeStamp) {
+    // postsQuery.push(where("timeStamp", ">", timeToTimeStamp(fromTimeStamp)));
   }
-  return await getPostsByQuery(postsQuery);
-};
-
-export const getPostByFollows = async (follows = [], limit = 10, lastDoc = null) => {
-  // Build query...
-  let postsQuery: Array<any> = [fsLimit(limit)];
   // Get only public posts
   postsQuery.push(where("visibility", "==", "public"));
   //
@@ -317,13 +309,33 @@ export const getPostByFollows = async (follows = [], limit = 10, lastDoc = null)
   return await getPostsByQuery(postsQuery);
 };
 
-export const getPostByExlude = async (exclude = [], limit = 10, lastDoc = null) => {
+export const getPostByInterests = async (interests = [], fromTimeStamp = null, limit = 10, lastDoc = null) => {
+  // Build query...
+  let postsQuery: Array<any> = [fsLimit(limit)];
+  // From timestamp
+  if (fromTimeStamp) {
+    postsQuery.push(where("timeStamp", ">", timeToTimeStamp(fromTimeStamp)));
+  }
+  // Get only public posts
+  postsQuery.push(where("visibility", "==", "public"));
+  //
+  postsQuery.push(where("category", "in", interests));
+  if (lastDoc) {
+    postsQuery.push(startAfter(lastDoc));
+  }
+  return await getPostsByQuery(postsQuery);
+};
+
+export const getPostByExclude = async (exclude = [], limit = 10, lastDoc = null) => {
+  console.log("exclude", exclude);
   // Build query...
   let postsQuery: Array<any> = [fsLimit(limit)];
   // Get only public posts
   postsQuery.push(where("visibility", "==", "public"));
   //
-  postsQuery.push(where("id", "not-in", exclude));
+  if (exclude.length) {
+    postsQuery.push(where("id", "not-in", exclude));
+  }
   if (lastDoc) {
     postsQuery.push(startAfter(lastDoc));
   }

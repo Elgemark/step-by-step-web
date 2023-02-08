@@ -1,6 +1,6 @@
 import PageMain from "../../../components/PageMain";
 import { PostsResponse } from "../../../utils/firebase/interface";
-import { getPostByExlude, getPostByFollows, getPostByInterests } from "../../../utils/firebase/api/post";
+import { getPostByExclude, getPostByFollows, getPostByInterests } from "../../../utils/firebase/api/post";
 import Collection from "../../../classes/Collection";
 import FirebaseWrapper from "../../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../../components/wrappers/MUIWrapper";
@@ -18,16 +18,17 @@ import Posts from "../../../components/posts/Posts";
 import { Posts as PostsType } from "../../../utils/firebase/type";
 import { useUser } from "../../../utils/firebase/api/user";
 
-const collection = new Collection();
-let lastDoc;
-
-const getPostsByInterest = async () => {};
+type FetchResponse = {
+  hasMorePosts: boolean;
+  numPosts: number;
+};
 
 const UserPage = ({ follows }) => {
   const { data: user, isLoading: isLoadingUser } = useUser();
   const isBottom = useScrolledToBottom(100);
   const router = useRouter();
   const { collection: posts, addItems: addPosts } = useCollection();
+  const [isFetching, setIsFetching] = useState(false);
   // posts by follows...
   const [lastDocByFollows, setLastDocByFollows] = useState();
   const [hasMorePostsByFollows, setHasMorePostsByFollows] = useState(true);
@@ -38,62 +39,73 @@ const UserPage = ({ follows }) => {
   const [lastDocByExclude, setLastDocByExclude] = useState();
   const [hasMorePostsByExclude, setHasMorePostsByExclude] = useState(true);
 
-  const fetchPostsByFollows = async () => {
+  const LIMIT = 5;
+
+  const fetchPostsByFollows = async (fromTimeStamp) => {
     if (!hasMorePostsByFollows) {
-      return { hasMorePosts: false };
+      return { hasMorePosts: false, numPosts: 0 };
     }
     //
-    const response = await getPostByFollows(follows, 5, lastDocByFollows);
+    console.log({ follows });
+    const response = await getPostByFollows(follows, fromTimeStamp, LIMIT, lastDocByFollows);
     addPosts(response.data);
     setLastDocByFollows(response.lastDoc);
     const hasMorePosts = response.data.length > 0;
     setHasMorePostsByFollows(hasMorePosts);
-    console.log("fetch by follows");
-    return { hasMorePosts };
+    console.log("fetch by follows", response.data.length);
+    return { hasMorePosts, numPosts: response.data.length };
   };
 
-  const fetchPostsByInterests = async () => {
+  const fetchPostsByInterests = async (fromTimeStamp) => {
     if (!hasMorePostsByInterests) {
-      return { hasMorePosts: false };
+      return { hasMorePosts: false, numPosts: 0 };
     }
     //
-    const response = await getPostByInterests(user.interests, 5, lastDocByInterests);
+    const response = await getPostByInterests(user.interests, fromTimeStamp, LIMIT, lastDocByInterests);
     addPosts(response.data);
     setLastDocByInterests(response.lastDoc);
     const hasMorePosts = response.data.length > 0;
     setHasMorePostsByInterests(hasMorePosts);
-    console.log("fetch by interests");
-    return { hasMorePosts };
+    console.log("fetch by interests", response.data.length);
+    return { hasMorePosts, numPosts: response.data.length };
   };
 
   const fetchPostsByExclude = async () => {
     if (!hasMorePostsByExclude) {
-      return { hasMorePosts: false };
+      return { hasMorePosts: false, numPosts: 0 };
     }
     //
     const exclude = posts.map((post) => post.id);
-    const response = await getPostByExlude(exclude, 5, lastDocByInterests);
+    const response = await getPostByExclude(exclude, LIMIT, lastDocByExclude);
     addPosts(response.data);
     setLastDocByExclude(response.lastDoc);
     const hasMorePosts = response.data.length > 0;
     setHasMorePostsByExclude(hasMorePosts);
-    console.log("fetch by exclude");
-    return { hasMorePosts };
+    console.log("fetch by exclude", response.data.length);
+    return { hasMorePosts, numPosts: response.data.length };
   };
 
-  const fetchPosts = async () => {
-    let resp = await fetchPostsByInterests();
+  const fetchPosts = async (fromTimeStamp) => {
+    setIsFetching(true);
+    let resp: FetchResponse = { hasMorePosts: false, numPosts: 0 };
+    // posts by follows
     if (!resp.hasMorePosts) {
-      resp = await fetchPostsByFollows();
+      resp = await fetchPostsByFollows(fromTimeStamp);
     }
+    // posts by interests
+    if (!resp.hasMorePosts) {
+      resp = await fetchPostsByInterests(fromTimeStamp);
+    }
+    // posts by follows
     if (!resp.hasMorePosts) {
       resp = await fetchPostsByExclude();
     }
+    setIsFetching(false);
   };
 
   useEffect(() => {
     if (!isLoadingUser && user.interests && user.interests.length) {
-      fetchPosts();
+      !isFetching && fetchPosts(user.lastFeedFetch);
     }
   }, [isLoadingUser, user]);
 
@@ -101,7 +113,7 @@ const UserPage = ({ follows }) => {
     if (isBottom) {
       if (!isLoadingUser && user.interests && user.interests.length) {
         // posts by interests...
-        fetchPosts();
+        !isFetching && fetchPosts(user.lastFeedFetch);
       }
     }
   }, [isBottom]);
