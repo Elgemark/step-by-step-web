@@ -11,7 +11,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import LoginIcon from "@mui/icons-material/Login";
 import PersonIcon from "@mui/icons-material/Person";
 import FeedIcon from "@mui/icons-material/Feed";
-import VisibilityIcon from "@mui/icons-material/Visibility";
+import TroubleshootIcon from "@mui/icons-material/Troubleshoot";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 
 export type Anchor = "top" | "left" | "bottom" | "right";
@@ -57,7 +57,7 @@ const SideMenu: FC<{
       <List>{/* <SideMenuItem onClick={onClickHome} label="Home" icon={<MailIcon />} /> */}</List>
       {/* ADMIN */}
       {onClickReview ? <Divider /> : null}
-      {onClickReview && <SideMenuItem onClick={onClickReview} label="Review" icon={<VisibilityIcon />} />}
+      {onClickReview && <SideMenuItem onClick={onClickReview} label="Review" icon={<TroubleshootIcon />} />}
     </Box>
   );
 };
