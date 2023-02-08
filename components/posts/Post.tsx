@@ -1,4 +1,4 @@
-import { Card } from "@mui/material";
+import { Card, useTheme } from "@mui/material";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
@@ -24,6 +24,9 @@ import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 const Root = styled(Card)`
   .button-link {
     margin-left: auto;
+  }
+  .list {
+    margin-bottom: ${({ theme }) => theme.spacing(1)};
   }
 `;
 
@@ -74,6 +77,7 @@ const Post: FC<{
   onLike,
   onClickAvatar,
 }) => {
+  const theme = useTheme();
   const [numLikes, setNumLikes] = useState(likes);
   const { isLiked, toggle: toggleLike } = useLikes(id);
   const { isBookmarked, toggle: toogleBookmark } = useBookmarks(id);
@@ -89,7 +93,7 @@ const Post: FC<{
   };
 
   return (
-    <Root>
+    <Root theme={theme}>
       <CardHeader
         avatar={
           <IconButton sx={{ padding: 0 }} onClick={() => onClickAvatar({ uid })}>

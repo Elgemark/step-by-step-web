@@ -13,6 +13,7 @@ const StyledAccordion = styled(Accordion)`
   top: ${({ pin }) => (pin ? "70px" : "auto")};
   background-color: ${({ theme, pin }) =>
     pin ? alpha(theme.palette.background.paper, 0.8) : theme.palette.background.paper};
+  /* margin-bottom: ${({ pin }) => (pin ? "1rem" : 0)}; */
 
   .button-pin {
     transform: rotate(-45deg);
@@ -44,7 +45,7 @@ const List: FC<{
   id: string;
   title: string;
   items: Array<ListItem>;
-}> = ({ id, title, items = [] }) => {
+}> = ({ id, title, items = [], ...rest }) => {
   const theme = useTheme();
   const [pin, setPin] = useState(false);
   const [collapse, setCollapse] = useState(false);
@@ -62,6 +63,8 @@ const List: FC<{
         elevation={3}
         theme={theme}
         pin={pin}
+        className="list"
+        {...rest}
       >
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <IconButton

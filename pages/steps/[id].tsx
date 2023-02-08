@@ -18,6 +18,7 @@ import MUIWrapper from "../../components/wrappers/MUIWrapper";
 import PostMoreMenu from "../../components/PostMoreMenu";
 import DialogDeletePost from "../../components/DialogDeletePost";
 import DialogReport, { ReportData } from "../../components/DialogReport";
+import { useTheme } from "@mui/material";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -37,6 +38,10 @@ const StyledLayout = styled(Layout)`
     top: 60px;
     z-index: 999;
     backdrop-filter: blur(5px);
+    padding-bottom: 1rem;
+    .list {
+      margin-bottom: ${({ theme }) => theme.spacing(1)};
+    }
   }
 `;
 
@@ -50,6 +55,7 @@ const StyledStepsProgress = styled(StepsProgress)`
 `;
 
 const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> = ({ id, post, steps, lists }) => {
+  const theme = useTheme();
   const [showDeleteDialog, setShowDeleteDialog] = useState<string>();
   const router = useRouter();
   const { user, progress, updateProgress, isLoading } = useProgress(id, true);
@@ -100,6 +106,7 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> 
         <title>{"STEPS | " + (post?.title || "untitled")}</title>
       </Head>
       <StyledLayout
+        theme={theme}
         propsTopbar={{
           actions: (
             <StyledStepsProgress
@@ -117,14 +124,14 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> 
           action={
             <PostMoreMenu
               onEdit={
-                user?.uid === post.userId
+                user?.uid === post.uid
                   ? () => {
                       onEditHandler(post);
                     }
                   : undefined
               }
               onDelete={
-                user?.uid === post.userId
+                user?.uid === post.uid
                   ? () => {
                       onDeleteHandler(post);
                     }
