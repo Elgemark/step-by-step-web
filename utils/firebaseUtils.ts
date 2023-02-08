@@ -14,7 +14,7 @@ export const parseData = (data: Data) => {
 };
 
 export const timeStampToTime = (timeStamp) => {
-  return timeStamp.toDate();
+  return timeStamp.toDate().toString();
 };
 
 export const timeToTimeStamp = (time = { seconds: 0, nanoseconds: 0 }) => {
