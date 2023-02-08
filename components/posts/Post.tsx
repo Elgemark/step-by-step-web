@@ -58,7 +58,7 @@ const Post: FC<{
   action?: ReactNode | ReactJSXElement;
   onLike?: Function;
   onBookmark?: Function;
-  onClickAvatar?: Function;
+  onClickAvatar?: ({ uid }) => void;
 }> = ({
   uid,
   currentUserId,
@@ -87,12 +87,13 @@ const Post: FC<{
   const onBookmarkHandler = () => {
     toogleBookmark(id);
   };
+  console.log("uid", uid);
 
   return (
     <Root>
       <CardHeader
         avatar={
-          <IconButton sx={{ padding: 0 }} onClick={() => onClickAvatar(uid)}>
+          <IconButton sx={{ padding: 0 }} onClick={() => onClickAvatar({ uid })}>
             <UserAvatar userId={uid} />
           </IconButton>
         }

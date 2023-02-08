@@ -15,7 +15,6 @@ const Posts: FC<{
   enableLink: boolean;
 }> = ({ posts = [], enableLink = false }) => {
   const router = useRouter();
-
   const [report, setReport] = useState<ReportData>();
   const [deletePost, setDeletePost] = useState<string>();
 
@@ -33,11 +32,11 @@ const Posts: FC<{
     await likePost(id);
   };
 
-  const onClickAvatarHandler = ({ userId }) => {
-    if (user.uid === userId) {
-      router.push("/profile/" + userId);
+  const onClickAvatarHandler = ({ uid }) => {
+    if (user.uid === uid) {
+      router.push("/profile/" + uid);
     } else {
-      router.push("/user/" + userId);
+      router.push("/user/" + uid);
     }
   };
 
@@ -52,14 +51,14 @@ const Posts: FC<{
             action={
               <PostMoreMenu
                 onEdit={
-                  user?.uid === data.userId
+                  user?.uid === data.uid
                     ? () => {
                         onEditHandler(data);
                       }
                     : undefined
                 }
                 onDelete={
-                  user?.uid === data.userId
+                  user?.uid === data.uid
                     ? () => {
                         setDeletePost(data.id);
                       }
@@ -69,7 +68,9 @@ const Posts: FC<{
               />
             }
             onLike={() => onLikeHandler(data)}
-            onClickAvatar={() => onClickAvatarHandler(data)}
+            onClickAvatar={({ uid }) => {
+              onClickAvatarHandler({ uid });
+            }}
             {...data}
           />
         ))}
