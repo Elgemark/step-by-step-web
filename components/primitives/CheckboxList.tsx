@@ -6,13 +6,17 @@ import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
 import ListSubheader from "@mui/material/ListSubheader";
 
-type ListItemData = {
+export type ListItemData = {
   id: string;
   label: string;
   checked: boolean;
 };
 
-const CheckboxList: FC<{ header?: string }> = ({ header }) => {
+const CheckboxList: FC<{ header?: string; data?: Array<ListItemData>; onChange: (id) => void }> = ({
+  header,
+  onChange,
+  data = [],
+}) => {
   const [checked, setChecked] = useState([0]);
 
   const handleToggle = (value: number) => () => {
@@ -31,26 +35,26 @@ const CheckboxList: FC<{ header?: string }> = ({ header }) => {
   return (
     <List dense>
       {header ? <ListSubheader>{header}</ListSubheader> : null}
-      {[0, 1, 2, 3].map((value) => {
-        const labelId = `checkbox-list-label-${value}`;
+      {data.map((itemData) => {
+        const labelId = `checkbox-list-label-${itemData.id}`;
 
         return (
           <ListItem
-            key={value}
+            key={itemData.id}
             dense
             secondaryAction={
               <Checkbox
                 edge="start"
-                onChange={handleToggle(value)}
-                checked={checked.indexOf(value) !== -1}
+                onChange={() => onChange(itemData.id)}
+                checked={itemData.checked}
                 tabIndex={-1}
                 disableRipple
                 inputProps={{ "aria-labelledby": labelId }}
               />
             }
           >
-            <ListItemButton role={undefined} onClick={handleToggle(value)}>
-              <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
+            <ListItemButton role={undefined} onClick={() => onChange(itemData.id)}>
+              <ListItemText id={labelId} primary={itemData.label} />
             </ListItemButton>
           </ListItem>
         );

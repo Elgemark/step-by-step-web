@@ -12,6 +12,7 @@ import ImageEditable from "../primitives/ImageEditable";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import styled from "styled-components";
+import { Lists } from "../../utils/firebase/type";
 
 const ButtonAddMediaContainer = styled.div`
   width: 100%;
@@ -23,10 +24,12 @@ const StepEditable: FC<{
   step: Step;
   index: number;
   scrollIntoView: boolean;
+  lists?: Lists;
+  onListChange?: (id) => void;
   onChange: any;
   onDelete: any;
   onAddStep: any;
-}> = ({ step, index, scrollIntoView = false, onChange, onDelete, onAddStep, ...props }) => {
+}> = ({ step, index, scrollIntoView = false, lists = [], onListChange, onChange, onDelete, onAddStep, ...props }) => {
   const ref = useRef<HTMLInputElement>(null);
   const { object: data, setValue } = useStateObject(step);
   const [openMediaEdit, setOpenMediaEdit] = useState(false);
@@ -53,7 +56,15 @@ const StepEditable: FC<{
             {index + 1}
           </Avatar>
         }
-        action={<StepMoreMenu index={index} onDelete={onDelete} onAddStep={onAddStep} />}
+        action={
+          <StepMoreMenu
+            index={index}
+            lists={lists}
+            onListChange={onListChange}
+            onDelete={onDelete}
+            onAddStep={onAddStep}
+          />
+        }
         title={
           <TextField
             fullWidth

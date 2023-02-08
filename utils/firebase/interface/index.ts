@@ -34,6 +34,7 @@ export interface Bookmark {
 export interface ListItem {
   text: string;
   value: string;
+  step?: number;
 }
 
 export interface List {

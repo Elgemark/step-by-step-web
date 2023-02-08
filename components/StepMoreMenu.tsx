@@ -8,15 +8,17 @@ import AddIcon from "@mui/icons-material/Add";
 import Menu from "./primitives/Menu";
 import { FC } from "react";
 import { Lists } from "../utils/firebase/type";
-import CheckboxList from "./primitives/CheckboxList";
+import CheckboxList, { ListItemData } from "./primitives/CheckboxList";
 import { Divider } from "@mui/material";
+import { ListItem } from "../utils/firebase/interface";
 
-const StepMoreMenu: FC<{ index: number; onDelete?: Function; onAddStep?: Function; lists?: Lists }> = ({
-  index,
-  onDelete,
-  onAddStep,
-  lists = [],
-}) => {
+const StepMoreMenu: FC<{
+  index: number;
+  onDelete?: Function;
+  onAddStep?: Function;
+  lists?: Lists;
+  onListChange?: (id) => void;
+}> = ({ index, onDelete, onAddStep, lists = [], onListChange }) => {
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -26,6 +28,15 @@ const StepMoreMenu: FC<{ index: number; onDelete?: Function; onAddStep?: Functio
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const checkLists = lists.map((list) => {
+    const data: Array<ListItemData> = list.items.map((item: ListItem) => ({
+      id: item.text,
+      label: item.text,
+      checked: false,
+    }));
+    return <CheckboxList data={data} header={list.title} onChange={onListChange}></CheckboxList>;
+  });
 
   return (
     <>
@@ -74,11 +85,14 @@ const StepMoreMenu: FC<{ index: number; onDelete?: Function; onAddStep?: Functio
           </MenuItem>
         )}
         {/* LISTS */}
-        <Divider />
-        <CheckboxList></CheckboxList>
+        {checkLists.length ? <Divider /> : null}
+        {checkLists}
       </Menu>
     </>
   );
 };
 
 export default StepMoreMenu;
+// id: string;
+// label: string;
+// checked: boolean;

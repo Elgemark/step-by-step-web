@@ -255,6 +255,7 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
                 step={dataStep}
                 index={index}
                 scrollIntoView={true}
+                lists={lists}
                 onChange={(data) => {
                   setSaveData(["steps", data.id], data);
                 }}
