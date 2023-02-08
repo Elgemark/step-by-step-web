@@ -96,12 +96,12 @@ export const getLeaderForFollower = async (leaderUserId, followerUserId) => {
 };
 
 export const useFollow = (leaderUserId) => {
-  const { data: currentUser } = useUser();
+  const { data: currentUser, status } = useUser();
   const [isLoading, setIsLoading] = useState(true);
   const [isFollowing, setIsFollowing] = useState(false);
 
   useEffect(() => {
-    if (currentUser) {
+    if (status !== "loading" && currentUser.uid) {
       setIsLoading(true);
       const followeUserId = currentUser.uid;
       // Get leader
@@ -110,7 +110,7 @@ export const useFollow = (leaderUserId) => {
         setIsLoading(false);
       });
     }
-  }, [currentUser]);
+  }, [currentUser, status]);
 
   return {
     isFollowing,
