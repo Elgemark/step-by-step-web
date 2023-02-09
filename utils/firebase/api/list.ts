@@ -1,4 +1,4 @@
-import { getAuth } from "firebase/auth";
+import { getAuth, Unsubscribe } from "firebase/auth";
 import {
   getFirestore,
   doc,
@@ -12,10 +12,39 @@ import {
   query,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { List, ListResponse, ListsResponse } from "../interface";
 import { Lists } from "../type";
 import _ from "lodash";
 import { v4 as uuid } from "uuid";
+import { useCollection } from "../hooks/collections";
+
+export type ListItem = {
+  id: string;
+  text: string;
+  value: string;
+  step?: number;
+};
+
+export type List = {
+  id: string;
+  title: string;
+  items: Array<ListItem>;
+};
+
+export type Lists = Array<List>;
+
+export type ListItems = Array<ListItem>;
+
+export type ListResponse = {
+  id: string;
+  data: List | [];
+  error: any;
+};
+
+export type ListsResponse = {
+  id: string;
+  data: Lists | null;
+  error: any;
+};
 
 export const setList = async (postId: string, id: string, data: List) => {
   const response: ListResponse = { id, data, error: null };
@@ -100,74 +129,52 @@ export const getLists = async (id: string) => {
   return result;
 };
 
-export const useLists = (
-  postId: string
-): {
-  data: Lists;
-  update: (listUpdates: List) => void;
-  save: (postId: string) => Promise<{ error: any; data: Lists }>;
-  addList: () => void;
-} => {
-  const [data, setData] = useState<Lists>([]);
-  const [updates, setUpdates] = useState<Lists>([]);
-
-  useEffect(() => {
-    const firebase = getFirestore();
-    // const listsQuery = query(collection(firebase, "posts", postId, "lists"));
-    const listCollection = collection(firebase, "posts", postId, "lists");
-    const unsubscribe = onSnapshot(listCollection, (querySnapshot) => {
-      const lists: Lists = [];
-      querySnapshot.forEach((doc) => {
-        lists.push(doc.data() as List);
-      });
-      setData(lists.reverse());
-      return () => {
-        unsubscribe();
-      };
+export const getListItems = async (postId: string, listId: string) => {
+  const firebase = getFirestore();
+  const result = { data: [], error: null };
+  try {
+    const collRef = collection(firebase, "posts", postId, "lists", listId, "items");
+    const docsSnap = await getDocs(collRef);
+    docsSnap.forEach((doc) => {
+      result.data.push({ ...doc.data(), id: doc.id } as ListItem);
     });
-  }, [postId]);
+    result.data = result.data.reverse();
+  } catch (error) {
+    result.error = error;
+    result.data = [];
+  }
+  return result;
+};
 
-  const concatenatedData: Lists = updates.length
-    ? data.map((list: List) => {
-        const listUpdate = updates.find((updateList) => updateList.id === list.id);
-        const result = _.merge(listUpdate, list);
-        return result;
-      })
-    : data;
+export const updateListItems = async (
+  postId: string,
+  listId: string,
+  data: ListItems
+): Promise<{ data: ListItems; error: any }> => {
+  const response = { data: data, id: postId, error: null };
+  const auth = getAuth();
+  const userId = auth.currentUser.uid;
+  const firebase = getFirestore();
+  const batch = writeBatch(firebase);
+  // Batch set
+  data.forEach((listItem) => {
+    const stepsRef = doc(firebase, "posts", postId, "lists", listId, "items", listItem.id);
+    const listsData = { ...listItem, uid: userId };
+    batch.set(stepsRef, listsData);
+  });
 
-  const updateListItem = (listId: string, index: number, itemUpdates: object) => {
-    const listUpdatesCopy: Lists = [...concatenatedData];
-    const listToUpdate: List = listUpdatesCopy.find((updateList) => updateList.id === listId);
-    listToUpdate[index] = { ...listToUpdate[index], itemUpdates };
-    setUpdates(listUpdatesCopy);
-  };
+  try {
+    await batch.commit();
+  } catch (error) {
+    response.error = error;
+  }
+  return response;
+};
 
-  const update = (listUpdates: List) => {
-    const listUpdatesCopy: Lists = [...concatenatedData];
-    const listToUpdateIndex: number = listUpdatesCopy.findIndex((updateList) => updateList.id === listUpdates.id);
-    listUpdatesCopy[listToUpdateIndex] = listUpdates;
-    setUpdates(listUpdatesCopy);
-  };
+export const useLists = (postId: string) => {
+  return useCollection(["posts", postId, "lists"]);
+};
 
-  const addList = () => {
-    const listId = uuid();
-    const list: List = { id: listId, title: "", items: [] };
-    const listUpdatesCopy: Lists = [...concatenatedData];
-    listUpdatesCopy.push(list);
-    setUpdates(listUpdatesCopy);
-  };
-
-  const save = async (postId: string) => {
-    if (updates.length) {
-      const resp = await updateLists(postId, concatenatedData);
-      if (!resp.error) {
-        setData(concatenatedData);
-        setUpdates([]);
-      }
-    } else {
-      return { error: null, data };
-    }
-  };
-
-  return { data: concatenatedData, update, save, addList };
+export const useListItems = (postId, listId) => {
+  return useCollection(["posts", postId, "lists", listId, "items"]);
 };

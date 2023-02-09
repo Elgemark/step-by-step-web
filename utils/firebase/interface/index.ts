@@ -31,18 +31,6 @@ export interface Bookmark {
   postId: string;
 }
 
-export interface ListItem {
-  text: string;
-  value: string;
-  step?: number;
-}
-
-export interface List {
-  id: string;
-  title: string;
-  items: Array<ListItem>;
-}
-
 export interface Progress {
   completed: boolean;
   completions: number;
@@ -58,18 +46,6 @@ export interface Progress {
 export interface ProgressResponse {
   id: string;
   data: Progress;
-  error: any;
-}
-
-export interface ListResponse {
-  id: string;
-  data: List | [];
-  error: any;
-}
-
-export interface ListsResponse {
-  id: string;
-  data: Lists | null;
   error: any;
 }
 
