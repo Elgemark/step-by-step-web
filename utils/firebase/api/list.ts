@@ -12,7 +12,6 @@ import {
   query,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { Lists } from "../type";
 import _ from "lodash";
 import { v4 as uuid } from "uuid";
 import { useCollection } from "../hooks/collections";
@@ -27,7 +26,6 @@ export type ListItem = {
 export type List = {
   id: string;
   title: string;
-  items: Array<ListItem>;
 };
 
 export type Lists = Array<List>;
@@ -171,10 +169,47 @@ export const updateListItems = async (
   return response;
 };
 
-export const useLists = (postId: string) => {
-  return useCollection(["posts", postId, "lists"]);
+export const useLists = (
+  postId: string
+): {
+  data: Lists;
+  save: () => Promise<{ data: Lists; error: any }>;
+  updateList: (itemId: string, itemUpdates: object) => void;
+  deleteList: (itemId: string) => Promise<{ error: any }>;
+  addList: (data: List) => Promise<{ id: string; data: object; error: null }>;
+} => {
+  const { data, updateItem, save, deleteItem, addItem } = useCollection(["posts", postId, "lists"]);
+  return {
+    data: data as Lists,
+    updateList: updateItem,
+    save: async () => {
+      const response = await save();
+      return { data: response.data as Lists, error: response.error };
+    },
+    deleteList: deleteItem,
+    addList: (data: List) => addItem(data),
+  };
 };
 
-export const useListItems = (postId, listId) => {
-  return useCollection(["posts", postId, "lists", listId, "items"]);
+export const useListItems = (
+  postId,
+  listId
+): {
+  data: ListItems;
+  save: () => Promise<{ data: ListItems; error: any }>;
+  updateListItem: (itemId: string, itemUpdates: object) => void;
+  deleteListItem: (itemId: string) => Promise<{ error: any }>;
+  addListItem: (data: ListItem) => Promise<{ id: string; data: object; error: null }>;
+} => {
+  const { data, updateItem, save, deleteItem, addItem } = useCollection(["posts", postId, "lists", listId, "items"]);
+  return {
+    data: data as ListItems,
+    updateListItem: updateItem,
+    save: async () => {
+      const response = await save();
+      return { data: response.data as ListItems, error: response.error };
+    },
+    deleteListItem: deleteItem,
+    addListItem: (data: ListItem) => addItem(data),
+  };
 };

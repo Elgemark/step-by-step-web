@@ -14,12 +14,12 @@ import Alert from "@mui/material/Alert";
 import { FC, useEffect, useState } from "react";
 import * as dataModels from "../../utils/firebase/models";
 import { v4 as uuid } from "uuid";
-import { List, Post, Step } from "../../utils/firebase/interface";
-import { ImageUploads, Lists, Steps } from "../../utils/firebase/type";
+import { Post, Step } from "../../utils/firebase/interface";
+import { ImageUploads, Steps } from "../../utils/firebase/type";
 import { deleteStep, setStep, setSteps, useSteps } from "../../utils/firebase/api/step";
 import { uploadImages } from "../../utils/firebase/api/storage";
 import { setPost, updatePost } from "../../utils/firebase/api/post";
-import { setList, useLists } from "../../utils/firebase/api/list";
+import { useLists } from "../../utils/firebase/api/list";
 import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/router";
 import FirebaseWrapper from "../../components/wrappers/FirebaseWrapper";
@@ -57,7 +57,7 @@ let saveData = { post: null, steps: null, lists: null };
 const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
   const router = useRouter();
   const steps = useSteps(id);
-  const { data: lists, update: updateList, addList } = useLists(id);
+  const { data: lists, updateList, addList } = useLists(id);
   const [prevId, setPrevId] = useState(id);
   const [successMessage, setSuccessMessage] = useState(null);
   const [postIsValid, setPostIsValid] = useState(false);
@@ -193,12 +193,12 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
     // const listId = uuid();
     // const list: List = { id: listId, title: "", items: [] };
     // await setList(id, listId, list);
-    addList();
+    addList({ text: "", value: "" });
   };
 
   const onChangeListHandler = (data: List) => {
     // setSaveData(`lists.${data.id}`, data);
-    updateList(data);
+    updateList(data.id, data);
   };
 
   const onDeleteListHandler = (listId) => {

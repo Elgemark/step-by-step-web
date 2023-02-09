@@ -1,16 +1,5 @@
 import { getAuth, Unsubscribe } from "firebase/auth";
-import {
-  getFirestore,
-  doc,
-  getDoc,
-  setDoc,
-  collection,
-  getDocs,
-  deleteDoc,
-  onSnapshot,
-  writeBatch,
-  query,
-} from "firebase/firestore";
+import { getFirestore, doc, setDoc, collection, deleteDoc, onSnapshot, writeBatch, query } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import _ from "lodash";
 import { v4 as uuid } from "uuid";
@@ -25,6 +14,19 @@ export type CollectionItems = Array<CollectionItem>;
 const mergeCollections = (a: Array<object>, b: Array<object>, key: string) => {
   const merged = _.merge(_.keyBy(a, key), _.keyBy(b, key));
   return _.values(merged);
+};
+
+export const addCollectionItem = async (path: Array<string>, id: string, data: CollectionItem) => {
+  const response = { id, data, error: null };
+  const firebase = getFirestore();
+  try {
+    const docPath = [...path];
+    docPath.push(id);
+    await setDoc(doc(firebase, docPath.join("/")), data);
+  } catch (error) {
+    response.error = error;
+  }
+  return response;
 };
 
 export const updateCollectionItems = async (
@@ -68,8 +70,9 @@ export const useCollection = (
 ): {
   data: CollectionItems;
   save: () => Promise<{ data: CollectionItems; error: any }>;
-  update: (itemId: string, itemUpdates: object) => void;
-  delete: (itemId: string) => Promise<{ error: any }>;
+  updateItem: (itemId: string, itemUpdates: object) => void;
+  deleteItem: (itemId: string) => Promise<{ error: any }>;
+  addItem: (data: CollectionItem) => Promise<{ id: string; data: object; error: null }>;
 } => {
   const [data, setData] = useState<CollectionItems>([]);
   const [updates, setUpdates] = useState<CollectionItems>([]);
@@ -101,7 +104,7 @@ export const useCollection = (
     return response;
   };
 
-  const update = (itemId: string, itemUpdates: object) => {
+  const updateItem = (itemId: string, itemUpdates: object) => {
     const updateCopy = [...updates];
     const index: number = updateCopy.findIndex((item) => item.id === itemId);
     const updatedItem = { ...updateCopy[index], ...itemUpdates };
@@ -114,7 +117,11 @@ export const useCollection = (
     return deleteCollectionItem(deletePath);
   };
 
+  const addItem = (item) => {
+    return addCollectionItem(path, uuid(), item);
+  };
+
   const concatenatedData = mergeCollections(data, updates, "id");
 
-  return { data: concatenatedData, update, save, delete: deleteItem };
+  return { data: concatenatedData, updateItem, save, deleteItem, addItem };
 };
