@@ -143,7 +143,13 @@ const PostEditable: FC<{
                 size="small"
               />
               {lists.map((list) => (
-                <ListEditable onChange={onChangeList} onDelete={onDeleteList} key={list.id} list={list} />
+                <ListEditable
+                  postId={post.id}
+                  onChange={onChangeList}
+                  onDelete={onDeleteList}
+                  key={list.id}
+                  list={list}
+                />
               ))}
             </Stack>
           </CardContent>

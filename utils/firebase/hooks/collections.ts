@@ -16,13 +16,11 @@ const mergeCollections = (a: Array<object>, b: Array<object>, key: string) => {
   return _.values(merged);
 };
 
-export const addCollectionItem = async (path: Array<string>, id: string, data: CollectionItem) => {
+export const addCollectionItem = async (path: Array<string>, data: CollectionItem) => {
   const response = { id, data, error: null };
   const firebase = getFirestore();
   try {
-    const docPath = [...path];
-    docPath.push(id);
-    await setDoc(doc(firebase, docPath.join("/")), data);
+    await setDoc(doc(firebase, path.join("/")), data);
   } catch (error) {
     response.error = error;
   }
@@ -117,8 +115,10 @@ export const useCollection = (
     return deleteCollectionItem(deletePath);
   };
 
-  const addItem = (item) => {
-    return addCollectionItem(path, uuid(), item);
+  const addItem = (item: CollectionItem) => {
+    const docPath = [...path];
+    docPath.push(item.id);
+    return addCollectionItem(docPath, item);
   };
 
   const concatenatedData = mergeCollections(data, updates, "id");

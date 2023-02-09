@@ -5,9 +5,10 @@ import { Fade, Input, useTheme } from "@mui/material";
 import styled from "styled-components";
 import Paper from "@mui/material/Paper";
 import { FC } from "react";
-import { List, ListItem } from "../../utils/firebase/interface";
+import { List, ListItem } from "../../utils/firebase/api/list";
 import { useStateObject } from "../../utils/object";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useListItems } from "../../utils/firebase/api/list";
 
 const StyledPaper = styled(Paper)`
   padding: ${({ theme }) => theme.spacing(1)};
@@ -64,11 +65,13 @@ const AddButton = ({ onClick }) => {
 };
 
 const ListEditable: FC<{
+  postId: string;
   list: List;
   onChange: (e: List) => void;
   onDelete: (listId?: string) => void;
-}> = ({ list, onChange }) => {
+}> = ({ postId, list, onChange }) => {
   const theme = useTheme();
+  const { data: listItems } = useListItems(postId, list.id);
 
   const updateListItem = (index, key, value) => {
     const items = [...list.items];
@@ -110,36 +113,37 @@ const ListEditable: FC<{
           </tr>
         </thead>
         <tbody>
-          {list.items.map((item: ListItem, index) => (
-            <Fade in={true} key={`${list.id}-${index}`}>
-              <tr>
-                {/* TEXT Left */}
-                <th className="column-1">
-                  <Input
-                    placeholder="Text left..."
-                    value={item.text}
-                    onChange={(e) => updateListItem(index, "text", e.target.value)}
-                  />
-                </th>
-                {/* TEXT Right */}
-                <td className="column-2">
-                  <Input
-                    placeholder="Text right..."
-                    value={item.value}
-                    onChange={(e) => updateListItem(index, "value", e.target.value)}
-                  />
-                </td>
-                {/* REMOVE BUTTON */}
-                <td className="column-3">
-                  <RemoveButton onClick={() => onDeleteListItemHandler(index)} />
-                </td>
-                {/* ADD BUTTON */}
-                <td className="column-4">
-                  <AddButton onClick={() => onAddListItemHandler(index)} />
-                </td>
-              </tr>
-            </Fade>
-          ))}
+          {listItems &&
+            listItems.map((item: ListItem, index) => (
+              <Fade in={true} key={`${list.id}-${index}`}>
+                <tr>
+                  {/* TEXT Left */}
+                  <th className="column-1">
+                    <Input
+                      placeholder="Text left..."
+                      value={item.text}
+                      onChange={(e) => updateListItem(index, "text", e.target.value)}
+                    />
+                  </th>
+                  {/* TEXT Right */}
+                  <td className="column-2">
+                    <Input
+                      placeholder="Text right..."
+                      value={item.value}
+                      onChange={(e) => updateListItem(index, "value", e.target.value)}
+                    />
+                  </td>
+                  {/* REMOVE BUTTON */}
+                  <td className="column-3">
+                    <RemoveButton onClick={() => onDeleteListItemHandler(index)} />
+                  </td>
+                  {/* ADD BUTTON */}
+                  <td className="column-4">
+                    <AddButton onClick={() => onAddListItemHandler(index)} />
+                  </td>
+                </tr>
+              </Fade>
+            ))}
           <tr className="list-buttons">
             <td colSpan={3}>
               <IconButton edge="end" aria-label="remove" onClick={() => onDelete(list.id)}>

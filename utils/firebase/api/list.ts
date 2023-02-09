@@ -187,7 +187,7 @@ export const useLists = (
       return { data: response.data as Lists, error: response.error };
     },
     deleteList: deleteItem,
-    addList: (data: List) => addItem(data),
+    addList: async (data: List) => await addItem(data),
   };
 };
 

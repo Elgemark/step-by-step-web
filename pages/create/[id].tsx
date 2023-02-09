@@ -57,7 +57,7 @@ let saveData = { post: null, steps: null, lists: null };
 const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
   const router = useRouter();
   const steps = useSteps(id);
-  const { data: lists, updateList, addList } = useLists(id);
+  const { data: lists, updateList, addList, save: saveLists } = useLists(id);
   const [prevId, setPrevId] = useState(id);
   const [successMessage, setSuccessMessage] = useState(null);
   const [postIsValid, setPostIsValid] = useState(false);
@@ -118,11 +118,7 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
     setIsSaving(true);
     const userId = user.uid;
     // Save lists...
-    const lists: Lists = [];
-    _.forIn(saveData.lists, (value) => {
-      lists.push(value);
-    });
-    await setLists(id, lists);
+    await saveLists();
     // Upload splash image...
     const splashImage = _.get(saveData, "post.blob");
     if (splashImage) {
@@ -193,7 +189,7 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
     // const listId = uuid();
     // const list: List = { id: listId, title: "", items: [] };
     // await setList(id, listId, list);
-    addList({ text: "", value: "" });
+    addList({ id: uuid(), title: "" });
   };
 
   const onChangeListHandler = (data: List) => {
