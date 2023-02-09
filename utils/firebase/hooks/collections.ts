@@ -1,8 +1,17 @@
 import { getAuth, Unsubscribe } from "firebase/auth";
-import { getFirestore, doc, setDoc, collection, deleteDoc, onSnapshot, writeBatch, query } from "firebase/firestore";
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  collection,
+  deleteDoc,
+  onSnapshot,
+  writeBatch,
+  query,
+  orderBy,
+} from "firebase/firestore";
 import { useEffect, useState } from "react";
 import _ from "lodash";
-import { v4 as uuid } from "uuid";
 
 export type CollectionItem = {
   id: string;
@@ -17,7 +26,7 @@ const mergeCollections = (a: Array<object>, b: Array<object>, key: string) => {
 };
 
 export const addCollectionItem = async (path: Array<string>, data: CollectionItem) => {
-  const response = { id, data, error: null };
+  const response = { data, error: null };
   const firebase = getFirestore();
   try {
     await setDoc(doc(firebase, path.join("/")), data);

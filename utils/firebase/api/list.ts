@@ -20,6 +20,7 @@ export type ListItem = {
   id: string;
   text: string;
   value: string;
+  index: number;
   step?: number;
 };
 

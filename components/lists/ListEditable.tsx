@@ -9,6 +9,7 @@ import { List, ListItem } from "../../utils/firebase/api/list";
 import { useStateObject } from "../../utils/object";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useListItems } from "../../utils/firebase/api/list";
+import { v4 as uuid } from "uuid";
 
 const StyledPaper = styled(Paper)`
   padding: ${({ theme }) => theme.spacing(1)};
@@ -71,7 +72,7 @@ const ListEditable: FC<{
   onDelete: (listId?: string) => void;
 }> = ({ postId, list, onChange }) => {
   const theme = useTheme();
-  const { data: listItems } = useListItems(postId, list.id);
+  const { data: listItems, deleteListItem, addListItem } = useListItems(postId, list.id);
 
   const updateListItem = (index, key, value) => {
     const items = [...list.items];
@@ -85,13 +86,7 @@ const ListEditable: FC<{
   };
 
   const onAddListItemHandler = (index) => {
-    const items = [...list.items];
-    if (index) {
-      items.splice(index + 1, 0, { text: "", value: "" });
-    } else {
-      items.push({ text: "", value: "" });
-    }
-    onChange({ ...list, items } as List);
+    addListItem({ id: uuid(), text: "", value: "", index });
   };
 
   const onDeleteListItemHandler = (index) => {
