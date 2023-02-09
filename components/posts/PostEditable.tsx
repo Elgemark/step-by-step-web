@@ -35,10 +35,10 @@ const PostEditable: FC<{
   post: Post;
   lists: Lists;
   onChangeList: (list: List) => void;
-  onDeleteList: (id: string) => void;
   onAddList: Function;
+  onDeleteList: (listId: string) => void;
   onChange: Function;
-}> = ({ post, lists = [], onChangeList, onDeleteList, onAddList, onChange }) => {
+}> = ({ post, lists = [], onChangeList, onAddList, onDeleteList, onChange }) => {
   const [tag, setTag] = useState("");
   const { object: data, setValue: setData } = useStateObject(post);
 

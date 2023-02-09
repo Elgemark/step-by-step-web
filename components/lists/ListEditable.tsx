@@ -66,30 +66,35 @@ const AddButton = ({ onClick }) => {
 const ListEditable: FC<{
   list: List;
   onChange: (e: List) => void;
-  onDelete: (id: string) => void;
-}> = ({ list, onDelete, onChange }) => {
-  // Add a default item if items missing...
-  const { object, setValue } = useStateObject({
-    ...list,
-    items: list.items.length ? list.items : [{ text: "", value: "" }],
-  });
+  onDelete: (listId?: string) => void;
+}> = ({ list, onChange }) => {
   const theme = useTheme();
 
-  const updateValue = (path, value) => {
-    const result: object = setValue(path, value);
-    onChange(result as List);
+  const updateListItem = (index, key, value) => {
+    const items = [...list.items];
+    items[index][key] = value;
+    onChange({ ...list, items } as List);
+  };
+
+  const update = (key, value) => {
+    const update = { [key]: value };
+    onChange({ ...list, update } as List);
   };
 
   const onAddListItemHandler = (index) => {
-    const newItems = [...object.items];
-    newItems.splice(index + 1, 0, { text: "", value: "" });
-    updateValue("items", newItems);
+    const items = [...list.items];
+    if (index) {
+      items.splice(index + 1, 0, { text: "", value: "" });
+    } else {
+      items.push({ text: "", value: "" });
+    }
+    onChange({ ...list, items } as List);
   };
 
   const onDeleteListItemHandler = (index) => {
-    const newItems = [...object.items];
-    newItems.splice(index, 1);
-    updateValue("items", newItems);
+    const items = [...list.items];
+    items.splice(index, 1);
+    onChange({ ...list, items } as List);
   };
 
   return (
@@ -98,14 +103,14 @@ const ListEditable: FC<{
         <thead>
           <tr>
             <th className="column-1" colSpan={1}>
-              <Input value={object.title} placeholder="Title" onChange={(e) => updateValue("title", e.target.value)} />
+              <Input value={list.title} placeholder="Title" onChange={(e) => update("title", e.target.value)} />
             </th>
             <th className="column-2"></th>
             <th className="column-3"></th>
           </tr>
         </thead>
         <tbody>
-          {object.items.map((item: ListItem, index) => (
+          {list.items.map((item: ListItem, index) => (
             <Fade in={true} key={`${list.id}-${index}`}>
               <tr>
                 {/* TEXT Left */}
@@ -113,7 +118,7 @@ const ListEditable: FC<{
                   <Input
                     placeholder="Text left..."
                     value={item.text}
-                    onChange={(e) => updateValue("items." + index + ".text", e.target.value)}
+                    onChange={(e) => updateListItem(index, "text", e.target.value)}
                   />
                 </th>
                 {/* TEXT Right */}
@@ -121,7 +126,7 @@ const ListEditable: FC<{
                   <Input
                     placeholder="Text right..."
                     value={item.value}
-                    onChange={(e) => updateValue("items." + index + ".value", e.target.value)}
+                    onChange={(e) => updateListItem(index, "value", e.target.value)}
                   />
                 </td>
                 {/* REMOVE BUTTON */}

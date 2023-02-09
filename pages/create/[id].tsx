@@ -57,7 +57,7 @@ let saveData = { post: null, steps: null, lists: null };
 const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
   const router = useRouter();
   const steps = useSteps(id);
-  const lists = useLists(id);
+  const { data: lists, update: updateList, addList } = useLists(id);
   const [prevId, setPrevId] = useState(id);
   const [successMessage, setSuccessMessage] = useState(null);
   const [postIsValid, setPostIsValid] = useState(false);
@@ -66,6 +66,8 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
   const { isLoading: isLoadingUser, data: user } = useUser();
   const [openPublishDialog, setOpenPublishDialog] = useState(false);
   const refresh = useRefresh();
+
+  console.log("lists", lists);
 
   useEffect(() => {
     if (prevId != id) {
@@ -188,13 +190,15 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
   };
 
   const onAddListHandler = async () => {
-    const listId = uuid();
-    const list: List = { id: listId, title: "", items: [] };
-    await setList(id, listId, list);
+    // const listId = uuid();
+    // const list: List = { id: listId, title: "", items: [] };
+    // await setList(id, listId, list);
+    addList();
   };
 
   const onChangeListHandler = (data: List) => {
-    setSaveData(`lists.${data.id}`, data);
+    // setSaveData(`lists.${data.id}`, data);
+    updateList(data);
   };
 
   const onDeleteListHandler = (listId) => {
@@ -227,6 +231,11 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
     }
   };
 
+  /*
+  onChangeList: (list: List) => void;
+  onAddList: Function;
+  onDeleteList: (listId: string) => void;
+  */
   return (
     <>
       <Head>
