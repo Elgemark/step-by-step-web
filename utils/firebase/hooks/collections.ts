@@ -107,7 +107,7 @@ export const useCollection = (
         querySnapshot.forEach((doc) => {
           listItems.push({ ...(doc.data() as CollectionItem), id: doc.id });
         });
-        setData(listItems.reverse());
+        setData(_.sortBy(listItems, (item: CollectionItem) => item.index));
       });
 
       return () => {
