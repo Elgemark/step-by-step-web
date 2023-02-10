@@ -20,13 +20,15 @@ export type ListItem = {
   id: string;
   text: string;
   value: string;
-  index: number;
+  index?: number;
   step?: number;
+  [key: string]: any;
 };
 
 export type List = {
   id: string;
   title: string;
+  [key: string]: any;
 };
 
 export type Lists = Array<List>;
@@ -177,7 +179,7 @@ export const useLists = (
   save: () => Promise<{ data: Lists; error: any }>;
   updateList: (itemId: string, itemUpdates: object) => void;
   deleteList: (itemId: string) => Promise<{ error: any }>;
-  addList: (data: List) => Promise<{ id: string; data: object; error: null }>;
+  addList: (data: List, atIndex: number) => void;
 } => {
   const { data, updateItem, save, deleteItem, addItem } = useCollection(["posts", postId, "lists"]);
   return {
@@ -188,7 +190,7 @@ export const useLists = (
       return { data: response.data as Lists, error: response.error };
     },
     deleteList: deleteItem,
-    addList: async (data: List) => await addItem(data),
+    addList: async (data: List, atIndex: number) => await addItem(data, atIndex),
   };
 };
 
@@ -200,7 +202,7 @@ export const useListItems = (
   save: () => Promise<{ data: ListItems; error: any }>;
   updateListItem: (itemId: string, itemUpdates: object) => void;
   deleteListItem: (itemId: string) => Promise<{ error: any }>;
-  addListItem: (data: ListItem) => Promise<{ id: string; data: object; error: null }>;
+  addListItem: (data: ListItem, atIndex: number) => void;
 } => {
   const { data, updateItem, save, deleteItem, addItem } = useCollection(["posts", postId, "lists", listId, "items"]);
   return {
@@ -211,6 +213,6 @@ export const useListItems = (
       return { data: response.data as ListItems, error: response.error };
     },
     deleteListItem: deleteItem,
-    addListItem: (data: ListItem) => addItem(data),
+    addListItem: (data: ListItem, atIndex: number) => addItem(data, atIndex),
   };
 };

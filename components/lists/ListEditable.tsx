@@ -68,31 +68,23 @@ const AddButton = ({ onClick }) => {
 const ListEditable: FC<{
   postId: string;
   list: List;
+  onChangeTitile: (title: string) => void;
   onChange: (e: List) => void;
   onDelete: (listId?: string) => void;
-}> = ({ postId, list, onChange }) => {
+}> = ({ postId, list, onChange, onChangeTitile }) => {
   const theme = useTheme();
-  const { data: listItems, deleteListItem, addListItem } = useListItems(postId, list.id);
+  const { data: listItems, deleteListItem, addListItem, updateListItem } = useListItems(postId, list.id);
 
-  const updateListItem = (index, key, value) => {
-    const items = [...list.items];
-    items[index][key] = value;
-    onChange({ ...list, items } as List);
-  };
-
-  const update = (key, value) => {
-    const update = { [key]: value };
-    onChange({ ...list, update } as List);
+  const updateListItemHandler = async (itemId: string, key: string, value: any) => {
+    await updateListItem(itemId, { [key]: value });
   };
 
   const onAddListItemHandler = (index) => {
-    addListItem({ id: uuid(), text: "", value: "", index });
+    addListItem({ id: uuid(), text: "", value: "" }, index);
   };
 
-  const onDeleteListItemHandler = (index) => {
-    const items = [...list.items];
-    items.splice(index, 1);
-    onChange({ ...list, items } as List);
+  const onDeleteListItemHandler = async (itemId) => {
+    await deleteListItem(itemId);
   };
 
   return (
@@ -101,7 +93,7 @@ const ListEditable: FC<{
         <thead>
           <tr>
             <th className="column-1" colSpan={1}>
-              <Input value={list.title} placeholder="Title" onChange={(e) => update("title", e.target.value)} />
+              <Input value={list.title} placeholder="Title" onChange={(e) => onChangeTitile(e.target.value)} />
             </th>
             <th className="column-2"></th>
             <th className="column-3"></th>
@@ -117,7 +109,7 @@ const ListEditable: FC<{
                     <Input
                       placeholder="Text left..."
                       value={item.text}
-                      onChange={(e) => updateListItem(index, "text", e.target.value)}
+                      onChange={(e) => updateListItemHandler(item.id, "text", e.target.value)}
                     />
                   </th>
                   {/* TEXT Right */}
@@ -125,12 +117,12 @@ const ListEditable: FC<{
                     <Input
                       placeholder="Text right..."
                       value={item.value}
-                      onChange={(e) => updateListItem(index, "value", e.target.value)}
+                      onChange={(e) => updateListItemHandler(item.id, "value", e.target.value)}
                     />
                   </td>
                   {/* REMOVE BUTTON */}
                   <td className="column-3">
-                    <RemoveButton onClick={() => onDeleteListItemHandler(index)} />
+                    <RemoveButton onClick={() => onDeleteListItemHandler(item.id)} />
                   </td>
                   {/* ADD BUTTON */}
                   <td className="column-4">

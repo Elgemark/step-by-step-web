@@ -19,7 +19,7 @@ import { ImageUploads, Steps } from "../../utils/firebase/type";
 import { deleteStep, setStep, setSteps, useSteps } from "../../utils/firebase/api/step";
 import { uploadImages } from "../../utils/firebase/api/storage";
 import { setPost, updatePost } from "../../utils/firebase/api/post";
-import { useLists } from "../../utils/firebase/api/list";
+import { List, useLists } from "../../utils/firebase/api/list";
 import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/router";
 import FirebaseWrapper from "../../components/wrappers/FirebaseWrapper";
@@ -189,7 +189,7 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
     // const listId = uuid();
     // const list: List = { id: listId, title: "", items: [] };
     // await setList(id, listId, list);
-    addList({ id: uuid(), title: "" });
+    addList({ id: uuid(), title: "" }, lists.length);
   };
 
   const onChangeListHandler = (data: List) => {
@@ -227,11 +227,6 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
     }
   };
 
-  /*
-  onChangeList: (list: List) => void;
-  onAddList: Function;
-  onDeleteList: (listId: string) => void;
-  */
   return (
     <>
       <Head>

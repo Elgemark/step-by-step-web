@@ -12,12 +12,12 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import _ from "lodash";
 import styled from "styled-components";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
-import { Lists } from "../../utils/firebase/type";
-import { List, Post } from "../../utils/firebase/interface";
+import { Post } from "../../utils/firebase/interface";
 import ListEditable from "../lists/ListEditable";
 import { useStateObject } from "../../utils/object";
 import { toSanitizedArray } from "../../utils/stringUtils";
 import UserAvatar from "../UserAvatar";
+import { List, Lists } from "../../utils/firebase/api/list";
 
 const Root = styled(Stack)`
   .card-actions {

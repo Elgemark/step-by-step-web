@@ -9,6 +9,7 @@ import {
   writeBatch,
   query,
   orderBy,
+  SetOptions,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import _ from "lodash";
@@ -36,9 +37,10 @@ export const addCollectionItem = async (path: Array<string>, data: CollectionIte
   return response;
 };
 
-export const updateCollectionItems = async (
+export const setCollectionItems = async (
   path: Array<string>,
-  data: CollectionItems
+  data: CollectionItems,
+  setOptions?: SetOptions
 ): Promise<{ data: CollectionItems; error: any }> => {
   const response = { data: data, error: null };
   const auth = getAuth();
@@ -49,7 +51,7 @@ export const updateCollectionItems = async (
   data.forEach((listItem) => {
     const stepsRef = doc(firebase, path.join("/"));
     const listsData = { ...listItem, uid: userId };
-    batch.set(stepsRef, listsData);
+    batch.set(stepsRef, listsData, setOptions);
   });
 
   try {
@@ -77,12 +79,23 @@ export const useCollection = (
 ): {
   data: CollectionItems;
   save: () => Promise<{ data: CollectionItems; error: any }>;
+  hasSaveData: boolean;
   updateItem: (itemId: string, itemUpdates: object) => void;
   deleteItem: (itemId: string) => Promise<{ error: any }>;
-  addItem: (data: CollectionItem) => Promise<{ id: string; data: object; error: null }>;
+  addItem: (data: CollectionItem, atIndex: number) => void;
 } => {
   const [data, setData] = useState<CollectionItems>([]);
   const [updates, setUpdates] = useState<CollectionItems>([]);
+  const [newItems, setNewItems] = useState<CollectionItems>([]);
+  const [hasSaveData, setHasSaveData] = useState(false);
+
+  const mergeAndSortCollection = () => {
+    const mergedCollections = mergeCollections(data, newItems.concat(updates), "id");
+    const sortedCollections = _.sortBy(mergedCollections, (item: CollectionItem) => item.index);
+    return sortedCollections;
+  };
+
+  const calculatedCollection = mergeAndSortCollection();
 
   useEffect(() => {
     let unsubscribe: Unsubscribe;
@@ -101,36 +114,58 @@ export const useCollection = (
         unsubscribe && unsubscribe();
       };
     }
-  }, [path]);
+  }, [...path]);
 
   const save = async () => {
-    const response = await updateCollectionItems(path, updates);
+    const response = await setCollectionItems(path, mergeCollections(newItems, updates, "id"), { merge: true });
     if (!response.error) {
       setUpdates([]);
+      setNewItems([]);
+      setHasSaveData(false);
     }
     return response;
   };
 
   const updateItem = (itemId: string, itemUpdates: object) => {
-    const updateCopy = [...updates];
-    const index: number = updateCopy.findIndex((item) => item.id === itemId);
-    const updatedItem = { ...updateCopy[index], ...itemUpdates };
-    updateCopy[index] = updatedItem;
-    setUpdates(updateCopy);
+    const calculatedCollectionCopy = [...calculatedCollection];
+    const index: number = calculatedCollectionCopy.findIndex((item) => item.id === itemId);
+    const updatedItem = { ...calculatedCollectionCopy[index], ...itemUpdates };
+    const updatedItemsCopy = mergeCollections(updates, [updatedItem], "id");
+    setUpdates(updatedItemsCopy);
+    setHasSaveData(true);
   };
 
   const deleteItem = async (itemId) => {
-    const deletePath = path.concat([itemId]);
-    return deleteCollectionItem(deletePath);
+    // If in new items
+    const newItemIndex = newItems.findIndex((item) => item.id === itemId);
+
+    if (newItemIndex > -1) {
+      const itemsCopy = [...newItems];
+      itemsCopy.splice(newItemIndex, 1);
+      setNewItems(itemsCopy);
+      setHasSaveData(itemsCopy.length > 0);
+      return { error: null };
+    }
+    // Else remove from collection
+    else {
+      const deletePath = path.concat([itemId]);
+      const response = await deleteCollectionItem(deletePath);
+      return response;
+    }
   };
 
-  const addItem = (item: CollectionItem) => {
-    const docPath = [...path];
-    docPath.push(item.id);
-    return addCollectionItem(docPath, item);
+  const addItem = (item: CollectionItem, atIndex: number) => {
+    // Calc index
+    const indexCurrStep = atIndex;
+    const indexNextStep = atIndex + 1 < calculatedCollection.length && calculatedCollection[atIndex + 1].index;
+    const newIndex = indexNextStep ? (indexCurrStep + indexNextStep) * 0.5 : indexCurrStep + 1;
+    debugger;
+    // Additem
+    const itemsCopy = [...newItems];
+    itemsCopy.push({ ...item, index: newIndex });
+    setNewItems(itemsCopy);
+    setHasSaveData(itemsCopy.length > 0);
   };
 
-  const concatenatedData = mergeCollections(data, updates, "id");
-
-  return { data: concatenatedData, updateItem, save, deleteItem, addItem };
+  return { data: calculatedCollection, updateItem, save, deleteItem, addItem, hasSaveData };
 };
