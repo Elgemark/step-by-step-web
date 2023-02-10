@@ -83,6 +83,7 @@ export const useCollection = (
   updateItem: (itemId: string, itemUpdates: object) => void;
   deleteItem: (itemId: string) => Promise<{ error: any }>;
   addItem: (data: CollectionItem, atIndex: number) => void;
+  onHasSaveDataChange: ({ hasSaveData: boolean, save: Function }) => void;
 } => {
   const [data, setData] = useState<CollectionItems>([]);
   const [updates, setUpdates] = useState<CollectionItems>([]);

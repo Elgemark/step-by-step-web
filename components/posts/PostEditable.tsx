@@ -6,7 +6,7 @@ import Fab from "@mui/material/Fab";
 import Stack from "@mui/material/Stack";
 import AddIcon from "@mui/icons-material/Add";
 import ImageEditable from "../primitives/ImageEditable";
-import { FC, useState } from "react";
+import { FC, ReactPropTypes, useEffect, useRef, useState } from "react";
 import SelectCategory from "../SelectCategory";
 import SettingsIcon from "@mui/icons-material/Settings";
 import _ from "lodash";
@@ -34,13 +34,17 @@ const StyledImageEditable = styled(ImageEditable)`
 const PostEditable: FC<{
   post: Post;
   lists: Lists;
-  onChangeList: (list: List) => void;
-  onAddList: Function;
-  onDeleteList: (listId: string) => void;
+  onChangeListTitle: (listId: string, title: string) => void;
   onChange: Function;
-}> = ({ post, lists = [], onChangeList, onAddList, onDeleteList, onChange }) => {
+  onAddList: Function;
+}> = ({ post, lists = [], onChangeListTitle, onAddList, onChange }) => {
   const [tag, setTag] = useState("");
   const { object: data, setValue: setData } = useStateObject(post);
+  const itemsRef = useRef([]);
+
+  useEffect(() => {
+    itemsRef.current = itemsRef.current.slice(0, lists.length);
+  }, [lists]);
 
   const updateData = (path, value) => {
     const updatedData = setData(path, value);
@@ -142,11 +146,11 @@ const PostEditable: FC<{
                 onChange={(e) => updateData("descr", e.target.value)}
                 size="small"
               />
-              {lists.map((list) => (
+              {lists.map((list, index) => (
                 <ListEditable
+                  ref={(el) => (itemsRef.current[index] = el)}
                   postId={post.id}
-                  onChange={onChangeList}
-                  onDelete={onDeleteList}
+                  onChangeTitle={(title) => onChangeListTitle(list.id, title)}
                   key={list.id}
                   list={list}
                 />

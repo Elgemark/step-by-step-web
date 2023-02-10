@@ -4,12 +4,13 @@ import IconButton from "@mui/material/IconButton";
 import { Fade, Input, useTheme } from "@mui/material";
 import styled from "styled-components";
 import Paper from "@mui/material/Paper";
-import { FC } from "react";
+import { FC, MutableRefObject, ReactPropTypes } from "react";
 import { List, ListItem } from "../../utils/firebase/api/list";
-import { useStateObject } from "../../utils/object";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useListItems } from "../../utils/firebase/api/list";
 import { v4 as uuid } from "uuid";
+import { forwardRef, useImperativeHandle, useRef } from "react";
+import { createRoot } from "react-dom/client";
 
 const StyledPaper = styled(Paper)`
   padding: ${({ theme }) => theme.spacing(1)};
@@ -69,11 +70,22 @@ const ListEditable: FC<{
   postId: string;
   list: List;
   onChangeTitile: (title: string) => void;
-  onChange: (e: List) => void;
-  onDelete: (listId?: string) => void;
-}> = ({ postId, list, onChange, onChangeTitile }) => {
+  [key: string]: any;
+}> = forwardRef(({ postId, list, onChangeTitile }, ref) => {
   const theme = useTheme();
-  const { data: listItems, deleteListItem, addListItem, updateListItem } = useListItems(postId, list.id);
+  const {
+    data: listItems,
+    deleteListItem,
+    addListItem,
+    updateListItem,
+    save: saveList,
+  } = useListItems(postId, list.id);
+
+  useImperativeHandle(ref, () => ({
+    save() {
+      saveList();
+    },
+  }));
 
   const updateListItemHandler = async (itemId: string, key: string, value: any) => {
     await updateListItem(itemId, { [key]: value });
@@ -142,6 +154,6 @@ const ListEditable: FC<{
       </StyledTable>
     </StyledPaper>
   );
-};
+});
 
 export default ListEditable;
