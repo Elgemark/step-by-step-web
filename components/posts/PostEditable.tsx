@@ -6,7 +6,7 @@ import Fab from "@mui/material/Fab";
 import Stack from "@mui/material/Stack";
 import AddIcon from "@mui/icons-material/Add";
 import ImageEditable from "../primitives/ImageEditable";
-import { FC, ReactPropTypes, useEffect, useRef, useState } from "react";
+import { FC, useState } from "react";
 import SelectCategory from "../SelectCategory";
 import SettingsIcon from "@mui/icons-material/Settings";
 import _ from "lodash";
@@ -17,7 +17,7 @@ import ListEditable from "../lists/ListEditable";
 import { useStateObject } from "../../utils/object";
 import { toSanitizedArray } from "../../utils/stringUtils";
 import UserAvatar from "../UserAvatar";
-import { List, Lists } from "../../utils/firebase/api/list";
+import { ListItems, Lists } from "../../utils/firebase/api/list";
 
 const Root = styled(Stack)`
   .card-actions {
@@ -34,17 +34,14 @@ const StyledImageEditable = styled(ImageEditable)`
 const PostEditable: FC<{
   post: Post;
   lists: Lists;
+  onChange: (data: object) => void;
   onChangeListTitle: (listId: string, title: string) => void;
-  onChange: Function;
+  onChangeListItems: (listId: string, hasData: boolean, save: () => Promise<{ data: ListItems; error: any }>) => void;
   onAddList: Function;
-}> = ({ post, lists = [], onChangeListTitle, onAddList, onChange }) => {
+  onDeleteList: Function;
+}> = ({ post, lists = [], onChange, onChangeListTitle, onAddList, onChangeListItems, onDeleteList }) => {
   const [tag, setTag] = useState("");
   const { object: data, setValue: setData } = useStateObject(post);
-  const itemsRef = useRef([]);
-
-  useEffect(() => {
-    itemsRef.current = itemsRef.current.slice(0, lists.length);
-  }, [lists]);
 
   const updateData = (path, value) => {
     const updatedData = setData(path, value);
@@ -148,9 +145,9 @@ const PostEditable: FC<{
               />
               {lists.map((list, index) => (
                 <ListEditable
-                  ref={(el) => (itemsRef.current[index] = el)}
                   postId={post.id}
                   onChangeTitle={(title) => onChangeListTitle(list.id, title)}
+                  onChangeListItems={onChangeListItems}
                   key={list.id}
                   list={list}
                 />

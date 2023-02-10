@@ -173,7 +173,8 @@ export const updateListItems = async (
 };
 
 export const useLists = (
-  postId: string
+  postId: string,
+  onHasSaveDataChange?: (hasSaveData: boolean, save: () => Promise<{ data: ListItems; error: any }>) => void
 ): {
   data: Lists;
   save: () => Promise<{ data: Lists; error: any }>;
@@ -181,7 +182,11 @@ export const useLists = (
   deleteList: (itemId: string) => Promise<{ error: any }>;
   addList: (data: List, atIndex: number) => void;
 } => {
-  const { data, updateItem, save, deleteItem, addItem } = useCollection(["posts", postId, "lists"]);
+  const { data, updateItem, save, deleteItem, addItem } = useCollection(
+    ["posts", postId, "lists"],
+    onHasSaveDataChange
+  );
+
   return {
     data: data as Lists,
     updateList: updateItem,
@@ -196,7 +201,8 @@ export const useLists = (
 
 export const useListItems = (
   postId,
-  listId
+  listId,
+  onHasSaveDataChange?: (hasSaveData: boolean, save: () => Promise<{ data: ListItems; error: any }>) => void
 ): {
   data: ListItems;
   save: () => Promise<{ data: ListItems; error: any }>;
@@ -204,7 +210,11 @@ export const useListItems = (
   deleteListItem: (itemId: string) => Promise<{ error: any }>;
   addListItem: (data: ListItem, atIndex: number) => void;
 } => {
-  const { data, updateItem, save, deleteItem, addItem } = useCollection(["posts", postId, "lists", listId, "items"]);
+  const { data, updateItem, save, deleteItem, addItem } = useCollection(
+    ["posts", postId, "lists", listId, "items"],
+    onHasSaveDataChange
+  );
+
   return {
     data: data as ListItems,
     updateListItem: updateItem,

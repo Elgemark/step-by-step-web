@@ -75,7 +75,8 @@ export const deleteCollectionItem = async (docPath: Array<string>) => {
 };
 
 export const useCollection = (
-  path: Array<string>
+  path: Array<string>,
+  onHasSaveDataChange?: (hasSaveData: boolean, save: () => Promise<{ data: CollectionItems; error: any }>) => void
 ): {
   data: CollectionItems;
   save: () => Promise<{ data: CollectionItems; error: any }>;
@@ -83,7 +84,6 @@ export const useCollection = (
   updateItem: (itemId: string, itemUpdates: object) => void;
   deleteItem: (itemId: string) => Promise<{ error: any }>;
   addItem: (data: CollectionItem, atIndex: number) => void;
-  onHasSaveDataChange: ({ hasSaveData: boolean, save: Function }) => void;
 } => {
   const [data, setData] = useState<CollectionItems>([]);
   const [updates, setUpdates] = useState<CollectionItems>([]);
@@ -116,6 +116,10 @@ export const useCollection = (
       };
     }
   }, [...path]);
+
+  useEffect(() => {
+    onHasSaveDataChange && onHasSaveDataChange(hasSaveData, save);
+  }, [hasSaveData]);
 
   const save = async () => {
     const response = await setCollectionItems(path, mergeCollections(newItems, updates, "id"), { merge: true });
