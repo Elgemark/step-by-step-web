@@ -1,20 +1,6 @@
-import { getAuth, Unsubscribe } from "firebase/auth";
-import {
-  getFirestore,
-  doc,
-  getDoc,
-  setDoc,
-  collection,
-  getDocs,
-  deleteDoc,
-  onSnapshot,
-  writeBatch,
-  query,
-} from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { getAuth } from "firebase/auth";
+import { getFirestore, doc, setDoc, collection, getDocs, deleteDoc, writeBatch } from "firebase/firestore";
 import _ from "lodash";
-import { v4 as uuid } from "uuid";
-import { useCollection } from "../hooks/collections";
 
 export type ListItem = {
   id: string;
@@ -170,59 +156,4 @@ export const updateListItems = async (
     response.error = error;
   }
   return response;
-};
-
-export const useLists = (
-  postId: string,
-  onHasSaveDataChange?: (hasSaveData: boolean, save: () => Promise<{ data: ListItems; error: any }>) => void
-): {
-  data: Lists;
-  save: () => Promise<{ data: Lists; error: any }>;
-  updateList: (itemId: string, itemUpdates: object) => void;
-  deleteList: (itemId: string) => Promise<{ error: any }>;
-  addList: (data: List, atIndex: number) => void;
-} => {
-  const { data, updateItem, save, deleteItem, addItem } = useCollection(
-    ["posts", postId, "lists"],
-    onHasSaveDataChange
-  );
-
-  return {
-    data: data as Lists,
-    updateList: updateItem,
-    save: async () => {
-      const response = await save();
-      return { data: response.data as Lists, error: response.error };
-    },
-    deleteList: deleteItem,
-    addList: async (data: List, atIndex: number) => await addItem(data, atIndex),
-  };
-};
-
-export const useListItems = (
-  postId,
-  listId,
-  onHasSaveDataChange?: (hasSaveData: boolean, save: () => Promise<{ data: ListItems; error: any }>) => void
-): {
-  data: ListItems;
-  save: () => Promise<{ data: ListItems; error: any }>;
-  updateListItem: (itemId: string, itemUpdates: object) => void;
-  deleteListItem: (itemId: string) => Promise<{ error: any }>;
-  addListItem: (data: ListItem, atIndex: number) => void;
-} => {
-  const { data, updateItem, save, deleteItem, addItem } = useCollection(
-    ["posts", postId, "lists", listId, "items"],
-    onHasSaveDataChange
-  );
-
-  return {
-    data: data as ListItems,
-    updateListItem: updateItem,
-    save: async () => {
-      const response = await save();
-      return { data: response.data as ListItems, error: response.error };
-    },
-    deleteListItem: deleteItem,
-    addListItem: (data: ListItem, atIndex: number) => addItem(data, atIndex),
-  };
 };

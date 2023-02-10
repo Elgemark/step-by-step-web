@@ -31,6 +31,7 @@ import Dialog from "../../components/primitives/Dialog";
 import UnpublishedIcon from "@mui/icons-material/Unpublished";
 import { useRefresh } from "../../utils/firebaseUtils";
 import BottomBar from "../../components/primitives/BottomBar";
+import { useCollection } from "../../utils/firebase/hooks/collections";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -57,7 +58,12 @@ let saveData = { post: null, steps: null, lists: null };
 const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
   const router = useRouter();
   const steps = useSteps(id);
-  const { data: lists, updateList, addList, save: saveLists } = useLists(id);
+  const {
+    data: lists,
+    updateItem: updateList,
+    addItem: addList,
+    save: saveLists,
+  } = useCollection(["posts", id, "lists"]);
   const [prevId, setPrevId] = useState(id);
   const [successMessage, setSuccessMessage] = useState(null);
   const [postIsValid, setPostIsValid] = useState(false);
@@ -239,9 +245,9 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
           {/* SETTINGS & POST */}
           <PostEditable
             post={post}
-            lists={lists}
+            // lists={lists} // Causes error!
             onAddList={onAddListHandler}
-            onChangeList={onChangeListHandler}
+            onChangeListItems={onChangeListHandler}
             onDeleteList={onDeleteListHandler}
             onChange={(value) => {
               setSaveData("post", value);

@@ -38,7 +38,7 @@ const PostEditable: FC<{
   onChangeListTitle: (listId: string, title: string) => void;
   onChangeListItems: (listId: string, hasData: boolean, save: () => Promise<{ data: ListItems; error: any }>) => void;
   onAddList: Function;
-  onDeleteList: Function;
+  onDeleteList: (listId) => void;
 }> = ({ post, lists = [], onChange, onChangeListTitle, onAddList, onChangeListItems, onDeleteList }) => {
   const [tag, setTag] = useState("");
   const { object: data, setValue: setData } = useStateObject(post);
@@ -143,11 +143,12 @@ const PostEditable: FC<{
                 onChange={(e) => updateData("descr", e.target.value)}
                 size="small"
               />
-              {lists.map((list, index) => (
+              {lists.map((list) => (
                 <ListEditable
                   postId={post.id}
                   onChangeTitle={(title) => onChangeListTitle(list.id, title)}
                   onChangeListItems={onChangeListItems}
+                  onDeleteList={onDeleteList}
                   key={list.id}
                   list={list}
                 />

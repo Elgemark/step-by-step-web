@@ -12,7 +12,6 @@ import ImageEditable from "../primitives/ImageEditable";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import styled from "styled-components";
-import { Lists } from "../../utils/firebase/type";
 
 const ButtonAddMediaContainer = styled.div`
   width: 100%;

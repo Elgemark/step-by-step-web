@@ -7,8 +7,8 @@ import Paper from "@mui/material/Paper";
 import { FC } from "react";
 import { List, ListItem } from "../../utils/firebase/api/list";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useListItems } from "../../utils/firebase/api/list";
 import { v4 as uuid } from "uuid";
+import { useCollection } from "../../utils/firebase/hooks/collections";
 
 const StyledPaper = styled(Paper)`
   padding: ${({ theme }) => theme.spacing(1)};
@@ -74,10 +74,14 @@ const ListEditable: FC<{
   const theme = useTheme();
   const {
     data: listItems,
-    deleteListItem,
-    addListItem,
-    updateListItem,
-  } = useListItems(postId, list.id, (hasSaveData, save) => onChangeListItems(list.id, hasSaveData, save));
+    deleteItem: deleteListItem,
+    addItem: addListItem,
+    updateItem: updateListItem,
+  } = useCollection(["posts", postId, "lists", list.id, "items"], (hasSaveData, save) =>
+    onChangeListItems(list.id, hasSaveData, save)
+  );
+
+  console.log("listItems", listItems, list.id);
 
   const updateListItemHandler = async (itemId: string, key: string, value: any) => {
     await updateListItem(itemId, { [key]: value });

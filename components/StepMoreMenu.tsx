@@ -7,16 +7,15 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import Menu from "./primitives/Menu";
 import { FC } from "react";
-import { Lists } from "../utils/firebase/type";
 import CheckboxList, { ListItemData } from "./primitives/CheckboxList";
 import { Divider } from "@mui/material";
-import { ListItem } from "../utils/firebase/interface";
+import { CollectionItem, CollectionItems } from "../utils/firebase/hooks/collections";
 
 const StepMoreMenu: FC<{
   index: number;
   onDelete?: Function;
   onAddStep?: Function;
-  lists?: Lists;
+  lists?: CollectionItems;
   onListChange?: (id) => void;
 }> = ({ index, onDelete, onAddStep, lists = [], onListChange }) => {
   const theme = useTheme();
@@ -30,7 +29,7 @@ const StepMoreMenu: FC<{
   };
 
   const checkLists = lists.map((list) => {
-    const data: Array<ListItemData> = list.items.map((item: ListItem) => ({
+    const data: Array<ListItemData> = list.items.map((item: CollectionItem) => ({
       id: item.text,
       label: item.text,
       checked: false,
