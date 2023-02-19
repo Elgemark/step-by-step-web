@@ -19,7 +19,6 @@ import { ImageUploads, Steps } from "../../utils/firebase/type";
 import { deleteStep, setStep, setSteps, useSteps } from "../../utils/firebase/api/step";
 import { uploadImages } from "../../utils/firebase/api/storage";
 import { setPost, updatePost } from "../../utils/firebase/api/post";
-import { List } from "../../utils/firebase/api/list";
 import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/router";
 import FirebaseWrapper from "../../components/wrappers/FirebaseWrapper";
@@ -200,6 +199,11 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
     console.log({ id, hasSaveData, save });
   };
 
+  const onChangeListTitleHandler = (listId: string, title: string) => {
+    //const list = lists.find((item) => item.id === listId);
+    updateList(listId, { title });
+  };
+
   const onDeleteListHandler = (listId) => {
     deleteList(id, listId).then((e) => {
       setSuccessMessage("List deleted!");
@@ -242,9 +246,10 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
           {/* SETTINGS & POST */}
           <PostEditable
             post={post}
-            lists={lists} // Causes error!
+            lists={lists}
             onAddList={onAddListHandler}
-            onChangeListItems={(id, hasSaveData, save) => onChangeListHandler(id, hasSaveData, save)}
+            onChangeListTitle={onChangeListTitleHandler}
+            onChangeListItems={onChangeListHandler}
             onDeleteList={onDeleteListHandler}
             onChange={(value) => {
               setSaveData("post", value);

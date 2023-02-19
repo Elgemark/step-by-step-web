@@ -132,11 +132,18 @@ export const useCollection = (
   };
 
   const updateItem = (itemId: string, itemUpdates: object) => {
-    const calculatedCollectionCopy = [...calculatedCollection];
-    const index: number = calculatedCollectionCopy.findIndex((item) => item.id === itemId);
-    const updatedItem = { ...calculatedCollectionCopy[index], ...itemUpdates };
-    const updatedItemsCopy = mergeCollections(updates, [updatedItem], "id");
-    setUpdates(updatedItemsCopy);
+    const updatesCopy = [...updates];
+    const indexUpdates = updates.findIndex((item) => item.id === itemId);
+
+    debugger;
+    // CHEKCK IF IN NEW ITEMS
+    if (indexUpdates > -1) {
+      updatesCopy[indexUpdates] = { ...updatesCopy[indexUpdates], ...itemUpdates };
+    } else {
+      updatesCopy.push({ ...itemUpdates, id: itemId });
+    }
+
+    setUpdates(updatesCopy);
   };
 
   const deleteItem = async (itemId) => {
