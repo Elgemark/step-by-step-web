@@ -19,7 +19,7 @@ import { ImageUploads, Steps } from "../../utils/firebase/type";
 import { deleteStep, setStep, setSteps, useSteps } from "../../utils/firebase/api/step";
 import { uploadImages } from "../../utils/firebase/api/storage";
 import { setPost, updatePost } from "../../utils/firebase/api/post";
-import { List, useLists } from "../../utils/firebase/api/list";
+import { List } from "../../utils/firebase/api/list";
 import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/router";
 import FirebaseWrapper from "../../components/wrappers/FirebaseWrapper";
@@ -53,7 +53,7 @@ const StyledDivider = styled(Divider)`
   margin: 20px 0;
 `;
 
-let saveData = { post: null, steps: null, lists: null };
+let saveData = { post: null, steps: null };
 
 const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
   const router = useRouter();
@@ -72,8 +72,6 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
   const { isLoading: isLoadingUser, data: user } = useUser();
   const [openPublishDialog, setOpenPublishDialog] = useState(false);
   const refresh = useRefresh();
-
-  console.log("lists", lists);
 
   useEffect(() => {
     if (prevId != id) {
@@ -94,7 +92,7 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
   };
 
   const resetSaveData = () => {
-    saveData = { post: null, steps: null, lists: null };
+    saveData = { post: null, steps: null };
     setHasSaveData(false);
   };
 
@@ -198,9 +196,8 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
     addList({ id: uuid(), title: "" }, lists.length);
   };
 
-  const onChangeListHandler = (data: List) => {
-    // setSaveData(`lists.${data.id}`, data);
-    updateList(data.id, data);
+  const onChangeListHandler = (id, hasSaveData, save) => {
+    console.log({ id, hasSaveData, save });
   };
 
   const onDeleteListHandler = (listId) => {
@@ -245,9 +242,9 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
           {/* SETTINGS & POST */}
           <PostEditable
             post={post}
-            // lists={lists} // Causes error!
+            lists={lists} // Causes error!
             onAddList={onAddListHandler}
-            onChangeListItems={onChangeListHandler}
+            onChangeListItems={(id, hasSaveData, save) => onChangeListHandler(id, hasSaveData, save)}
             onDeleteList={onDeleteListHandler}
             onChange={(value) => {
               setSaveData("post", value);

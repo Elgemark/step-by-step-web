@@ -88,7 +88,8 @@ export const useCollection = (
   const [data, setData] = useState<CollectionItems>([]);
   const [updates, setUpdates] = useState<CollectionItems>([]);
   const [newItems, setNewItems] = useState<CollectionItems>([]);
-  const [hasSaveData, setHasSaveData] = useState(false);
+
+  const hasSaveData: boolean = updates.length > 0 || newItems.length > 0;
 
   const mergeAndSortCollection = () => {
     const mergedCollections = mergeCollections(data, newItems.concat(updates), "id");
@@ -126,7 +127,6 @@ export const useCollection = (
     if (!response.error) {
       setUpdates([]);
       setNewItems([]);
-      setHasSaveData(false);
     }
     return response;
   };
@@ -137,7 +137,6 @@ export const useCollection = (
     const updatedItem = { ...calculatedCollectionCopy[index], ...itemUpdates };
     const updatedItemsCopy = mergeCollections(updates, [updatedItem], "id");
     setUpdates(updatedItemsCopy);
-    setHasSaveData(true);
   };
 
   const deleteItem = async (itemId) => {
@@ -148,7 +147,6 @@ export const useCollection = (
       const itemsCopy = [...newItems];
       itemsCopy.splice(newItemIndex, 1);
       setNewItems(itemsCopy);
-      setHasSaveData(itemsCopy.length > 0);
       return { error: null };
     }
     // Else remove from collection
@@ -169,7 +167,6 @@ export const useCollection = (
     const itemsCopy = [...newItems];
     itemsCopy.push({ ...item, index: newIndex });
     setNewItems(itemsCopy);
-    setHasSaveData(itemsCopy.length > 0);
   };
 
   return { data: calculatedCollection, updateItem, save, deleteItem, addItem, hasSaveData };

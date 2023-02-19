@@ -77,11 +77,9 @@ const ListEditable: FC<{
     deleteItem: deleteListItem,
     addItem: addListItem,
     updateItem: updateListItem,
-  } = useCollection(["posts", postId, "lists", list.id, "items"], (hasSaveData, save) =>
-    onChangeListItems(list.id, hasSaveData, save)
-  );
-
-  console.log("listItems", listItems, list.id);
+  } = useCollection(["posts", postId, "lists", list.id, "items"], (hasSaveData, save) => {
+    onChangeListItems(list.id, hasSaveData, save);
+  });
 
   const updateListItemHandler = async (itemId: string, key: string, value: any) => {
     await updateListItem(itemId, { [key]: value });

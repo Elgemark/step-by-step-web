@@ -13,7 +13,7 @@ export type ListItem = {
 
 export type List = {
   id: string;
-  title: string;
+  title?: string;
   [key: string]: any;
 };
 
