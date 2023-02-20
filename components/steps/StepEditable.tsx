@@ -27,22 +27,10 @@ const StepEditable: FC<{
   index: number;
   scrollIntoView: boolean;
   lists?: CollectionItems;
-  onListChange?: (id) => void;
   onChange: any;
   onDelete: any;
   onAddStep: any;
-}> = ({
-  postId,
-  step,
-  index,
-  scrollIntoView = false,
-  lists = [],
-  onListChange,
-  onChange,
-  onDelete,
-  onAddStep,
-  ...props
-}) => {
+}> = ({ postId, step, index, scrollIntoView = false, lists = [], onChange, onDelete, onAddStep, ...props }) => {
   const ref = useRef<HTMLInputElement>(null);
   const { object: data, setValue } = useStateObject(step);
   const [openMediaEdit, setOpenMediaEdit] = useState(false);
@@ -70,14 +58,7 @@ const StepEditable: FC<{
           </Avatar>
         }
         action={
-          <StepMoreMenu
-            postId={postId}
-            index={index}
-            lists={lists}
-            onListChange={onListChange}
-            onDelete={onDelete}
-            onAddStep={onAddStep}
-          />
+          <StepMoreMenu postId={postId} stepId={step.id} lists={lists} onDelete={onDelete} onAddStep={onAddStep} />
         }
         title={
           <TextField

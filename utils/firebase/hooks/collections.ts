@@ -49,9 +49,9 @@ export const setCollectionItems = async (
   const batch = writeBatch(firebase);
   // Batch set
   data.forEach((listItem) => {
-    const stepsRef = doc(firebase, path.join("/"));
+    const docRef = doc(firebase, path.join("/") + "/" + listItem.id);
     const listsData = { ...listItem, uid: userId };
-    batch.set(stepsRef, listsData, setOptions);
+    batch.set(docRef, listsData, setOptions);
   });
 
   try {
@@ -82,9 +82,10 @@ export const useCollection = (
   data: CollectionItems;
   save: () => Promise<{ data: CollectionItems; error: any }>;
   hasSaveData: boolean;
-  updateItem: (itemId: string, itemUpdates: object) => void;
+  updateItem: (itemId: string, itemUpdates: object) => CollectionItems;
   deleteItem: (itemId: string) => Promise<{ error: any }>;
   addItem: (data: CollectionItem, atIndex: number) => void;
+  updateAndSave: (itemId: string, itemUpdates: object) => Promise<{ data: CollectionItems; error: any }>;
 } => {
   const [data, setData] = useState<CollectionItems>([]);
   const [updates, setUpdates] = useState<CollectionItems>([]);
@@ -112,7 +113,6 @@ export const useCollection = (
         });
         setData(_.sortBy(listItems, (item: CollectionItem) => item.index));
       });
-
       return () => {
         unsubscribe && unsubscribe();
       };
@@ -137,16 +137,25 @@ export const useCollection = (
   const updateItem = (itemId: string, itemUpdates: object) => {
     const updatesCopy = [...updates];
     const indexUpdates = updates.findIndex((item) => item.id === itemId);
-
-    debugger;
-    // CHEKCK IF IN NEW ITEMS
     if (indexUpdates > -1) {
       updatesCopy[indexUpdates] = { ...updatesCopy[indexUpdates], ...itemUpdates };
     } else {
       updatesCopy.push({ ...itemUpdates, id: itemId });
     }
-
     setUpdates(updatesCopy);
+    return updatesCopy;
+  };
+
+  const updateAndSave = async (itemId: string, itemUpdates: object) => {
+    return new Promise((resolve, reject) => {
+      const updates = updateItem(itemId, itemUpdates);
+      setCollectionItems(path, updates, { merge: true })
+        .then((res) => {
+          setUpdates([]);
+          resolve(res);
+        })
+        .catch((error) => reject(error));
+    });
   };
 
   const deleteItem = async (itemId) => {
@@ -178,5 +187,14 @@ export const useCollection = (
     setUpdates(updatesCopy);
   };
 
-  return { data: calculatedCollection, updateItem, save, deleteItem, addItem, hasSaveData, path };
+  return {
+    data: calculatedCollection,
+    updateAndSave,
+    updateItem,
+    save,
+    deleteItem,
+    addItem,
+    hasSaveData,
+    path,
+  };
 };

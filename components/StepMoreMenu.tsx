@@ -7,28 +7,34 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import Menu from "./primitives/Menu";
 import { FC } from "react";
-import CheckboxList, { ListItemData } from "./primitives/CheckboxList";
+import CheckboxList from "./primitives/CheckboxList";
 import { Divider } from "@mui/material";
 import { CollectionItem, CollectionItems, useCollection } from "../utils/firebase/hooks/collections";
 
-const CheckList: FC<{ postId: string; list: CollectionItem; onChange?: (id) => void }> = ({
-  postId,
-  list,
-  onChange,
-}) => {
-  const { data } = useCollection(["posts", postId, "lists", list.id, "items"]);
-  const checkBoxData = data.map((item) => ({ id: item.id, label: item.text, checked: false }));
-  return <CheckboxList data={checkBoxData} header={list.title} onChange={onChange}></CheckboxList>;
+const CheckList: FC<{ postId: string; stepId: string; list: CollectionItem }> = ({ postId, stepId, list }) => {
+  const { data, updateAndSave } = useCollection(["posts", postId, "lists", list.id, "items"]);
+  const checkBoxData = data.map((item) => ({
+    id: item.id,
+    label: item.text,
+    checked: item.stepId === stepId,
+    disabled: item.stepId && item.stepId !== stepId,
+  }));
+
+  const onChangeHandler = ({ id: itemId }) => {
+    const listItem = data.find((item) => item.id === itemId);
+    const checked = listItem.stepId === stepId;
+    updateAndSave(itemId, { stepId: checked ? null : stepId });
+  };
+  return <CheckboxList data={checkBoxData} header={list.title} onChange={onChangeHandler}></CheckboxList>;
 };
 
 const StepMoreMenu: FC<{
   postId: string;
-  index: number;
+  stepId: string;
   onDelete?: Function;
   onAddStep?: Function;
   lists?: CollectionItems;
-  onListChange?: (id) => void;
-}> = ({ postId, index, onDelete, onAddStep, lists = [], onListChange }) => {
+}> = ({ postId, stepId, onDelete, onAddStep, lists = [] }) => {
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -40,7 +46,7 @@ const StepMoreMenu: FC<{
   };
 
   const checkLists = lists.map((list) => {
-    return <CheckList postId={postId} list={list} onChange={onListChange} />;
+    return <CheckList postId={postId} stepId={stepId} list={list} />;
   });
 
   return (
@@ -49,6 +55,7 @@ const StepMoreMenu: FC<{
         <MoreVertIcon />
       </IconButton>
       <Menu
+        dense
         elevation={0}
         anchorOrigin={{
           vertical: "bottom",

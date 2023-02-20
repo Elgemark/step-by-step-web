@@ -10,6 +10,7 @@ export type ListItemData = {
   id: string;
   label: string;
   checked: boolean;
+  disabled?: boolean;
 };
 
 const CheckboxList: FC<{ header?: string; data?: Array<ListItemData>; onChange: (id) => void }> = ({
@@ -17,21 +18,6 @@ const CheckboxList: FC<{ header?: string; data?: Array<ListItemData>; onChange: 
   onChange,
   data = [],
 }) => {
-  const [checked, setChecked] = useState([0]);
-
-  const handleToggle = (value: number) => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-
-    setChecked(newChecked);
-  };
-
   return (
     <List dense>
       {header ? <ListSubheader>{header}</ListSubheader> : null}
@@ -44,8 +30,10 @@ const CheckboxList: FC<{ header?: string; data?: Array<ListItemData>; onChange: 
             dense
             secondaryAction={
               <Checkbox
+                sx={{ opacity: itemData.disabled ? 0.5 : 1 }}
+                disabled={itemData.disabled}
                 edge="start"
-                onChange={() => onChange(itemData.id)}
+                onChange={() => onChange({ id: itemData.id, checked: itemData.checked })}
                 checked={itemData.checked}
                 tabIndex={-1}
                 disableRipple
@@ -53,8 +41,8 @@ const CheckboxList: FC<{ header?: string; data?: Array<ListItemData>; onChange: 
               />
             }
           >
-            <ListItemButton role={undefined} onClick={() => onChange(itemData.id)}>
-              <ListItemText id={labelId} primary={itemData.label} />
+            <ListItemButton role={undefined} onClick={() => onChange(itemData.id)} disabled={itemData.disabled}>
+              <ListItemText id={labelId} primary={itemData.label} sx={{ my: 0 }} />
             </ListItemButton>
           </ListItem>
         );
