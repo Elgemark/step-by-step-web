@@ -78,6 +78,7 @@ export const useCollection = (
   path: Array<string>,
   onHasSaveDataChange?: (hasSaveData: boolean, save: () => Promise<{ data: CollectionItems; error: any }>) => void
 ): {
+  path: Array<string>;
   data: CollectionItems;
   save: () => Promise<{ data: CollectionItems; error: any }>;
   hasSaveData: boolean;
@@ -177,5 +178,5 @@ export const useCollection = (
     setUpdates(updatesCopy);
   };
 
-  return { data: calculatedCollection, updateItem, save, deleteItem, addItem, hasSaveData };
+  return { data: calculatedCollection, updateItem, save, deleteItem, addItem, hasSaveData, path };
 };

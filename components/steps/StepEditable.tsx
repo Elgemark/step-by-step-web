@@ -22,6 +22,7 @@ const ButtonAddMediaContainer = styled.div`
 `;
 
 const StepEditable: FC<{
+  postId: string;
   step: Step;
   index: number;
   scrollIntoView: boolean;
@@ -30,7 +31,18 @@ const StepEditable: FC<{
   onChange: any;
   onDelete: any;
   onAddStep: any;
-}> = ({ step, index, scrollIntoView = false, lists = [], onListChange, onChange, onDelete, onAddStep, ...props }) => {
+}> = ({
+  postId,
+  step,
+  index,
+  scrollIntoView = false,
+  lists = [],
+  onListChange,
+  onChange,
+  onDelete,
+  onAddStep,
+  ...props
+}) => {
   const ref = useRef<HTMLInputElement>(null);
   const { object: data, setValue } = useStateObject(step);
   const [openMediaEdit, setOpenMediaEdit] = useState(false);
@@ -59,6 +71,7 @@ const StepEditable: FC<{
         }
         action={
           <StepMoreMenu
+            postId={postId}
             index={index}
             lists={lists}
             onListChange={onListChange}

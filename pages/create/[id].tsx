@@ -262,6 +262,7 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
           {steps.map((dataStep, index) => (
             <div key={"step-" + index + "-" + dataStep.id}>
               <StepEditable
+                postId={id}
                 step={dataStep}
                 index={index}
                 scrollIntoView={true}

@@ -9,15 +9,26 @@ import Menu from "./primitives/Menu";
 import { FC } from "react";
 import CheckboxList, { ListItemData } from "./primitives/CheckboxList";
 import { Divider } from "@mui/material";
-import { CollectionItem, CollectionItems } from "../utils/firebase/hooks/collections";
+import { CollectionItem, CollectionItems, useCollection } from "../utils/firebase/hooks/collections";
+
+const CheckList: FC<{ postId: string; list: CollectionItem; onChange?: (id) => void }> = ({
+  postId,
+  list,
+  onChange,
+}) => {
+  const { data } = useCollection(["posts", postId, "lists", list.id, "items"]);
+  const checkBoxData = data.map((item) => ({ id: item.id, label: item.text, checked: false }));
+  return <CheckboxList data={checkBoxData} header={list.title} onChange={onChange}></CheckboxList>;
+};
 
 const StepMoreMenu: FC<{
+  postId: string;
   index: number;
   onDelete?: Function;
   onAddStep?: Function;
   lists?: CollectionItems;
   onListChange?: (id) => void;
-}> = ({ index, onDelete, onAddStep, lists = [], onListChange }) => {
+}> = ({ postId, index, onDelete, onAddStep, lists = [], onListChange }) => {
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -29,12 +40,7 @@ const StepMoreMenu: FC<{
   };
 
   const checkLists = lists.map((list) => {
-    const data: Array<ListItemData> = list.items.map((item: CollectionItem) => ({
-      id: item.text,
-      label: item.text,
-      checked: false,
-    }));
-    return <CheckboxList data={data} header={list.title} onChange={onListChange}></CheckboxList>;
+    return <CheckList postId={postId} list={list} onChange={onListChange} />;
   });
 
   return (
