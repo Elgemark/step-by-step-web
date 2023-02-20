@@ -92,6 +92,3 @@ const StepMoreMenu: FC<{
 };
 
 export default StepMoreMenu;
-// id: string;
-// label: string;
-// checked: boolean;

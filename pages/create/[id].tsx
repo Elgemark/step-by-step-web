@@ -72,6 +72,8 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
   const [openPublishDialog, setOpenPublishDialog] = useState(false);
   const refresh = useRefresh();
 
+  console.log("lists", lists);
+
   useEffect(() => {
     if (prevId != id) {
       router.replace(router.asPath);

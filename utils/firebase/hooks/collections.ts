@@ -87,18 +87,18 @@ export const useCollection = (
 } => {
   const [data, setData] = useState<CollectionItems>([]);
   const [updates, setUpdates] = useState<CollectionItems>([]);
-  const [newItems, setNewItems] = useState<CollectionItems>([]);
 
-  const hasSaveData: boolean = updates.length > 0 || newItems.length > 0;
+  const hasSaveData: boolean = updates.length > 0;
 
   const mergeAndSortCollection = () => {
-    const mergedCollections = mergeCollections(data, newItems.concat(updates), "id");
+    const mergedCollections = mergeCollections(data, updates, "id");
     const sortedCollections = _.sortBy(mergedCollections, (item: CollectionItem) => item.index);
     return sortedCollections;
   };
 
   const calculatedCollection = mergeAndSortCollection();
 
+  // Subscribe to collection
   useEffect(() => {
     let unsubscribe: Unsubscribe;
     if (path) {
@@ -118,19 +118,21 @@ export const useCollection = (
     }
   }, [...path]);
 
+  // "dispatch" callback onHasSaveDataChange
   useEffect(() => {
     onHasSaveDataChange && onHasSaveDataChange(hasSaveData, save);
   }, [hasSaveData]);
 
+  // Save function
   const save = async () => {
-    const response = await setCollectionItems(path, mergeCollections(newItems, updates, "id"), { merge: true });
+    const response = await setCollectionItems(path, updates, { merge: true });
     if (!response.error) {
       setUpdates([]);
-      setNewItems([]);
     }
     return response;
   };
 
+  // Update function
   const updateItem = (itemId: string, itemUpdates: object) => {
     const updatesCopy = [...updates];
     const indexUpdates = updates.findIndex((item) => item.id === itemId);
@@ -147,17 +149,16 @@ export const useCollection = (
   };
 
   const deleteItem = async (itemId) => {
-    // If in new items
-    const newItemIndex = newItems.findIndex((item) => item.id === itemId);
-
-    if (newItemIndex > -1) {
-      const itemsCopy = [...newItems];
-      itemsCopy.splice(newItemIndex, 1);
-      setNewItems(itemsCopy);
+    // Find in updates...
+    const updateIndex = updates.findIndex((item) => item.id === itemId);
+    if (updateIndex > -1) {
+      const updatesCopy = [...updates];
+      updatesCopy.splice(updateIndex, 1);
+      setUpdates(updatesCopy);
       return { error: null };
     }
-    // Else remove from collection
-    else {
+    // Find in data...
+    if (data.find((item) => item.id === itemId)) {
       const deletePath = path.concat([itemId]);
       const response = await deleteCollectionItem(deletePath);
       return response;
@@ -171,9 +172,9 @@ export const useCollection = (
     const newIndex = indexNextStep ? (indexCurrStep + indexNextStep) * 0.5 : indexCurrStep + 1;
     debugger;
     // Additem
-    const itemsCopy = [...newItems];
-    itemsCopy.push({ ...item, index: newIndex });
-    setNewItems(itemsCopy);
+    const updatesCopy = [...updates];
+    updatesCopy.push({ ...item, index: newIndex });
+    setUpdates(updatesCopy);
   };
 
   return { data: calculatedCollection, updateItem, save, deleteItem, addItem, hasSaveData };

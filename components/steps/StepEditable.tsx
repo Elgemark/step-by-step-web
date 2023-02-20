@@ -6,12 +6,14 @@ import { red } from "@mui/material/colors";
 import TextField from "@mui/material/TextField";
 import { useRef, useEffect, FC, useState } from "react";
 import StepMoreMenu from "../StepMoreMenu";
+import { List, ListItem } from "../../utils/firebase/api/list";
 import { Step } from "../../utils/firebase/interface";
 import { useStateObject } from "../../utils/object";
 import ImageEditable from "../primitives/ImageEditable";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import styled from "styled-components";
+import { CollectionItems } from "../../utils/firebase/hooks/collections";
 
 const ButtonAddMediaContainer = styled.div`
   width: 100%;
@@ -23,7 +25,7 @@ const StepEditable: FC<{
   step: Step;
   index: number;
   scrollIntoView: boolean;
-  lists?: Lists;
+  lists?: CollectionItems;
   onListChange?: (id) => void;
   onChange: any;
   onDelete: any;
