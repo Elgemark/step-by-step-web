@@ -85,7 +85,7 @@ export const useCollection = (
   updateItem: (itemId: string, itemUpdates: object) => CollectionItems;
   deleteItem: (itemId: string) => Promise<{ error: any }>;
   addItem: (data: CollectionItem, atIndex: number) => void;
-  updateAndSave: (itemId: string, itemUpdates: object) => Promise<{ data: CollectionItems; error: any }>;
+  updateAndSave: (itemId: string, itemUpdates: object) => Promise<any>;
 } => {
   const [data, setData] = useState<CollectionItems>([]);
   const [updates, setUpdates] = useState<CollectionItems>([]);
@@ -99,6 +99,17 @@ export const useCollection = (
   };
 
   const calculatedCollection = mergeAndSortCollection();
+
+  useEffect(() => {
+    const _save = async () => {
+      return save(updates);
+    };
+
+    window.addEventListener("save", _save);
+    return () => {
+      window.removeEventListener("save", _save);
+    };
+  }, [...updates]);
 
   // Subscribe to collection
   useEffect(() => {
@@ -121,12 +132,13 @@ export const useCollection = (
 
   // "dispatch" callback onHasSaveDataChange
   useEffect(() => {
-    onHasSaveDataChange && onHasSaveDataChange(hasSaveData, save);
+    onHasSaveDataChange && onHasSaveDataChange(hasSaveData, () => save(updates));
   }, [hasSaveData]);
 
   // Save function
-  const save = async () => {
-    const response = await setCollectionItems(path, updates, { merge: true });
+  const save = async (saveData: CollectionItems) => {
+    console.log("save", { saveData });
+    const response = await setCollectionItems(path, saveData, { merge: true });
     if (!response.error) {
       setUpdates([]);
     }
@@ -152,7 +164,7 @@ export const useCollection = (
       setCollectionItems(path, updates, { merge: true })
         .then((res) => {
           setUpdates([]);
-          resolve(res);
+          resolve({ updates, error: null });
         })
         .catch((error) => reject(error));
     });
@@ -191,10 +203,19 @@ export const useCollection = (
     data: calculatedCollection,
     updateAndSave,
     updateItem,
-    save,
+    save: async () => {
+      if (!hasSaveData) {
+        return { data: [], error: null };
+      }
+      return save(updates);
+    },
     deleteItem,
     addItem,
     hasSaveData,
     path,
   };
+};
+
+export const saveAll = () => {
+  window.dispatchEvent(new CustomEvent("save"));
 };

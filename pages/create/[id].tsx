@@ -30,7 +30,7 @@ import Dialog from "../../components/primitives/Dialog";
 import UnpublishedIcon from "@mui/icons-material/Unpublished";
 import { useRefresh } from "../../utils/firebaseUtils";
 import BottomBar from "../../components/primitives/BottomBar";
-import { useCollection } from "../../utils/firebase/hooks/collections";
+import { useCollection, saveAll as saveAllLists } from "../../utils/firebase/hooks/collections";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -61,8 +61,11 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
     data: lists,
     updateItem: updateList,
     addItem: addList,
-    save: saveLists,
-  } = useCollection(["posts", id, "lists"]);
+  } = useCollection(["posts", id, "lists"], (e) => {
+    if (e) {
+      setHasSaveData(true);
+    }
+  });
   const [prevId, setPrevId] = useState(id);
   const [successMessage, setSuccessMessage] = useState(null);
   const [postIsValid, setPostIsValid] = useState(false);
@@ -71,8 +74,6 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
   const { isLoading: isLoadingUser, data: user } = useUser();
   const [openPublishDialog, setOpenPublishDialog] = useState(false);
   const refresh = useRefresh();
-
-  console.log("lists", lists);
 
   useEffect(() => {
     if (prevId != id) {
@@ -123,7 +124,7 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
     setIsSaving(true);
     const userId = user.uid;
     // Save lists...
-    await saveLists();
+    await saveAllLists();
     // Upload splash image...
     const splashImage = _.get(saveData, "post.blob");
     if (splashImage) {
@@ -198,7 +199,9 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
   };
 
   const onChangeListHandler = (id, hasSaveData, save) => {
-    console.log({ id, hasSaveData, save });
+    if (hasSaveData) {
+      setHasSaveData(true);
+    }
   };
 
   const onChangeListTitleHandler = (listId: string, title: string) => {
