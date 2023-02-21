@@ -1,12 +1,11 @@
 import { Accordion, AccordionDetails, AccordionSummary, IconButton, Typography, useTheme } from "@mui/material";
 import styled from "styled-components";
-import Paper from "@mui/material/Paper";
 import { FC, useState } from "react";
-import { ListItem } from "../../utils/firebase/interface";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import Portal from "../primitives/Portal";
 import { alpha } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { ListItem } from "../../utils/firebase/api/list";
 
 const StyledAccordion = styled(Accordion)`
   position: ${({ pin }) => (pin ? "sticky" : "relative")};
@@ -42,10 +41,9 @@ const StyledTable = styled.table`
 `;
 
 const List: FC<{
-  id: string;
   title: string;
   items: Array<ListItem>;
-}> = ({ id, title, items = [], ...rest }) => {
+}> = ({ title, items = [], ...rest }) => {
   const theme = useTheme();
   const [pin, setPin] = useState(false);
   const [collapse, setCollapse] = useState(false);
@@ -83,7 +81,7 @@ const List: FC<{
           <StyledTable theme={theme}>
             <tbody>
               {items.map((item: ListItem, index) => (
-                <tr key={`${id}-${index}`}>
+                <tr key={`${item.id}-${index}`}>
                   {/* TEXT Left */}
                   <td className="column-1">
                     <Typography variant="body2">{item.text}</Typography>

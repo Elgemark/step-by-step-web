@@ -20,6 +20,8 @@ import List from "../lists/List";
 import { Media } from "../../utils/firebase/interface";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
+import { useCollection } from "../../utils/firebase/hooks/collections";
+import { ListItems } from "../../utils/firebase/api/list";
 
 const Root = styled(Card)`
   .button-link {
@@ -45,6 +47,11 @@ const MediaContainer = ({ children, hrefBasePath, slug, enableLink }) => {
   } else {
     return children;
   }
+};
+
+const ListController: FC<{ postId: string; listId: string; listTitle: string }> = ({ postId, listId, listTitle }) => {
+  const { data: listItems } = useCollection(["posts", postId, "lists", listId, "items"]);
+  return <List title={listTitle} items={listItems as ListItems} />;
 };
 
 const Post: FC<{
@@ -142,7 +149,8 @@ const Post: FC<{
       {lists.length ? (
         <CardContent>
           {lists.map((list) => (
-            <List {...list} />
+            // <List {...list} />
+            <ListController postId={id} listId={list.id} listTitle={list.title} />
           ))}
         </CardContent>
       ) : null}

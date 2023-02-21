@@ -10,8 +10,8 @@ import StepsProgress from "../../components/StepsProgress";
 import { useRouter } from "next/router";
 import { v4 as uuid } from "uuid";
 import { FC, useState } from "react";
-import { ListsResponse, Post as PostType } from "../../utils/firebase/interface";
-import { Lists, Steps } from "../../utils/firebase/type";
+import { Post as PostType } from "../../utils/firebase/interface";
+import { Steps } from "../../utils/firebase/type";
 import { useProgress } from "../../utils/firebase/api/progress";
 import FirebaseWrapper from "../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../components/wrappers/MUIWrapper";
@@ -19,6 +19,7 @@ import PostMoreMenu from "../../components/PostMoreMenu";
 import DialogDeletePost from "../../components/DialogDeletePost";
 import DialogReport, { ReportData } from "../../components/DialogReport";
 import { useTheme } from "@mui/material";
+import { ListsResponse } from "../../utils/firebase/api/list";
 
 const StyledLayout = styled(Layout)`
   display: flex;
