@@ -18,6 +18,8 @@ import { useStateObject } from "../../utils/object";
 import { toSanitizedArray } from "../../utils/stringUtils";
 import UserAvatar from "../UserAvatar";
 import { ListItems, Lists } from "../../utils/firebase/api/list";
+import { useCollection } from "../../utils/firebase/hooks/collections";
+import { v4 as uuid } from "uuid";
 
 const Root = styled(Stack)`
   .card-actions {
@@ -33,13 +35,14 @@ const StyledImageEditable = styled(ImageEditable)`
 
 const PostEditable: FC<{
   post: Post;
-  lists: Lists;
   onChange: (data: object) => void;
-  onChangeListTitle: (listId: string, title: string) => void;
-  onChangeListItems: (listId: string, hasData: boolean, save: () => Promise<{ data: ListItems; error: any }>) => void;
-  onAddList: Function;
-  onDeleteList: (listId) => void;
-}> = ({ post, lists = [], onChange, onChangeListTitle, onAddList, onChangeListItems, onDeleteList }) => {
+}> = ({ post, onChange }) => {
+  const {
+    data: lists,
+    updateItem: updateList,
+    addItem: addList,
+    deleteItem: deleteList,
+  } = useCollection(["posts", post.id, "lists"]);
   const [tag, setTag] = useState("");
   const { object: data, setValue: setData } = useStateObject(post);
 
@@ -57,6 +60,24 @@ const PostEditable: FC<{
     const tags = _.get(data, "tags", []);
     _.remove(tags, (tag) => tag === value);
     updateData("tags", tags);
+  };
+
+  const onAddListHandler = async () => {
+    // const listId = uuid();
+    // const list: List = { id: listId, title: "", items: [] };
+    // await setList(id, listId, list);
+    addList({ id: uuid(), title: "" }, lists.length);
+  };
+
+  const onChangeListTitleHandler = (listId: string, title: string) => {
+    //const list = lists.find((item) => item.id === listId);
+    updateList(listId, { title });
+  };
+
+  const onDeleteListHandler = (listId) => {
+    deleteList(listId).then((e) => {
+      debugger;
+    });
   };
 
   return (
@@ -146,9 +167,8 @@ const PostEditable: FC<{
               {lists.map((list) => (
                 <ListEditable
                   postId={post.id}
-                  onChangeTitle={(title) => onChangeListTitle(list.id, title)}
-                  onChangeListItems={onChangeListItems}
-                  onDeleteList={onDeleteList}
+                  onChangeTitle={(title) => onChangeListTitleHandler(list.id, title)}
+                  onDeleteList={onDeleteListHandler}
                   key={list.id}
                   list={list}
                 />
@@ -156,7 +176,7 @@ const PostEditable: FC<{
             </Stack>
           </CardContent>
           <CardActions className="card-actions">
-            <Button onClick={() => onAddList()} endIcon={<PlaylistAddIcon></PlaylistAddIcon>}>
+            <Button onClick={onAddListHandler} endIcon={<PlaylistAddIcon></PlaylistAddIcon>}>
               Add List
             </Button>
           </CardActions>

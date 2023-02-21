@@ -30,7 +30,7 @@ import Dialog from "../../components/primitives/Dialog";
 import UnpublishedIcon from "@mui/icons-material/Unpublished";
 import { useRefresh } from "../../utils/firebaseUtils";
 import BottomBar from "../../components/primitives/BottomBar";
-import { useCollection, saveAll as saveAllLists } from "../../utils/firebase/hooks/collections";
+import { saveAll as saveAllLists } from "../../utils/firebase/hooks/collections";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -57,15 +57,6 @@ let saveData = { post: null, steps: null };
 const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
   const router = useRouter();
   const steps = useSteps(id);
-  const {
-    data: lists,
-    updateItem: updateList,
-    addItem: addList,
-  } = useCollection(["posts", id, "lists"], (e) => {
-    if (e) {
-      setHasSaveData(true);
-    }
-  });
   const [prevId, setPrevId] = useState(id);
   const [successMessage, setSuccessMessage] = useState(null);
   const [postIsValid, setPostIsValid] = useState(false);
@@ -191,30 +182,6 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
     await setStep(id, stepId, step);
   };
 
-  const onAddListHandler = async () => {
-    // const listId = uuid();
-    // const list: List = { id: listId, title: "", items: [] };
-    // await setList(id, listId, list);
-    addList({ id: uuid(), title: "" }, lists.length);
-  };
-
-  const onChangeListHandler = (id, hasSaveData, save) => {
-    if (hasSaveData) {
-      setHasSaveData(true);
-    }
-  };
-
-  const onChangeListTitleHandler = (listId: string, title: string) => {
-    //const list = lists.find((item) => item.id === listId);
-    updateList(listId, { title });
-  };
-
-  const onDeleteListHandler = (listId) => {
-    deleteList(id, listId).then((e) => {
-      setSuccessMessage("List deleted!");
-    });
-  };
-
   const onClickPublishHandler = () => {
     setOpenPublishDialog(true);
   };
@@ -251,11 +218,6 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
           {/* SETTINGS & POST */}
           <PostEditable
             post={post}
-            lists={lists}
-            onAddList={onAddListHandler}
-            onChangeListTitle={onChangeListTitleHandler}
-            onChangeListItems={onChangeListHandler}
-            onDeleteList={onDeleteListHandler}
             onChange={(value) => {
               setSaveData("post", value);
             }}
@@ -269,7 +231,6 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
                 step={dataStep}
                 index={index}
                 scrollIntoView={true}
-                lists={lists}
                 onChange={(data) => {
                   setSaveData(["steps", data.id], data);
                 }}

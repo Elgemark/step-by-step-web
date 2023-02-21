@@ -69,17 +69,14 @@ const ListEditable: FC<{
   list: List;
   onChangeTitle: (title: string) => void;
   onDeleteList: (listId: string) => void;
-  onChangeListItems: (listId: string, hasSaveData: boolean, save: Function) => void;
-}> = ({ postId, list, onChangeTitle, onChangeListItems }) => {
+}> = ({ postId, list, onChangeTitle }) => {
   const theme = useTheme();
   const {
     data: listItems,
     deleteItem: deleteListItem,
     addItem: addListItem,
     updateItem: updateListItem,
-  } = useCollection(["posts", postId, "lists", list.id, "items"], (hasSaveData, save) => {
-    onChangeListItems(list.id, hasSaveData, save);
-  });
+  } = useCollection(["posts", postId, "lists", list.id, "items"]);
 
   const updateListItemHandler = async (itemId: string, key: string, value: any) => {
     await updateListItem(itemId, { [key]: value });
