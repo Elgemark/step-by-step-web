@@ -70,7 +70,7 @@ const ListEditable: FC<{
   onChangeTitle: (title: string) => void;
   onDeleteList: (listId: string) => void;
   onChange: () => void;
-}> = ({ postId, list, onChangeTitle, onChange }) => {
+}> = ({ postId, list, onChangeTitle, onChange, onDeleteList }) => {
   const theme = useTheme();
   const {
     data: listItems,

@@ -20,6 +20,7 @@ import UserAvatar from "../UserAvatar";
 import { ListItems, Lists } from "../../utils/firebase/api/list";
 import { addCollectionItem, setCollectionItems, useCollection } from "../../utils/firebase/hooks/collections";
 import { v4 as uuid } from "uuid";
+import { useMessages } from "../../hooks/message";
 
 const Root = styled(Stack)`
   .card-actions {
@@ -41,6 +42,7 @@ const PostEditable: FC<{
   const { data: lists, updateItem: updateList, deleteItem: deleteList } = useCollection(["posts", post.id, "lists"]);
   const [tag, setTag] = useState("");
   const { object: data, setValue: setData } = useStateObject(post);
+  const { addMessage } = useMessages();
 
   const updateData = (path, value) => {
     const updatedData = setData(path, value);
@@ -80,7 +82,7 @@ const PostEditable: FC<{
   const onDeleteListHandler = (listId) => {
     deleteList(listId).then((e) => {
       // Show message...
-      debugger;
+      addMessage({ id: "alert", message: "list deleted" });
     });
   };
 

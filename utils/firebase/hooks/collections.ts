@@ -192,7 +192,6 @@ export const useCollection = (
     const indexCurrStep = atIndex;
     const indexNextStep = atIndex + 1 < calculatedCollection.length && calculatedCollection[atIndex + 1].index;
     const newIndex = indexNextStep ? (indexCurrStep + indexNextStep) * 0.5 : indexCurrStep + 1;
-    debugger;
     // Additem
     const updatesCopy = [...updates];
     updatesCopy.push({ ...item, index: newIndex });
