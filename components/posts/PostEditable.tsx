@@ -18,7 +18,7 @@ import { useStateObject } from "../../utils/object";
 import { toSanitizedArray } from "../../utils/stringUtils";
 import UserAvatar from "../UserAvatar";
 import { ListItems, Lists } from "../../utils/firebase/api/list";
-import { useCollection } from "../../utils/firebase/hooks/collections";
+import { addCollectionItem, setCollectionItems, useCollection } from "../../utils/firebase/hooks/collections";
 import { v4 as uuid } from "uuid";
 
 const Root = styled(Stack)`
@@ -36,13 +36,9 @@ const StyledImageEditable = styled(ImageEditable)`
 const PostEditable: FC<{
   post: Post;
   onChange: (data: object) => void;
-}> = ({ post, onChange }) => {
-  const {
-    data: lists,
-    updateItem: updateList,
-    addItem: addList,
-    deleteItem: deleteList,
-  } = useCollection(["posts", post.id, "lists"]);
+  onListChange: () => void;
+}> = ({ post, onChange, onListChange }) => {
+  const { data: lists, updateItem: updateList, deleteItem: deleteList } = useCollection(["posts", post.id, "lists"]);
   const [tag, setTag] = useState("");
   const { object: data, setValue: setData } = useStateObject(post);
 
@@ -63,19 +59,27 @@ const PostEditable: FC<{
   };
 
   const onAddListHandler = async () => {
-    // const listId = uuid();
-    // const list: List = { id: listId, title: "", items: [] };
-    // await setList(id, listId, list);
-    addList({ id: uuid(), title: "" }, lists.length);
+    const listId = uuid();
+    // Add new list
+    addCollectionItem(["posts", post.id, "lists", listId], { id: listId, title: "" });
+    // Add new listitems to list
+    addCollectionItem(["posts", post.id, "lists", listId, "items", listId], {
+      id: listId,
+      text: "",
+      value: "",
+      index: 0,
+    });
   };
 
   const onChangeListTitleHandler = (listId: string, title: string) => {
     //const list = lists.find((item) => item.id === listId);
     updateList(listId, { title });
+    onListChange();
   };
 
   const onDeleteListHandler = (listId) => {
     deleteList(listId).then((e) => {
+      // Show message...
       debugger;
     });
   };
@@ -169,6 +173,7 @@ const PostEditable: FC<{
                   postId={post.id}
                   onChangeTitle={(title) => onChangeListTitleHandler(list.id, title)}
                   onDeleteList={onDeleteListHandler}
+                  onChange={onListChange}
                   key={list.id}
                   list={list}
                 />

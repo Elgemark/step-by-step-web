@@ -206,6 +206,10 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
     }
   };
 
+  const onListChangeHandler = () => {
+    setHasSaveData(true);
+  };
+
   return (
     <>
       <Head>
@@ -221,6 +225,7 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
             onChange={(value) => {
               setSaveData("post", value);
             }}
+            onListChange={onListChangeHandler}
           />
           <StyledDivider />
           {/* STEPS */}

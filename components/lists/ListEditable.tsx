@@ -69,7 +69,8 @@ const ListEditable: FC<{
   list: List;
   onChangeTitle: (title: string) => void;
   onDeleteList: (listId: string) => void;
-}> = ({ postId, list, onChangeTitle }) => {
+  onChange: () => void;
+}> = ({ postId, list, onChangeTitle, onChange }) => {
   const theme = useTheme();
   const {
     data: listItems,
@@ -80,6 +81,7 @@ const ListEditable: FC<{
 
   const updateListItemHandler = async (itemId: string, key: string, value: any) => {
     await updateListItem(itemId, { [key]: value });
+    onChange();
   };
 
   const onAddListItemHandler = (index) => {
