@@ -169,6 +169,8 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
   const onDeleteStepHandler = async (step) => {
     await deleteStep(id, step.id);
     ["steps", step.id];
+    // ToDo: set assiciated list items to null
+    window.alert("ToDo: set assiciated list items to null");
   };
 
   const onAddStepAtIndexHandler = async (index) => {

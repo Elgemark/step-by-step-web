@@ -13,12 +13,14 @@ import { CollectionItem, CollectionItems, useCollection } from "../utils/firebas
 
 const CheckList: FC<{ postId: string; stepId: string; list: CollectionItem }> = ({ postId, stepId, list }) => {
   const { data, updateAndSave } = useCollection(["posts", postId, "lists", list.id, "items"]);
-  const checkBoxData = data.map((item) => ({
-    id: item.id,
-    label: item.text,
-    checked: item.stepId === stepId,
-    disabled: item.stepId && item.stepId !== stepId,
-  }));
+  const checkBoxData = data
+    .filter((item) => !item.stepId || item.stepId === stepId)
+    .map((item) => ({
+      id: item.id,
+      label: item.text,
+      checked: item.stepId === stepId,
+      disabled: item.stepId && item.stepId !== stepId,
+    }));
 
   const onChangeHandler = ({ id: itemId }) => {
     const listItem = data.find((item) => item.id === itemId);
@@ -33,8 +35,8 @@ const StepMoreMenu: FC<{
   stepId: string;
   onDelete?: Function;
   onAddStep?: Function;
-  lists?: CollectionItems;
-}> = ({ postId, stepId, onDelete, onAddStep, lists = [] }) => {
+}> = ({ postId, stepId, onDelete, onAddStep }) => {
+  const { data: lists } = useCollection(["posts", postId, "lists"]);
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);

@@ -6,7 +6,6 @@ import { red } from "@mui/material/colors";
 import TextField from "@mui/material/TextField";
 import { useRef, useEffect, FC, useState } from "react";
 import StepMoreMenu from "../StepMoreMenu";
-import { List, ListItem } from "../../utils/firebase/api/list";
 import { Step } from "../../utils/firebase/interface";
 import { useStateObject } from "../../utils/object";
 import ImageEditable from "../primitives/ImageEditable";
