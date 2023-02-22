@@ -12,7 +12,7 @@ import { v4 as uuid } from "uuid";
 import { FC, useState } from "react";
 import { Post as PostType } from "../../utils/firebase/interface";
 import { Steps } from "../../utils/firebase/type";
-import { Progress, useProgress } from "../../utils/firebase/api/progress";
+import { useProgress } from "../../utils/firebase/api/progress";
 import FirebaseWrapper from "../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../components/wrappers/MUIWrapper";
 import PostMoreMenu from "../../components/PostMoreMenu";
@@ -76,7 +76,7 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> 
   };
 
   const onStartOverHandler = async () => {
-    await updateProgress(user.uid, id, { step: -1, completed: false, stepsCompleted: [] });
+    await updateProgress(user.uid, id, { completed: false, stepsCompleted: [] });
   };
 
   const onRevelNextClickHandler = async ({ index }) => {
@@ -103,6 +103,13 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> 
     } else {
       router.push("/user/" + user.uid);
     }
+  };
+
+  const onRollBackHandler = async ({ stepId }) => {
+    let stepsCompleted = progress?.stepsCompleted || [];
+    const index = stepsCompleted.findIndex((id) => id === stepId);
+    stepsCompleted = stepsCompleted.slice(0, index + 1);
+    await updateProgress(user.uid, id, { completed: false, stepsCompleted });
   };
 
   return (
@@ -176,7 +183,7 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> 
                 onRevelNextClickHandler({ index });
               }}
             >
-              <StyledStep {...step} index={index} />
+              <StyledStep postId={id} {...step} index={index} onRollBack={onRollBackHandler} />
             </RevealNext>
           );
         })}

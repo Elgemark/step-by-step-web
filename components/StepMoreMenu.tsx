@@ -3,11 +3,9 @@ import { useTheme } from "@mui/material/styles";
 import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import DeleteIcon from "@mui/icons-material/Delete";
-import AddIcon from "@mui/icons-material/Add";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import Menu from "./primitives/Menu";
 import { FC } from "react";
-import CheckboxList from "./primitives/CheckboxList";
 import { Divider } from "@mui/material";
 import { CollectionItem, useCollection } from "../utils/firebase/hooks/collections";
 import ListTable from "./primitives/ListTable";
@@ -78,13 +76,13 @@ const StepMoreMenu: FC<{
         {onRollBack && (
           <MenuItem
             onClick={() => {
-              onRollBack();
+              onRollBack({ stepId });
               handleClose();
             }}
             disableRipple
           >
-            <AddIcon />
-            Step
+            <RestartAltIcon />
+            Roll Back
           </MenuItem>
         )}
 
