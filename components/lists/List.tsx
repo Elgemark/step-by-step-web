@@ -1,6 +1,6 @@
 import { Accordion, AccordionDetails, AccordionSummary, IconButton, Typography, useTheme } from "@mui/material";
 import styled from "styled-components";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import Portal from "../primitives/Portal";
 import { alpha } from "@mui/material";
@@ -71,13 +71,22 @@ const List: FC<{
   const theme = useTheme();
   const [pin, setPin] = useState(false);
   const [collapse, setCollapse] = useState(false);
+  const [doc, setDoc] = useState(null);
+
+  useEffect(() => {
+    setDoc(document);
+  }, []);
 
   const onClickPinHandler = () => {
     setPin(!pin);
   };
 
+  if (!doc) {
+    return null;
+  }
+
   return (
-    <Portal show={pin} target={document.getElementById("pinned-lists")}>
+    <Portal show={pin} target={doc.getElementById("pinned-lists")}>
       <StyledAccordion
         disableGutters
         expanded={!collapse}

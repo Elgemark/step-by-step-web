@@ -1,15 +1,8 @@
-import PageMain from "../../../components/PageMain";
-import { PostsResponse } from "../../../utils/firebase/interface";
 import { getPostByExclude, getPostByFollows, getPostByInterests } from "../../../utils/firebase/api/post";
-import Collection from "../../../classes/Collection";
 import FirebaseWrapper from "../../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../../components/wrappers/MUIWrapper";
-import { getCategories, getFollows } from "../../../utils/firebase/api";
 import { useEffect, useState } from "react";
 import { useCollection } from "../../../utils/collectionUtils";
-import SelectChips from "../../../components/primitives/SelectChips";
-import { Divider } from "@mui/material";
-import styled from "styled-components";
 import { useScrolledToBottom } from "../../../utils/scrollUtils";
 import { useRouter } from "next/router";
 import Head from "next/head";
@@ -17,6 +10,7 @@ import Layout from "../../../components/Layout";
 import Posts from "../../../components/posts/Posts";
 import { Posts as PostsType } from "../../../utils/firebase/type";
 import { useUser } from "../../../utils/firebase/api/user";
+import { getFollows } from "../../../utils/firebase/api/follow";
 
 type FetchResponse = {
   hasMorePosts: boolean;
@@ -46,7 +40,6 @@ const UserPage = ({ follows }) => {
       return { hasMorePosts: false, posts: [] };
     }
     //
-    console.log({ follows });
     const response = await getPostByFollows(follows, fromTimeStamp, LIMIT, lastDocByFollows);
     addPosts(response.data);
     setLastDocByFollows(response.lastDoc);
@@ -80,14 +73,13 @@ const UserPage = ({ follows }) => {
     setLastDocByExclude(response.lastDoc);
     const hasMorePosts = response.data.length > 0;
     setHasMorePostsByExclude(hasMorePosts);
-    console.log("fetch by exclude", response.data.length);
     return { hasMorePosts, posts: response.data };
   };
 
   const fetchPosts = async (fromTimeStamp) => {
     setIsFetching(true);
     let resp: FetchResponse = { hasMorePosts: false, posts: [] };
-    let aggregatedPosts: Posts = [];
+    let aggregatedPosts: PostsType = [];
     // posts by follows
     if (!resp.hasMorePosts || aggregatedPosts.length < LIMIT) {
       resp = await fetchPostsByFollows(fromTimeStamp);

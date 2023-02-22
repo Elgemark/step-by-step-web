@@ -63,8 +63,6 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> 
   const { user, progress, updateProgress, isLoading } = useProgress(id, true);
   const [report, setReport] = useState<ReportData>();
 
-  console.log("progress", progress);
-
   const onEditHandler = ({ id }) => {
     router.push("/create/" + id);
   };
