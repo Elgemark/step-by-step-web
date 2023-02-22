@@ -141,8 +141,8 @@ const List: FC<{
         <AccordionDetails>
           <StyledTable theme={theme}>
             <tbody>
-              {items.map((item: ListItem, index) => (
-                <StyledTR consumed={item.consumed}>
+              {items.map((item: ListItem) => (
+                <StyledTR consumed={item.consumed} key={item.id}>
                   {/* TEXT Left */}
                   <td className="column-1">
                     {item.badgeContent ? (

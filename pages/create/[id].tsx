@@ -307,7 +307,7 @@ export async function getServerSideProps({ query }) {
   const post = await getPost(id);
   return {
     props: {
-      post: post?.data || dataModels.post,
+      post: post?.data || { ...dataModels.post, id },
       id,
     },
   };

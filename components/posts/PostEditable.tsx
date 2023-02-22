@@ -17,8 +17,7 @@ import ListEditable from "../lists/ListEditable";
 import { useStateObject } from "../../utils/object";
 import { toSanitizedArray } from "../../utils/stringUtils";
 import UserAvatar from "../UserAvatar";
-import { ListItems, Lists } from "../../utils/firebase/api/list";
-import { addCollectionItem, setCollectionItems, useCollection } from "../../utils/firebase/hooks/collections";
+import { addCollectionItem, useCollection } from "../../utils/firebase/hooks/collections";
 import { v4 as uuid } from "uuid";
 import { useMessages } from "../../hooks/message";
 
