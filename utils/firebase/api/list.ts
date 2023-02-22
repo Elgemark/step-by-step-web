@@ -1,6 +1,7 @@
 import { getAuth } from "firebase/auth";
 import { getFirestore, doc, setDoc, collection, getDocs, deleteDoc, writeBatch } from "firebase/firestore";
 import _ from "lodash";
+import React from "react";
 
 export type ListItem = {
   id: string;
@@ -10,6 +11,7 @@ export type ListItem = {
   step?: number;
   consumed?: boolean;
   highlight?: boolean;
+  badgeContent?: React.ReactNode;
   [key: string]: any;
 };
 

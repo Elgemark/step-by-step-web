@@ -14,16 +14,13 @@ import {
   setDoc,
   updateDoc,
   onSnapshot,
-  Timestamp,
 } from "firebase/firestore";
-import { FollowersResponse, Post, PostResponse, PostsResponse } from "../interface";
+import { Post, PostResponse, PostsResponse } from "../interface";
 import { parseData, timeToTimeStamp } from "../../firebaseUtils";
 import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { Posts } from "../type";
-import { getUser } from "./user";
 import { toSanitizedArray } from "../../stringUtils";
-import { getFollows } from "./follow";
 
 interface SearchFilter {
   category?: string;

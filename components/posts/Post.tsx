@@ -60,10 +60,12 @@ const ListController: FC<{ postId: string; listId: string; listTitle: string; pr
   const calculatedListItems = listItems.map((item) => {
     const currentStep = _.last(progress.stepsCompleted);
     const previousSteps = _.slice(progress.stepsCompleted, 0, progress.stepsCompleted.length - 1);
+    console.log("consumed", previousSteps.includes(item.stepId));
     return {
       ...item,
       highlight: item.stepId && item.stepId === currentStep,
       consumed: previousSteps.includes(item.stepId),
+      badgeContent: (item.stepId && item.stepId === currentStep && progress.stepsCompleted.length) || null,
     };
   });
   return <List title={listTitle} items={calculatedListItems as ListItems} />;

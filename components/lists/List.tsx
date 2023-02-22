@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, AccordionSummary, IconButton, Typography, useTheme } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Badge, IconButton, Typography, useTheme } from "@mui/material";
 import styled from "styled-components";
 import { FC, useEffect, useState } from "react";
 import PushPinIcon from "@mui/icons-material/PushPin";
@@ -6,6 +6,7 @@ import Portal from "../primitives/Portal";
 import { alpha } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { ListItem } from "../../utils/firebase/api/list";
+import { red } from "@mui/material/colors";
 
 const StyledAccordion = styled(Accordion)`
   position: ${({ pin }) => (pin ? "sticky" : "relative")};
@@ -31,6 +32,7 @@ const StyledTable = styled.table`
   border-collapse: collapse;
   .column-1 {
     text-align: left;
+    display: flex;
   }
   .column-2 {
     text-align: right;
@@ -46,9 +48,21 @@ const StyledTR = styled.tr`
     opacity: ${({ highlight }) => (highlight ? 1 : 0.7)};
   }
 
-  .highlight::before {
-    content: "👉  ";
-    animation: ${({ highlight }) => (highlight ? "pulse 2s infinite" : "none")};
+  .badge {
+    animation: pulse 2s infinite;
+    background-color: ${() => red[500]};
+    width: 18px;
+    height: 18px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 8px;
+    margin-top: 1px;
+    h6 {
+      margin-top: 0px;
+      color: black;
+    }
   }
 
   @keyframes pulse {
@@ -63,6 +77,14 @@ const StyledTR = styled.tr`
     }
   }
 `;
+
+const BadgeWrapper = ({ badgeContent, children }) => {
+  if (badgeContent) {
+    return <>{children}</>;
+  } else {
+    return children;
+  }
+};
 
 const List: FC<{
   title: string;
@@ -114,13 +136,19 @@ const List: FC<{
           <StyledTable theme={theme}>
             <tbody>
               {items.map((item: ListItem, index) => (
-                <StyledTR key={`${item.id}-${index}`} {...item}>
+                <StyledTR consumed={item.consumed}>
                   {/* TEXT Left */}
                   <td className="column-1">
+                    {item.badgeContent ? (
+                      <span className="badge">
+                        <Typography variant="subtitle2">{item.badgeContent}</Typography>
+                      </span>
+                    ) : null}
                     <Typography variant="body2" className={item.highlight ? "highlight" : ""}>
                       {item.text}
                     </Typography>
                   </td>
+
                   {/* TEXT Right */}
                   <td className="column-2">
                     <Typography variant="body2">{item.value}</Typography>
