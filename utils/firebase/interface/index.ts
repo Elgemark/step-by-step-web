@@ -1,3 +1,4 @@
+import { Lists } from "../api/list";
 import { Bookmarks, Posts, PostVisibility, Steps } from "../type";
 
 export interface Media {
