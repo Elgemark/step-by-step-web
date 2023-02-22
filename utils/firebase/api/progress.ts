@@ -1,8 +1,21 @@
 import { getFirestore, onSnapshot, doc, setDoc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useSigninCheck } from "reactfire";
-import { Progress, ProgressResponse } from "../interface";
 import { useUser } from "./user";
+
+export interface Progress {
+  completed: boolean;
+  completions: number;
+  stepsCompleted: Array<string>;
+  id: string;
+  userId: string;
+}
+
+export interface ProgressResponse {
+  id: string;
+  data: Progress;
+  error: any;
+}
 
 export const setProgress = async (userId: string, postId: string, progress: Progress) => {
   const response: ProgressResponse = { id: postId, data: progress, error: null };
@@ -29,7 +42,7 @@ export const updateProgress = async (userId: string, postId: string, updates: ob
 export const useProgress = (postId: string, createIfMissing = false) => {
   const [isLoading, setIsLoading] = useState(true);
   const { data: signInCheckResult } = useSigninCheck();
-  const [data, setData] = useState({ completed: false, step: -1, completions: 0 });
+  const [data, setData] = useState({ completed: false, stepsCompleted: [], completions: 0 });
   const { data: user } = useUser(null, true);
 
   useEffect(() => {
@@ -40,7 +53,13 @@ export const useProgress = (postId: string, createIfMissing = false) => {
         if (doc.exists()) {
           setData(doc.data() as Progress);
         } else if (createIfMissing) {
-          setProgress(user.uid, postId, { completed: false, id: postId, step: -1, userId: user.uid, completions: 0 });
+          setProgress(user.uid, postId, {
+            completed: false,
+            id: postId,
+            userId: user.uid,
+            completions: 0,
+            stepsCompleted: [],
+          });
         }
       });
       setIsLoading(false);

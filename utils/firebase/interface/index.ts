@@ -1,4 +1,4 @@
-import { Bookmarks, Lists, Posts, PostVisibility, Steps } from "../type";
+import { Bookmarks, Posts, PostVisibility, Steps } from "../type";
 
 export interface Media {
   imageURI: string | null;
@@ -31,23 +31,9 @@ export interface Bookmark {
   postId: string;
 }
 
-export interface Progress {
-  completed: boolean;
-  completions: number;
-  id: string;
-  step: number;
-  userId: string;
-}
-
 //::::::
 //:::::: RESPONSE INTERFACES
 //::::::
-
-export interface ProgressResponse {
-  id: string;
-  data: Progress;
-  error: any;
-}
 
 export interface BookmarksResponse {
   data: Bookmarks | null;

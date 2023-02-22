@@ -19,7 +19,8 @@ import PostMoreMenu from "../../components/PostMoreMenu";
 import DialogDeletePost from "../../components/DialogDeletePost";
 import DialogReport, { ReportData } from "../../components/DialogReport";
 import { useTheme } from "@mui/material";
-import { ListsResponse } from "../../utils/firebase/api/list";
+import { Lists, ListsResponse } from "../../utils/firebase/api/list";
+import _ from "lodash";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -62,6 +63,8 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> 
   const { user, progress, updateProgress, isLoading } = useProgress(id, true);
   const [report, setReport] = useState<ReportData>();
 
+  console.log("progress", progress);
+
   const onEditHandler = ({ id }) => {
     router.push("/create/" + id);
   };
@@ -75,17 +78,20 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> 
   };
 
   const onStartOverHandler = async () => {
-    await updateProgress(user.uid, id, { step: -1, completed: false });
+    await updateProgress(user.uid, id, { step: -1, completed: false, stepsCompleted: [] });
   };
 
   const onRevelNextClickHandler = async ({ index }) => {
     const nextStep = steps[index + 1];
     const nextNextStep = steps[index + 2];
+    let stepsCompleted = progress?.stepsCompleted || [];
+    stepsCompleted.push(nextStep.id);
+    stepsCompleted = _.uniq(stepsCompleted);
     if (nextStep) {
       await updateProgress(user.uid, id, {
-        step: index + 1,
         completed: nextNextStep ? false : true,
         completions: nextNextStep ? progress.completions : progress.completions + 1,
+        stepsCompleted,
       });
     }
   };
@@ -111,9 +117,9 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> 
         propsTopbar={{
           actions: (
             <StyledStepsProgress
-              label={`${progress.step + 1}/${steps.length}`}
-              value={((progress.step + 1) / steps.length) * 100}
-              complete={progress.step + 1 === steps.length}
+              label={`${progress.stepsCompleted.length}/${steps.length}`}
+              value={(progress.stepsCompleted.length / steps.length) * 100}
+              complete={progress.stepsCompleted.length === steps.length}
             />
           ),
         }}
@@ -152,7 +158,7 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> 
         {/* START BUTTON */}
         <RevealNext
           open
-          showButton={progress.step === -1}
+          showButton={!progress.stepsCompleted.length}
           label="Start"
           onClick={() => {
             onRevelNextClickHandler({ index: -1 });
@@ -165,8 +171,8 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> 
               isLoading={isLoading}
               key={"step-" + index}
               label="Next"
-              open={index <= progress.step}
-              showButton={index == progress.step && index !== steps.length - 1}
+              open={index < progress.stepsCompleted.length}
+              showButton={index == progress.stepsCompleted.length - 1 && index !== steps.length - 1}
               showDone={index === steps.length - 1}
               onClick={() => {
                 onRevelNextClickHandler({ index });
