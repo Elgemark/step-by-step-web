@@ -6,8 +6,7 @@ import Step from "../../../../components/steps/Step";
 import Post from "../../../../components/posts/Post";
 import { v4 as uuid } from "uuid";
 import { FC, useState } from "react";
-import { ListsResponse } from "../../../../utils/firebase/interface";
-import { Lists, PostVisibility, Steps } from "../../../../utils/firebase/type";
+import { PostVisibility, Steps } from "../../../../utils/firebase/type";
 import FirebaseWrapper from "../../../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../../../components/wrappers/MUIWrapper";
 import DialogDeletePost from "../../../../components/DialogDeletePost";
@@ -19,6 +18,7 @@ import BlockIcon from "@mui/icons-material/Block";
 import { updatePost, useGetPost } from "../../../../utils/firebase/api/post";
 import Loader from "../../../../components/Loader";
 import DoneIcon from "@mui/icons-material/Done";
+import { Lists, ListsResponse } from "../../../../utils/firebase/api/list";
 
 const StyledLayout = styled(Layout)`
   display: flex;
