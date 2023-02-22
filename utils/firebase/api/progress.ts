@@ -51,7 +51,7 @@ export const useProgress = (postId: string, createIfMissing = false) => {
       const progressDoc = doc(firebase, "users", user.uid, "progress", postId);
       const unsubscribe = onSnapshot(progressDoc, (doc) => {
         if (doc.exists()) {
-          setData(doc.data() as Progress);
+          setData({ ...data, ...doc.data() } as Progress);
         } else if (createIfMissing) {
           setProgress(user.uid, postId, {
             completed: false,
