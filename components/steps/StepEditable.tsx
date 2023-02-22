@@ -5,7 +5,7 @@ import Avatar from "@mui/material/Avatar";
 import { red } from "@mui/material/colors";
 import TextField from "@mui/material/TextField";
 import { useRef, useEffect, FC, useState } from "react";
-import StepMoreMenu from "../StepMoreMenu";
+import StepEditableMoreMenu from "../StepEditableMoreMenu";
 import { Step } from "../../utils/firebase/interface";
 import { useStateObject } from "../../utils/object";
 import ImageEditable from "../primitives/ImageEditable";
@@ -56,7 +56,7 @@ const StepEditable: FC<{
             {index + 1}
           </Avatar>
         }
-        action={<StepMoreMenu postId={postId} stepId={step.id} onDelete={onDelete} onAddStep={onAddStep} />}
+        action={<StepEditableMoreMenu postId={postId} stepId={step.id} onDelete={onDelete} onAddStep={onAddStep} />}
         title={
           <TextField
             fullWidth

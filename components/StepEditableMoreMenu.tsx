@@ -9,48 +9,46 @@ import Menu from "./primitives/Menu";
 import { FC } from "react";
 import CheckboxList from "./primitives/CheckboxList";
 import { Divider } from "@mui/material";
-import { CollectionItem, useCollection } from "../utils/firebase/hooks/collections";
-import ListTable from "./primitives/ListTable";
-import ListTableItem from "./primitives/ListTableItem";
+import { CollectionItem, CollectionItems, useCollection } from "../utils/firebase/hooks/collections";
 
-const List: FC<{ postId: string; stepId: string; list: CollectionItem }> = ({ postId, stepId, list }) => {
-  const { data } = useCollection(["posts", postId, "lists", list.id, "items"]);
-  const listData = data
+const CheckList: FC<{ postId: string; stepId: string; list: CollectionItem }> = ({ postId, stepId, list }) => {
+  const { data, updateAndSave } = useCollection(["posts", postId, "lists", list.id, "items"]);
+  const checkBoxData = data
     .filter((item) => !item.stepId || item.stepId === stepId)
     .map((item) => ({
-      text: item.text,
-      value: item.value,
+      id: item.id,
+      label: item.text,
+      checked: item.stepId === stepId,
+      disabled: item.stepId && item.stepId !== stepId,
     }));
 
-  return (
-    <ListTable>
-      {listData.map((data) => (
-        <ListTableItem {...data}></ListTableItem>
-      ))}
-    </ListTable>
-  );
+  const onChangeHandler = ({ id: itemId }) => {
+    const listItem = data.find((item) => item.id === itemId);
+    const checked = listItem.stepId === stepId;
+    updateAndSave(itemId, { stepId: checked ? null : stepId });
+  };
+  return <CheckboxList data={checkBoxData} header={list.title} onChange={onChangeHandler}></CheckboxList>;
 };
 
-const StepMoreMenu: FC<{
+const StepEditableMoreMenu: FC<{
   postId: string;
   stepId: string;
-  onRollBack?: Function;
-}> = ({ postId, stepId, onRollBack }) => {
+  onDelete?: Function;
+  onAddStep?: Function;
+}> = ({ postId, stepId, onDelete, onAddStep }) => {
   const { data: lists } = useCollection(["posts", postId, "lists"]);
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
   const handleClose = () => {
     setAnchorEl(null);
   };
 
-  const listItems = lists.map((list) => {
-    return <List postId={postId} stepId={stepId} list={list} />;
+  const checkLists = lists.map((list) => {
+    return <CheckList postId={postId} stepId={stepId} list={list} />;
   });
 
   return (
@@ -74,11 +72,11 @@ const StepMoreMenu: FC<{
         onClose={handleClose}
         theme={theme}
       >
-        {/* ROLL BACK */}
-        {onRollBack && (
+        {/* ADD STEP */}
+        {onAddStep && (
           <MenuItem
             onClick={() => {
-              onRollBack();
+              onAddStep();
               handleClose();
             }}
             disableRipple
@@ -87,13 +85,25 @@ const StepMoreMenu: FC<{
             Step
           </MenuItem>
         )}
-
+        {/* DELETE */}
+        {onDelete && (
+          <MenuItem
+            onClick={() => {
+              onDelete();
+              handleClose();
+            }}
+            disableRipple
+          >
+            <DeleteIcon />
+            Delete
+          </MenuItem>
+        )}
         {/* LISTS */}
-        {listItems.length ? <Divider /> : null}
-        {listItems}
+        {checkLists.length ? <Divider /> : null}
+        {checkLists}
       </Menu>
     </>
   );
 };
 
-export default StepMoreMenu;
+export default StepEditableMoreMenu;
