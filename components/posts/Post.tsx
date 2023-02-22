@@ -15,13 +15,14 @@ import { useLikes, useBookmarks } from "../../utils/firebase/api";
 import styled from "styled-components";
 import { useState, FC, ReactNode } from "react";
 import { CardActionArea } from "@mui/material";
-import { Lists } from "../../utils/firebase/type";
 import List from "../lists/List";
 import { Media } from "../../utils/firebase/interface";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import { useCollection } from "../../utils/firebase/hooks/collections";
-import { ListItems } from "../../utils/firebase/api/list";
+import { ListItems, Lists } from "../../utils/firebase/api/list";
+import { Progress, useProgress } from "../../utils/firebase/api/progress";
+import _ from "lodash";
 
 const Root = styled(Card)`
   .button-link {
@@ -49,9 +50,23 @@ const MediaContainer = ({ children, hrefBasePath, slug, enableLink }) => {
   }
 };
 
-const ListController: FC<{ postId: string; listId: string; listTitle: string }> = ({ postId, listId, listTitle }) => {
+const ListController: FC<{ postId: string; listId: string; listTitle: string; progress: Progress }> = ({
+  postId,
+  listId,
+  listTitle,
+  progress,
+}) => {
   const { data: listItems } = useCollection(["posts", postId, "lists", listId, "items"]);
-  return <List title={listTitle} items={listItems as ListItems} />;
+  const calculatedListItems = listItems.map((item) => {
+    const currentStep = _.last(progress.stepsCompleted);
+    const previousSteps = _.slice(progress.stepsCompleted, 0, progress.stepsCompleted.length - 1);
+    return {
+      ...item,
+      highlight: item.stepId && item.stepId === currentStep,
+      consumed: previousSteps.includes(item.stepId),
+    };
+  });
+  return <List title={listTitle} items={calculatedListItems as ListItems} />;
 };
 
 const Post: FC<{
@@ -88,6 +103,7 @@ const Post: FC<{
   const [numLikes, setNumLikes] = useState(likes);
   const { isLiked, toggle: toggleLike } = useLikes(id);
   const { isBookmarked, toggle: toogleBookmark } = useBookmarks(id);
+  const { progress } = useProgress(id, true);
 
   const onLikeHandler = () => {
     setNumLikes(numLikes + (isLiked ? -1 : 1));
@@ -150,7 +166,7 @@ const Post: FC<{
         <CardContent>
           {lists.map((list) => (
             // <List {...list} />
-            <ListController postId={id} listId={list.id} listTitle={list.title} />
+            <ListController postId={id} listId={list.id} listTitle={list.title} progress={progress as Progress} />
           ))}
         </CardContent>
       ) : null}

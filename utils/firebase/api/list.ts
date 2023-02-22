@@ -8,6 +8,8 @@ export type ListItem = {
   value: string;
   index?: number;
   step?: number;
+  consumed?: boolean;
+  highlight?: boolean;
   [key: string]: any;
 };
 

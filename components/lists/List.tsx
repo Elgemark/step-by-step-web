@@ -40,6 +40,30 @@ const StyledTable = styled.table`
   }
 `;
 
+const StyledTR = styled.tr`
+  p {
+    text-decoration: ${({ consumed }) => (consumed ? "line-through" : "none")};
+    opacity: ${({ highlight }) => (highlight ? 1 : 0.7)};
+  }
+
+  .highlight::before {
+    content: "👉  ";
+    animation: ${({ highlight }) => (highlight ? "pulse 2s infinite" : "none")};
+  }
+
+  @keyframes pulse {
+    0% {
+      opacity: 100%;
+    }
+    50% {
+      opacity: 50%;
+    }
+    100% {
+      opacity: 100%;
+    }
+  }
+`;
+
 const List: FC<{
   title: string;
   items: Array<ListItem>;
@@ -81,16 +105,18 @@ const List: FC<{
           <StyledTable theme={theme}>
             <tbody>
               {items.map((item: ListItem, index) => (
-                <tr key={`${item.id}-${index}`}>
+                <StyledTR key={`${item.id}-${index}`} {...item}>
                   {/* TEXT Left */}
                   <td className="column-1">
-                    <Typography variant="body2">{item.text}</Typography>
+                    <Typography variant="body2" className={item.highlight ? "highlight" : ""}>
+                      {item.text}
+                    </Typography>
                   </td>
                   {/* TEXT Right */}
                   <td className="column-2">
                     <Typography variant="body2">{item.value}</Typography>
                   </td>
-                </tr>
+                </StyledTR>
               ))}
             </tbody>
           </StyledTable>
