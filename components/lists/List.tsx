@@ -1,6 +1,6 @@
 import { Accordion, AccordionDetails, AccordionSummary, Badge, IconButton, Typography, useTheme } from "@mui/material";
 import styled from "styled-components";
-import { FC, useEffect, useState } from "react";
+import { FC, ReactElement, ReactNode, useEffect, useState } from "react";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import Portal from "../primitives/Portal";
 import { alpha } from "@mui/material";
@@ -13,7 +13,6 @@ const StyledAccordion = styled(Accordion)`
   top: ${({ pin }) => (pin ? "70px" : "auto")};
   background-color: ${({ theme, pin }) =>
     pin ? alpha(theme.palette.background.paper, 0.8) : theme.palette.background.paper};
-  /* margin-bottom: ${({ pin }) => (pin ? "1rem" : 0)}; */
 
   .button-pin {
     transform: rotate(-45deg);
@@ -48,23 +47,6 @@ const StyledTR = styled.tr`
     opacity: ${({ highlight }) => (highlight ? 1 : 0.7)};
   }
 
-  .badge {
-    animation: pulse 2s infinite;
-    background-color: ${() => red[500]};
-    width: 18px;
-    height: 18px;
-    border-radius: 8px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-right: 8px;
-    margin-top: 1px;
-    h6 {
-      margin-top: 0px;
-      color: black;
-    }
-  }
-
   @keyframes pulse {
     0% {
       opacity: 100%;
@@ -78,13 +60,30 @@ const StyledTR = styled.tr`
   }
 `;
 
-const BadgeWrapper = ({ badgeContent, children }) => {
-  if (badgeContent) {
-    return <>{children}</>;
-  } else {
-    return children;
-  }
+const CustomBadge = ({ badgeContent, ...rest }) => {
+  return (
+    <span className="badge" {...rest}>
+      <Typography variant="subtitle2">{badgeContent}</Typography>
+    </span>
+  );
 };
+
+const StyledCustomBadge = styled(CustomBadge)`
+  animation: pulse 2s infinite;
+  background-color: ${() => red[500]};
+  width: 18px;
+  height: 18px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 8px;
+  margin-top: 1px;
+  h6 {
+    margin-top: 0px;
+    color: black;
+  }
+`;
 
 const List: FC<{
   title: string;
@@ -94,6 +93,8 @@ const List: FC<{
   const [pin, setPin] = useState(false);
   const [collapse, setCollapse] = useState(false);
   const [doc, setDoc] = useState(null);
+
+  const foundItemWithBadge = items.find((item) => item.badgeContent);
 
   useEffect(() => {
     setDoc(document);
@@ -130,8 +131,13 @@ const List: FC<{
           >
             <PushPinIcon fontSize="small" />
           </IconButton>
+
           <Typography variant="h6">{title}</Typography>
+          {foundItemWithBadge ? (
+            <StyledCustomBadge badgeContent={foundItemWithBadge.badgeContent}></StyledCustomBadge>
+          ) : null}
         </AccordionSummary>
+
         <AccordionDetails>
           <StyledTable theme={theme}>
             <tbody>
@@ -140,9 +146,7 @@ const List: FC<{
                   {/* TEXT Left */}
                   <td className="column-1">
                     {item.badgeContent ? (
-                      <span className="badge">
-                        <Typography variant="subtitle2">{item.badgeContent}</Typography>
-                      </span>
+                      <StyledCustomBadge badgeContent={item.badgeContent}></StyledCustomBadge>
                     ) : null}
                     <Typography variant="body2" className={item.highlight ? "highlight" : ""}>
                       {item.text}
