@@ -129,13 +129,10 @@ const List: FC<{
               e.stopPropagation();
             }}
           >
-            <PushPinIcon fontSize="small" />
+            <PushPinIcon sx={{ color: foundItemWithBadge ? red[500] : "white" }} fontSize="small" />
           </IconButton>
 
           <Typography variant="h6">{title}</Typography>
-          {foundItemWithBadge ? (
-            <StyledCustomBadge badgeContent={foundItemWithBadge.badgeContent}></StyledCustomBadge>
-          ) : null}
         </AccordionSummary>
 
         <AccordionDetails>
