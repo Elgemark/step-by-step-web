@@ -41,9 +41,6 @@ const StyledLayout = styled(Layout)`
     z-index: 999;
     backdrop-filter: blur(5px);
     padding-bottom: 1rem;
-    .list {
-      margin-bottom: ${({ theme }) => theme.spacing(1)};
-    }
   }
 `;
 

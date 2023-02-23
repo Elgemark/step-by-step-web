@@ -11,8 +11,9 @@ import ListTableItem from "../primitives/ListTableItem";
 import ListTable from "../primitives/ListTable";
 
 const StyledAccordion = styled(Accordion)`
-  position: ${({ pin }) => (pin ? "sticky" : "relative")};
-  top: ${({ pin }) => (pin ? "70px" : "auto")};
+  position: relative;
+  top: ${({ pin }) => (pin ? "0" : "auto")};
+  left: ${({ pin }) => (pin ? "0" : "auto")};
   background-color: ${({ theme, pin }) =>
     pin ? alpha(theme.palette.background.paper, 0.8) : theme.palette.background.paper};
   .button-pin {
