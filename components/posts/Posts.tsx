@@ -12,8 +12,9 @@ import DialogDeletePost from "../DialogDeletePost";
 
 const Posts: FC<{
   posts: Posts;
-  enableLink: boolean;
-}> = ({ posts = [], enableLink = false }) => {
+  enableLink?: boolean;
+  showStatus?: boolean;
+}> = ({ posts = [], enableLink = false, showStatus = false }) => {
   const router = useRouter();
   const [report, setReport] = useState<ReportData>();
   const [deletePost, setDeletePost] = useState<string>();
