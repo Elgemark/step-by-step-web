@@ -134,7 +134,7 @@ export const getDraftedPosts = async (uid) => {
   //
   const firebase = getFirestore();
   const postsRef = collection(firebase, "posts");
-  const queryBuild = query(postsRef, where("uid", "==", uid), where("visibility", "==", "draft"));
+  const queryBuild = query(postsRef, where("uid", "==", uid), where("visibility", "in", ["draft", "review"]));
 
   try {
     const querySnapshot = await getDocs(queryBuild);

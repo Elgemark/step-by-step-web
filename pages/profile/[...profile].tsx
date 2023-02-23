@@ -11,6 +11,7 @@ import Tab from "@mui/material/Tab";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import CreateIcon from "@mui/icons-material/Create";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import GridViewIcon from "@mui/icons-material/GridView";
 import UnpublishedIcon from "@mui/icons-material/Unpublished";
 import PublishIcon from "@mui/icons-material/Publish";
 import AssistantDirectionIcon from "@mui/icons-material/AssistantDirection";
@@ -55,8 +56,18 @@ const StyledLayout = styled(Layout)`
     align-items: center;
     /* width: 100%; */
   }
+  .tab-container {
+    position: sticky;
+    top: 70px;
+    z-index: 1;
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+  }
   .tabs {
     margin: ${({ theme }) => theme.spacing(4)} 0;
+  }
+  .MuiTab-root {
+    min-width: 40px;
   }
   .divider {
     width: 100%;
@@ -83,8 +94,6 @@ const ProfilePage = ({ tabValue, uid, posts = [], userIds = [] }) => {
     }
   }, [status, user]);
 
-  console.log({ status, user });
-
   const onTabChangeHandler = (event: React.SyntheticEvent, newValue: string) => {
     router.push("/profile/" + uid + "/" + newValue);
   };
@@ -98,28 +107,26 @@ const ProfilePage = ({ tabValue, uid, posts = [], userIds = [] }) => {
         {/* LOGGED IN */}
         <ProfileCard userId={uid} />
         <Divider className="divider" />
-        <Box sx={{ maxWidth: { xs: 360, sm: 480, md: 600, lg: 1024 }, bgcolor: "background.paper" }}>
+        <div className="tab-container">
           <Tabs
             className="tabs"
             value={tabValue}
             onChange={onTabChangeHandler}
             aria-label="tabs"
-            variant="scrollable"
-            scrollButtons
-            allowScrollButtonsMobile
+            centered
+            sx={{ width: "100%" }}
           >
-            <Tab label="Saved" icon={<BookmarkIcon />} {...tabProps(0)} value="saved" />
-            <Tab label="Published" icon={<PublishIcon />} {...tabProps(1)} value="published" />
-            <Tab label="Drafts" icon={<CreateIcon />} {...tabProps(2)} value="drafts" />
-            <Tab label="Reviews" icon={<VisibilityIcon />} {...tabProps(3)} value="reviews" />
-            <Tab label="Completed" icon={<CheckCircleIcon />} {...tabProps(4)} value="completed" />
-            <Tab label="Incompleted" icon={<UnpublishedIcon />} {...tabProps(5)} value="incompleted" />
-            <Tab label="Follows" icon={<AssistantDirectionIcon />} {...tabProps(6)} value="follows" />
+            <Tab icon={<BookmarkIcon />} {...tabProps(0)} value="saved" />
+            <Tab icon={<GridViewIcon />} {...tabProps(1)} value="published" />
+            <Tab icon={<CreateIcon />} {...tabProps(2)} value="drafts" />
+            {/* <Tab icon={<VisibilityIcon />} {...tabProps(3)} value="reviews" /> */}
+            <Tab icon={<CheckCircleIcon />} {...tabProps(3)} value="completed" />
+            <Tab icon={<UnpublishedIcon />} {...tabProps(4)} value="incompleted" />
+            <Tab icon={<AssistantDirectionIcon />} {...tabProps(5)} value="follows" />
           </Tabs>
-        </Box>
+        </div>
 
         <Posts posts={posts} enableLink />
-
         <Users userIds={userIds} />
       </StyledLayout>
     </>
