@@ -18,10 +18,10 @@ const StyledTable = styled.table`
   }
 `;
 
-const ListTable = ({ children }) => {
+const ListTable = ({ children, ...rest }) => {
   const theme = useTheme();
   return (
-    <StyledTable theme={theme}>
+    <StyledTable theme={theme} {...rest}>
       <tbody>{children}</tbody>
     </StyledTable>
   );

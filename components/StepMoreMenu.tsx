@@ -6,10 +6,25 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import Menu from "./primitives/Menu";
 import { FC } from "react";
-import { Divider } from "@mui/material";
+import { Divider, Fade } from "@mui/material";
 import { CollectionItem, useCollection } from "../utils/firebase/hooks/collections";
 import ListTable from "./primitives/ListTable";
 import ListTableItem from "./primitives/ListTableItem";
+import styled from "styled-components";
+
+const StyledMenu = styled(Menu)`
+  /* min-width: 800px; */
+  table {
+    /* max-width: 700px; */
+  }
+  .list-table-item {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 16px;
+    min-width: 200px;
+  }
+`;
 
 const List: FC<{ postId: string; stepId: string; list: CollectionItem }> = ({ postId, stepId, list }) => {
   const { data } = useCollection(["posts", postId, "lists", list.id, "items"]);
@@ -21,11 +36,11 @@ const List: FC<{ postId: string; stepId: string; list: CollectionItem }> = ({ po
     }));
 
   return (
-    <ListTable>
+    <div style={{ width: "100%" }}>
       {listData.map((data) => (
-        <ListTableItem {...data}></ListTableItem>
+        <ListTableItem {...data} className="list-table-item"></ListTableItem>
       ))}
-    </ListTable>
+    </div>
   );
 };
 
@@ -56,7 +71,7 @@ const StepMoreMenu: FC<{
       <IconButton aria-label="more" onClick={handleClick}>
         <MoreVertIcon />
       </IconButton>
-      <Menu
+      <StyledMenu
         dense
         elevation={0}
         anchorOrigin={{
@@ -71,6 +86,7 @@ const StepMoreMenu: FC<{
         open={open}
         onClose={handleClose}
         theme={theme}
+        TransitionComponent={Fade}
       >
         {/* ROLL BACK */}
         {onRollBack && (
@@ -89,7 +105,7 @@ const StepMoreMenu: FC<{
         {/* LISTS */}
         {listItems.length ? <Divider /> : null}
         {listItems}
-      </Menu>
+      </StyledMenu>
     </>
   );
 };

@@ -53,9 +53,10 @@ const ListTableItem: FC<{
   consumed?: boolean;
   highlight?: boolean;
   badgeContent?: ReactNode;
-}> = ({ text, value, badgeContent = null, highlight = false, consumed = false }) => {
+  className: string;
+}> = ({ text, value, badgeContent = null, highlight = false, consumed = false, className }) => {
   return (
-    <StyledTR consumed={consumed}>
+    <StyledTR consumed={consumed} className={className}>
       {/* TEXT Left */}
       <td className="column-1">
         {badgeContent ? <StyledCustomBadge badgeContent={badgeContent}></StyledCustomBadge> : null}
