@@ -37,7 +37,7 @@ const Posts: FC<{
     if (user.uid === uid) {
       router.push("/profile/" + uid);
     } else {
-      router.push("/user/" + uid);
+      router.push("/user/" + uid + "/published");
     }
   };
 

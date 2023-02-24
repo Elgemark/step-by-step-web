@@ -21,7 +21,7 @@ import MUIWrapper from "../../components/wrappers/MUIWrapper";
 import { useUser } from "reactfire";
 import { getPublishedPosts, getCreatedPosts } from "../../utils/firebase/api/post";
 import { TabContext, TabPanel } from "@mui/lab";
-import FilterListIcon from "@mui/icons-material/FilterList";
+import FilterMenu from "../../components/primitives/FilterMenu";
 
 const UserCardControlled: FC<{ userId: string }> = styled(({ userId, ...props }) => {
   const router = useRouter();
@@ -53,7 +53,6 @@ const StyledLayout = styled(Layout)`
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* width: 100%; */
   }
   .tab-container {
     position: sticky;
@@ -82,26 +81,6 @@ const tabProps = (index: number) => {
     id: `simple-tab-${index}`,
     "aria-controls": `simple-tabpanel-${index}`,
   };
-};
-
-const Filter: FC<{
-  onClick?: Function;
-  values: Array<string> | Array<{ value: string; label: string }>;
-  selectedValue: string;
-}> = ({ onClick, values, selectedValue }) => {
-  return (
-    <Stack direction={"row"} spacing={1} sx={{ marginBottom: 1 }} alignItems="center">
-      <FilterListIcon></FilterListIcon>
-      {values.map((value) => (
-        <Chip
-          label={value?.label || value}
-          variant={(value?.value || value) === selectedValue ? "filled" : "outlined"}
-          clickable={Boolean(onClick)}
-          onClick={() => onClick && onClick({ value: value?.value || value })}
-        />
-      ))}
-    </Stack>
-  );
 };
 
 const ProfilePage = ({ tabValue, filterValue, uid, posts = [], userIds = [] }) => {
@@ -146,9 +125,7 @@ const ProfilePage = ({ tabValue, filterValue, uid, posts = [], userIds = [] }) =
               <Tab icon={<BookmarkIcon />} {...tabProps(0)} value="saved" />
               <Tab icon={<GridViewIcon />} {...tabProps(1)} value="published" />
               <Tab icon={<CreateIcon />} {...tabProps(2)} value="created" />
-              {/* <Tab icon={<VisibilityIcon />} {...tabProps(3)} value="reviews" /> */}
               <Tab icon={<CheckCircleIcon />} {...tabProps(3)} value="completed" />
-              {/* <Tab icon={<UnpublishedIcon />} {...tabProps(4)} value="incompleted" /> */}
               <Tab icon={<AssistantDirectionIcon />} {...tabProps(4)} value="follows" />
             </Tabs>
           </div>
@@ -160,22 +137,22 @@ const ProfilePage = ({ tabValue, filterValue, uid, posts = [], userIds = [] }) =
             <Posts posts={posts} enableLink />
           </TabPanel>
           <TabPanel value="created" tabIndex={2}>
-            <Filter
+            <FilterMenu
               values={[
                 { value: "draft", label: "drafts" },
                 { value: "review", label: "under review" },
               ]}
               selectedValue={filterValue}
               onClick={onClickFilterHandler}
-            ></Filter>
+            ></FilterMenu>
             <Posts posts={posts} enableLink />
           </TabPanel>
           <TabPanel value="completed" tabIndex={3}>
-            <Filter
+            <FilterMenu
               values={["completed", "incomplete"]}
               selectedValue={filterValue}
               onClick={onClickFilterHandler}
-            ></Filter>
+            ></FilterMenu>
             <Posts posts={posts} enableLink />
           </TabPanel>
           <TabPanel value="follows" tabIndex={4}>

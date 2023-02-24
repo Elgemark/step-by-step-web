@@ -16,7 +16,9 @@ import ResponsiveGrid from "../../components/primitives/ResponsiveGrid";
 import UserCard from "../../components/primitives/UserCard";
 import FirebaseWrapper from "../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../components/wrappers/MUIWrapper";
-import { getBookmarkedPosts, getDraftedPosts, getPublishedPosts } from "../../utils/firebase/api/post";
+import { getBookmarkedPosts, getPublishedPosts } from "../../utils/firebase/api/post";
+import GridViewIcon from "@mui/icons-material/GridView";
+import { TabContext, TabPanel } from "@mui/lab";
 
 const UserCardControlled: FC<{ userId: string }> = styled(({ userId, ...props }) => {
   const router = useRouter();
@@ -48,8 +50,22 @@ const StyledLayout = styled(Layout)`
   .user-card {
     margin-bottom: ${({ theme }) => theme.spacing(4)};
   }
+  .tab-container {
+    position: sticky;
+    top: 70px;
+    z-index: 1;
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+  }
   .tabs {
-    margin: ${({ theme }) => theme.spacing(4)} 0;
+    margin: ${({ theme }) => theme.spacing(2)};
+  }
+  .MuiTab-root {
+    min-width: 40px;
+  }
+  .MuiTabPanel-root {
+    width: 100%;
+    padding: 0;
   }
   .divider {
     width: 100%;
@@ -96,13 +112,25 @@ const UserPage = ({ posts, user, userIds, uid, tabValue }) => {
           )}
         </UserCard>
         <Divider className="divider" />
-        <Tabs className="tabs" value={tabValue} onChange={onTabChangehandle} aria-label="post tabs">
-          <Tab label="Steps" icon={<CreateIcon />} {...tabProps(1)} value="published" />
-          <Tab label="Saved" icon={<BookmarkIcon />} {...tabProps(0)} value="saved" />
-          <Tab label="Follows" icon={<AssistantDirectionIcon />} {...tabProps(2)} value="follows" />
-        </Tabs>
-        <Posts posts={posts} enableLink />
-        <Users userIds={userIds} />
+        <TabContext value={tabValue}>
+          <div className="tab-container">
+            <Tabs className="tabs" value={tabValue} onChange={onTabChangehandle} aria-label="post tabs">
+              <Tab icon={<GridViewIcon />} {...tabProps(0)} value="published" />
+              <Tab icon={<BookmarkIcon />} {...tabProps(1)} value="saved" />
+              <Tab icon={<AssistantDirectionIcon />} {...tabProps(2)} value="follows" />
+            </Tabs>
+          </div>
+
+          <TabPanel value="published" tabIndex={0}>
+            <Posts posts={posts} enableLink />
+          </TabPanel>
+          <TabPanel value="saved" tabIndex={1}>
+            <Posts posts={posts} enableLink />
+          </TabPanel>
+          <TabPanel value="saved" tabIndex={2}>
+            <Users userIds={userIds} />
+          </TabPanel>
+        </TabContext>
       </StyledLayout>
     </>
   );
