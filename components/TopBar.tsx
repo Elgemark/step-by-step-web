@@ -11,9 +11,7 @@ import SearchFilter from "./SearchFilter";
 import { useDebouncedQuery } from "../utils/queryUtils";
 import _ from "lodash";
 import { useUser } from "reactfire";
-import StepsLogoIconFold from "./primitives/StepsLogoIconFold";
-import IconStepsFoldLogo from "./primitives/IconStepsFoldLogo";
-import IconSteppoCheckWhite from "./primitives/IconSteppoCheckWhite";
+import MenuIcon from "@mui/icons-material/Menu";
 import IconSteppoCheckColor from "./primitives/IconSteppoCheckColor";
 
 const StyledAppbar = styled(AppBar)`
@@ -97,7 +95,7 @@ const TopBar: FC<{ onClickLogo: () => void; className?: string; actions?: ReactN
           }}
         >
           {/* <StepsLogoIconFold height={36} /> */}
-          <IconSteppoCheckColor fontSize="large"></IconSteppoCheckColor>
+          <MenuIcon fontSize="large"></MenuIcon>
         </IconButton>
         {/* SEARCH */}
         {actions || (

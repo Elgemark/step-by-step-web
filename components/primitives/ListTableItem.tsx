@@ -53,7 +53,7 @@ const ListTableItem: FC<{
   consumed?: boolean;
   highlight?: boolean;
   badgeContent?: ReactNode;
-  className: string;
+  className?: string;
 }> = ({ text, value, badgeContent = null, highlight = false, consumed = false, className }) => {
   return (
     <StyledTR consumed={consumed} className={className}>
