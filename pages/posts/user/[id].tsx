@@ -1,4 +1,9 @@
-import { getPostByExclude, getPostByFollows, getPostByInterests } from "../../../utils/firebase/api/post";
+import {
+  getPostByExclude,
+  getPostByFollows,
+  getPostByInterests,
+  getPostsForAnonymousUser,
+} from "../../../utils/firebase/api/post";
 import FirebaseWrapper from "../../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../../components/wrappers/MUIWrapper";
 import { useEffect, useState } from "react";
@@ -20,7 +25,6 @@ type FetchResponse = {
 const UserPage = ({ follows }) => {
   const { data: user, isLoading: isLoadingUser } = useUser();
   const isBottom = useScrolledToBottom(100);
-  const router = useRouter();
   const { collection: posts, addItems: addPosts } = useCollection();
   const [isFetching, setIsFetching] = useState(false);
   // posts by follows...
@@ -32,11 +36,14 @@ const UserPage = ({ follows }) => {
   // posts by exclude...
   const [lastDocByExclude, setLastDocByExclude] = useState();
   const [hasMorePostsByExclude, setHasMorePostsByExclude] = useState(true);
+  // posts by exclude...
+  const [lastDocByAnonymousUser, setLastDocByAnonymousUser] = useState();
+  const [hasMorePostsByAnonymousUser, setHasMorePostsByAnonymousUser] = useState(true);
 
   const LIMIT = 5;
 
   const fetchPostsByFollows = async (fromTimeStamp) => {
-    if (!hasMorePostsByFollows) {
+    if (!hasMorePostsByFollows || !follows.length) {
       return { hasMorePosts: false, posts: [] };
     }
     //
@@ -50,7 +57,7 @@ const UserPage = ({ follows }) => {
   };
 
   const fetchPostsByInterests = async (fromTimeStamp) => {
-    if (!hasMorePostsByInterests) {
+    if (!hasMorePostsByInterests || !user.interests?.length) {
       return { hasMorePosts: false, posts: [] };
     }
     //
@@ -63,8 +70,8 @@ const UserPage = ({ follows }) => {
     return { hasMorePosts, posts: response.data };
   };
 
-  const fetchPostsByExclude = async (exclude, fromTimeStamp = null) => {
-    if (!hasMorePostsByExclude) {
+  const fetchPostsByExclude = async (exclude: Array<string>, fromTimeStamp = null) => {
+    if (!hasMorePostsByExclude || !exclude.length) {
       return { hasMorePosts: false, posts: [] };
     }
     //
@@ -76,7 +83,22 @@ const UserPage = ({ follows }) => {
     return { hasMorePosts, posts: response.data };
   };
 
+  const fetchPostForAnonymousUser = async (fromTimeStamp = null) => {
+    if (!hasMorePostsByAnonymousUser) {
+      return { hasMorePosts: false, posts: [] };
+    }
+    //
+    const response = await getPostsForAnonymousUser(LIMIT, lastDocByAnonymousUser, { fromTimeStamp });
+    addPosts(response.data);
+    setLastDocByAnonymousUser(response.lastDoc);
+    const hasMorePosts = response.data.length > 0;
+    setHasMorePostsByAnonymousUser(hasMorePosts);
+    console.log("fetch by anonymous user", hasMorePosts);
+    return { hasMorePosts, posts: response.data };
+  };
+
   const fetchPosts = async (fromTimeStamp) => {
+    console.log("fetchPosts");
     setIsFetching(true);
     let resp: FetchResponse = { hasMorePosts: false, posts: [] };
     let aggregatedPosts: PostsType = [];
@@ -95,19 +117,22 @@ const UserPage = ({ follows }) => {
       const exclude = posts.concat(aggregatedPosts).map((post) => post.id);
       resp = await fetchPostsByExclude(exclude);
     }
+    // If no post found, try
+    if (!resp.posts.length) {
+      resp = await fetchPostForAnonymousUser(fromTimeStamp);
+    }
     setIsFetching(false);
   };
 
   useEffect(() => {
-    if (!isLoadingUser && user.interests && user.interests.length) {
+    if (!isLoadingUser) {
       !isFetching && fetchPosts(user.lastFeedFetch);
     }
-  }, [isLoadingUser, user]);
+  }, [isLoadingUser]);
 
   useEffect(() => {
     if (isBottom) {
-      if (!isLoadingUser && user.interests && user.interests.length) {
-        // posts by interests...
+      if (!isLoadingUser) {
         !isFetching && fetchPosts(user.lastFeedFetch);
       }
     }

@@ -262,6 +262,7 @@ export const useGetPostsByQuery = () => {
 
 type PostsForAnonymousUserOptions = {
   excludeIds?: Array<string>;
+  fromTimeStamp?: any;
 };
 
 export const getPostsForAnonymousUser = async (
