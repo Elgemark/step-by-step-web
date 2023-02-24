@@ -142,7 +142,7 @@ const UserPage = ({ follows }) => {
     <>
       <Head>
         <meta content="noindex, nofollow, initial-scale=1, width=device-width" name="robots" />
-        <title>{"Title"}</title>
+        <title>{"Steppo"}</title>
       </Head>
       <Layout>
         <Posts enableLink={true} posts={posts as PostsType} />

@@ -3,6 +3,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { ReactNode, useRef } from "react";
 import { FC } from "react";
+import IconSteppoCheckColor from "./primitives/IconSteppoCheckColor";
 
 const RevealNext: FC<{
   open: boolean;
@@ -46,7 +47,7 @@ const RevealNext: FC<{
       {/* DONE */}
       <Collapse in={showDone}>
         <Divider>
-          <CheckCircleIcon fontSize="large" />
+          <IconSteppoCheckColor fontSize="large" />
         </Divider>
       </Collapse>
     </Collapse>

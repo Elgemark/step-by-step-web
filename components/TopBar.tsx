@@ -13,6 +13,8 @@ import _ from "lodash";
 import { useUser } from "reactfire";
 import StepsLogoIconFold from "./primitives/StepsLogoIconFold";
 import IconStepsFoldLogo from "./primitives/IconStepsFoldLogo";
+import IconSteppoCheckWhite from "./primitives/IconSteppoCheckWhite";
+import IconSteppoCheckColor from "./primitives/IconSteppoCheckColor";
 
 const StyledAppbar = styled(AppBar)`
   align-items: center;
@@ -95,7 +97,7 @@ const TopBar: FC<{ onClickLogo: () => void; className?: string; actions?: ReactN
           }}
         >
           {/* <StepsLogoIconFold height={36} /> */}
-          <IconStepsFoldLogo fontSize="large"></IconStepsFoldLogo>
+          <IconSteppoCheckColor fontSize="large"></IconSteppoCheckColor>
         </IconButton>
         {/* SEARCH */}
         {actions || (

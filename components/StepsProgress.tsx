@@ -5,6 +5,7 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { FC } from "react";
 import styled from "styled-components";
 import { Grow } from "@mui/material";
+import IconSteppoCheckColor from "./primitives/IconSteppoCheckColor";
 
 const Root = styled(Box)`
   .icon-done {
@@ -27,7 +28,9 @@ const StepsProgress: FC<{ label: string; complete: boolean; value: number; props
       <Box sx={{ minWidth: 35 }}>
         {complete ? (
           <Grow in={true}>
-            <CheckCircleOutlineIcon className="icon-done" />
+            <div>
+              <IconSteppoCheckColor className="icon-done" />
+            </div>
           </Grow>
         ) : (
           <Typography variant="button" color="text.secondary">{`${label}`}</Typography>
