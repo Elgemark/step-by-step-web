@@ -1,11 +1,11 @@
 import { getFollows, getPostsByState, getBookmarkedPosts, useUser as fbUseUser } from "../../utils/firebase/api";
-import { Divider, useTheme, Box } from "@mui/material";
+import { Divider, useTheme, Box, Chip, Stack } from "@mui/material";
 import Head from "next/head";
 import Layout from "../../components/Layout";
 import ProfileCard from "../../components/profile/ProfileCard";
 import { useRouter } from "next/router";
 import Posts from "../../components/posts/Posts";
-import { useEffect, FC } from "react";
+import { useEffect, FC, useState } from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
@@ -21,8 +21,10 @@ import UserCard from "../../components/primitives/UserCard";
 import FirebaseWrapper from "../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../components/wrappers/MUIWrapper";
 import { useUser } from "reactfire";
-import { getReviewPosts, getDraftedPosts, getPublishedPosts } from "../../utils/firebase/api/post";
+import { getReviewPosts, getDraftedPosts, getPublishedPosts, getCreatedPosts } from "../../utils/firebase/api/post";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import { TabContext, TabPanel } from "@mui/lab";
+import FilterListIcon from "@mui/icons-material/FilterList";
 
 const UserCardControlled: FC<{ userId: string }> = styled(({ userId, ...props }) => {
   const router = useRouter();
@@ -69,6 +71,10 @@ const StyledLayout = styled(Layout)`
   .MuiTab-root {
     min-width: 40px;
   }
+  .MuiTabPanel-root {
+    width: 100%;
+    padding: 0;
+  }
   .divider {
     width: 100%;
   }
@@ -81,11 +87,38 @@ const tabProps = (index: number) => {
   };
 };
 
-const ProfilePage = ({ tabValue, uid, posts = [], userIds = [] }) => {
+const Filter: FC<{ onClick?: Function; values: Array<string>; selectedValue: string }> = ({
+  onClick,
+  values,
+  selectedValue,
+}) => {
+  return (
+    <Stack direction={"row"} spacing={1} sx={{ marginBottom: 1 }}>
+      <FilterListIcon></FilterListIcon>
+      {values.map((value) => (
+        <Chip
+          label={value}
+          variant={value === selectedValue ? "filled" : "outlined"}
+          clickable={Boolean(onClick)}
+          onClick={() => onClick && onClick({ value })}
+        />
+      ))}
+    </Stack>
+  );
+};
+
+const TabPanelCompleted = ({ posts = [] }) => {
+  return (
+    <TabPanel value="completed" tabIndex={3}>
+      <Filter values={["completed", "incomplete"]} selectedValue="completed"></Filter>
+      <Posts posts={posts} enableLink />
+    </TabPanel>
+  );
+};
+
+const ProfilePage = ({ tabValue, filterValue, uid, posts = [], userIds = [] }) => {
   const theme = useTheme();
-
   const { status, data: user } = useUser();
-
   const router = useRouter();
 
   useEffect(() => {
@@ -98,6 +131,10 @@ const ProfilePage = ({ tabValue, uid, posts = [], userIds = [] }) => {
     router.push("/profile/" + uid + "/" + newValue);
   };
 
+  const onClickFilterHandler = ({ value }) => {
+    router.push("/profile/" + uid + "/" + tabValue + "/" + value);
+  };
+
   return (
     <>
       <Head>
@@ -107,27 +144,48 @@ const ProfilePage = ({ tabValue, uid, posts = [], userIds = [] }) => {
         {/* LOGGED IN */}
         <ProfileCard userId={uid} />
         <Divider className="divider" />
-        <div className="tab-container">
-          <Tabs
-            className="tabs"
-            value={tabValue}
-            onChange={onTabChangeHandler}
-            aria-label="tabs"
-            centered
-            sx={{ width: "100%" }}
-          >
-            <Tab icon={<BookmarkIcon />} {...tabProps(0)} value="saved" />
-            <Tab icon={<GridViewIcon />} {...tabProps(1)} value="published" />
-            <Tab icon={<CreateIcon />} {...tabProps(2)} value="drafts" />
-            {/* <Tab icon={<VisibilityIcon />} {...tabProps(3)} value="reviews" /> */}
-            <Tab icon={<CheckCircleIcon />} {...tabProps(3)} value="completed" />
-            <Tab icon={<UnpublishedIcon />} {...tabProps(4)} value="incompleted" />
-            <Tab icon={<AssistantDirectionIcon />} {...tabProps(5)} value="follows" />
-          </Tabs>
-        </div>
 
-        <Posts posts={posts} enableLink />
-        <Users userIds={userIds} />
+        <TabContext value={tabValue}>
+          <div className="tab-container">
+            <Tabs
+              className="tabs"
+              value={tabValue}
+              onChange={onTabChangeHandler}
+              aria-label="tabs"
+              centered
+              sx={{ width: "100%" }}
+            >
+              <Tab icon={<BookmarkIcon />} {...tabProps(0)} value="saved" />
+              <Tab icon={<GridViewIcon />} {...tabProps(1)} value="published" />
+              <Tab icon={<CreateIcon />} {...tabProps(2)} value="created" />
+              {/* <Tab icon={<VisibilityIcon />} {...tabProps(3)} value="reviews" /> */}
+              <Tab icon={<CheckCircleIcon />} {...tabProps(3)} value="completed" />
+              {/* <Tab icon={<UnpublishedIcon />} {...tabProps(4)} value="incompleted" /> */}
+              <Tab icon={<AssistantDirectionIcon />} {...tabProps(4)} value="follows" />
+            </Tabs>
+          </div>
+
+          <TabPanel value="saved" tabIndex={0}>
+            <Posts posts={posts} enableLink />
+          </TabPanel>
+          <TabPanel value="published" tabIndex={1}>
+            <Posts posts={posts} enableLink />
+          </TabPanel>
+          <TabPanel value="created" tabIndex={2}>
+            <Posts posts={posts} enableLink />
+          </TabPanel>
+          <TabPanel value="completed" tabIndex={3}>
+            <Filter
+              values={["completed", "incomplete"]}
+              selectedValue={filterValue}
+              onClick={onClickFilterHandler}
+            ></Filter>
+            <Posts posts={posts} enableLink />
+          </TabPanel>
+          <TabPanel value="follows" tabIndex={4}>
+            <Users userIds={userIds} />
+          </TabPanel>
+        </TabContext>
       </StyledLayout>
     </>
   );
@@ -136,6 +194,7 @@ const ProfilePage = ({ tabValue, uid, posts = [], userIds = [] }) => {
 export async function getServerSideProps({ query }) {
   const uid = query.profile[0];
   const tabValue = query.profile[1] || "saved";
+  let filterValue = query.profile[2] || null;
   let posts = [];
   let userIds = [];
   switch (tabValue) {
@@ -147,21 +206,15 @@ export async function getServerSideProps({ query }) {
       const { posts: createdPosts } = await getPublishedPosts(uid);
       posts = createdPosts;
       break;
-    case "drafts":
-      const { posts: draftedPosts } = await getDraftedPosts(uid);
+    case "created":
+      const visibility = filterValue || "published";
+      const { posts: draftedPosts } = await getCreatedPosts(uid, filterValue || visibility);
       posts = draftedPosts;
       break;
-    case "reviews":
-      const { posts: reviewPosts } = await getReviewPosts(uid);
-      posts = reviewPosts;
-      break;
     case "completed":
-      const { posts: completedPosts } = await getPostsByState(uid, "completed");
+      const status = filterValue || "completed";
+      const { posts: completedPosts } = await getPostsByState(uid, status);
       posts = completedPosts;
-      break;
-    case "incompleted":
-      const { posts: incompletedPosts } = await getPostsByState(uid, "incompleted");
-      posts = incompletedPosts;
       break;
     case "follows":
       const { data: follows } = await getFollows(uid);
@@ -169,7 +222,7 @@ export async function getServerSideProps({ query }) {
       break;
   }
 
-  return { props: { tabValue, uid, posts, userIds } };
+  return { props: { tabValue, filterValue, uid, posts, userIds } };
 }
 
 export default (props) => (
