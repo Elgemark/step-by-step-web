@@ -166,7 +166,8 @@ export const getReviewPosts = async (uid) => {
   return { error, posts };
 };
 
-export const getPostsByState = async (uid, state) => {
+// Can only get 10 at the time
+export const getPostsByState = async (uid, state, from = 0, to = 10) => {
   let error = null;
   const posts = [];
   const firebase = getFirestore();
@@ -185,7 +186,7 @@ export const getPostsByState = async (uid, state) => {
   // Get posts saved by user (if any)
   if (postIds.length) {
     const postsRef = collection(firebase, "posts");
-    const queryBuild = query(postsRef, where("id", "in", postIds));
+    const queryBuild = query(postsRef, where("id", "in", postIds.slice(from, to)));
     try {
       const querySnapshot = await getDocs(queryBuild);
       querySnapshot.forEach((doc) => {

@@ -12,8 +12,6 @@ import BookmarkIcon from "@mui/icons-material/Bookmark";
 import CreateIcon from "@mui/icons-material/Create";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import GridViewIcon from "@mui/icons-material/GridView";
-import UnpublishedIcon from "@mui/icons-material/Unpublished";
-import PublishIcon from "@mui/icons-material/Publish";
 import AssistantDirectionIcon from "@mui/icons-material/AssistantDirection";
 import styled from "styled-components";
 import ResponsiveGrid from "../../components/primitives/ResponsiveGrid";
@@ -21,8 +19,7 @@ import UserCard from "../../components/primitives/UserCard";
 import FirebaseWrapper from "../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../components/wrappers/MUIWrapper";
 import { useUser } from "reactfire";
-import { getReviewPosts, getDraftedPosts, getPublishedPosts, getCreatedPosts } from "../../utils/firebase/api/post";
-import VisibilityIcon from "@mui/icons-material/Visibility";
+import { getPublishedPosts, getCreatedPosts } from "../../utils/firebase/api/post";
 import { TabContext, TabPanel } from "@mui/lab";
 import FilterListIcon from "@mui/icons-material/FilterList";
 
@@ -63,10 +60,10 @@ const StyledLayout = styled(Layout)`
     top: 70px;
     z-index: 1;
     backdrop-filter: blur(10px);
-    border-radius: 20px;
+    border-radius: 16px;
   }
   .tabs {
-    margin: ${({ theme }) => theme.spacing(4)} 0;
+    margin: ${({ theme }) => theme.spacing(2)};
   }
   .MuiTab-root {
     min-width: 40px;
@@ -87,32 +84,23 @@ const tabProps = (index: number) => {
   };
 };
 
-const Filter: FC<{ onClick?: Function; values: Array<string>; selectedValue: string }> = ({
-  onClick,
-  values,
-  selectedValue,
-}) => {
+const Filter: FC<{
+  onClick?: Function;
+  values: Array<string> | Array<{ value: string; label: string }>;
+  selectedValue: string;
+}> = ({ onClick, values, selectedValue }) => {
   return (
-    <Stack direction={"row"} spacing={1} sx={{ marginBottom: 1 }}>
+    <Stack direction={"row"} spacing={1} sx={{ marginBottom: 1 }} alignItems="center">
       <FilterListIcon></FilterListIcon>
       {values.map((value) => (
         <Chip
-          label={value}
-          variant={value === selectedValue ? "filled" : "outlined"}
+          label={value?.label || value}
+          variant={(value?.value || value) === selectedValue ? "filled" : "outlined"}
           clickable={Boolean(onClick)}
-          onClick={() => onClick && onClick({ value })}
+          onClick={() => onClick && onClick({ value: value?.value || value })}
         />
       ))}
     </Stack>
-  );
-};
-
-const TabPanelCompleted = ({ posts = [] }) => {
-  return (
-    <TabPanel value="completed" tabIndex={3}>
-      <Filter values={["completed", "incomplete"]} selectedValue="completed"></Filter>
-      <Posts posts={posts} enableLink />
-    </TabPanel>
   );
 };
 
@@ -172,6 +160,14 @@ const ProfilePage = ({ tabValue, filterValue, uid, posts = [], userIds = [] }) =
             <Posts posts={posts} enableLink />
           </TabPanel>
           <TabPanel value="created" tabIndex={2}>
+            <Filter
+              values={[
+                { value: "draft", label: "drafts" },
+                { value: "review", label: "under review" },
+              ]}
+              selectedValue={filterValue}
+              onClick={onClickFilterHandler}
+            ></Filter>
             <Posts posts={posts} enableLink />
           </TabPanel>
           <TabPanel value="completed" tabIndex={3}>
@@ -207,13 +203,13 @@ export async function getServerSideProps({ query }) {
       posts = createdPosts;
       break;
     case "created":
-      const visibility = filterValue || "published";
-      const { posts: draftedPosts } = await getCreatedPosts(uid, filterValue || visibility);
+      filterValue = filterValue || "draft";
+      const { posts: draftedPosts } = await getCreatedPosts(uid, filterValue);
       posts = draftedPosts;
       break;
     case "completed":
-      const status = filterValue || "completed";
-      const { posts: completedPosts } = await getPostsByState(uid, status);
+      filterValue = filterValue || "completed";
+      const { posts: completedPosts } = await getPostsByState(uid, filterValue);
       posts = completedPosts;
       break;
     case "follows":
