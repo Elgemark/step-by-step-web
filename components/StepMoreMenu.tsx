@@ -4,26 +4,16 @@ import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
-import Menu from "./primitives/Menu";
-import { FC } from "react";
-import { Divider, Fade } from "@mui/material";
+import { FC, useRef, useState } from "react";
+import { Button, ClickAwayListener, Divider, Grow, MenuList, Paper } from "@mui/material";
 import { CollectionItem, useCollection } from "../utils/firebase/hooks/collections";
-import ListTable from "./primitives/ListTable";
 import ListTableItem from "./primitives/ListTableItem";
 import styled from "styled-components";
+import Popper from "@mui/material/Popper";
+import PushPinIcon from "@mui/icons-material/PushPin";
 
-const StyledMenu = styled(Menu)`
-  /* min-width: 800px; */
-  table {
-    /* max-width: 700px; */
-  }
-  .list-table-item {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    padding: 0 16px;
-    min-width: 200px;
-  }
+const StyledMenu = styled(Paper)`
+  padding: 12px;
 `;
 
 const List: FC<{ postId: string; stepId: string; list: CollectionItem }> = ({ postId, stepId, list }) => {
@@ -37,6 +27,8 @@ const List: FC<{ postId: string; stepId: string; list: CollectionItem }> = ({ po
 
   return (
     <div style={{ width: "100%" }}>
+      {/* {listData.length ? <Button startIcon={<PushPinIcon />}>{list.title}</Button> : ""} */}
+
       {listData.map((data) => (
         <ListTableItem {...data} className="list-table-item"></ListTableItem>
       ))}
@@ -51,16 +43,39 @@ const StepMoreMenu: FC<{
 }> = ({ postId, stepId, onRollBack }) => {
   const { data: lists } = useCollection(["posts", postId, "lists"]);
   const theme = useTheme();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
+  const [open, setOpen] = useState(false);
+  const anchorRef = useRef<HTMLButtonElement>(null);
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleToggle = () => {
+    setOpen((prevOpen) => !prevOpen);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
+  const handleClose = (event: Event | React.SyntheticEvent) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target as HTMLElement)) {
+      return;
+    }
+
+    setOpen(false);
   };
+
+  function handleListKeyDown(event: React.KeyboardEvent) {
+    if (event.key === "Tab") {
+      event.preventDefault();
+      setOpen(false);
+    } else if (event.key === "Escape") {
+      setOpen(false);
+    }
+  }
+
+  // return focus to the button when we transitioned from !open -> open
+  const prevOpen = React.useRef(open);
+  React.useEffect(() => {
+    if (prevOpen.current === true && open === false) {
+      anchorRef.current!.focus();
+    }
+
+    prevOpen.current = open;
+  }, [open]);
 
   const listItems = lists.map((list) => {
     return <List postId={postId} stepId={stepId} list={list} />;
@@ -68,44 +83,56 @@ const StepMoreMenu: FC<{
 
   return (
     <>
-      <IconButton aria-label="more" onClick={handleClick}>
+      <IconButton ref={anchorRef} aria-label="more" onClick={handleToggle}>
         <MoreVertIcon />
       </IconButton>
-      <StyledMenu
-        dense
-        elevation={0}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "right",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-        anchorEl={anchorEl}
+      <Popper
         open={open}
-        onClose={handleClose}
-        theme={theme}
-        TransitionComponent={Fade}
+        anchorEl={anchorRef.current}
+        role={undefined}
+        placement="bottom-start"
+        transition
+        disablePortal
+        sx={{ zIndex: 1 }}
       >
-        {/* ROLL BACK */}
-        {onRollBack && (
-          <MenuItem
-            onClick={() => {
-              onRollBack({ stepId });
-              handleClose();
+        {({ TransitionProps, placement }) => (
+          <Grow
+            {...TransitionProps}
+            style={{
+              transformOrigin: placement === "bottom-start" ? "left top" : "left bottom",
             }}
-            disableRipple
           >
-            <RestartAltIcon />
-            Roll Back
-          </MenuItem>
-        )}
+            <StyledMenu elevation={3}>
+              <ClickAwayListener onClickAway={handleClose}>
+                <MenuList
+                  autoFocusItem={open}
+                  id="composition-menu"
+                  aria-labelledby="composition-button"
+                  onKeyDown={handleListKeyDown}
+                >
+                  {/* ROLL BACK */}
+                  {onRollBack && (
+                    <MenuItem
+                      onClick={() => {
+                        onRollBack({ stepId });
+                        setOpen(false);
+                      }}
+                      disableRipple
+                    >
+                      <RestartAltIcon />
+                      Roll Back
+                    </MenuItem>
+                  )}
 
-        {/* LISTS */}
-        {listItems.length ? <Divider /> : null}
-        {listItems}
-      </StyledMenu>
+                  {/* LISTS */}
+                  {listItems.length ? <Divider /> : null}
+                  {listItems}
+                </MenuList>
+              </ClickAwayListener>
+            </StyledMenu>
+          </Grow>
+        )}
+      </Popper>
     </>
   );
 };
