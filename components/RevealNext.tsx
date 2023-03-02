@@ -9,21 +9,11 @@ const RevealNext: FC<{
   open: boolean;
   onClick: Function;
   showButton?: boolean;
-  showDone?: boolean;
   isLoading?: boolean;
   children?: ReactNode;
   label: string;
   scrollIntoViewTimeout?: number;
-}> = ({
-  children,
-  open,
-  showButton = true,
-  showDone = false,
-  isLoading = false,
-  label,
-  onClick,
-  scrollIntoViewTimeout = 500,
-}) => {
+}> = ({ children, open, showButton = true, isLoading = false, label, onClick, scrollIntoViewTimeout = 500 }) => {
   const ref = useRef<HTMLInputElement>(null);
 
   const onEndHandler = () => {
@@ -42,12 +32,6 @@ const RevealNext: FC<{
           <LoadingButton loading={isLoading} onClick={() => onClick()}>
             {label}
           </LoadingButton>
-        </Divider>
-      </Collapse>
-      {/* DONE */}
-      <Collapse in={showDone}>
-        <Divider>
-          <IconSteppoCheckColor fontSize="large" />
         </Divider>
       </Collapse>
     </Collapse>

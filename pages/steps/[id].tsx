@@ -21,6 +21,7 @@ import DialogReport, { ReportData } from "../../components/DialogReport";
 import { useTheme } from "@mui/material";
 import { Lists, ListsResponse } from "../../utils/firebase/api/list";
 import _ from "lodash";
+import StepsDone from "../../components/StepsDone";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -175,7 +176,6 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> 
               label="Next"
               open={index < progress.stepsCompleted.length}
               showButton={index == progress.stepsCompleted.length - 1 && index !== steps.length - 1}
-              showDone={index === steps.length - 1}
               onClick={() => {
                 onRevelNextClickHandler({ index });
               }}
@@ -184,6 +184,8 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> 
             </RevealNext>
           );
         })}
+        {/* STEPS DONE */}
+        <StepsDone open={progress.completed}></StepsDone>
       </StyledLayout>
       {/* DELETE DIALOG */}
       <DialogDeletePost open={showDeleteDialog} onClose={() => setShowDeleteDialog(null)} />
