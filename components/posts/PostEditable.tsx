@@ -37,7 +37,8 @@ const PostEditable: FC<{
   post: Post;
   onChange: (data: object) => void;
   onListChange: () => void;
-}> = ({ post, onChange, onListChange }) => {
+  onAIButtonClick?: () => void;
+}> = ({ post, onChange, onListChange, onAIButtonClick }) => {
   const { data: lists, updateItem: updateList, deleteItem: deleteList } = useCollection(["posts", post.id, "lists"]);
   const [tag, setTag] = useState("");
   const { object: data, setValue: setData } = useStateObject(post);
@@ -157,6 +158,7 @@ const PostEditable: FC<{
             onBlobChange={(blob) => {
               updateData("blob", blob);
             }}
+            onAiClick={onAIButtonClick}
             media={data.media}
           />
           <CardContent>

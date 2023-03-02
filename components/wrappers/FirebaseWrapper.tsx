@@ -1,6 +1,7 @@
 import { getApp } from "firebase/app";
 import { getAuth } from "firebase/auth"; // Firebase v9+
 import { getDatabase } from "firebase/database"; // Firebase v9+
+import { getFunctions } from "firebase/functions";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import styled from "styled-components";
@@ -39,6 +40,7 @@ const AuthAndDatabaseProviderWrapper = ({ children }) => {
   // initialize Database and Auth with the normal Firebase SDK functions
   const database = getDatabase(app);
   const auth = getAuth(app);
+  const functions = getFunctions(app, "us-central1");
 
   return (
     <AuthProvider sdk={auth}>

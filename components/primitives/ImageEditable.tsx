@@ -1,5 +1,6 @@
 import CardMedia from "@mui/material/CardMedia";
 import IconButton from "@mui/material/IconButton";
+import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import CropIcon from "@mui/icons-material/Crop";
 import TextField from "@mui/material/TextField";
@@ -46,7 +47,8 @@ interface Media {
 const ImageEditable: FC<{
   media: Media;
   onBlobChange?: Function;
-}> = ({ media = { imageURI: "" }, onBlobChange, ...props }) => {
+  onAiClick?: Function;
+}> = ({ media = { imageURI: "" }, onBlobChange, onAiClick, ...props }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [openEditor, setOpenEditor] = useState(false);
   const [blob, setBlob] = useState();
@@ -122,11 +124,19 @@ const ImageEditable: FC<{
           onChange={() => setEmptyStr("")}
           onPaste={onPasteHandler}
         />
+        {/* BROWSE */}
         <OpenDialog onFileSelected={onFileSelectedHandler}>
           <IconButton className="select-file" aria-label="browse">
             <FolderOpenIcon />
           </IconButton>
         </OpenDialog>
+        {/* AI */}
+        {onAiClick && (
+          <IconButton className="button-edit-image" aria-label="edit" onClick={() => onAiClick()}>
+            <AutoFixHighIcon />
+          </IconButton>
+        )}
+        {/* CROP */}
         {selectedImageURI && (
           <IconButton className="button-edit-image" aria-label="edit" onClick={onClickEditHandler}>
             <CropIcon />

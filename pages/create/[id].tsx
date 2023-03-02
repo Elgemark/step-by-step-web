@@ -31,6 +31,7 @@ import UnpublishedIcon from "@mui/icons-material/Unpublished";
 import { useRefresh } from "../../utils/firebaseUtils";
 import BottomBar from "../../components/primitives/BottomBar";
 import { saveAll as saveAllLists } from "../../utils/firebase/hooks/collections";
+import { getFunctions, httpsCallable } from "firebase/functions";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -210,6 +211,24 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
 
   const onListChangeHandler = () => {
     setHasSaveData(true);
+  };
+
+  const onAIButtonClickHandler = () => {
+    const functions = getFunctions();
+    const createAIImage = httpsCallable(functions, "createAIImage");
+    const messageTest = httpsCallable(functions, "messageTest");
+    const postData = { ...post, ...saveData.post };
+    const prompt = postData.title + " containing " + postData.tags.join(" and ");
+    console.log("prompt", prompt);
+
+    createAIImage({ prompt })
+      .then((resp) => {
+        //saveData, "post.blob
+        debugger;
+      })
+      .catch((error) => {
+        debugger;
+      });
   };
 
   return (
