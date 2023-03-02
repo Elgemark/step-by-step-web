@@ -5,7 +5,7 @@ export const toSanitizedArray = (str: string, tags = [], maxLength = 5) => {
     return [];
   }
   //
-  let newTags = str.split(/,| |;|\+|\-/);
+  let newTags = str.split(/,| |;|#|\+|\-/);
   // Removes leading and trailing whitespace
   newTags = newTags.map((tag: string) => _.trim(tag));
   // Removes empty strings
