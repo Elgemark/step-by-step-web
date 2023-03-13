@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import { useUser } from "../utils/firebase/api/user";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
+import { useSigninCheck } from "reactfire";
 
 export const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
@@ -37,13 +38,14 @@ const Layout: FC<{
   children?: ReactNode;
 }> = ({ children, propsTopbar, propsContent, ...props }) => {
   const { data: user } = useUser();
-  const auth = getAuth();
-  const [authState] = useAuthState(auth);
+  const { data: signInCheckResult } = useSigninCheck();
 
   const router = useRouter();
   const theme = useTheme();
   const { messages, removeMessage } = useMessages();
   const [showSideMenu, setShowSideMenu] = useState(false);
+
+  const isSignedId = signInCheckResult?.signedIn && user;
 
   return (
     <Root theme={theme} {...props}>
@@ -62,7 +64,7 @@ const Layout: FC<{
         <SideMenu
           onClose={() => setShowSideMenu(false)}
           onClickFeed={() => {
-            if (authState && user) {
+            if (isSignedId) {
               router.push("/posts/user/" + user.uid);
             } else {
               router.push("/posts/");
@@ -72,25 +74,25 @@ const Layout: FC<{
             router.push("/posts/search/");
           }}
           onClickLogin={
-            !user &&
+            !isSignedId &&
             (() => {
               router.push("/login/");
             })
           }
           onClickProfile={
-            user &&
+            isSignedId &&
             (() => {
               router.push("/profile/" + user.uid);
             })
           }
           onClickBookmarks={
-            user &&
+            isSignedId &&
             (() => {
               router.push("/profile/" + user.uid + "/saved/");
             })
           }
           onClickReview={
-            user &&
+            isSignedId &&
             user?.roles?.includes("admin") &&
             (() => {
               router.push("/admin/review");
