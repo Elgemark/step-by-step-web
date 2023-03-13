@@ -5,7 +5,7 @@ import IconSteppoCheckColor from "./primitives/IconSteppoCheckColor";
 import styled from "styled-components";
 
 const StyledInnerContainer = styled.div`
-  padding: ${({ theme }) => theme.spacing(4)} 0;
+  padding: ${({ theme }) => theme.spacing(3)} 0;
   width: 100%;
   display: flex;
   flex-direction: column;

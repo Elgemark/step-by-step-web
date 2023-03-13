@@ -1,11 +1,11 @@
 import { getFollows, getPostsByState, getBookmarkedPosts, useUser as fbUseUser } from "../../utils/firebase/api";
-import { Divider, useTheme, Box, Chip, Stack } from "@mui/material";
+import { Divider, useTheme } from "@mui/material";
 import Head from "next/head";
 import Layout from "../../components/Layout";
 import ProfileCard from "../../components/profile/ProfileCard";
 import { useRouter } from "next/router";
 import Posts from "../../components/posts/Posts";
-import { useEffect, FC, useState } from "react";
+import { useEffect, FC } from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
