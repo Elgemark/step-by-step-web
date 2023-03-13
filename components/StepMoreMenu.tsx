@@ -1,16 +1,14 @@
 import * as React from "react";
-import { useTheme } from "@mui/material/styles";
 import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import { FC, useRef, useState } from "react";
-import { Button, ClickAwayListener, Divider, Grow, MenuList, Paper } from "@mui/material";
+import { ClickAwayListener, Divider, Grow, MenuList, Paper } from "@mui/material";
 import { CollectionItem, useCollection } from "../utils/firebase/hooks/collections";
 import ListTableItem from "./primitives/ListTableItem";
 import styled from "styled-components";
 import Popper from "@mui/material/Popper";
-import PushPinIcon from "@mui/icons-material/PushPin";
 
 const StyledMenu = styled(Paper)`
   padding: 12px;
@@ -27,8 +25,6 @@ const List: FC<{ postId: string; stepId: string; list: CollectionItem }> = ({ po
 
   return (
     <div style={{ width: "100%" }}>
-      {/* {listData.length ? <Button startIcon={<PushPinIcon />}>{list.title}</Button> : ""} */}
-
       {listData.map((data) => (
         <ListTableItem {...data} className="list-table-item"></ListTableItem>
       ))}
@@ -42,7 +38,6 @@ const StepMoreMenu: FC<{
   onRollBack?: Function;
 }> = ({ postId, stepId, onRollBack }) => {
   const { data: lists } = useCollection(["posts", postId, "lists"]);
-  const theme = useTheme();
   const [open, setOpen] = useState(false);
   const anchorRef = useRef<HTMLButtonElement>(null);
 
