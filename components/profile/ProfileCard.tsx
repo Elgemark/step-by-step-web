@@ -11,6 +11,7 @@ import { UploadResponse } from "../../utils/firebase/interface";
 import UserCard, { UserCardBigEditable } from "../primitives/UserCard";
 import { useCategories } from "../../utils/firebase/api/categories";
 import _ from "lodash";
+import { useRouter } from "next/router";
 
 const ProfileCardEditable: FC<{
   userId?: string;
@@ -20,8 +21,6 @@ const ProfileCardEditable: FC<{
   const [isSaving, setIsSaving] = useState(false);
   const { data: user, update: updateUser, save: saveUser, isLoading } = useUser(userId);
   const { categories } = useCategories();
-
-  console.log("user", user);
 
   const { object: avatarData, update: updateAvatarObject } = useStateObject({
     url: null,
@@ -151,9 +150,11 @@ const ProfileCardDefault: FC<{
   const [burst] = useState<number>(Math.random());
   const { data: user, isLoading } = useUser(userId, true);
   const [signOut] = useSignOut(getAuth());
+  const router = useRouter();
 
-  const onSignOutHandler = () => {
-    signOut();
+  const onSignOutHandler = async () => {
+    await signOut();
+    router.push("/login/");
   };
 
   if (isLoading) {
