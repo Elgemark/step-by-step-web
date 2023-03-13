@@ -8,6 +8,8 @@ import { useTheme } from "@emotion/react";
 import SideMenu from "./primitives/SideMenu";
 import { useRouter } from "next/router";
 import { useUser } from "../utils/firebase/api/user";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { getAuth } from "firebase/auth";
 
 export const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
@@ -35,6 +37,9 @@ const Layout: FC<{
   children?: ReactNode;
 }> = ({ children, propsTopbar, propsContent, ...props }) => {
   const { data: user } = useUser();
+  const auth = getAuth();
+  const [authState] = useAuthState(auth);
+
   const router = useRouter();
   const theme = useTheme();
   const { messages, removeMessage } = useMessages();
@@ -57,7 +62,7 @@ const Layout: FC<{
         <SideMenu
           onClose={() => setShowSideMenu(false)}
           onClickFeed={() => {
-            if (user) {
+            if (authState && user) {
               router.push("/posts/user/" + user.uid);
             } else {
               router.push("/posts/");
