@@ -32,7 +32,7 @@ const StepEditable: FC<{
 }> = ({ postId, step, index, scrollIntoView = false, lists = [], onChange, onDelete, onAddStep, ...props }) => {
   const ref = useRef<HTMLInputElement>(null);
   const { object: data, setValue } = useStateObject(step);
-  const [openMediaEdit, setOpenMediaEdit] = useState(false);
+  const [openMediaEdit, setOpenMediaEdit] = useState(step.media.imageURI ? true : false);
 
   useEffect(() => {
     if (ref && scrollIntoView) {
