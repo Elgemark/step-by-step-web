@@ -22,6 +22,7 @@ const CardImage: FC<{ height?: any; src?: string; enableFullscreen?: boolean }> 
   height,
   src,
   enableFullscreen = false,
+  ...rest
 }) => {
   const [fullscreen, setFullscreen] = useState(false);
 
@@ -37,18 +38,21 @@ const CardImage: FC<{ height?: any; src?: string; enableFullscreen?: boolean }> 
         image={src}
         onClick={() => enableFullscreen && setFullscreen(true)}
         enableFullscreen={enableFullscreen}
+        {...rest}
       />
-      <StyledModal open={fullscreen} onClose={() => setFullscreen(false)}>
-        <img
-          onClick={() => {
-            if (fullscreen) {
-              setFullscreen(false);
-            }
-          }}
-          src={src}
-          width="100%"
-        ></img>
-      </StyledModal>
+      {enableFullscreen ? (
+        <StyledModal open={fullscreen} onClose={() => setFullscreen(false)}>
+          <img
+            onClick={() => {
+              if (fullscreen) {
+                setFullscreen(false);
+              }
+            }}
+            src={src}
+            width="100%"
+          ></img>
+        </StyledModal>
+      ) : null}
     </>
   );
 };

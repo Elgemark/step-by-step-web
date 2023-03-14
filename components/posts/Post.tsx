@@ -35,9 +35,10 @@ const Root = styled(Card)`
   }
 `;
 
-const StyledCardMedia = styled(CardMedia)`
+const StyledCardImage = styled(CardImage)`
   object-fit: cover;
   max-height: 320px;
+  cursor: ${({ enableLink }) => (enableLink ? "pointer" : "auo")};
 `;
 
 const MediaContainer = ({ children, hrefBasePath, slug, enableLink }) => {
@@ -131,7 +132,12 @@ const Post: FC<{
       />
 
       <MediaContainer slug={id} hrefBasePath={hrefBasePath} enableLink={enableLink}>
-        <CardImage height={settings.image.height} src={media.imageURI} enableFullscreen />
+        <StyledCardImage
+          height={settings.image.height}
+          src={media.imageURI}
+          enableLink={enableLink}
+          enableFullscreen={!enableLink}
+        />
       </MediaContainer>
 
       <CardContent>
