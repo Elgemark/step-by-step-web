@@ -23,6 +23,8 @@ import { useCollection } from "../../utils/firebase/hooks/collections";
 import { ListItems, Lists } from "../../utils/firebase/api/list";
 import { Progress, useProgress } from "../../utils/firebase/api/progress";
 import _ from "lodash";
+import CardImage from "../CardImage";
+import settings from "../../config";
 
 const Root = styled(Card)`
   .button-link {
@@ -129,7 +131,7 @@ const Post: FC<{
       />
 
       <MediaContainer slug={id} hrefBasePath={hrefBasePath} enableLink={enableLink}>
-        {media?.imageURI && <StyledCardMedia component="img" image={media?.imageURI} />}
+        <CardImage height={settings.image.height} src={media.imageURI} enableFullscreen />
       </MediaContainer>
 
       <CardContent>

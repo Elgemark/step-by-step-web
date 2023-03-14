@@ -8,9 +8,11 @@ import styled from "styled-components";
 import { FC } from "react";
 import settings from "../../config";
 import StepMoreMenu from "../StepMoreMenu";
+import CardImage from "../CardImage";
 
 const StyledCardMedia = styled(CardMedia)`
   object-fit: contain;
+  cursor: zoom-in;
 `;
 
 interface Media {
@@ -38,7 +40,7 @@ const Step: FC<{
         title={<Typography>{title}</Typography>}
         action={<StepMoreMenu postId={postId} stepId={id} onRollBack={onRollBack} />}
       />
-      {media?.imageURI && <StyledCardMedia component="img" height={settings.image.height} image={media.imageURI} />}
+      <CardImage height={settings.image.height} src={media.imageURI} enableFullscreen />
       <CardContent>
         <Typography variant="body2">{body}</Typography>
       </CardContent>
