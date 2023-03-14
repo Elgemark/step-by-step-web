@@ -6,7 +6,7 @@ import { red } from "@mui/material/colors";
 import TextField from "@mui/material/TextField";
 import { useRef, useEffect, FC, useState } from "react";
 import StepEditableMoreMenu from "../StepEditableMoreMenu";
-import { Step } from "../../utils/firebase/interface";
+import { Media, Step } from "../../utils/firebase/interface";
 import { useStateObject } from "../../utils/object";
 import ImageEditable from "../primitives/ImageEditable";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
@@ -79,6 +79,10 @@ const StepEditable: FC<{
         <ImageEditable
           onBlobChange={(blob) => {
             const updatedData = setValue("blob", blob);
+            onChange(updatedData);
+          }}
+          onDelete={() => {
+            const updatedData = setValue("media.imageURI", null);
             onChange(updatedData);
           }}
           media={data.media}

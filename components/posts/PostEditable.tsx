@@ -157,6 +157,9 @@ const PostEditable: FC<{
             onBlobChange={(blob) => {
               updateData("blob", blob);
             }}
+            onDelete={() => {
+              const updatedData = updateData("media.imageURI", null);
+            }}
             media={data.media}
           />
           <CardContent>

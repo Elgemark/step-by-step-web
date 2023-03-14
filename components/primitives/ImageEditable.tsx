@@ -1,6 +1,7 @@
 import CardMedia from "@mui/material/CardMedia";
 import IconButton from "@mui/material/IconButton";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
+import DeleteIcon from "@mui/icons-material/Delete";
 import CropIcon from "@mui/icons-material/Crop";
 import TextField from "@mui/material/TextField";
 import { useEffect, useState } from "react";
@@ -12,6 +13,7 @@ import { FC } from "react";
 import Modal from "@mui/material/Modal";
 import ImageEditor from "../ImageEditor";
 import settings from "../../config";
+import Dialog from "./Dialog";
 
 const StyledCardMediaContainer = styled.div`
   position: relative;
@@ -45,8 +47,10 @@ interface Media {
 
 const ImageEditable: FC<{
   media: Media;
-  onBlobChange?: Function;
-}> = ({ media = { imageURI: "" }, onBlobChange, ...props }) => {
+  onBlobChange: Function;
+  onDelete: Function;
+}> = ({ media = { imageURI: "" }, onBlobChange, onDelete, ...props }) => {
+  const [showDeleteMediaDialog, setShowDeleteMediaDialog] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [openEditor, setOpenEditor] = useState(false);
   const [blob, setBlob] = useState();
@@ -132,6 +136,12 @@ const ImageEditable: FC<{
             <CropIcon />
           </IconButton>
         )}
+        {/* DELETE */}
+        {previewImageURI || selectedImageURI || media?.imageURI ? (
+          <IconButton aria-label="delete" onClick={() => setShowDeleteMediaDialog(true)}>
+            <DeleteIcon />
+          </IconButton>
+        ) : null}
       </Stack>
 
       <Modal open={openEditor} onClose={onCloseEditorHandle}>
@@ -144,6 +154,19 @@ const ImageEditable: FC<{
           />
         </>
       </Modal>
+      {/* DIALOG DELETE MEDIA */}
+      <Dialog
+        open={showDeleteMediaDialog}
+        onClose={() => setShowDeleteMediaDialog(false)}
+        onClickOk={() => {
+          onDelete(media);
+          setSelectedImageURI(null);
+          setPreviewImageURI(null);
+          setShowDeleteMediaDialog(false);
+        }}
+        onClickCancel={() => setShowDeleteMediaDialog(false)}
+        content={"Delete image?"}
+      />
     </StyledCardMediaContainer>
   );
 };
