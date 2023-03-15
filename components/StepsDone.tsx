@@ -3,6 +3,7 @@ import { useRef } from "react";
 import { FC } from "react";
 import IconSteppoCheckColor from "./primitives/IconSteppoCheckColor";
 import styled from "styled-components";
+import Rate from "./primitives/Rate";
 
 const StyledInnerContainer = styled.div`
   padding: ${({ theme }) => theme.spacing(3)} 0;
@@ -36,6 +37,7 @@ const StepsDone: FC<{
       <StyledInnerContainer theme={theme}>
         <IconSteppoCheckColor className="icon-complete" fontSize="large" />
         <Divider />
+        <Rate value={0} />
       </StyledInnerContainer>
     </Collapse>
   );
