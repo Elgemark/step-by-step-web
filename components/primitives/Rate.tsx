@@ -9,17 +9,25 @@ export type StarType = "empty" | "half" | "full";
 
 const icons = { empty: StarBorderIcon, half: StarHalfIcon, full: StarIcon };
 
-const StarButton: FC<{ type: StarType; onClick: () => void }> = ({ type = "empty", onClick, ...rest }) => {
+const StarButton: FC<{ type: StarType; onClick: () => void; size?: "small" | "medium" | "large" }> = ({
+  type = "empty",
+  size = "medium",
+  onClick,
+  ...rest
+}) => {
   const Icon = icons[type];
 
   return (
-    <IconButton onClick={onClick} {...rest}>
-      <Icon />
+    <IconButton onClick={onClick} {...rest} size={size}>
+      <Icon fontSize={size} />
     </IconButton>
   );
 };
 
-const StyledStarButton = styled(StarButton)``;
+const StyledStarButton = styled(StarButton)`
+  opacity: ${({ type }) => (type === "empty" ? 0.5 : 1)};
+  cursor: ${({ clickable }) => (clickable ? "pointer" : "auto")};
+`;
 
 const getStarType = (value: number, starValue: number) => {
   const floorValue = starValue - 1;
@@ -34,24 +42,34 @@ const getStarType = (value: number, starValue: number) => {
   }
 };
 
-const getStarButton = (value: number, starValue: number, onClick: Function) => {
+const getStarButton = (value: number, starValue: number, onClick: Function, size?: "small" | "medium" | "large") => {
+  const type = getStarType(value, starValue);
   return (
     <StyledStarButton
-      type={getStarType(value, starValue)}
+      type={type}
       onClick={() => onClick && onClick(starValue)}
       clickable={Boolean(onClick)}
+      size={size}
+      disableRipple={Boolean(!onClick)}
+      disableTouchRipple={Boolean(!onClick)}
+      disableFocusRipple={Boolean(!onClick)}
     />
   );
 };
 
-const Rate: FC<{ value: number; onClick?: (value: number) => void }> = ({ value = 0, onClick }) => {
+const Rate: FC<{
+  value: number;
+  spacing?: number;
+  size?: "small" | "medium" | "large";
+  onClick?: (value: number) => void;
+}> = ({ value = 0, spacing = 0, size = "medium", onClick }) => {
   const starButtons = [];
   for (let index = 0; index < 5; index++) {
-    starButtons.push(getStarButton(value, index + 1, onClick));
+    starButtons.push(getStarButton(value, index + 1, onClick, size));
   }
 
   return (
-    <Stack direction={"row"} spacing={0}>
+    <Stack direction={"row"} spacing={spacing}>
       {starButtons}
     </Stack>
   );
