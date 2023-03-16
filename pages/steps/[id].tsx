@@ -22,6 +22,7 @@ import { useTheme } from "@mui/material";
 import { Lists, ListsResponse } from "../../utils/firebase/api/list";
 import _ from "lodash";
 import StepsDone from "../../components/StepsDone";
+import { ratePost, useRatesForPostAndUser } from "../../utils/firebase/api/rate";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -59,6 +60,7 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> 
   const [showDeleteDialog, setShowDeleteDialog] = useState<string>();
   const router = useRouter();
   const { user, progress, updateProgress, isLoading } = useProgress(id, true);
+  const { value: userRateValue, isLoading: isUserRateLoading } = useRatesForPostAndUser(id, user?.uid);
   const [report, setReport] = useState<ReportData>();
 
   const onEditHandler = ({ id }) => {
@@ -108,6 +110,10 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> 
     const index = stepsCompleted.findIndex((id) => id === stepId);
     stepsCompleted = stepsCompleted.slice(0, index + 1);
     await updateProgress(user.uid, id, { completed: false, stepsCompleted });
+  };
+
+  const onClickRateHandler = async (value) => {
+    await ratePost(id, user.uid, value);
   };
 
   return (
@@ -185,7 +191,7 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> 
           );
         })}
         {/* STEPS DONE */}
-        <StepsDone open={progress.completed}></StepsDone>
+        <StepsDone open={progress.completed} onClickRate={onClickRateHandler} rateValue={userRateValue} />
       </StyledLayout>
       {/* DELETE DIALOG */}
       <DialogDeletePost open={showDeleteDialog} onClose={() => setShowDeleteDialog(null)} />

@@ -25,6 +25,7 @@ import { Progress, useProgress } from "../../utils/firebase/api/progress";
 import _ from "lodash";
 import CardImage from "../CardImage";
 import settings from "../../config";
+import Rate from "../primitives/Rate";
 
 const Root = styled(Card)`
   .button-link {
@@ -83,6 +84,8 @@ const Post: FC<{
   lists?: Lists;
   media: Media;
   likes: number;
+  ratesNum?: number;
+  ratesTotal?: number;
   currentUserId?: string;
   action?: ReactNode | ReactJSXElement;
   onLike?: Function;
@@ -100,6 +103,8 @@ const Post: FC<{
   media = { imageURI: "" },
   action,
   likes = 0,
+  ratesNum = 0,
+  ratesTotal = 0,
   onLike,
   onClickAvatar,
 }) => {
@@ -155,6 +160,7 @@ const Post: FC<{
             </Badge>
           </IconButton>
         )}
+
         {/* SHARE */}
         {/* <IconButton aria-label="share">
           <ShareIcon />
@@ -165,6 +171,8 @@ const Post: FC<{
             {isBookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
           </IconButton>
         )}
+        {/* RATE */}
+        <Rate value={ratesTotal / ratesNum} size="small" spacing={-0.5} />
         {enableLink && (
           <IconButton className="button-link" aria-label="open-in-new-window" href={`/steps/${id}`} target="_blank">
             <OpenInNewIcon />

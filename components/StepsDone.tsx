@@ -22,7 +22,8 @@ const StepsDone: FC<{
   open: boolean;
   scrollIntoViewTimeout?: number;
   onClickRate?: (value) => void;
-}> = ({ open = false, scrollIntoViewTimeout = 500, onClickRate }) => {
+  rateValue?: number;
+}> = ({ open = false, scrollIntoViewTimeout = 500, onClickRate, rateValue = 0 }) => {
   const ref = useRef<HTMLInputElement>(null);
   const theme = useTheme();
 
@@ -38,7 +39,7 @@ const StepsDone: FC<{
       <StyledInnerContainer theme={theme}>
         <IconSteppoCheckColor className="icon-complete" fontSize="large" />
         <Divider />
-        <Rate value={0} onClick={onClickRate} />
+        <Rate value={rateValue} onClick={onClickRate} size="large" />
       </StyledInnerContainer>
     </Collapse>
   );
