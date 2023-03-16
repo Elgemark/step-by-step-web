@@ -69,7 +69,7 @@ const Rate: FC<{
   }
 
   return (
-    <Stack direction={"row"} spacing={spacing}>
+    <Stack direction={"row"} spacing={spacing} className="rate">
       {starButtons}
     </Stack>
   );

@@ -34,6 +34,11 @@ const Root = styled(Card)`
   .list {
     margin-bottom: ${({ theme }) => theme.spacing(1)};
   }
+  .rate-container {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+  }
 `;
 
 const StyledCardImage = styled(CardImage)`
@@ -153,13 +158,13 @@ const Post: FC<{
 
       <CardActions disableSpacing>
         {/* LIKE */}
-        {onLike && (
+        {/* {onLike && (
           <IconButton aria-label="like" onClick={onLikeHandler}>
             <Badge badgeContent={numLikes} color="success">
               {isLiked ? <FavoriteIcon color="warning" /> : <FavoriteBorderIcon />}
             </Badge>
           </IconButton>
-        )}
+        )} */}
 
         {/* SHARE */}
         {/* <IconButton aria-label="share">
@@ -172,7 +177,13 @@ const Post: FC<{
           </IconButton>
         )}
         {/* RATE */}
-        <Rate value={ratesTotal / ratesNum} size="small" spacing={-0.8} />
+        {ratesNum > 0 ? (
+          <div className="rate-container">
+            <Badge badgeContent={ratesNum} color="success">
+              <Rate value={ratesTotal / ratesNum} size="small" spacing={-0.8} />
+            </Badge>
+          </div>
+        ) : null}
         {enableLink && (
           <IconButton className="button-link" aria-label="open-in-new-window" href={`/steps/${id}`} target="_blank">
             <OpenInNewIcon />

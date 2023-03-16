@@ -1,4 +1,4 @@
-import { Collapse, Divider, useTheme } from "@mui/material";
+import { Collapse, Divider, Typography, useTheme } from "@mui/material";
 import { useRef } from "react";
 import { FC } from "react";
 import IconSteppoCheckColor from "./primitives/IconSteppoCheckColor";
@@ -39,6 +39,9 @@ const StepsDone: FC<{
       <StyledInnerContainer theme={theme}>
         <IconSteppoCheckColor className="icon-complete" fontSize="large" />
         <Divider />
+        <Collapse in={rateValue < 1}>
+          <Typography variant="subtitle2">{"Feel free to rate!"}</Typography>
+        </Collapse>
         <Rate value={rateValue} onClick={onClickRate} size="large" />
       </StyledInnerContainer>
     </Collapse>
