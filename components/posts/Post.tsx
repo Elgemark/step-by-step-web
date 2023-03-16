@@ -172,7 +172,7 @@ const Post: FC<{
           </IconButton>
         )}
         {/* RATE */}
-        <Rate value={ratesTotal / ratesNum} size="small" spacing={-0.5} />
+        <Rate value={ratesTotal / ratesNum} size="small" spacing={-0.8} />
         {enableLink && (
           <IconButton className="button-link" aria-label="open-in-new-window" href={`/steps/${id}`} target="_blank">
             <OpenInNewIcon />
