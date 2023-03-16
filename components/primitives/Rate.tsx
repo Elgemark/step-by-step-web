@@ -38,7 +38,7 @@ const getStarButton = (value: number, starValue: number, onClick: Function) => {
   return (
     <StyledStarButton
       type={getStarType(value, starValue)}
-      onClick={() => onClick && onClick(1)}
+      onClick={() => onClick && onClick(starValue)}
       clickable={Boolean(onClick)}
     />
   );
