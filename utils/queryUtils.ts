@@ -29,3 +29,11 @@ export const useDebouncedQuery = (query = {}) => {
     query: _query,
   };
 };
+
+export const getQuery = () => {
+  return Object.fromEntries(new URLSearchParams(location.search));
+};
+
+export const getPath = () => {
+  return location.href;
+};

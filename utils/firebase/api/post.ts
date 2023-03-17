@@ -24,7 +24,7 @@ import { toSanitizedArray } from "../../stringUtils";
 
 interface SearchFilter {
   category?: string;
-  orderBy?: "likes" | "latest" | "completions";
+  orderBy?: "ratesValue" | "latest" | "completions";
 }
 
 export const setPost = async (id, post: Post) => {
@@ -279,8 +279,8 @@ export const getPostsForAnonymousUser = async (
   if (options.excludeIds) {
     postsQuery.push(where("id", "not-in", options.excludeIds));
   }
-  // Order by likes // Not working!
-  // postsQuery.push(orderBy("likes", "desc"));
+  // Order by ratesValue // Not working with "in" or "=="!
+  // postsQuery.push(orderBy("ratesValue", "desc"));
   // Limit
   postsQuery.push(fsLimit(limit));
   // paginate...

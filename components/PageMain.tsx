@@ -8,6 +8,7 @@ import { useScrolledToBottom } from "../utils/scrollUtils";
 import SelectChips from "./primitives/SelectChips";
 import styled from "styled-components";
 import { Divider } from "@mui/material";
+import { getQuery } from "../utils/queryUtils";
 
 const StyledDivider = styled(Divider)`
   margin-bottom: 2rem;
@@ -35,7 +36,7 @@ const PageMain: FC<{
   };
 
   const onSelectCategoryHandler = (selectedCategory) => {
-    router.push("/posts/category/" + selectedCategory);
+    router.push({ pathname: "/posts/category/" + selectedCategory, query: getQuery() });
   };
 
   return (

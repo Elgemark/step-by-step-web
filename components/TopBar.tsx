@@ -8,7 +8,7 @@ import LoginIcon from "@mui/icons-material/Login";
 import Search from "./primitives/Search";
 import styled from "styled-components";
 import SearchFilter from "./SearchFilter";
-import { useDebouncedQuery } from "../utils/queryUtils";
+import { getPath, getQuery, useDebouncedQuery } from "../utils/queryUtils";
 import _ from "lodash";
 import { useUser } from "reactfire";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -51,7 +51,9 @@ const TopBar: FC<{ onClickLogo: () => void; className?: string; actions?: ReactN
   const { query, set: setQuery } = useDebouncedQuery();
 
   const onSearchEnterHandler = () => {
-    router.push({ pathname: "/posts/search/", query: { search: searchStr } });
+    //const newQuery = { ...getQuery(), search: searchStr };
+    const newQuery = _.pickBy({ ...getQuery(), search: searchStr }, _.identity);
+    router.push({ pathname: router.asPath.split("?")[0], query: newQuery });
     setAnchorEl(null);
   };
 
