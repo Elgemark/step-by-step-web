@@ -8,8 +8,6 @@ import { useTheme } from "@emotion/react";
 import SideMenu from "./primitives/SideMenu";
 import { useRouter } from "next/router";
 import { useUser } from "../utils/firebase/api/user";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { getAuth } from "firebase/auth";
 import { useSigninCheck } from "reactfire";
 
 export const ColorModeContext = createContext({ toggleColorMode: () => {} });

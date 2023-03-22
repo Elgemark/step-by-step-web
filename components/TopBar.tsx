@@ -1,18 +1,16 @@
 import { AppBar, Toolbar, Button, IconButton, useTheme, Popover, useMediaQuery } from "@mui/material";
 import { useRouter } from "next/router";
 import UserAvatar from "./UserAvatar";
-import { FC, ReactNode, useContext, useRef, useState } from "react";
+import { FC, ReactNode, useRef, useState } from "react";
 import { v4 as uuid } from "uuid";
 import CreateIcon from "@mui/icons-material/Create";
 import LoginIcon from "@mui/icons-material/Login";
 import Search from "./primitives/Search";
 import styled from "styled-components";
-import SearchFilter from "./SearchFilter";
-import { getPath, getQuery, useDebouncedQuery } from "../utils/queryUtils";
+import { getQuery, useDebouncedQuery } from "../utils/queryUtils";
 import _ from "lodash";
 import { useUser } from "reactfire";
 import MenuIcon from "@mui/icons-material/Menu";
-import IconSteppoCheckColor from "./primitives/IconSteppoCheckColor";
 
 const StyledAppbar = styled(AppBar)`
   align-items: center;
@@ -130,12 +128,6 @@ const TopBar: FC<{ onClickLogo: () => void; className?: string; actions?: ReactN
           }}
         >
           <div data-popper-arrow ref={refArrrow}></div>
-          <SearchFilter
-            selectedCategory={_.get(query, "category")}
-            selectedOrderBy={_.get(query, "orderBy")}
-            onSelectCategory={onSelectCategoryHandler}
-            onSelectOrderBy={onSelecteOrderBy}
-          ></SearchFilter>
         </Popover>
         {/* CREATE */}
         {user && (

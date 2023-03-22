@@ -22,6 +22,7 @@ import { useUser } from "reactfire";
 import { getPublishedPosts, getCreatedPosts } from "../../utils/firebase/api/post";
 import { TabContext, TabPanel } from "@mui/lab";
 import FilterMenu from "../../components/primitives/FilterMenu";
+import FloatingTopBar from "../../components/primitives/FloatingTopBar";
 
 const UserCardControlled: FC<{ userId: string }> = styled(({ userId, ...props }) => {
   const router = useRouter();
@@ -53,13 +54,6 @@ const StyledLayout = styled(Layout)`
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
-  .tab-container {
-    position: sticky;
-    top: 70px;
-    z-index: 1;
-    backdrop-filter: blur(10px);
-    border-radius: 16px;
   }
   .tabs {
     margin: ${({ theme }) => theme.spacing(2)};
@@ -113,7 +107,7 @@ const ProfilePage = ({ tabValue, filterValue, uid, posts = [], userIds = [] }) =
         <Divider className="divider" />
 
         <TabContext value={tabValue}>
-          <div className="tab-container">
+          <FloatingTopBar>
             <Tabs
               className="tabs"
               value={tabValue}
@@ -128,7 +122,7 @@ const ProfilePage = ({ tabValue, filterValue, uid, posts = [], userIds = [] }) =
               <Tab icon={<CheckCircleIcon />} {...tabProps(3)} value="completed" />
               <Tab icon={<AssistantDirectionIcon />} {...tabProps(4)} value="follows" />
             </Tabs>
-          </div>
+          </FloatingTopBar>
 
           <TabPanel value="saved" tabIndex={0}>
             <Posts posts={posts} enableLink />
