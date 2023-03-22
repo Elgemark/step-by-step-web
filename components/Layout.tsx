@@ -19,6 +19,9 @@ const Root = styled.div`
     display: none;
   }
   .content {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
     margin-top: 68px;
     width: 1024px;
     @media (min-width: 600px) {

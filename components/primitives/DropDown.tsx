@@ -1,4 +1,4 @@
-import { Button, Menu, MenuItem, alpha } from "@mui/material";
+import { Button, Menu, MenuItem, alpha, ButtonTypeMap } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import styled from "styled-components";
 import { FC, ReactElement, ReactNode, useState } from "react";
@@ -47,7 +47,14 @@ const DropDown: FC<{
   selectedOption?: MenuOption;
   placeholder?: MenuOption;
   onSelect: (option: MenuOption) => void | number;
-}> = ({ options, onSelect, selectedOption, placeholder = { label: "select", element: null, value: null } }) => {
+  buttonProps?: ButtonTypeMap;
+}> = ({
+  options,
+  onSelect,
+  selectedOption,
+  placeholder = { label: "select", element: null, value: null },
+  buttonProps,
+}) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const onClickMenuButtonHandler = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -67,6 +74,7 @@ const DropDown: FC<{
           onClickMenuButtonHandler(e);
         }}
         endIcon={<KeyboardArrowDownIcon />}
+        {...buttonProps}
       >
         {selectedOption ? (
           <>

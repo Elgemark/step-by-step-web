@@ -7,6 +7,10 @@ const Root = styled.div`
   z-index: 1;
   backdrop-filter: blur(20px);
   border-radius: ${({ theme }) => theme.spacing(2)};
+  padding: ${({ theme }) => theme.spacing(1)};
+  display: flex;
+  justify-content: center;
+  /* width: fit-content; */
 `;
 
 const FloatingTopBar = (props) => {

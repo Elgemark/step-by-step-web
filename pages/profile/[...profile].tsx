@@ -55,6 +55,9 @@ const StyledLayout = styled(Layout)`
     flex-direction: column;
     align-items: center;
   }
+  .floating-top-bar {
+    padding: 0;
+  }
   .tabs {
     margin: ${({ theme }) => theme.spacing(2)};
   }
@@ -107,7 +110,7 @@ const ProfilePage = ({ tabValue, filterValue, uid, posts = [], userIds = [] }) =
         <Divider className="divider" />
 
         <TabContext value={tabValue}>
-          <FloatingTopBar>
+          <FloatingTopBar className="floating-top-bar">
             <Tabs
               className="tabs"
               value={tabValue}

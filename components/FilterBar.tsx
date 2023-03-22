@@ -1,20 +1,20 @@
-
 import FloatingTopBar from "./primitives/FloatingTopBar";
 import styled from "styled-components";
 import DropDown from "./primitives/DropDown";
 import { useCategories } from "../utils/firebase/api/categories";
+import SelectDropDown from "./primitives/SelectDropDown";
 
-const FilterBar = ({ , onClickCategories }) => {
+const FilterBar = ({}) => {
+  const { categories, isLoading: isLoadingCategories } = useCategories();
 
-  const {categories,isLoading:isLoadingCategories} = useCategories();
-
-  const onSelectCategoriesHandler = (option) => {
-
-  }
-
+  const onChangeCategoryHandler = (e) => {};
   return (
     <FloatingTopBar>
-      <DropDown options={[{ value: "test", label: "test" }]} onSelect={onSelectCategoriesHandler}></DropDown>
+      <SelectDropDown
+        onChange={onChangeCategoryHandler}
+        label="Category"
+        options={categories.map((category) => ({ label: category.text, value: category.value }))}
+      />
     </FloatingTopBar>
   );
 };

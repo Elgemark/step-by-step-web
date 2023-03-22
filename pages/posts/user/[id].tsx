@@ -16,6 +16,7 @@ import Posts from "../../../components/posts/Posts";
 import { Posts as PostsType } from "../../../utils/firebase/type";
 import { useUser } from "../../../utils/firebase/api/user";
 import { getFollows } from "../../../utils/firebase/api/follow";
+import FilterBar from "../../../components/FilterBar";
 
 type FetchResponse = {
   hasMorePosts: boolean;
@@ -144,7 +145,9 @@ const UserPage = ({ follows }) => {
         <meta content="noindex, nofollow, initial-scale=1, width=device-width" name="robots" />
         <title>{"Steppo"}</title>
       </Head>
+
       <Layout>
+        <FilterBar></FilterBar>
         <Posts enableLink={true} posts={posts as PostsType} />
       </Layout>
     </>
