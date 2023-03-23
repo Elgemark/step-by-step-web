@@ -19,6 +19,7 @@ const ContentContainer = styled.div`
   margin: ${({ theme }) => theme.spacing(1)} 0 ${({ theme }) => theme.spacing(2)};
   transform: scale(${({ scrollDirection }) => (scrollDirection === "down" ? 0.8 : 1)});
   transform-origin: top center;
+  transition-delay: 1s;
   transition: 0.5s transform;
   :hover {
     transform: scale(1);

@@ -42,7 +42,7 @@ const FilterBar = ({}) => {
           value={router.query.category as string}
           options={allCategories}
         />
-        <StyledOutlinedBox>
+        <StyledOutlinedBox title="Rated">
           <Rate size="small" onClick={onClickRateHandler} value={query.rated || 0} />
         </StyledOutlinedBox>
       </Stack>
