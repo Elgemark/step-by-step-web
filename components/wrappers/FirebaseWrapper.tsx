@@ -48,7 +48,6 @@ const AuthAndDatabaseProviderWrapper = ({ children }) => {
 };
 
 const Root = styled.div`
-  height: ;
   display: flex;
   flex-direction: column;
   justify-content: center;

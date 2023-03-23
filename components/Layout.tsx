@@ -19,9 +19,6 @@ const Root = styled.div`
     display: none;
   }
   .content {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
     margin-top: 68px;
     width: 1024px;
     @media (min-width: 600px) {
@@ -53,11 +50,11 @@ const Layout: FC<{
       {/* TOPBAR */}
       <TopBar onClickLogo={() => setShowSideMenu(true)} className="top-bar" {...propsTopbar} />
       <Box className="content" {...propsContent}>
-        <Stack direction={"row"} justifyContent="center">
+        {/* <Stack direction={"row"} justifyContent="center">
           <Alert className="info" severity="info" color="warning">
             This is site is under development. Please come back later!
           </Alert>
-        </Stack>
+        </Stack> */}
         {children}
       </Box>
       {/* SIDEMENU */}

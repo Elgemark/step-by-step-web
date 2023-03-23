@@ -4,7 +4,7 @@ import SelectDropDown from "./primitives/SelectDropDown";
 import { Stack } from "@mui/material";
 import Rate from "./primitives/Rate";
 import OutlinedBox from "./primitives/OutlinedBox";
-import { getQuery, useDebouncedQuery } from "../utils/queryUtils";
+import { useDebouncedQuery } from "../utils/queryUtils";
 import styled from "styled-components";
 import { useRouter } from "next/router";
 
@@ -38,8 +38,8 @@ const FilterBar = ({}) => {
       <Stack spacing={2} direction="row">
         <SelectDropDown
           onChange={onChangeCategoryHandler}
-          label="Category"
-          value={router.query.category}
+          label={isLoadingCategories ? "loading..." : "Category"}
+          value={router.query.category as string}
           options={allCategories}
         />
         <StyledOutlinedBox>

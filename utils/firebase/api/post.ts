@@ -24,7 +24,7 @@ import { toSanitizedArray } from "../../stringUtils";
 
 interface SearchFilter {
   category?: string;
-  orderBy?: "ratesValue" | "latest" | "completions";
+  rated?: number;
 }
 
 export const setPost = async (id, post: Post) => {
@@ -358,9 +358,9 @@ export const getPostsBySearch = async (search: string, filter: SearchFilter = {}
   if (tags && tags.length) {
     postsQuery.push(where("tags", "array-contains-any", tags));
   }
-  // order by
-  if (filter.orderBy) {
-    postsQuery.push(orderBy(filter.orderBy, "desc"));
+  // rated
+  if (filter.rated) {
+    postsQuery.push(where("ratesValue", ">=", filter.rated));
   }
   // paginate...
   if (lastDoc) {

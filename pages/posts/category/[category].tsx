@@ -2,23 +2,20 @@ import { getPostsBySearch } from "../../../utils/firebase/api/post";
 import _ from "lodash";
 import FirebaseWrapper from "../../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../../components/wrappers/MUIWrapper";
-import { getCategories } from "../../../utils/firebase/api";
 import Head from "next/head";
 import Layout from "../../../components/Layout";
 import FilterBar from "../../../components/FilterBar";
 import Posts from "../../../components/posts/Posts";
+import { Posts as PostsType } from "../../../utils/firebase/type";
 
 export async function getServerSideProps({ query }) {
-  const { category, search } = query;
+  const { category, search, rated } = query;
 
-  const categories = await getCategories();
-
-  const response = await getPostsBySearch(search, { category });
-
+  const response = await getPostsBySearch(search, { category, rated });
   const items = response.data || [];
 
   return {
-    props: { posts: items, category, categories: categories.data.map((item) => item.value), search: search || null },
+    props: { posts: items, category, search: search || null },
   };
 }
 
