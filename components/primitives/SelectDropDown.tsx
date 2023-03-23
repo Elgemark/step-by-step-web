@@ -5,7 +5,7 @@ import Select from "@mui/material/Select";
 import { FC, ReactElement, ReactNode } from "react";
 
 type Option = {
-  label: string;
+  label?: string;
   value: string | number;
   element?: ReactNode | ReactElement;
 };
@@ -20,7 +20,7 @@ const SelectDropDown: FC<{ onChange: Function; label: string; options: Options; 
   ...props
 }) => {
   return (
-    <FormControl sx={{ minWidth: 200 }} size="small" {...props}>
+    <FormControl sx={{ minWidth: 160 }} size="small" {...props}>
       <InputLabel>{label}</InputLabel>
       <Select value={value} label={label} onChange={(e) => onChange(e.target.value)}>
         {options.map((option, index) => (

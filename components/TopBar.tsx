@@ -49,9 +49,7 @@ const TopBar: FC<{ onClickLogo: () => void; className?: string; actions?: ReactN
   const { query, set: setQuery } = useDebouncedQuery();
 
   const onSearchEnterHandler = () => {
-    //const newQuery = { ...getQuery(), search: searchStr };
-    const newQuery = _.pickBy({ ...getQuery(), search: searchStr }, _.identity);
-    router.push({ pathname: router.asPath.split("?")[0], query: newQuery });
+    setQuery({ search: searchStr });
     setAnchorEl(null);
   };
 

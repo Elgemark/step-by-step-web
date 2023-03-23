@@ -6,22 +6,31 @@ export interface Query {
   [key: string]: any;
 }
 
-const debouncedSetQuery = _.debounce((router, query) => {
-  router.replace({ query: _.omitBy({ ...router.query, ...query }, _.isEmpty) }, null, { scroll: false });
-}, 1000);
+export interface QueryProperties {
+  debounceWait?: number;
+}
 
-export const useDebouncedQuery = (query = {}) => {
+const debouncedSetQuery = (wait = 1000) =>
+  _.debounce((router, query) => {
+    const newQuery = _.pickBy(query, _.identity);
+    router.push({ pathname: router.asPath.split("?")[0], query: newQuery });
+  }, wait);
+
+export const useDebouncedQuery = (query = {}, props: QueryProperties = {}) => {
+  const queryProps: QueryProperties = { debounceWait: 100, ...props };
+  const debounce = debouncedSetQuery(queryProps.debounceWait);
   const router = useRouter();
   const [_query, setQuery] = useState<Query>(query);
 
   useEffect(() => {
-    setQuery({ ...router.query, ...query });
+    setQuery({ ...getQuery(), ..._query });
   }, []);
 
   return {
     set: (query) => {
-      setQuery({ ...router.query, ...query });
-      debouncedSetQuery(router, query);
+      const newQuery = { ..._query, ...query };
+      setQuery(newQuery);
+      debounce(router, newQuery);
     },
     get: () => {
       return _query;

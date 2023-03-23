@@ -8,9 +8,9 @@ const Root = styled.div`
   backdrop-filter: blur(20px);
   border-radius: ${({ theme }) => theme.spacing(2)};
   padding: ${({ theme }) => theme.spacing(1)};
+  margin: ${({ theme }) => theme.spacing(1)};
   display: flex;
   justify-content: center;
-  /* width: fit-content; */
 `;
 
 const FloatingTopBar = (props) => {

@@ -145,7 +145,6 @@ const UserPage = ({ follows }) => {
         <meta content="noindex, nofollow, initial-scale=1, width=device-width" name="robots" />
         <title>{"Steppo"}</title>
       </Head>
-
       <Layout>
         <FilterBar></FilterBar>
         <Posts enableLink={true} posts={posts as PostsType} />
