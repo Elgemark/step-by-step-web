@@ -6,7 +6,6 @@ import MUIWrapper from "../../../components/wrappers/MUIWrapper";
 import { likePost, useUser } from "../../../utils/firebase/api";
 import Loader from "../../../components/Loader";
 import { limit, startAfter, where } from "firebase/firestore";
-import PageMain from "../../../components/PageMain";
 import Head from "next/head";
 import Layout from "../../../components/Layout";
 import Masonry from "../../../components/primitives/Masonry";

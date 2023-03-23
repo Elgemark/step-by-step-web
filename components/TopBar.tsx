@@ -7,10 +7,11 @@ import CreateIcon from "@mui/icons-material/Create";
 import LoginIcon from "@mui/icons-material/Login";
 import Search from "./primitives/Search";
 import styled from "styled-components";
-import { getQuery, useDebouncedQuery } from "../utils/queryUtils";
+import { getBasePath, getPath, getQuery, useDebouncedQuery } from "../utils/queryUtils";
 import _ from "lodash";
 import { useUser } from "reactfire";
 import MenuIcon from "@mui/icons-material/Menu";
+import { includesAny } from "../utils/arrayUtils";
 
 const StyledAppbar = styled(AppBar)`
   align-items: center;
@@ -49,7 +50,12 @@ const TopBar: FC<{ onClickLogo: () => void; className?: string; actions?: ReactN
   const { query, set: setQuery } = useDebouncedQuery();
 
   const onSearchEnterHandler = () => {
-    setQuery({ search: searchStr });
+    if (includesAny(getBasePath().split("/"), ["search", "category"])) {
+      setQuery({ search: searchStr });
+    } else {
+      router.push({ pathname: `/posts/search/`, query: { ...query, search: searchStr } });
+    }
+
     setAnchorEl(null);
   };
 
@@ -65,22 +71,6 @@ const TopBar: FC<{ onClickLogo: () => void; className?: string; actions?: ReactN
 
   const onClickFilterHandler = (e) => {
     setAnchorEl(anchorEl ? null : e.currentTarget);
-  };
-
-  const onSelectCategoryHandler = (category) => {
-    if (_.get(query, "category") === category) {
-      setQuery({ category: null });
-    } else {
-      setQuery({ category });
-    }
-  };
-
-  const onSelecteOrderBy = (orderBy) => {
-    if (_.get(query, "orderBy") === orderBy) {
-      setQuery({ orderBy: null });
-    } else {
-      setQuery({ orderBy });
-    }
   };
 
   return (

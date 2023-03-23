@@ -146,7 +146,6 @@ const UserPage = ({ follows }) => {
         <title>{"Steppo"}</title>
       </Head>
       <Layout>
-        <FilterBar></FilterBar>
         <Posts enableLink={true} posts={posts as PostsType} />
       </Layout>
     </>

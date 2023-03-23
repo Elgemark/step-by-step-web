@@ -4,12 +4,10 @@ import _ from "lodash";
 import FirebaseWrapper from "../../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../../components/wrappers/MUIWrapper";
 import { getCategories } from "../../../utils/firebase/api";
-
-const CategoryPage = (props) => {
-  const { category, search } = props;
-  console.log("search", search);
-  return <PageMain {...props} title={"STEPS | " + _.capitalize(category)} enableLink={true} />;
-};
+import Head from "next/head";
+import Layout from "../../../components/Layout";
+import FilterBar from "../../../components/FilterBar";
+import Posts from "../../../components/posts/Posts";
 
 export async function getServerSideProps({ query }) {
   const { category, search } = query;
@@ -20,13 +18,22 @@ export async function getServerSideProps({ query }) {
 
   const items = response.data || [];
 
-  return { props: { posts: items, category, categories: categories.data, search: search || null } };
+  return {
+    props: { posts: items, category, categories: categories.data.map((item) => item.value), search: search || null },
+  };
 }
 
-export default (props) => (
+export default ({ category, posts }) => (
   <MUIWrapper>
     <FirebaseWrapper>
-      <CategoryPage {...props} />
+      <Head>
+        <meta content="noindex, nofollow, initial-scale=1, width=device-width" name="robots" />
+        <title>{"STEPS | " + _.capitalize(category)}</title>
+      </Head>
+      <Layout>
+        <FilterBar></FilterBar>
+        <Posts enableLink={true} posts={posts as PostsType} />
+      </Layout>
     </FirebaseWrapper>
   </MUIWrapper>
 );

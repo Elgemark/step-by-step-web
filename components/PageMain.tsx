@@ -5,10 +5,10 @@ import Posts from "./posts/Posts";
 import { FC, useEffect } from "react";
 import { Posts as PostsType } from "../utils/firebase/type";
 import { useScrolledToBottom } from "../utils/scrollUtils";
-import SelectChips from "./primitives/SelectChips";
 import styled from "styled-components";
 import { Divider } from "@mui/material";
 import { getQuery } from "../utils/queryUtils";
+import FilterBar from "./FilterBar";
 
 const StyledDivider = styled(Divider)`
   margin-bottom: 2rem;
@@ -21,7 +21,7 @@ const PageMain: FC<{
   categories: Array<any>;
   title: string;
   enableLink: boolean;
-}> = ({ posts = [], title, categories, category, enableLink = false }) => {
+}> = ({ posts = [], title, enableLink = false }) => {
   const isBottom = useScrolledToBottom(100);
   const router = useRouter();
 
@@ -35,10 +35,6 @@ const PageMain: FC<{
     router.replace(router.asPath, undefined, { scroll: false });
   };
 
-  const onSelectCategoryHandler = (selectedCategory) => {
-    router.push({ pathname: "/posts/category/" + selectedCategory, query: getQuery() });
-  };
-
   return (
     <>
       <Head>
@@ -46,19 +42,7 @@ const PageMain: FC<{
         <title>{title}</title>
       </Head>
       <Layout>
-        {categories ? (
-          <>
-            <nav>
-              <SelectChips
-                items={categories}
-                selectedItems={[category]}
-                onSelect={onSelectCategoryHandler}
-                justifyContent="center"
-              />
-            </nav>
-            <StyledDivider />
-          </>
-        ) : null}
+        <FilterBar></FilterBar>
         <Posts enableLink={enableLink} posts={posts as PostsType} />
       </Layout>
     </>

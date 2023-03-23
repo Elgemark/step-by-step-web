@@ -8,10 +8,6 @@ import MUIWrapper from "../../../components/wrappers/MUIWrapper";
 const collection = new Collection();
 let lastDoc;
 
-const SearchPage = (props) => {
-  return <PageMain {...props} title="STEPS" enableLink={true} />;
-};
-
 export async function getServerSideProps({ query }) {
   const { search, category } = query;
   let response: PostsResponse = { data: [], error: null };
@@ -35,7 +31,7 @@ export async function getServerSideProps({ query }) {
 export default (props) => (
   <MUIWrapper>
     <FirebaseWrapper>
-      <SearchPage {...props} />
+      <PageMain {...props} title="STEPS" enableLink={true} />
     </FirebaseWrapper>
   </MUIWrapper>
 );

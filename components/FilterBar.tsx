@@ -6,6 +6,7 @@ import Rate from "./primitives/Rate";
 import OutlinedBox from "./primitives/OutlinedBox";
 import { getQuery, useDebouncedQuery } from "../utils/queryUtils";
 import styled from "styled-components";
+import { useRouter } from "next/router";
 
 const StyledOutlinedBox = styled(OutlinedBox)`
   padding: 0 4px;
@@ -14,9 +15,14 @@ const StyledOutlinedBox = styled(OutlinedBox)`
 const FilterBar = ({}) => {
   const { categories, isLoading: isLoadingCategories } = useCategories();
   const { query, set: setQuery } = useDebouncedQuery({}, { debounceWait: 10 });
+  const router = useRouter();
 
   const onChangeCategoryHandler = (value) => {
-    setQuery({ category: value });
+    if (value === null) {
+      router.push({ pathname: `/posts/search/`, query });
+    } else {
+      router.push({ pathname: `/posts/category/${value}`, query });
+    }
   };
 
   const onClickRateHandler = (value) => {
