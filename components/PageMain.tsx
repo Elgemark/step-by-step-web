@@ -5,14 +5,8 @@ import Posts from "./posts/Posts";
 import { FC, useEffect } from "react";
 import { Posts as PostsType } from "../utils/firebase/type";
 import { useScrolledToBottom } from "../utils/scrollUtils";
-import styled from "styled-components";
-import { Divider } from "@mui/material";
-import { getQuery } from "../utils/queryUtils";
-import FilterBar from "./FilterBar";
 
-const StyledDivider = styled(Divider)`
-  margin-bottom: 2rem;
-`;
+import FilterBar from "./FilterBar";
 
 const PageMain: FC<{
   search: string;

@@ -1,5 +1,4 @@
 import { getPostsBySearch } from "../../../utils/firebase/api/post";
-import PageMain from "../../../components/PageMain";
 import _ from "lodash";
 import FirebaseWrapper from "../../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../../components/wrappers/MUIWrapper";

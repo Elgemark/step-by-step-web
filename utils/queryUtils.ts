@@ -13,7 +13,7 @@ export interface QueryProperties {
 const debouncedSetQuery = (wait = 1000) =>
   _.debounce((router, query) => {
     const newQuery = _.pickBy(query, _.identity);
-    router.push({ pathname: router.asPath.split("?")[0], query: newQuery });
+    router.replace({ pathname: router.asPath.split("?")[0], query: newQuery });
   }, wait);
 
 export const useDebouncedQuery = (query = {}, props: QueryProperties = {}) => {

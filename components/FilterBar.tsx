@@ -39,7 +39,7 @@ const FilterBar = ({}) => {
         <SelectDropDown
           onChange={onChangeCategoryHandler}
           label="Category"
-          value={query.category}
+          value={router.query.category}
           options={allCategories}
         />
         <StyledOutlinedBox>
