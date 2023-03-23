@@ -16,14 +16,16 @@ const FilterBar = ({}) => {
   const { query, set: setQuery } = useDebouncedQuery({}, { debounceWait: 10 });
 
   const onChangeCategoryHandler = (value) => {
-    //setQuery({ category: value });
+    setQuery({ category: value });
   };
 
   const onClickRateHandler = (value) => {
     const oldValue = query.rated || 0;
     setQuery({ rated: oldValue === 1 && value === 1 ? 0 : value });
-    console.log("val", String(value));
   };
+
+  const allCategories = categories.map((category) => ({ label: category.text, value: category.value }));
+  allCategories.splice(0, 0, { label: "any", value: null });
 
   return (
     <FloatingTopBar>
@@ -32,7 +34,7 @@ const FilterBar = ({}) => {
           onChange={onChangeCategoryHandler}
           label="Category"
           value={query.category}
-          options={categories.map((category) => ({ label: category.text, value: category.value }))}
+          options={allCategories}
         />
         <StyledOutlinedBox>
           <Rate size="small" onClick={onClickRateHandler} value={query.rated || 0} />
