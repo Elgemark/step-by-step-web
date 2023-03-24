@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import SvgIcon from "@mui/material/SvgIcon";
 import { InputLabel } from "@mui/material";
+import { FC } from "react";
+import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 
 const Root = styled.div`
   display: flex;
@@ -19,31 +21,22 @@ const Root = styled.div`
   }
   .headerBorderBefore {
     border-top: 1px solid ${({ borderColor }) => borderColor};
-    width: 1em;
+    width: 0.6em;
     border-top-left-radius: 5px;
   }
-  .headerTitle {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    align-items: center;
-    gap: 0.25em;
-    width: fit-content;
+  .headerBorderAfter {
+    border-top: 1px solid ${({ borderColor }) => borderColor};
+    width: 1em;
+    flex-grow: 1;
+    border-top-right-radius: 5px;
+  }
+
+  .title-container {
     margin: -1em 0.5em 0em 0.5em;
-    text-overflow: ellipsis;
-    font-size: 1em;
-    font-weight: 600;
   }
 
   .title {
     transform: scale(0.75) translate(0, 0.6em);
-  }
-
-  .headerBorderAfter {
-    border-top: 1px solid ${({ borderColor }) => borderColor};
-    width: 1em;
-    flex-grow: 2;
-    border-top-right-radius: 5px;
   }
 
   .childrenContainer {
@@ -54,16 +47,21 @@ const Root = styled.div`
   }
 `;
 
-const OutlinedBox = ({ icon, title, children }) => {
+const BorderBox: FC<{ icon?: any; label?: string; children?: ReactJSXElement; [key: string]: any }> = ({
+  icon,
+  label,
+  children,
+  ...rest
+}) => {
   const borderColor = "rgba(255,255,255,0.25)";
   return (
-    <Root borderColor={borderColor}>
+    <Root borderColor={borderColor} {...rest}>
       <div className="header">
         <div className="headerBorderBefore"></div>
-        {(icon || title) && (
-          <div className="headerTitle">
+        {(icon || label) && (
+          <div className="title-container">
             {icon && <SvgIcon component={icon} />}
-            {title && <InputLabel className="title">{title}</InputLabel>}
+            {label && <InputLabel className="title">{label}</InputLabel>}
           </div>
         )}
         <div className="headerBorderAfter"></div>
@@ -73,4 +71,4 @@ const OutlinedBox = ({ icon, title, children }) => {
   );
 };
 
-export default OutlinedBox;
+export default BorderBox;
