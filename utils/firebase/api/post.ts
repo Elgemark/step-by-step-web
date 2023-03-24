@@ -23,8 +23,8 @@ import { Posts } from "../type";
 import { toSanitizedArray } from "../../stringUtils";
 
 interface SearchFilter {
-  category?: string;
-  rated?: number;
+  category?: string | string[];
+  rated?: number | string | string[];
 }
 
 export const setPost = async (id, post: Post) => {
@@ -344,15 +344,20 @@ export const getPostByExclude = async (exclude = [], fromTimeStamp = null, limit
   return await getPostsByQuery(postsQuery);
 };
 
-export const getPostsBySearch = async (search: string, filter: SearchFilter = {}, limit = 10, lastDoc = null) => {
-  const tags = toSanitizedArray(search);
+export const getPostsBySearch = async (
+  search: string | string[],
+  filter: SearchFilter = {},
+  limit = 10,
+  lastDoc = null
+) => {
+  const tags = toSanitizedArray(search as string);
   // Build query...
   let postsQuery: Array<any> = [fsLimit(limit)];
   // Get only public posts
   postsQuery.push(where("visibility", "==", "public"));
   // category...
   if (filter.category) {
-    postsQuery.push(where("category", "==", filter.category));
+    // postsQuery.push(where("category", "==", filter.category));
   }
   // search by tags...
   if (tags && tags.length) {
