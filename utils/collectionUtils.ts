@@ -32,6 +32,10 @@ export const useCollection = (collection: Collection = []) => {
       _setCollection(newCollection);
       return newCollection;
     },
+    replaceItems: (items: Collection) => {
+      _setCollection(items);
+      return items;
+    },
     reset: () => {
       _setCollection([]);
     },
