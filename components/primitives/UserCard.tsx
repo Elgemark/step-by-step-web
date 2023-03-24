@@ -70,8 +70,8 @@ const RootBig = styled.div`
   .background {
     margin-top: -10px;
     width: 100%;
-    min-height: 400px;
-    background-color: #272727;
+    min-height: ${({ src }) => (src ? "400px" : "200px")};
+    background-color: black;
     background-image: ${({ src }) => "url(" + src + ")"};
     background-repeat: no-repeat;
     background-position: center;
@@ -93,41 +93,15 @@ const RootBig = styled.div`
   .border-box .content-container {
     justify-content: flex-start;
   }
+  .Mui-disabled textarea,
+  .Mui-disabled input {
+    color: white;
+    -webkit-text-fill-color: white;
+    opacity: 1;
+  }
 `;
 
-const UserCardBig: FC<{
-  children?: JSX.Element;
-  alias?: string;
-  biography?: string;
-  avatar?: string;
-  background: string;
-  selectedCategories?: Array<string>;
-}> = ({ alias, biography, avatar, selectedCategories = [], background, children, ...props }) => {
-  const theme = useTheme();
-
-  return (
-    <RootBig palette={theme.palette} src={background}>
-      <div className="background"></div>
-      <Stack spacing={2} width="100%" height="100%" alignItems="center" className="profile-content">
-        <Avatar className="user-avatar" src={avatar} sx={{ width: 120, height: 120 }} />
-        <Typography className="user-alias" variant="h4">
-          {alias}
-        </Typography>
-        <Typography className="user-biography" variant="body1" color="text.secondary">
-          {biography}
-        </Typography>
-        <Stack className="user-selectedCategories" direction={"row"}>
-          {selectedCategories.map((category) => (
-            <Chip key={category} className="chip" label={category} color="primary" />
-          ))}
-        </Stack>
-        {children}
-      </Stack>
-    </RootBig>
-  );
-};
-
-export const UserCardBigEditable: FC<{
+export const UserCardBig: FC<{
   children?: JSX.Element;
   alias?: string;
   biography?: string;
@@ -136,21 +110,26 @@ export const UserCardBigEditable: FC<{
   categories: Categories;
   background: string;
   loading?: boolean;
-  onAvatarSelect: any;
-  onCategorySelect: any;
-  onChangeAlias: any;
-  onChangeBiography: any;
-  onBackgroundSelect: any;
-  onCancel: any;
-  onSave: any;
+  edit?: boolean;
+  onAvatarSelect?: any;
+  onCategorySelect?: any;
+  onChangeAlias?: any;
+  onChangeBiography?: any;
+  onBackgroundSelect?: any;
+  onCancel?: any;
+  onSave?: any;
+  onEdit?: any;
+  onSignOut?: any;
+  [key: string]: any;
 }> = ({
   alias,
   biography,
   avatar,
   selectedCategories = [],
-  categories,
+  categories = [],
   background,
   loading,
+  edit = false,
   onCategorySelect,
   onAvatarSelect,
   onChangeAlias,
@@ -158,6 +137,8 @@ export const UserCardBigEditable: FC<{
   onBackgroundSelect,
   onCancel,
   onSave,
+  onEdit,
+  onSignOut,
   ...props
 }) => {
   const theme = useTheme();
@@ -175,7 +156,14 @@ export const UserCardBigEditable: FC<{
             <Button endIcon={<ImageIcon></ImageIcon>}>wallpaper</Button>
           </OpenDialog>
         </Stack>
-        <TextField className="user-alias" fullWidth label="Alias" value={alias} onChange={onChangeAlias} />
+        <TextField
+          className="user-alias"
+          fullWidth
+          label="Alias"
+          value={alias}
+          onChange={onChangeAlias}
+          disabled={!edit}
+        />
         <TextField
           className="user-biography"
           fullWidth
@@ -185,6 +173,7 @@ export const UserCardBigEditable: FC<{
           inputProps={{ maxLength: 120 }}
           maxRows={3}
           onChange={onChangeBiography}
+          disabled={!edit}
         />
         <BorderBox label="Interests (max 3)" className="border-box">
           <SelectChips
@@ -193,12 +182,19 @@ export const UserCardBigEditable: FC<{
             onSelect={(category) => onCategorySelect({ category })}
           />
         </BorderBox>
-        <ButtonGroup variant="text">
-          <Button onClick={onCancel}>Cancel</Button>
-          <LoadingButton loading={loading} onClick={onSave}>
-            Save
-          </LoadingButton>
-        </ButtonGroup>
+        {edit ? (
+          <ButtonGroup variant="text">
+            <Button onClick={onCancel}>Cancel</Button>
+            <LoadingButton loading={loading} onClick={onSave}>
+              Save
+            </LoadingButton>
+          </ButtonGroup>
+        ) : (
+          <ButtonGroup variant="text">
+            <Button onClick={onEdit}>Edit</Button>
+            <Button onClick={onSignOut}>Log Out</Button>
+          </ButtonGroup>
+        )}
       </Stack>
     </RootBig>
   );
@@ -227,14 +223,24 @@ const UserCardSmall: FC<{
 
 const UserCard: FC<{
   variant: "big" | "small";
+  edit: boolean;
   alias?: string;
   biography?: string;
   avatar?: string;
   background: string;
-}> = ({ variant, alias, biography, avatar, background, ...props }) => {
+}> = ({ variant, alias, biography, avatar, background, edit, ...props }) => {
   switch (variant) {
     case "big":
-      return <UserCardBig alias={alias} biography={biography} avatar={avatar} background={background} {...props} />;
+      return (
+        <UserCardBig
+          edit={edit}
+          alias={alias}
+          biography={biography}
+          avatar={avatar}
+          background={background}
+          {...props}
+        />
+      );
     case "small":
       return <UserCardSmall alias={alias} biography={biography} avatar={avatar} background={background} {...props} />;
     default:

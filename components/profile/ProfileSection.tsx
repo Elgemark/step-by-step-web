@@ -8,7 +8,7 @@ import ImageEditor from "../ImageEditor";
 import appSettings from "../../config";
 import { uploadImage } from "../../utils/firebase/api/storage";
 import { UploadResponse } from "../../utils/firebase/interface";
-import UserCard, { UserCardBigEditable } from "../primitives/UserCard";
+import UserCard, { UserCardBig } from "../primitives/UserCard";
 import { useCategories } from "../../utils/firebase/api/categories";
 import _ from "lodash";
 import { useRouter } from "next/router";
@@ -17,10 +17,15 @@ const ProfileSctionEditable: FC<{
   userId?: string;
   onSave: Function;
   onCancel: Function;
-}> = ({ userId, onSave, onCancel }) => {
+  onEdit: any;
+  onSignOut: any;
+}> = ({ userId, onSave, onCancel, onEdit, onSignOut }) => {
   const [isSaving, setIsSaving] = useState(false);
   const { data: user, update: updateUser, save: saveUser, isLoading } = useUser(userId);
   const { categories } = useCategories();
+  const [edit, setEdit] = useState(false);
+  const [signOut] = useSignOut(getAuth());
+  const router = useRouter();
 
   const { object: avatarData, update: updateAvatarObject } = useStateObject({
     url: null,
@@ -34,6 +39,11 @@ const ProfileSctionEditable: FC<{
   });
 
   const [editImage, setEditImage] = useState<"avatar" | "background" | null>(null);
+
+  const onEditHandler = () => {
+    onEdit();
+    setEdit(true);
+  };
 
   const onSaveHandler = async () => {
     setIsSaving(true);
@@ -52,16 +62,19 @@ const ProfileSctionEditable: FC<{
         "background"
       );
       update.background = backgroundResp.url;
+      setEdit(false);
     }
 
     const resp = await saveUser(update);
     console.log("resp", { resp, update });
     setIsSaving(false);
+    setEdit(false);
     onSave();
   };
 
   const onCancelHandler = () => {
     onCancel();
+    setEdit(false);
   };
 
   const onChangeAliasHandler = (e) => {
@@ -106,13 +119,19 @@ const ProfileSctionEditable: FC<{
     setEditImage(null);
   };
 
+  const onSignOutHandler = async () => {
+    await signOut();
+    router.push("/login/");
+  };
+
   if (isLoading) {
     return <></>;
   }
 
   return (
     <>
-      <UserCardBigEditable
+      <UserCardBig
+        edit={edit}
         avatar={avatarData.url || user.avatar}
         background={backgroundData.url || user.background}
         alias={user.alias}
@@ -127,6 +146,8 @@ const ProfileSctionEditable: FC<{
         onBackgroundSelect={onBackgroundSelectHandler}
         onCancel={onCancelHandler}
         onSave={onSaveHandler}
+        onEdit={onEditHandler}
+        onSignOut={onSignOutHandler}
       />
       <Modal open={editImage !== null}>
         <ImageEditor
@@ -140,41 +161,6 @@ const ProfileSctionEditable: FC<{
         />
       </Modal>
     </>
-  );
-};
-
-const ProfileSctionDefault: FC<{
-  userId: string;
-  onEdit: any;
-  onSignOut: any;
-}> = ({ userId, onEdit, ...props }) => {
-  const [burst] = useState<number>(Math.random());
-  const { data: user, isLoading } = useUser(userId, true);
-  const [signOut] = useSignOut(getAuth());
-  const router = useRouter();
-
-  const onSignOutHandler = async () => {
-    await signOut();
-    router.push("/login/");
-  };
-
-  if (isLoading) {
-    return <CircularProgress />;
-  }
-
-  return (
-    <UserCard
-      variant="big"
-      {...user}
-      avatar={`${user.avatar}&bust=${burst}`}
-      background={`${user.background}&bust=${burst}`}
-      // {...props}
-    >
-      <ButtonGroup variant="text">
-        <Button onClick={onEdit}>Edit</Button>
-        <Button onClick={onSignOutHandler}>Log Out</Button>
-      </ButtonGroup>
-    </UserCard>
   );
 };
 
@@ -193,11 +179,15 @@ const ProfileSction = (props) => {
     setEdit(false);
   };
 
-  if (edit) {
-    return <ProfileSctionEditable onSave={onSaveHandler} onCancel={onCancelHandler} {...props} />;
-  } else {
-    return <ProfileSctionDefault onEdit={onEditHandler} {...props} />;
-  }
+  return (
+    <ProfileSctionEditable
+      edit={edit}
+      onSave={onSaveHandler}
+      onCancel={onCancelHandler}
+      onEdit={onEditHandler}
+      {...props}
+    />
+  );
 };
 
 export default ProfileSction;

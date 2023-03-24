@@ -8,7 +8,7 @@ import ImageEditor from "../ImageEditor";
 import appSettings from "../../config";
 import { uploadImage } from "../../utils/firebase/api/storage";
 import { UploadResponse } from "../../utils/firebase/interface";
-import UserCard, { UserCardBigEditable } from "../primitives/UserCard";
+import UserCard, { UserCardBig } from "../primitives/UserCard";
 import { useCategories } from "../../utils/firebase/api/categories";
 import _ from "lodash";
 import { useRouter } from "next/router";
@@ -111,7 +111,7 @@ const ProfileCardEditable: FC<{
 
   return (
     <>
-      <UserCardBigEditable
+      <UserCardBig
         avatar={avatarData.url || user.avatar}
         background={backgroundData.url || user.background}
         alias={user.alias}

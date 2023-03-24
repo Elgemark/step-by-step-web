@@ -1,8 +1,7 @@
 import { getFollows, getPostsByState, getBookmarkedPosts, useUser as fbUseUser } from "../../utils/firebase/api";
-import { Divider, useTheme } from "@mui/material";
+import { useTheme } from "@mui/material";
 import Head from "next/head";
 import Layout from "../../components/Layout";
-import ProfileCard from "../../components/profile/ProfileCard";
 import { useRouter } from "next/router";
 import Posts from "../../components/posts/Posts";
 import { useEffect, FC } from "react";
@@ -24,6 +23,7 @@ import { TabContext, TabPanel } from "@mui/lab";
 import FilterMenu from "../../components/primitives/FilterMenu";
 import FloatingTopBar from "../../components/primitives/FloatingTopBar";
 import ProfileSection from "../../components/profile/ProfileSection";
+import { useCategories } from "../../utils/firebase/api/categories";
 
 const UserCardControlled: FC<{ userId: string }> = styled(({ userId, ...props }) => {
   const router = useRouter();
@@ -108,7 +108,6 @@ const ProfilePage = ({ tabValue, filterValue, uid, posts = [], userIds = [] }) =
       <StyledLayout theme={theme}>
         {/* LOGGED IN */}
         <ProfileSection userId={uid} />
-
         <TabContext value={tabValue}>
           <FloatingTopBar className="floating-top-bar">
             <Tabs

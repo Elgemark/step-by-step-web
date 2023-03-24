@@ -101,7 +101,7 @@ export const useFollow = (leaderUserId) => {
   const [isFollowing, setIsFollowing] = useState(false);
 
   useEffect(() => {
-    if (status !== "loading" && currentUser.uid) {
+    if (status !== "loading" && currentUser?.uid) {
       setIsLoading(true);
       const followeUserId = currentUser.uid;
       // Get leader
