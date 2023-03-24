@@ -26,20 +26,22 @@ const Root = styled.div`
   }
   .headerBorderAfter {
     border-top: 1px solid ${({ borderColor }) => borderColor};
-    width: 1em;
     flex-grow: 1;
     border-top-right-radius: 5px;
   }
 
   .title-container {
-    margin: -1em 0.5em 0em 0.5em;
+    margin: -1em -1.5em 0 0.5em;
+    flex-shrink: 1;
   }
 
   .title {
     transform: scale(0.75) translate(0, 0.6em);
+    margin: 0;
+    padding: 0;
   }
 
-  .childrenContainer {
+  .content-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -66,7 +68,7 @@ const BorderBox: FC<{ icon?: any; label?: string; children?: ReactJSXElement; [k
         )}
         <div className="headerBorderAfter"></div>
       </div>
-      <div className="childrenContainer">{children}</div>
+      <div className="content-container">{children}</div>
     </Root>
   );
 };

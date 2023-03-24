@@ -1,12 +1,12 @@
 import { getFirestore, getDoc, collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
-type Category = {
+export type Category = {
   value: string | number;
   text: string;
 };
 
-type Categories = Array<Category>;
+export type Categories = Array<Category>;
 
 type CategoriesResponse = {
   data: Categories;

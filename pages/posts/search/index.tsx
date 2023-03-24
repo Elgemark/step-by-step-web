@@ -8,41 +8,45 @@ import Head from "next/head";
 import Layout from "../../../components/Layout";
 import Posts from "../../../components/posts/Posts";
 import FilterBar from "../../../components/FilterBar";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { useCollection } from "../../../utils/collectionUtils";
 
-const collection = new Collection();
-let lastDoc;
+export default () => {
+  const router = useRouter();
+  const { collection: posts, addItems: addPosts, replaceItems: replacePosts } = useCollection();
+  const [isFetching, setIsFetching] = useState(false);
 
-export async function getServerSideProps({ query }) {
-  const { search, category } = query;
-  let response: PostsResponse = { data: [], error: null };
+  useEffect(() => {
+    console.log("query", router.query);
+    fetchBySearch(true);
+  }, [router.query]);
 
-  if (search || category) {
-    // Search...
-    response = await getPostsBySearch(search, { category });
-  } else {
-    response = await getPostsForAnonymousUser();
-  }
+  const fetchBySearch = async (replace = false) => {
+    setIsFetching(true);
+    const { search, category, rated } = router.query;
+    const response = await getPostsBySearch(search, { category, rated });
+    if (replace) {
+      replacePosts(response.data);
+    } else {
+      addPosts(response.data);
+    }
 
-  lastDoc = response.lastDoc;
+    setIsFetching(false);
+  };
 
-  const items = collection.union(response.data, [category, search], () => {
-    lastDoc = null;
-  });
-
-  return { props: { posts: items } };
-}
-
-export default ({ posts }) => (
-  <MUIWrapper>
-    <FirebaseWrapper>
-      <Head>
-        <meta content="noindex, nofollow, initial-scale=1, width=device-width" name="robots" />
-        <title>{"STEPS | Search"}</title>
-      </Head>
-      <Layout>
-        <FilterBar></FilterBar>
-        <Posts enableLink={true} posts={posts as PostsType} />
-      </Layout>
-    </FirebaseWrapper>
-  </MUIWrapper>
-);
+  return (
+    <MUIWrapper>
+      <FirebaseWrapper>
+        <Head>
+          <meta content="noindex, nofollow, initial-scale=1, width=device-width" name="robots" />
+          <title>{"STEPS | Search"}</title>
+        </Head>
+        <Layout>
+          <FilterBar></FilterBar>
+          <Posts enableLink={true} posts={posts as PostsType} />
+        </Layout>
+      </FirebaseWrapper>
+    </MUIWrapper>
+  );
+};

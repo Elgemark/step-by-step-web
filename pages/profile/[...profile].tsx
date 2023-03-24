@@ -23,6 +23,7 @@ import { getPublishedPosts, getCreatedPosts } from "../../utils/firebase/api/pos
 import { TabContext, TabPanel } from "@mui/lab";
 import FilterMenu from "../../components/primitives/FilterMenu";
 import FloatingTopBar from "../../components/primitives/FloatingTopBar";
+import ProfileSection from "../../components/profile/ProfileSection";
 
 const UserCardControlled: FC<{ userId: string }> = styled(({ userId, ...props }) => {
   const router = useRouter();
@@ -106,8 +107,7 @@ const ProfilePage = ({ tabValue, filterValue, uid, posts = [], userIds = [] }) =
       </Head>
       <StyledLayout theme={theme}>
         {/* LOGGED IN */}
-        <ProfileCard userId={uid} />
-        <Divider className="divider" />
+        <ProfileSection userId={uid} />
 
         <TabContext value={tabValue}>
           <FloatingTopBar className="floating-top-bar">

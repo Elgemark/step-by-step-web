@@ -3,12 +3,12 @@ import { useCategories } from "../utils/firebase/api/categories";
 import SelectDropDown from "./primitives/SelectDropDown";
 import { Stack } from "@mui/material";
 import Rate from "./primitives/Rate";
-import OutlinedBox from "./primitives/OutlinedBox";
+import BorderBox from "./primitives/BorderBox";
 import { useDebouncedQuery } from "../utils/queryUtils";
 import styled from "styled-components";
 import { useRouter } from "next/router";
 
-const StyledOutlinedBox = styled(OutlinedBox)`
+const StyledOutlinedBox = styled(BorderBox)`
   padding: 0 4px;
 `;
 
@@ -42,7 +42,7 @@ const FilterBar = ({}) => {
           value={router.query.category as string}
           options={allCategories}
         />
-        <StyledOutlinedBox title="Rated">
+        <StyledOutlinedBox lable="Rated">
           <Rate size="small" onClick={onClickRateHandler} value={query.rated || 0} />
         </StyledOutlinedBox>
       </Stack>

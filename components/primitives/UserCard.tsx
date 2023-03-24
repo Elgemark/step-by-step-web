@@ -8,9 +8,11 @@ import { Button, ButtonGroup } from "@mui/material";
 import ImageIcon from "@mui/icons-material/Image";
 import OpenDialog from "../primitives/OpenDialog";
 import { LoadingButton } from "@mui/lab";
-import SelectChips from "./SelectChips";
+import SelectChips, { ChipItem } from "./SelectChips";
+import { Categories } from "../../utils/firebase/api/categories";
+import BorderBox from "./BorderBox";
 
-const defaultStyle = css`
+const RootSmall = styled.div`
   border-radius: ${({ spacing }) => spacing(1)};
   padding: ${({ spacing }) => spacing(2)};
   margin-top: ${({ spacing }) => spacing(5)};
@@ -18,24 +20,25 @@ const defaultStyle = css`
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 640px;
-  min-height: 320px;
   position: relative;
   background-color: #272727;
   background-image: ${({ backgroundImage }) => "url(" + backgroundImage + ")"};
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
+  max-width: 320px;
+  min-height: 160px;
+  max-height: 320px;
   hr {
     width: 100%;
     margin: ${({ spacing }) => spacing(2)};
   }
   .user-avatar {
-    margin-top: -54px;
+    margin-top: -50px;
     border: 8px solid ${({ palette }) => (palette.mode === "dark" ? "black" : "white")};
     box-sizing: content-box;
   }
-  .user-interests {
+  .user-selectedCategories {
     flex-grow: 1;
   }
   .user-wallpaper {
@@ -48,23 +51,48 @@ const defaultStyle = css`
     margin-right: ${({ spacing }) => spacing(1)};
     margin-bottom: ${({ spacing }) => spacing(1)};
   }
-`;
 
-const RootSmall = styled.div`
-  ${defaultStyle}
-  max-width: 320px;
-  min-height: 160px;
-  max-height: 320px;
-  .user-avatar {
-    margin-top: -50px;
-  }
   .user-alias {
     margin-top: 26px;
   }
 `;
 
 const RootBig = styled.div`
-  ${defaultStyle}
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-top: -10px;
+  background-color: #272727;
+  border-radius: 0 0 10px 10px;
+  position: relative;
+  width: 100%;
+  .background {
+    margin-top: -10px;
+    width: 100%;
+    min-height: 400px;
+    background-color: #272727;
+    background-image: ${({ src }) => "url(" + src + ")"};
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    border-radius: 0 0 10px 10px;
+  }
+  .user-avatar {
+    border: 8px solid ${({ palette }) => (palette.mode === "dark" ? "#272727" : "white")};
+    box-sizing: content-box;
+    margin-top: -60px;
+  }
+  .profile-content {
+    padding: 0 32px 32px;
+    max-width: 600px;
+  }
+  .border-box {
+    width: 100%;
+  }
+  .border-box .content-container {
+    justify-content: flex-start;
+  }
 `;
 
 const UserCardBig: FC<{
@@ -73,23 +101,24 @@ const UserCardBig: FC<{
   biography?: string;
   avatar?: string;
   background: string;
-  interests?: Array<string>;
-}> = ({ alias, biography, avatar, interests = [], background, children, ...props }) => {
+  selectedCategories?: Array<string>;
+}> = ({ alias, biography, avatar, selectedCategories = [], background, children, ...props }) => {
   const theme = useTheme();
 
   return (
-    <RootBig spacing={theme.spacing} palette={theme.palette} backgroundImage={background} {...props}>
-      <Stack spacing={2} width="100%" height="100%" alignItems="center">
-        <Avatar className="user-avatar" src={avatar} sx={{ width: 72, height: 72 }} />
+    <RootBig palette={theme.palette} src={background}>
+      <div className="background"></div>
+      <Stack spacing={2} width="100%" height="100%" alignItems="center" className="profile-content">
+        <Avatar className="user-avatar" src={avatar} sx={{ width: 120, height: 120 }} />
         <Typography className="user-alias" variant="h4">
           {alias}
         </Typography>
         <Typography className="user-biography" variant="body1" color="text.secondary">
           {biography}
         </Typography>
-        <Stack className="user-interests" direction={"row"}>
-          {interests.map((interest) => (
-            <Chip key={interest} className="chip" label={interest} color="primary" />
+        <Stack className="user-selectedCategories" direction={"row"}>
+          {selectedCategories.map((category) => (
+            <Chip key={category} className="chip" label={category} color="primary" />
           ))}
         </Stack>
         {children}
@@ -103,12 +132,12 @@ export const UserCardBigEditable: FC<{
   alias?: string;
   biography?: string;
   avatar?: string;
-  interests?: Array<string>;
-  categories: Array<string>;
+  selectedCategories?: Categories;
+  categories: Categories;
   background: string;
   loading?: boolean;
   onAvatarSelect: any;
-  onInterestSelect: any;
+  onCategorySelect: any;
   onChangeAlias: any;
   onChangeBiography: any;
   onBackgroundSelect: any;
@@ -118,11 +147,11 @@ export const UserCardBigEditable: FC<{
   alias,
   biography,
   avatar,
-  interests = [],
+  selectedCategories = [],
   categories,
   background,
   loading,
-  onInterestSelect,
+  onCategorySelect,
   onAvatarSelect,
   onChangeAlias,
   onChangeBiography,
@@ -134,9 +163,10 @@ export const UserCardBigEditable: FC<{
   const theme = useTheme();
 
   return (
-    <RootBig spacing={theme.spacing} palette={theme.palette} backgroundImage={background} {...props}>
-      <Stack spacing={2} width="100%" height="100%" alignItems="center">
-        <Avatar className="user-avatar" src={avatar} sx={{ width: 72, height: 72 }} />
+    <RootBig spacing={theme.spacing} palette={theme.palette} src={background} {...props}>
+      <div className="background"></div>
+      <Stack spacing={2} width="100%" height="100%" alignItems="center" className="profile-content">
+        <Avatar className="user-avatar" src={avatar} sx={{ width: 120, height: 120 }} />
         <Stack direction="row">
           <OpenDialog className="button-change-avatar" onFileSelected={onAvatarSelect}>
             <Button endIcon={<ImageIcon></ImageIcon>}>avatar</Button>
@@ -156,14 +186,13 @@ export const UserCardBigEditable: FC<{
           maxRows={3}
           onChange={onChangeBiography}
         />
-        <InputLabel disableAnimation shrink sx={{ width: "100%" }}>
-          {"Interests (max 3)"}
-        </InputLabel>
-        <SelectChips
-          items={categories}
-          selectedItems={interests}
-          onSelect={(category) => onInterestSelect({ category })}
-        />
+        <BorderBox label="Interests (max 3)" className="border-box">
+          <SelectChips
+            items={categories.map((category) => ({ label: category.text, value: category.value } as ChipItem))}
+            selectedItems={selectedCategories}
+            onSelect={(category) => onCategorySelect({ category })}
+          />
+        </BorderBox>
         <ButtonGroup variant="text">
           <Button onClick={onCancel}>Cancel</Button>
           <LoadingButton loading={loading} onClick={onSave}>

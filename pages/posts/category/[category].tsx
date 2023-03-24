@@ -19,17 +19,19 @@ export async function getServerSideProps({ query }) {
   };
 }
 
-export default ({ category, posts }) => (
-  <MUIWrapper>
-    <FirebaseWrapper>
-      <Head>
-        <meta content="noindex, nofollow, initial-scale=1, width=device-width" name="robots" />
-        <title>{"STEPS | " + _.capitalize(category)}</title>
-      </Head>
-      <Layout>
-        <FilterBar></FilterBar>
-        <Posts enableLink={true} posts={posts as PostsType} />
-      </Layout>
-    </FirebaseWrapper>
-  </MUIWrapper>
-);
+export default ({ category, posts }) => {
+  return (
+    <MUIWrapper>
+      <FirebaseWrapper>
+        <Head>
+          <meta content="noindex, nofollow, initial-scale=1, width=device-width" name="robots" />
+          <title>{"STEPS | " + _.capitalize(category)}</title>
+        </Head>
+        <Layout>
+          <FilterBar></FilterBar>
+          <Posts enableLink={true} posts={posts as PostsType} />
+        </Layout>
+      </FirebaseWrapper>
+    </MUIWrapper>
+  );
+};
