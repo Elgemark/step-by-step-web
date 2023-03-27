@@ -10,7 +10,7 @@ interface User {
   avatar?: string;
   background?: string;
   biography?: string;
-  interests: Array<string>;
+  categories: Array<string>;
   roles: Array<string>;
   theme: Array<string>;
   uid: string;

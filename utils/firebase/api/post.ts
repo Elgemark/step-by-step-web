@@ -308,7 +308,7 @@ export const getPostByFollows = async (follows = [], fromTimeStamp = null, limit
   return await getPostsByQuery(postsQuery);
 };
 
-export const getPostByInterests = async (interests = [], fromTimeStamp = null, limit = 10, lastDoc = null) => {
+export const getPostByCategories = async (categories = [], fromTimeStamp = null, limit = 10, lastDoc = null) => {
   // Build query...
   let postsQuery: Array<any> = [fsLimit(limit)];
   // From timestamp
@@ -318,7 +318,7 @@ export const getPostByInterests = async (interests = [], fromTimeStamp = null, l
   // Get only public posts
   postsQuery.push(where("visibility", "==", "public"));
   //
-  postsQuery.push(where("category", "in", interests));
+  postsQuery.push(where("category", "in", categories));
   if (lastDoc) {
     postsQuery.push(startAfter(lastDoc));
   }

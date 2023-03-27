@@ -1,7 +1,7 @@
 import {
   getPostByExclude,
   getPostByFollows,
-  getPostByInterests,
+  getPostByCategories,
   getPostsForAnonymousUser,
 } from "../../../utils/firebase/api/post";
 import FirebaseWrapper from "../../../components/wrappers/FirebaseWrapper";
@@ -9,14 +9,12 @@ import MUIWrapper from "../../../components/wrappers/MUIWrapper";
 import { useEffect, useState } from "react";
 import { useCollection } from "../../../utils/collectionUtils";
 import { useScrolledToBottom } from "../../../utils/scrollUtils";
-import { useRouter } from "next/router";
 import Head from "next/head";
 import Layout from "../../../components/Layout";
 import Posts from "../../../components/posts/Posts";
 import { Posts as PostsType } from "../../../utils/firebase/type";
 import { useUser } from "../../../utils/firebase/api/user";
 import { getFollows } from "../../../utils/firebase/api/follow";
-import FilterBar from "../../../components/FilterBar";
 
 type FetchResponse = {
   hasMorePosts: boolean;
@@ -31,9 +29,9 @@ const UserPage = ({ follows }) => {
   // posts by follows...
   const [lastDocByFollows, setLastDocByFollows] = useState();
   const [hasMorePostsByFollows, setHasMorePostsByFollows] = useState(true);
-  // posts by interests...
-  const [lastDocByInterests, setLastDocByInterests] = useState();
-  const [hasMorePostsByInterests, setHasMorePostsByInterests] = useState(true);
+  // posts by categories...
+  const [lastDocByCategories, setLastDocByCategories] = useState();
+  const [hasMorePostsByCategories, setHasMorePostsByCategories] = useState(true);
   // posts by exclude...
   const [lastDocByExclude, setLastDocByExclude] = useState();
   const [hasMorePostsByExclude, setHasMorePostsByExclude] = useState(true);
@@ -57,17 +55,17 @@ const UserPage = ({ follows }) => {
     return { hasMorePosts, posts: response.data };
   };
 
-  const fetchPostsByInterests = async (fromTimeStamp) => {
-    if (!hasMorePostsByInterests || !user.interests?.length) {
+  const fetchPostsByCategories = async (fromTimeStamp) => {
+    if (!hasMorePostsByCategories || !user.categories?.length) {
       return { hasMorePosts: false, posts: [] };
     }
     //
-    const response = await getPostByInterests(user.interests, fromTimeStamp, LIMIT, lastDocByInterests);
+    const response = await getPostByCategories(user.categories, fromTimeStamp, LIMIT, lastDocByCategories);
     addPosts(response.data);
-    setLastDocByInterests(response.lastDoc);
+    setLastDocByCategories(response.lastDoc);
     const hasMorePosts = response.data.length > 0;
-    setHasMorePostsByInterests(hasMorePosts);
-    console.log("fetch by interests", response.data.length);
+    setHasMorePostsByCategories(hasMorePosts);
+    console.log("fetch by categories", response.data.length);
     return { hasMorePosts, posts: response.data };
   };
 
@@ -108,9 +106,9 @@ const UserPage = ({ follows }) => {
       resp = await fetchPostsByFollows(fromTimeStamp);
       aggregatedPosts = aggregatedPosts.concat(resp.posts);
     }
-    // posts by interests
+    // posts by categories
     if (!resp.hasMorePosts || aggregatedPosts.length < LIMIT) {
-      resp = await fetchPostsByInterests(fromTimeStamp);
+      resp = await fetchPostsByCategories(fromTimeStamp);
       aggregatedPosts = aggregatedPosts.concat(resp.posts);
     }
     // posts by exclude
