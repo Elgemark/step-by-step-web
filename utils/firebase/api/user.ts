@@ -1,4 +1,13 @@
-import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot } from "firebase/firestore";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  onSnapshot,
+  collection,
+  getCountFromServer,
+} from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { useEffect, useId, useState } from "react";
 import { useStateObject } from "../../object";
@@ -78,6 +87,54 @@ export const getUser = async (uid) => {
   }
 
   return response;
+};
+
+export const getFollowsCount = async (uid) => {
+  const response = { count: 0, error: null };
+  const firebase = getFirestore();
+  const collRef = collection(firebase, "users", uid, "follows");
+
+  try {
+    const snapshot = await getCountFromServer(collRef);
+    response.count = snapshot.data().count;
+  } catch (error) {
+    response.error = error;
+  }
+
+  return response;
+};
+
+export const getFollowersCount = async (uid) => {
+  const response = { count: 0, error: null };
+  const firebase = getFirestore();
+  const collRef = collection(firebase, "users", uid, "followers");
+
+  try {
+    const snapshot = await getCountFromServer(collRef);
+    response.count = snapshot.data().count;
+  } catch (error) {
+    response.error = error;
+  }
+
+  return response;
+};
+
+export const useUserStats = (uid = null) => {
+  const [followersCount, setFollowersCount] = useState(0);
+  const [followsCount, setFollowsCount] = useState(0);
+
+  useEffect(() => {
+    if (uid) {
+      getFollowersCount(uid).then((res) => {
+        setFollowersCount(res.count);
+      });
+      getFollowsCount(uid).then((res) => {
+        setFollowsCount(res.count);
+      });
+    }
+  }, [uid]);
+
+  return { followersCount, followsCount };
 };
 
 export const useUser = (uid = null, realtime = false) => {

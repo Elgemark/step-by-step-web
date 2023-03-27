@@ -49,7 +49,7 @@ const SideMenu: FC<{
       <Divider />
       {/* ... */}
       <List>
-        <SideMenuItem onClick={onClickSearch} label="Search" icon={<SearchIcon />} dense />
+        <SideMenuItem onClick={onClickSearch} label="Discover" icon={<SearchIcon />} dense />
       </List>
       <Divider />
       <List>

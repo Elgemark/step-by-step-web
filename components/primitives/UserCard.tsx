@@ -99,6 +99,18 @@ const RootBig = styled.div`
     -webkit-text-fill-color: white;
     opacity: 1;
   }
+
+  .stats {
+    margin-bottom: 16px;
+  }
+  .stats .num {
+    margin-right: 0.4em;
+    /* opacity: 0.75; */
+  }
+  .stats .label {
+    font-weight: bold;
+    opacity: 0.5;
+  }
 `;
 
 export const UserCardBig: FC<{
@@ -112,6 +124,8 @@ export const UserCardBig: FC<{
   loading?: boolean;
   edit?: boolean;
   editable?: boolean;
+  followsCount?: number;
+  followersCount?: number;
   onAvatarSelect?: any;
   onCategorySelect?: any;
   onChangeAlias?: any;
@@ -132,6 +146,8 @@ export const UserCardBig: FC<{
   loading,
   edit = false,
   editable = false,
+  followsCount = 0,
+  followersCount = 0,
   onCategorySelect,
   onAvatarSelect,
   onChangeAlias,
@@ -156,16 +172,34 @@ export const UserCardBig: FC<{
       <div className="background"></div>
       <Stack spacing={2} width="100%" height="100%" alignItems="center" className="profile-content">
         <Avatar className="user-avatar" src={avatar} sx={{ width: 120, height: 120 }} />
-        <Collapse in={edit}>
-          <Stack direction="row">
-            <OpenDialog className="button-change-avatar" onFileSelected={onAvatarSelect}>
-              <Button endIcon={<ImageIcon></ImageIcon>}>avatar</Button>
-            </OpenDialog>
-            <OpenDialog className="button-change-background" onFileSelected={onBackgroundSelect}>
-              <Button endIcon={<ImageIcon></ImageIcon>}>wallpaper</Button>
-            </OpenDialog>
-          </Stack>
-        </Collapse>
+        {/* STATS */}
+        <div>
+          <Collapse in={!edit} className="stats">
+            <Stack direction="row" spacing={2} width="100%" justifyContent={"center"}>
+              <Typography variant="subtitle2">
+                <span className="num">{followersCount}</span>
+                <span className="label">Followers</span>
+              </Typography>
+
+              <Typography variant="subtitle2">
+                <span className="num">{followsCount}</span>
+                <span className="label">Following</span>
+              </Typography>
+            </Stack>
+          </Collapse>
+          {/* IMAGE EDIT */}
+          <Collapse in={edit}>
+            <Stack direction="row" width="100%" justifyContent={"center"}>
+              <OpenDialog className="button-change-avatar" onFileSelected={onAvatarSelect}>
+                <Button endIcon={<ImageIcon></ImageIcon>}>avatar</Button>
+              </OpenDialog>
+              <OpenDialog className="button-change-background" onFileSelected={onBackgroundSelect}>
+                <Button endIcon={<ImageIcon></ImageIcon>}>wallpaper</Button>
+              </OpenDialog>
+            </Stack>
+          </Collapse>
+        </div>
+
         <TextField
           className="user-alias"
           fullWidth

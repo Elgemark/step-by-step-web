@@ -1,5 +1,5 @@
 import { useUser } from "../../utils/firebase/api";
-import { useState, FC } from "react";
+import { useState, FC, useEffect } from "react";
 import { Button, ButtonGroup, CircularProgress, Modal } from "@mui/material";
 import { useSignOut } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
@@ -12,9 +12,11 @@ import UserCard, { UserCardBig } from "../primitives/UserCard";
 import { useCategories } from "../../utils/firebase/api/categories";
 import _ from "lodash";
 import { useRouter } from "next/router";
+import { useUserStats } from "../../utils/firebase/api/user";
 
 const ProfileSctionEditable: FC<{
   userId?: string;
+
   onSave: Function;
   onCancel: Function;
   onEdit: any;
@@ -22,6 +24,7 @@ const ProfileSctionEditable: FC<{
 }> = ({ userId, onSave, onCancel, onEdit, onSignOut }) => {
   const [isSaving, setIsSaving] = useState(false);
   const { data: user, update: updateUser, save: saveUser, isLoading } = useUser(userId);
+  const { followersCount, followsCount } = useUserStats(userId);
   const { categories } = useCategories();
   const [edit, setEdit] = useState(false);
   const [signOut] = useSignOut(getAuth());
@@ -133,6 +136,8 @@ const ProfileSctionEditable: FC<{
       <UserCardBig
         edit={edit}
         editable={true}
+        followersCount={followersCount}
+        followsCount={followsCount}
         avatar={avatarData.url || user.avatar}
         background={backgroundData.url || user.background}
         alias={user.alias}
