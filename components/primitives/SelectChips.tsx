@@ -26,6 +26,7 @@ type propTypes = {
 
 const SelectChips: FC<propTypes & StackProps> = ({ items, onSelect, selectedItems = [], ...rest }) => {
   const theme = useTheme();
+
   return (
     <StyledStack theme={theme} direction="row" flexWrap="wrap" {...rest}>
       {items &&
@@ -34,7 +35,7 @@ const SelectChips: FC<propTypes & StackProps> = ({ items, onSelect, selectedItem
             className="chip"
             onClick={() => onSelect && onSelect(item)}
             label={item?.label || item}
-            color={selectedItems.includes(item) ? "primary" : undefined}
+            color={selectedItems.includes(item.value || item) ? "primary" : undefined}
           />
         ))}
     </StyledStack>

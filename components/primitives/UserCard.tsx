@@ -106,7 +106,7 @@ export const UserCardBig: FC<{
   alias?: string;
   biography?: string;
   avatar?: string;
-  selectedCategories?: Categories;
+  selectedCategories?: Array<string>;
   categories: Categories;
   background: string;
   loading?: boolean;
@@ -143,6 +143,12 @@ export const UserCardBig: FC<{
 }) => {
   const theme = useTheme();
 
+  let categoryValues = categories.map((category) => ({ label: category.text, value: category.value } as ChipItem));
+
+  if (!edit) {
+    categoryValues = categoryValues.filter((item) => selectedCategories.includes(item.value));
+  }
+
   return (
     <RootBig spacing={theme.spacing} palette={theme.palette} src={background} {...props}>
       <div className="background"></div>
@@ -177,7 +183,7 @@ export const UserCardBig: FC<{
         />
         <BorderBox label="Interests (max 3)" className="border-box">
           <SelectChips
-            items={categories.map((category) => ({ label: category.text, value: category.value } as ChipItem))}
+            items={categoryValues}
             selectedItems={selectedCategories}
             onSelect={(category) => onCategorySelect({ category })}
           />

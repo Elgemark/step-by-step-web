@@ -47,7 +47,7 @@ const ProfileSctionEditable: FC<{
 
   const onSaveHandler = async () => {
     setIsSaving(true);
-    const update = _.pick(user, ["biography", "alias", "interests"]);
+    const update = _.pick(user, ["biography", "alias", "categories"]);
     // Avatar...
     if (avatarData.file) {
       const avatarResp: UploadResponse = await uploadImage(avatarData.file, "1024x1024", ["users", userId], "avatar");
@@ -96,7 +96,7 @@ const ProfileSctionEditable: FC<{
   };
 
   const onCategorySelectHandler = ({ category }) => {
-    const newUserCategories = user.interests ? [...user.interests] : [];
+    const newUserCategories = user.categories ? [...user.categories] : [];
     if (newUserCategories.includes(category.value)) {
       _.pull(newUserCategories, category.value);
     } else {
@@ -105,7 +105,7 @@ const ProfileSctionEditable: FC<{
     console.log("newUserCategories", newUserCategories);
     // Max 3!
     if (newUserCategories.length <= 3) {
-      updateUser("interests", newUserCategories);
+      updateUser("categories", newUserCategories);
     }
   };
 
@@ -136,7 +136,7 @@ const ProfileSctionEditable: FC<{
         background={backgroundData.url || user.background}
         alias={user.alias}
         biography={user.biography}
-        selectedCategories={user.interests}
+        selectedCategories={user.categories}
         categories={categories}
         loading={isLoading}
         onCategorySelect={onCategorySelectHandler}
