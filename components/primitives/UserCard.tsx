@@ -89,6 +89,7 @@ const RootBig = styled.div`
   }
   .border-box {
     width: 100%;
+    margin-bottom: 12px;
   }
   .border-box .content-container {
     justify-content: flex-start;
@@ -100,16 +101,18 @@ const RootBig = styled.div`
     opacity: 1;
   }
 
+  .image-buttons-container {
+    margin-top: -20px !important;
+  }
   .stats {
-    margin-bottom: 16px;
+    margin-bottom: 24px;
   }
   .stats .num {
-    margin-right: 0.4em;
-    /* opacity: 0.75; */
+    margin-right: 0.2em;
+    font-weight: bold;
   }
   .stats .label {
-    font-weight: bold;
-    opacity: 0.5;
+    opacity: 0.7;
   }
 `;
 
@@ -173,25 +176,27 @@ export const UserCardBig: FC<{
       <Stack spacing={2} width="100%" height="100%" alignItems="center" className="profile-content">
         <Avatar className="user-avatar" src={avatar} sx={{ width: 120, height: 120 }} />
         {/* STATS */}
-        <div>
+        <div style={{ height: "80px" }}>
           <Collapse in={!edit} className="stats">
             <Stack direction="row" spacing={2} width="100%" justifyContent={"center"}>
-              <Typography variant="subtitle2">
+              <Typography variant="h5" color="primary">
                 <span className="num">{followersCount}</span>
                 <span className="label">Followers</span>
               </Typography>
 
-              <Typography variant="subtitle2">
+              <Typography variant="h5" color="primary">
                 <span className="num">{followsCount}</span>
                 <span className="label">Following</span>
               </Typography>
             </Stack>
           </Collapse>
           {/* IMAGE EDIT */}
-          <Collapse in={edit}>
+          <Collapse in={edit} className="image-buttons-container">
             <Stack direction="row" width="100%" justifyContent={"center"}>
               <OpenDialog className="button-change-avatar" onFileSelected={onAvatarSelect}>
-                <Button endIcon={<ImageIcon></ImageIcon>}>avatar</Button>
+                <Button variant="contained" endIcon={<ImageIcon></ImageIcon>}>
+                  avatar
+                </Button>
               </OpenDialog>
               <OpenDialog className="button-change-background" onFileSelected={onBackgroundSelect}>
                 <Button endIcon={<ImageIcon></ImageIcon>}>wallpaper</Button>
