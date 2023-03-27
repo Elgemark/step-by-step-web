@@ -27,7 +27,7 @@ const FilterBar = ({}) => {
 
   const onClickRateHandler = (value) => {
     const oldValue = query.rated || 0;
-    setQuery({ rated: oldValue === 1 && value === 1 ? 0 : value });
+    setQuery({ rated: oldValue === value && value > 0 ? value - 1 : value });
   };
 
   const allCategories = categories.map((category) => ({ label: category.text, value: category.value }));
@@ -42,7 +42,7 @@ const FilterBar = ({}) => {
           value={router.query.category as string}
           options={allCategories}
         />
-        <StyledOutlinedBox lable="Rated">
+        <StyledOutlinedBox label="Rated">
           <Rate size="small" onClick={onClickRateHandler} value={query.rated || 0} />
         </StyledOutlinedBox>
       </Stack>
