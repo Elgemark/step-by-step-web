@@ -13,7 +13,9 @@ export interface Post {
   tags: Array<string>;
   lists?: Lists;
   category: string;
-  likes: number;
+  ratesNum?: number;
+  ratesTotal?: number;
+  ratesValue?: number;
   stepsCompleted: number;
   uid: string;
   visibility: PostVisibility;

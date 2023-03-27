@@ -353,26 +353,32 @@ export const getPostsBySearch = async (
   const tags = toSanitizedArray(search as string);
   // Build query...
   let postsQuery: Array<any> = [fsLimit(limit)];
+  postsQuery = [];
   // Get only public posts
   postsQuery.push(where("visibility", "==", "public"));
   // category...
   if (filter.category) {
-    // postsQuery.push(where("category", "==", filter.category));
+    postsQuery.push(where("category", "==", filter.category));
   }
   // search by tags...
   if (tags && tags.length) {
     postsQuery.push(where("tags", "array-contains-any", tags));
   }
-  // rated
-  if (filter.rated) {
-    postsQuery.push(where("ratesValue", ">=", filter.rated));
-  }
+
   // paginate...
   if (lastDoc) {
     postsQuery.push(startAfter(lastDoc));
   }
 
-  return await getPostsByQuery(postsQuery);
+  let postsResponse = await getPostsByQuery(postsQuery);
+
+  // Compuond queries can not contain range filter on different values. Using JS filtering...
+  // rated...
+  if (filter.rated) {
+    postsResponse.data = postsResponse.data.filter((post) => post.ratesValue >= filter.rated);
+  }
+
+  return postsResponse;
 };
 
 export const getPostsByCategory = async (category = null, limit = 10, lastDoc = null) => {
