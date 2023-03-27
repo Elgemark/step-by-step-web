@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import { useTheme } from "@mui/material";
 import { useScrollDirection } from "../../hooks/scroll";
+import { FC } from "react";
+import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 
 const Root = styled.div`
   position: sticky;
@@ -17,7 +19,7 @@ const ContentContainer = styled.div`
   border-radius: ${({ theme }) => theme.spacing(2)};
   padding: ${({ theme }) => theme.spacing(1)};
   margin: ${({ theme }) => theme.spacing(1)} 0 ${({ theme }) => theme.spacing(2)};
-  transform: scale(${({ scrollDirection }) => (scrollDirection === "down" ? 0.8 : 1)});
+  transform: scale(${({ scrollDirection, disableShrink }) => (!disableShrink && scrollDirection === "down" ? 0.8 : 1)});
   transform-origin: top center;
   transition-delay: 1s;
   transition: 0.5s transform;
@@ -26,13 +28,17 @@ const ContentContainer = styled.div`
   }
 `;
 
-const FloatingTopBar = ({ children, ...props }) => {
+const FloatingTopBar: FC<{ disableShrink?: boolean; children: ReactJSXElement; [key: string]: any }> = ({
+  disableShrink = false,
+  children,
+  ...props
+}) => {
   const theme = useTheme();
   const scrollDirection = useScrollDirection();
 
   return (
     <Root theme={theme} {...props}>
-      <ContentContainer scrollDirection={scrollDirection} theme={theme}>
+      <ContentContainer scrollDirection={scrollDirection} disableShrink={disableShrink} theme={theme}>
         {children}
       </ContentContainer>
     </Root>

@@ -1,7 +1,7 @@
 import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
 import { FC } from "react";
-import { Chip, InputLabel, Stack, useTheme } from "@mui/material";
+import { Collapse, Stack, useTheme } from "@mui/material";
 import styled, { css } from "styled-components";
 import TextField from "@mui/material/TextField";
 import { Button, ButtonGroup } from "@mui/material";
@@ -111,6 +111,7 @@ export const UserCardBig: FC<{
   background: string;
   loading?: boolean;
   edit?: boolean;
+  editable?: boolean;
   onAvatarSelect?: any;
   onCategorySelect?: any;
   onChangeAlias?: any;
@@ -130,6 +131,7 @@ export const UserCardBig: FC<{
   background,
   loading,
   edit = false,
+  editable = false,
   onCategorySelect,
   onAvatarSelect,
   onChangeAlias,
@@ -154,14 +156,16 @@ export const UserCardBig: FC<{
       <div className="background"></div>
       <Stack spacing={2} width="100%" height="100%" alignItems="center" className="profile-content">
         <Avatar className="user-avatar" src={avatar} sx={{ width: 120, height: 120 }} />
-        <Stack direction="row">
-          <OpenDialog className="button-change-avatar" onFileSelected={onAvatarSelect}>
-            <Button endIcon={<ImageIcon></ImageIcon>}>avatar</Button>
-          </OpenDialog>
-          <OpenDialog className="button-change-background" onFileSelected={onBackgroundSelect}>
-            <Button endIcon={<ImageIcon></ImageIcon>}>wallpaper</Button>
-          </OpenDialog>
-        </Stack>
+        <Collapse in={edit}>
+          <Stack direction="row">
+            <OpenDialog className="button-change-avatar" onFileSelected={onAvatarSelect}>
+              <Button endIcon={<ImageIcon></ImageIcon>}>avatar</Button>
+            </OpenDialog>
+            <OpenDialog className="button-change-background" onFileSelected={onBackgroundSelect}>
+              <Button endIcon={<ImageIcon></ImageIcon>}>wallpaper</Button>
+            </OpenDialog>
+          </Stack>
+        </Collapse>
         <TextField
           className="user-alias"
           fullWidth
@@ -188,19 +192,21 @@ export const UserCardBig: FC<{
             onSelect={(category) => onCategorySelect({ category })}
           />
         </BorderBox>
-        {edit ? (
-          <ButtonGroup variant="text">
-            <Button onClick={onCancel}>Cancel</Button>
-            <LoadingButton loading={loading} onClick={onSave}>
-              Save
-            </LoadingButton>
-          </ButtonGroup>
-        ) : (
-          <ButtonGroup variant="text">
-            <Button onClick={onEdit}>Edit</Button>
-            <Button onClick={onSignOut}>Log Out</Button>
-          </ButtonGroup>
-        )}
+        {editable ? (
+          edit ? (
+            <ButtonGroup variant="text">
+              <Button onClick={onCancel}>Cancel</Button>
+              <LoadingButton loading={loading} onClick={onSave}>
+                Save
+              </LoadingButton>
+            </ButtonGroup>
+          ) : (
+            <ButtonGroup variant="text">
+              <Button onClick={onEdit}>Edit</Button>
+              <Button onClick={onSignOut}>Log Out</Button>
+            </ButtonGroup>
+          )
+        ) : null}
       </Stack>
     </RootBig>
   );

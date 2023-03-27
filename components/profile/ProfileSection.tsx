@@ -132,6 +132,7 @@ const ProfileSctionEditable: FC<{
     <>
       <UserCardBig
         edit={edit}
+        editable={true}
         avatar={avatarData.url || user.avatar}
         background={backgroundData.url || user.background}
         alias={user.alias}

@@ -109,7 +109,7 @@ const ProfilePage = ({ tabValue, filterValue, uid, posts = [], userIds = [] }) =
         {/* LOGGED IN */}
         <ProfileSection userId={uid} />
         <TabContext value={tabValue}>
-          <FloatingTopBar className="floating-top-bar">
+          <FloatingTopBar className="floating-top-bar" disableShrink>
             <Tabs
               className="tabs"
               value={tabValue}
