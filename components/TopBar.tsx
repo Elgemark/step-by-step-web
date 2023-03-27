@@ -7,11 +7,12 @@ import CreateIcon from "@mui/icons-material/Create";
 import LoginIcon from "@mui/icons-material/Login";
 import Search from "./primitives/Search";
 import styled from "styled-components";
-import { getBasePath, getPath, getQuery, useDebouncedQuery } from "../utils/queryUtils";
+import { getBasePath, getQuery, useDebouncedQuery } from "../utils/queryUtils";
 import _ from "lodash";
 import { useUser } from "reactfire";
 import MenuIcon from "@mui/icons-material/Menu";
 import { includesAny } from "../utils/arrayUtils";
+import { useEffect } from "react";
 
 const StyledAppbar = styled(AppBar)`
   align-items: center;
@@ -43,11 +44,15 @@ const TopBar: FC<{ onClickLogo: () => void; className?: string; actions?: ReactN
   const isDesktop = useMediaQuery("(min-width:600px)");
   const { data: user } = useUser();
   const router = useRouter();
-  const [searchStr, setSearchStr] = useState(router.query.search);
+  const [searchStr, setSearchStr] = useState(router.query.search || "");
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const refArrrow = useRef();
   const { query, set: setQuery } = useDebouncedQuery();
+
+  useEffect(() => {
+    setSearchStr(getQuery()?.search || "");
+  }, []);
 
   const onSearchEnterHandler = () => {
     if (includesAny(getBasePath().split("/"), ["search", "category"])) {
@@ -90,6 +95,7 @@ const TopBar: FC<{ onClickLogo: () => void; className?: string; actions?: ReactN
           <StyledSearch
             theme={theme}
             onEnter={onSearchEnterHandler}
+            onClear={onSearchEnterHandler}
             onChange={(e) => setSearchStr(e.currentTarget.value.toLowerCase())}
             onFocus={onSearchFocusHandler}
             onBlur={onFocusBlurHandler}

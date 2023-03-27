@@ -23,15 +23,20 @@ const Search: FC<{
   onFocus: (e: any) => void;
   onBlur: (e: any) => void;
   onEnter?: () => void;
+  onClear?: () => void;
   onClickFilter?: (e: any) => void;
   value: string | null;
   showFilterButton?: boolean;
-}> = ({ onChange, onEnter, onFocus, onBlur, onClickFilter, value, ...rest }) => {
+}> = ({ onChange, onEnter, onFocus, onClear, onBlur, onClickFilter, value, ...rest }) => {
   const theme = useTheme();
 
   const onKeyUpHandler = (e) => {
     if (e.keyCode === 13) {
       onEnter && onEnter();
+    }
+    // "clear"
+    if (e.keyCode === 8 && !e.target.value) {
+      onClear && onClear();
     }
   };
 
