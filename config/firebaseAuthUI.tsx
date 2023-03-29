@@ -24,7 +24,7 @@ export const config = (firebase) => {
         const { user } = authResult;
         setUser(user).then((res) => {
           if (res.wasCreated) {
-            window.location.assign(`/profile/${res.uid}`);
+            window.location.assign(`/login/verify-email`);
           } else {
             window.location.assign(`/`);
           }

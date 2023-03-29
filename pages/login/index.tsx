@@ -12,48 +12,60 @@ import "firebaseui/dist/firebaseui.css";
 import { useUser } from "reactfire";
 import FirebaseWrapper from "../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../components/wrappers/MUIWrapper";
+import { useRouter } from "next/router";
 
-const StyledContainer = styled.div`
-  margin-top: 100px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+const Root = styled.div`
+  .login-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .firebaseui-auth-container {
+    opacity: ${({ status }) => (status === "success" ? 1 : 0)};
+    transition: 0.6s opacity;
+  }
 `;
 
 const LogInPage = () => {
-  const { status } = useUser();
+  const { status, data: user } = useUser();
+  const router = useRouter();
 
   const loadFirebaseui = useCallback(async () => {
     const firebaseui = await import("firebaseui");
     const firebaseUi = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(getAuth());
     firebaseUi.start(".firebaseui-auth-container", uiConfig(firebase));
-    // firebaseUi.disableAutoSignIn();
+    firebaseUi.disableAutoSignIn();
   }, []);
 
   useEffect(() => {
     if (status !== "loading") {
       loadFirebaseui();
     }
-  }, [status]);
+    if (status === "success" && user !== null) {
+      router.replace("/profile/" + user.uid);
+    }
+  }, [status, user]);
 
   return (
-    <>
+    <Root status={status}>
       <Head>
         <title>STEPS | LogIn</title>
       </Head>
-      <Layout>
-        <StyledContainer>{status === "loading" ? <CircularProgress /> : null}</StyledContainer>
-      </Layout>
-      <div className="firebaseui-auth-container" />
-    </>
+      <Layout />
+      <div className="login-container">
+        {status === "loading" ? <CircularProgress /> : null}
+        {/* Buttons not showing when in Layout */}
+        <div className="firebaseui-auth-container" />
+      </div>
+    </Root>
   );
 };
 
-export default () => (
+export default (props) => (
   <MUIWrapper>
     <FirebaseWrapper>
-      <LogInPage></LogInPage>
+      <LogInPage {...props}></LogInPage>
     </FirebaseWrapper>
   </MUIWrapper>
 );
