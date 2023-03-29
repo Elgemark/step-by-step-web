@@ -102,7 +102,7 @@ const RootBig = styled.div`
   }
 
   .image-buttons-container {
-    margin-top: -20px !important;
+    margin-top: -32px !important;
   }
   .stats {
     margin-bottom: 24px;
@@ -176,7 +176,7 @@ export const UserCardBig: FC<{
       <Stack spacing={2} width="100%" height="100%" alignItems="center" className="profile-content">
         <Avatar className="user-avatar" src={avatar} sx={{ width: 120, height: 120 }} />
         {/* STATS */}
-        <div style={{ height: "80px" }}>
+        <div style={{ height: "60px" }}>
           <Collapse in={!edit} className="stats">
             <Stack direction="row" spacing={2} width="100%" justifyContent={"center"}>
               <Typography variant="h5" color="primary">
@@ -194,12 +194,14 @@ export const UserCardBig: FC<{
           <Collapse in={edit} className="image-buttons-container">
             <Stack direction="row" width="100%" justifyContent={"center"}>
               <OpenDialog className="button-change-avatar" onFileSelected={onAvatarSelect}>
-                <Button variant="contained" endIcon={<ImageIcon></ImageIcon>}>
+                <Button size="large" endIcon={<ImageIcon></ImageIcon>}>
                   avatar
                 </Button>
               </OpenDialog>
               <OpenDialog className="button-change-background" onFileSelected={onBackgroundSelect}>
-                <Button endIcon={<ImageIcon></ImageIcon>}>wallpaper</Button>
+                <Button size="large" endIcon={<ImageIcon></ImageIcon>}>
+                  wallpaper
+                </Button>
               </OpenDialog>
             </Stack>
           </Collapse>
