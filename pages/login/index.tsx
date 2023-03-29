@@ -43,11 +43,9 @@ const LogInPage = () => {
         <title>STEPS | LogIn</title>
       </Head>
       <Layout>
-        <StyledContainer>
-          {status === "loading" ? <CircularProgress /> : null}
-          <div className="firebaseui-auth-container" />
-        </StyledContainer>
+        <StyledContainer>{status === "loading" ? <CircularProgress /> : null}</StyledContainer>
       </Layout>
+      <div className="firebaseui-auth-container" />
     </>
   );
 };
