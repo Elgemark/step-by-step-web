@@ -88,7 +88,7 @@ const Post: FC<{
   hrefBasePath?: string;
   lists?: Lists;
   media: Media;
-  likes: number;
+  likes?: number;
   ratesNum?: number;
   ratesTotal?: number;
   currentUserId?: string;

@@ -122,7 +122,7 @@ export const UserCardBig: FC<{
   biography?: string;
   avatar?: string;
   selectedCategories?: Array<string>;
-  categories: Categories;
+  categories?: Categories;
   background: string;
   loading?: boolean;
   edit?: boolean;
