@@ -278,7 +278,7 @@ export const getPostsForAnonymousUser = async (filter: SearchFilter = {}, limit 
   let postsResponse = await getPostsByQuery(postsQuery);
   // Compuond queries can not contain range filter on different values. Using JS filtering...
   // rated...
-  if (filter.rated) {
+  if (filter?.rated > 0) {
     postsResponse.data = postsResponse.data.filter((post) => post.ratesValue >= filter.rated);
   }
 
@@ -347,7 +347,7 @@ export const getPostsBySearch = async (
 
   // Compuond queries can not contain range filter on different values. Using JS filtering...
   // rated...
-  if (filter.rated) {
+  if (filter?.rated > 0) {
     postsResponse.data = postsResponse.data.filter((post) => post.ratesValue >= filter.rated);
   }
 
