@@ -1,5 +1,5 @@
 import { PostsResponse } from "../../../utils/firebase/interface";
-import { getPostsBySearch, getPostsForAnonymousUser } from "../../../utils/firebase/api/post";
+import { getPostsBySearch } from "../../../utils/firebase/api/post";
 import Collection from "../../../classes/Collection";
 import FirebaseWrapper from "../../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../../components/wrappers/MUIWrapper";

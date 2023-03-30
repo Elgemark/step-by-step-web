@@ -1,9 +1,4 @@
-import {
-  getPostByExclude,
-  getPostByFollows,
-  getPostByCategories,
-  getPostsForAnonymousUser,
-} from "../../../utils/firebase/api/post";
+import { getPostByFollows, getPostByCategories, getPostsForAnonymousUser } from "../../../utils/firebase/api/post";
 import FirebaseWrapper from "../../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../../components/wrappers/MUIWrapper";
 import { useEffect, useState } from "react";
@@ -33,20 +28,17 @@ const UserPage = ({ follows }) => {
   const [lastDocByCategories, setLastDocByCategories] = useState();
   const [hasMorePostsByCategories, setHasMorePostsByCategories] = useState(true);
   // posts by exclude...
-  const [lastDocByExclude, setLastDocByExclude] = useState();
-  const [hasMorePostsByExclude, setHasMorePostsByExclude] = useState(true);
-  // posts by exclude...
   const [lastDocByAnonymousUser, setLastDocByAnonymousUser] = useState();
   const [hasMorePostsByAnonymousUser, setHasMorePostsByAnonymousUser] = useState(true);
 
   const LIMIT = 5;
 
-  const fetchPostsByFollows = async (fromTimeStamp) => {
+  const fetchPostsByFollows = async () => {
     if (!hasMorePostsByFollows || !follows.length) {
       return { hasMorePosts: false, posts: [] };
     }
     //
-    const response = await getPostByFollows(follows, fromTimeStamp, LIMIT, lastDocByFollows);
+    const response = await getPostByFollows(follows, LIMIT, lastDocByFollows);
     addPosts(response.data);
     setLastDocByFollows(response.lastDoc);
     const hasMorePosts = response.data.length > 0;
@@ -55,12 +47,12 @@ const UserPage = ({ follows }) => {
     return { hasMorePosts, posts: response.data };
   };
 
-  const fetchPostsByCategories = async (fromTimeStamp) => {
+  const fetchPostsByCategories = async () => {
     if (!hasMorePostsByCategories || !user.categories?.length) {
       return { hasMorePosts: false, posts: [] };
     }
     //
-    const response = await getPostByCategories(user.categories, fromTimeStamp, LIMIT, lastDocByCategories);
+    const response = await getPostByCategories(user.categories, LIMIT, lastDocByCategories);
     addPosts(response.data);
     setLastDocByCategories(response.lastDoc);
     const hasMorePosts = response.data.length > 0;
@@ -69,25 +61,12 @@ const UserPage = ({ follows }) => {
     return { hasMorePosts, posts: response.data };
   };
 
-  const fetchPostsByExclude = async (exclude: Array<string>, fromTimeStamp = null) => {
-    if (!hasMorePostsByExclude || !exclude.length) {
-      return { hasMorePosts: false, posts: [] };
-    }
-    //
-    const response = await getPostByExclude(exclude, fromTimeStamp, LIMIT, lastDocByExclude);
-    addPosts(response.data);
-    setLastDocByExclude(response.lastDoc);
-    const hasMorePosts = response.data.length > 0;
-    setHasMorePostsByExclude(hasMorePosts);
-    return { hasMorePosts, posts: response.data };
-  };
-
-  const fetchPostForAnonymousUser = async (fromTimeStamp = null) => {
+  const fetchPostForAnonymousUser = async () => {
     if (!hasMorePostsByAnonymousUser) {
       return { hasMorePosts: false, posts: [] };
     }
     //
-    const response = await getPostsForAnonymousUser(LIMIT, lastDocByAnonymousUser, { fromTimeStamp });
+    const response = await getPostsForAnonymousUser({}, LIMIT, lastDocByAnonymousUser);
     addPosts(response.data);
     setLastDocByAnonymousUser(response.lastDoc);
     const hasMorePosts = response.data.length > 0;
@@ -96,43 +75,38 @@ const UserPage = ({ follows }) => {
     return { hasMorePosts, posts: response.data };
   };
 
-  const fetchPosts = async (fromTimeStamp) => {
+  const fetchPosts = async () => {
     console.log("fetchPosts");
     setIsFetching(true);
     let resp: FetchResponse = { hasMorePosts: false, posts: [] };
     let aggregatedPosts: PostsType = [];
     // posts by follows
     if (!resp.hasMorePosts || aggregatedPosts.length < LIMIT) {
-      resp = await fetchPostsByFollows(fromTimeStamp);
+      resp = await fetchPostsByFollows();
       aggregatedPosts = aggregatedPosts.concat(resp.posts);
     }
     // posts by categories
     if (!resp.hasMorePosts || aggregatedPosts.length < LIMIT) {
-      resp = await fetchPostsByCategories(fromTimeStamp);
+      resp = await fetchPostsByCategories();
       aggregatedPosts = aggregatedPosts.concat(resp.posts);
-    }
-    // posts by exclude
-    if (!resp.hasMorePosts || aggregatedPosts.length < LIMIT) {
-      const exclude = posts.concat(aggregatedPosts).map((post) => post.id);
-      resp = await fetchPostsByExclude(exclude);
     }
     // If no post found, try
     if (!resp.posts.length) {
-      resp = await fetchPostForAnonymousUser(fromTimeStamp);
+      resp = await fetchPostForAnonymousUser();
     }
     setIsFetching(false);
   };
 
   useEffect(() => {
     if (!isLoadingUser) {
-      !isFetching && fetchPosts(user.lastFeedFetch);
+      !isFetching && fetchPosts();
     }
   }, [isLoadingUser]);
 
   useEffect(() => {
     if (isBottom) {
       if (!isLoadingUser) {
-        !isFetching && fetchPosts(user.lastFeedFetch);
+        !isFetching && fetchPosts();
       }
     }
   }, [isBottom]);

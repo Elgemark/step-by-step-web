@@ -14,7 +14,7 @@ const collection = new Collection();
 let lastDoc;
 
 export async function getServerSideProps({ query }) {
-  const { search, category } = query;
+  const { search, category, rated } = query;
   let response: PostsResponse = { data: [], error: null };
 
   const categories = await getCategories();
@@ -23,14 +23,17 @@ export async function getServerSideProps({ query }) {
     // Search...
     response = await getPostsBySearch(search, category);
   } else {
-    response = await getPostsForAnonymousUser();
+    response = await getPostsForAnonymousUser({ rated });
   }
 
   lastDoc = response.lastDoc;
 
-  const items = collection.union(response.data, [category, search], () => {
-    lastDoc = null;
-  });
+  const items = collection
+    .union(response.data, [category, search], () => {
+      lastDoc = null;
+    })
+    // Filter by rated
+    .filter((item) => (rated && item.ratesValue ? item.ratesValue >= rated : true));
 
   return { props: { posts: items, categories: categories.data } };
 }

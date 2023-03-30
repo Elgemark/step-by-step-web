@@ -260,27 +260,14 @@ export const useGetPostsByQuery = () => {
 
 // ::: Custom query functions...
 
-type PostsForAnonymousUserOptions = {
-  excludeIds?: Array<string>;
-  fromTimeStamp?: any;
-};
-
-export const getPostsForAnonymousUser = async (
-  limit = 10,
-  lastDoc = null,
-  options: PostsForAnonymousUserOptions = {}
-) => {
+export const getPostsForAnonymousUser = async (filter: SearchFilter = {}, limit = 10, lastDoc = null) => {
   // Build query...
   let postsQuery: Array<any> = [];
   // Get only public posts
   postsQuery.push(where("visibility", "==", "public"));
-
-  //
-  if (options.excludeIds) {
-    postsQuery.push(where("id", "not-in", options.excludeIds));
-  }
-  // Order by ratesValue // Not working with "in" or "=="!
-  // postsQuery.push(orderBy("ratesValue", "desc"));
+  // Order by timeStamp
+  postsQuery.push(orderBy("timeStamp", "desc"));
+  // Indexed by visibility &  timeStamp!!!
   // Limit
   postsQuery.push(fsLimit(limit));
   // paginate...
@@ -288,56 +275,42 @@ export const getPostsForAnonymousUser = async (
     postsQuery.push(startAfter(lastDoc));
   }
 
-  return await getPostsByQuery(postsQuery);
+  let postsResponse = await getPostsByQuery(postsQuery);
+  // Compuond queries can not contain range filter on different values. Using JS filtering...
+  // rated...
+  if (filter.rated) {
+    postsResponse.data = postsResponse.data.filter((post) => post.ratesValue >= filter.rated);
+  }
+
+  return await postsResponse;
 };
 
-export const getPostByFollows = async (follows = [], fromTimeStamp = null, limit = 10, lastDoc = null) => {
+export const getPostByFollows = async (follows = [], limit = 10, lastDoc = null) => {
   // Build query...
   let postsQuery: Array<any> = [fsLimit(limit)];
-  // From timestamp !!! Funkar inte i kombo
-  if (fromTimeStamp) {
-    // postsQuery.push(where("timeStamp", ">", timeToTimeStamp(fromTimeStamp)));
-  }
   // Get only public posts
   postsQuery.push(where("visibility", "==", "public"));
-  //
+  // by follows id
   postsQuery.push(where("uid", "in", follows));
+  // Order by timeStamp
+  postsQuery.push(orderBy("timeStamp", "desc"));
+  // Indexed by visibility & uid & timeStamp!!!
   if (lastDoc) {
     postsQuery.push(startAfter(lastDoc));
   }
   return await getPostsByQuery(postsQuery);
 };
 
-export const getPostByCategories = async (categories = [], fromTimeStamp = null, limit = 10, lastDoc = null) => {
+export const getPostByCategories = async (categories = [], limit = 10, lastDoc = null) => {
   // Build query...
   let postsQuery: Array<any> = [fsLimit(limit)];
-  // From timestamp
-  if (fromTimeStamp) {
-    postsQuery.push(where("timeStamp", ">", timeToTimeStamp(fromTimeStamp)));
-  }
   // Get only public posts
   postsQuery.push(where("visibility", "==", "public"));
-  //
+  // by category
   postsQuery.push(where("category", "in", categories));
-  if (lastDoc) {
-    postsQuery.push(startAfter(lastDoc));
-  }
-  return await getPostsByQuery(postsQuery);
-};
-
-export const getPostByExclude = async (exclude = [], fromTimeStamp = null, limit = 10, lastDoc = null) => {
-  // Build query...
-  let postsQuery: Array<any> = [fsLimit(limit)];
-  // From timestamp NOT WORKING
-  if (fromTimeStamp) {
-    postsQuery.push(where("timeStamp", ">", timeToTimeStamp(fromTimeStamp)));
-  }
-  // Get only public posts
-  postsQuery.push(where("visibility", "==", "public"));
-  // NOT WORKING
-  // if (exclude.length) {
-  //   postsQuery.push(where("id", "not-in", exclude));
-  // }
+  // Order by timeStamp
+  postsQuery.push(orderBy("timeStamp", "desc"));
+  // Indexed by visibility & uid & timeStamp!!!
   if (lastDoc) {
     postsQuery.push(startAfter(lastDoc));
   }

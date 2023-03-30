@@ -185,7 +185,8 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
   };
 
   const onClickPublishHandler = () => {
-    setOpenPublishDialog(true);
+    //setOpenPublishDialog(true);
+    onClickPublish();
   };
 
   const onClickPublish = async () => {
@@ -193,9 +194,9 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
       await onClickSaveHandler();
     }
 
-    const resp = await updatePost(id, { visibility: "review" });
+    const resp = await updatePost(id, { visibility: "public" });
     if (!resp.error) {
-      setSuccessMessage("Post sent for review!");
+      setSuccessMessage("Post published!");
       refresh();
     }
   };
@@ -266,7 +267,7 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
               {/* BUTTON PUBLISH / UNPUBLISH */}
               <Button
                 endIcon={post.visibility === "draft" ? <PublishIcon /> : <UnpublishedIcon />}
-                onClick={onClickPublishHandler}
+                onClick={post.visibility === "draft" ? onClickPublishHandler : onClickUnpublish}
               >
                 {post.visibility === "draft" ? "Publish" : "Unpublish"}
               </Button>
@@ -294,7 +295,7 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
             onClickCancel={() => {
               setOpenPublishDialog(false);
             }}
-            onClickOk={post.visibility === "draft" ? onClickPublish : onClickUnpublish}
+            onClickOk={post.visibility !== "draft" ? onClickPublish : onClickUnpublish}
           />
         </StyledLayout>
       )}
