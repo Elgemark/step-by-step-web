@@ -1,4 +1,14 @@
-import { getFirestore, onSnapshot, doc, setDoc, updateDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  onSnapshot,
+  doc,
+  setDoc,
+  updateDoc,
+  collection,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useSigninCheck } from "reactfire";
 import { useUser } from "./user";
@@ -36,6 +46,26 @@ export const updateProgress = async (userId: string, postId: string, updates: ob
   } catch (error) {
     response.error = error;
   }
+  return response;
+};
+
+export const getPostIdsByProgress = async (uid, completed = true) => {
+  const response = { data: [], error: null };
+
+  const firebase = getFirestore();
+  // get completed posts for user
+  const progressRef = collection(firebase, "users", uid, "progress");
+  const progressQuery = query(progressRef, where("completed", "==", completed));
+
+  try {
+    const docsSnap = await getDocs(progressQuery);
+    docsSnap.forEach((doc) => {
+      response.data.push(doc.id);
+    });
+  } catch (error) {
+    response.error = error.toString();
+  }
+
   return response;
 };
 

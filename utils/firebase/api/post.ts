@@ -21,6 +21,8 @@ import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { Posts } from "../type";
 import { toSanitizedArray } from "../../stringUtils";
+import { geBookmarksForUser } from "./bookmarks";
+import { getPostIdsByProgress } from "./progress";
 
 interface SearchFilter {
   category?: string | string[];
@@ -73,78 +75,41 @@ export const getPostsByQuery = async (queries: Array<any>) => {
   return response;
 };
 
-export const getBookmarkedPosts = async (uid, limit = 10, lastDoc = null) => {
-  let error = null;
-  const posts = [];
-  const firebase = getFirestore();
-  // get saved posts for user as list of id:s
-  const bookmarksRef = collection(firebase, "users", uid, "bookmarks");
-
-  const queries = [fsLimit(limit)];
-  const queryBuild = query(bookmarksRef, ...queries);
-
-  let bookmarksIds = [];
-  try {
-    const bookmarksSnap = await getDocs(queryBuild);
-    bookmarksSnap.forEach((doc) => {
-      bookmarksIds.push(doc.id);
-    });
-  } catch (error) {
-    error = error.toString();
-  }
+export const getBookmarkedPosts = async (uid, limit = 10) => {
+  const resBookmarks = await geBookmarksForUser(uid);
+  // Build query...
+  let postsQuery: Array<any> = [fsLimit(limit)];
+  // Get only public posts
+  postsQuery.push(where("visibility", "==", "public"));
+  // Get by bookmarked posts
+  postsQuery.push(where("id", "in", resBookmarks.data));
   // Get posts saved by user (if any)
-  if (bookmarksIds.length) {
-    const postsRef = collection(firebase, "posts");
-    const queryBuild = query(postsRef, where("id", "in", bookmarksIds), where("visibility", "==", "public"));
-    try {
-      const querySnapshot = await getDocs(queryBuild);
-      querySnapshot.forEach((doc) => {
-        posts.push(parseData({ ...doc.data(), id: doc.id }));
-      });
-    } catch (error) {
-      error = error.toString();
-    }
-  }
 
-  return { error, posts, bookmarksIds };
+  return resBookmarks.data.length ? await getPostsByQuery(postsQuery) : { data: [], error: null };
 };
 
-export const getPublishedPosts = async (uid) => {
-  let error = null;
-  const posts = [];
-  //
-  const firebase = getFirestore();
-  const postsRef = collection(firebase, "posts");
-  const queryBuild = query(postsRef, where("uid", "==", uid), where("visibility", "==", "public"));
+export const getPublishedPosts = async (uid, limit = 10) => {
+  // Build query...
+  let postsQuery: Array<any> = [fsLimit(limit)];
+  // Get only public posts
+  postsQuery.push(where("visibility", "==", "public"));
+  // by follows id
+  postsQuery.push(where("uid", "==", uid));
+  // Order by timeStamp
+  postsQuery.push(orderBy("timeStamp", "desc"));
 
-  try {
-    const querySnapshot = await getDocs(queryBuild);
-    querySnapshot.forEach((doc) => {
-      posts.push(parseData({ ...doc.data(), id: doc.id }));
-    });
-  } catch (error) {
-    error = error.toString();
-  }
-  return { error, posts };
+  return await getPostsByQuery(postsQuery);
 };
 
-export const getCreatedPosts = async (uid, visiblity) => {
-  let error = null;
-  const posts = [];
-  //
-  const firebase = getFirestore();
-  const postsRef = collection(firebase, "posts");
-  const queryBuild = query(postsRef, where("uid", "==", uid), where("visibility", "==", visiblity));
+export const getCreatedPosts = async (uid, visiblity, limit = 10) => {
+  // Build query...
+  let postsQuery: Array<any> = [fsLimit(limit)];
+  // Get only public posts
+  postsQuery.push(where("visibility", "==", visiblity));
+  // Get by uid
+  postsQuery.push(where("uid", "==", uid));
 
-  try {
-    const querySnapshot = await getDocs(queryBuild);
-    querySnapshot.forEach((doc) => {
-      posts.push(parseData({ ...doc.data(), id: doc.id }));
-    });
-  } catch (error) {
-    error = error.toString();
-  }
-  return { error, posts };
+  return await getPostsByQuery(postsQuery);
 };
 
 export const getReviewPosts = async (uid) => {
@@ -167,37 +132,25 @@ export const getReviewPosts = async (uid) => {
 };
 
 // Can only get 10 at the time
-export const getPostsByState = async (uid, state, from = 0, to = 10) => {
-  let error = null;
-  const posts = [];
-  const firebase = getFirestore();
-  // get completed posts for user
-  const progressRef = collection(firebase, "users", uid, "progress");
-  const progressQuery = query(progressRef, where("completed", "==", state === "completed"));
-  let postIds = [];
-  try {
-    const docsSnap = await getDocs(progressQuery);
-    docsSnap.forEach((doc) => {
-      postIds.push(doc.id);
-    });
-  } catch (error) {
-    error = error.toString();
-  }
-  // Get posts saved by user (if any)
-  if (postIds.length) {
-    const postsRef = collection(firebase, "posts");
-    const queryBuild = query(postsRef, where("id", "in", postIds.slice(from, to)));
-    try {
-      const querySnapshot = await getDocs(queryBuild);
-      querySnapshot.forEach((doc) => {
-        posts.push(parseData({ ...doc.data(), id: doc.id }));
-      });
-    } catch (error) {
-      error = error.toString();
-    }
+export const getPostsByState = async (uid, completed = true, from = 0, to = 10, lastDoc = null) => {
+  const postIdsResponse = await getPostIdsByProgress(uid, completed);
+
+  // Build query...
+  let postsQuery: Array<any> = [];
+  // Get only public posts
+  postsQuery.push(where("visibility", "==", "public"));
+  // Get only post for ids...
+  postsQuery.push(where("id", "in", postIdsResponse.data.slice(from, to)));
+  // Order by timeStamp
+  postsQuery.push(orderBy("timeStamp", "desc"));
+  // Indexed by visibility & id &  timeStamp!!!
+
+  // paginate...
+  if (lastDoc) {
+    postsQuery.push(startAfter(lastDoc));
   }
 
-  return { error, posts, postIds };
+  return (await postIdsResponse.data.length) ? getPostsByQuery(postsQuery) : { data: [], error: null };
 };
 
 export const getPost = async (id: string) => {

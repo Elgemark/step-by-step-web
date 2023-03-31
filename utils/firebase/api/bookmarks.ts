@@ -1,4 +1,14 @@
-import { getFirestore, writeBatch, doc, getDoc, increment } from "firebase/firestore";
+import {
+  getFirestore,
+  writeBatch,
+  doc,
+  getDoc,
+  increment,
+  collection,
+  limit as fsLimit,
+  query,
+  getDocs,
+} from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { BookmarkResponse } from "../interface";
@@ -64,6 +74,26 @@ export const isBookmarkedByUser = async (postId) => {
   const bookmarkSnap = await getDoc(bookmarkRef);
   const isBookmarked = bookmarkSnap.exists();
   return { isBookmarked };
+};
+
+export const geBookmarksForUser = async (uid, limit = 100) => {
+  const response = { data: [], error: null };
+  const firebase = getFirestore();
+  // get saved posts for user as list of id:s
+  const bookmarksRef = collection(firebase, "users", uid, "bookmarks");
+  const queries = [fsLimit(limit)];
+  const queryBuild = query(bookmarksRef, ...queries);
+
+  try {
+    const bookmarksSnap = await getDocs(queryBuild);
+    bookmarksSnap.forEach((doc) => {
+      response.data.push(doc.id);
+    });
+  } catch (error) {
+    response.error = error.toString();
+  }
+
+  return response;
 };
 
 export const useBookmarks = (postId) => {
