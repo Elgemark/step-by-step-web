@@ -87,7 +87,6 @@ const TopBar: FC<{ onClickLogo: () => void; className?: string; actions?: ReactN
             onClickLogo();
           }}
         >
-          {/* <StepsLogoIconFold height={36} /> */}
           <MenuIcon fontSize="large"></MenuIcon>
         </IconButton>
         {/* SEARCH */}

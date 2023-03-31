@@ -8,7 +8,7 @@ const SteppoLogo = (props) => {
   const theme = useTheme();
   if (theme.palette.mode === "dark") {
     return (
-      <svg width="303" height="67" viewBox="0 0 303 67" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg width="303" height="67" viewBox="0 0 303 67" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
         <rect x="262.69" y="10.1855" width="40" height="40" transform="rotate(45 262.69 10.1855)" fill="#2277FF" />
         <rect x="290.387" width="17.7356" height="56.2983" transform="rotate(45 290.387 0)" fill="#EEAA00" />
         <rect x="234" y="23.4871" width="17.7356" height="23.338" transform="rotate(-45 234 23.4871)" fill="#EEAA00" />
