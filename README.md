@@ -45,6 +45,7 @@ https://dev.to/rowaxl/what-i-struggled-with-next-js-using-firebase-hosting-and-e
 
 https://www.hobbyideas.in/diy/
 https://simplicable.com/culture/diy
+https://www.shiksha.com/
 
 ### Firebase alts
 

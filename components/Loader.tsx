@@ -1,6 +1,7 @@
 import { CircularProgress, Fade, Slide, Typography, useTheme } from "@mui/material";
 import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
+import LogoLoader from "./primitives/LogoLoader";
 
 const Root = styled.div`
   display: flex;
@@ -27,7 +28,7 @@ const Loader: FC<{ message?: string }> = ({ message }) => {
 
   return (
     <Root theme={theme}>
-      <CircularProgress></CircularProgress>
+      <LogoLoader></LogoLoader>
       <Fade in={showMessage}>
         <Typography className="message" variant="caption">
           {newMessage}

@@ -10,7 +10,7 @@ import FilterBar from "../../components/FilterBar";
 import Posts from "../../components/posts/Posts";
 import { Posts as PostsType } from "../../utils/firebase/type";
 import SteppoLogo from "../../components/primitives/SteppoLogo";
-import { Divider, Paper, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import styled from "styled-components";
 import Accordion from "../../components/primitives/Accordion";
 
