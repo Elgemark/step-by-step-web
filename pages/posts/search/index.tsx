@@ -1,6 +1,4 @@
-import { PostsResponse } from "../../../utils/firebase/interface";
 import { getPostsBySearch } from "../../../utils/firebase/api/post";
-import Collection from "../../../classes/Collection";
 import FirebaseWrapper from "../../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../../components/wrappers/MUIWrapper";
 import { Posts as PostsType } from "../../../utils/firebase/type";
@@ -18,7 +16,6 @@ export default () => {
   const [isFetching, setIsFetching] = useState(false);
 
   useEffect(() => {
-    console.log("query", router.query);
     fetchBySearch(true);
   }, [router.query]);
 
