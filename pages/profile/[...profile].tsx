@@ -1,10 +1,10 @@
-import { getFollows, getPostsByState, getBookmarkedPosts, useUser as fbUseUser } from "../../utils/firebase/api";
+import { getFollows, getBookmarkedPosts, useUser as fbUseUser } from "../../utils/firebase/api";
 import { useTheme } from "@mui/material";
 import Head from "next/head";
 import Layout from "../../components/Layout";
 import { useRouter } from "next/router";
 import Posts from "../../components/posts/Posts";
-import { useEffect, FC } from "react";
+import { useEffect, FC, useState } from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
@@ -18,12 +18,14 @@ import UserCard from "../../components/primitives/UserCard";
 import FirebaseWrapper from "../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../components/wrappers/MUIWrapper";
 import { useUser } from "reactfire";
-import { getPublishedPosts, getCreatedPosts } from "../../utils/firebase/api/post";
+import { getPublishedPosts, getCreatedPosts, getPostsByState } from "../../utils/firebase/api/post";
 import { TabContext, TabPanel } from "@mui/lab";
 import FilterMenu from "../../components/primitives/FilterMenu";
 import FloatingTopBar from "../../components/primitives/FloatingTopBar";
 import ProfileSection from "../../components/profile/ProfileSection";
-import { useCategories } from "../../utils/firebase/api/categories";
+import { Collection, useCollection } from "../../utils/collectionUtils";
+import { useScrolledToBottom } from "../../utils/scrollUtils";
+import { PostsResponse } from "../../utils/firebase/interface";
 
 const UserCardControlled: FC<{ userId: string }> = styled(({ userId, ...props }) => {
   const router = useRouter();
@@ -81,10 +83,15 @@ const tabProps = (index: number) => {
   };
 };
 
-const ProfilePage = ({ tabValue, filterValue, uid, posts = [], userIds = [] }) => {
+const LIMIT = 5;
+
+const ProfilePage = ({ tabValue, filterValue, uid, userIds = [] }) => {
   const theme = useTheme();
   const { status, data: user } = useUser();
   const router = useRouter();
+  const { collection: posts, addItems: addPosts, replaceItems: replacePosts } = useCollection();
+  const isBottom = useScrolledToBottom(100);
+  const [lastDoc, setLastDoc] = useState();
 
   useEffect(() => {
     if (status !== "loading" && user === undefined) {
@@ -98,6 +105,40 @@ const ProfilePage = ({ tabValue, filterValue, uid, posts = [], userIds = [] }) =
 
   const onClickFilterHandler = ({ value }) => {
     router.push("/profile/" + uid + "/" + tabValue + "/" + value);
+  };
+
+  useEffect(() => {
+    fetchData(tabValue).then((res) => {
+      replacePosts(res.data as Collection);
+    });
+  }, [tabValue]);
+
+  useEffect(() => {
+    fetchData(tabValue).then((res) => {
+      addPosts(res.data as Collection);
+    });
+  }, [isBottom]);
+
+  const fetchData = async (tabValue) => {
+    let response: PostsResponse = { data: [], error: null, lastDoc: null };
+    switch (tabValue) {
+      case "saved":
+        response = await getBookmarkedPosts(uid, LIMIT, lastDoc);
+        break;
+      case "published":
+        response = await getPublishedPosts(uid, LIMIT, lastDoc);
+        break;
+      case "created":
+        filterValue = filterValue || "draft";
+        response = await getCreatedPosts(uid, "draft", LIMIT, lastDoc);
+        break;
+      case "completed":
+        filterValue = filterValue || "completed";
+        response = await getPostsByState(uid, true, LIMIT, lastDoc);
+        break;
+    }
+    setLastDoc(response.lastDoc);
+    return response;
   };
 
   return (
@@ -127,10 +168,10 @@ const ProfilePage = ({ tabValue, filterValue, uid, posts = [], userIds = [] }) =
           </FloatingTopBar>
 
           <TabPanel value="saved" tabIndex={0}>
-            <Posts posts={posts} enableLink />
+            <Posts posts={posts as Posts} enableLink />
           </TabPanel>
           <TabPanel value="published" tabIndex={1}>
-            <Posts posts={posts} enableLink />
+            <Posts posts={posts as Posts} enableLink />
           </TabPanel>
           <TabPanel value="created" tabIndex={2}>
             <FilterMenu
@@ -141,7 +182,7 @@ const ProfilePage = ({ tabValue, filterValue, uid, posts = [], userIds = [] }) =
               selectedValue={filterValue}
               onClick={onClickFilterHandler}
             ></FilterMenu>
-            <Posts posts={posts} enableLink />
+            <Posts posts={posts as Posts} enableLink />
           </TabPanel>
           <TabPanel value="completed" tabIndex={3}>
             <FilterMenu
@@ -149,7 +190,7 @@ const ProfilePage = ({ tabValue, filterValue, uid, posts = [], userIds = [] }) =
               selectedValue={filterValue}
               onClick={onClickFilterHandler}
             ></FilterMenu>
-            <Posts posts={posts} enableLink />
+            <Posts posts={posts as Posts} enableLink />
           </TabPanel>
           <TabPanel value="follows" tabIndex={4}>
             <Users userIds={userIds} />
@@ -164,34 +205,14 @@ export async function getServerSideProps({ query }) {
   const uid = query.profile[0];
   const tabValue = query.profile[1] || "saved";
   let filterValue = query.profile[2] || null;
-  let posts = [];
   let userIds = [];
-  switch (tabValue) {
-    case "saved":
-      const { posts: savedPosts } = await getBookmarkedPosts(uid);
-      posts = savedPosts;
-      break;
-    case "published":
-      const { posts: createdPosts } = await getPublishedPosts(uid);
-      posts = createdPosts;
-      break;
-    case "created":
-      filterValue = filterValue || "draft";
-      const { posts: draftedPosts } = await getCreatedPosts(uid, filterValue);
-      posts = draftedPosts;
-      break;
-    case "completed":
-      filterValue = filterValue || "completed";
-      const { posts: completedPosts } = await getPostsByState(uid, filterValue);
-      posts = completedPosts;
-      break;
-    case "follows":
-      const { data: follows } = await getFollows(uid);
-      userIds = follows.map((follow) => follow.id);
-      break;
+
+  if (tabValue === "follows") {
+    const { data: follows } = await getFollows(uid);
+    userIds = follows.map((follow) => follow.id);
   }
 
-  return { props: { tabValue, filterValue, uid, posts, userIds } };
+  return { props: { tabValue, filterValue, uid, userIds } };
 }
 
 export default (props) => (

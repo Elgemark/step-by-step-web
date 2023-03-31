@@ -75,7 +75,7 @@ export const getPostsByQuery = async (queries: Array<any>) => {
   return response;
 };
 
-export const getBookmarkedPosts = async (uid, limit = 10) => {
+export const getBookmarkedPosts = async (uid, limit = 10, lastDoc = null) => {
   const resBookmarks = await geBookmarksForUser(uid);
   // Build query...
   let postsQuery: Array<any> = [fsLimit(limit)];
@@ -84,11 +84,15 @@ export const getBookmarkedPosts = async (uid, limit = 10) => {
   // Get by bookmarked posts
   postsQuery.push(where("id", "in", resBookmarks.data));
   // Get posts saved by user (if any)
+  // paginate...
+  if (lastDoc) {
+    postsQuery.push(startAfter(lastDoc));
+  }
 
   return resBookmarks.data.length ? await getPostsByQuery(postsQuery) : { data: [], error: null };
 };
 
-export const getPublishedPosts = async (uid, limit = 10) => {
+export const getPublishedPosts = async (uid, limit = 10, lastDoc = null) => {
   // Build query...
   let postsQuery: Array<any> = [fsLimit(limit)];
   // Get only public posts
@@ -97,17 +101,25 @@ export const getPublishedPosts = async (uid, limit = 10) => {
   postsQuery.push(where("uid", "==", uid));
   // Order by timeStamp
   postsQuery.push(orderBy("timeStamp", "desc"));
+  // paginate...
+  if (lastDoc) {
+    postsQuery.push(startAfter(lastDoc));
+  }
 
   return await getPostsByQuery(postsQuery);
 };
 
-export const getCreatedPosts = async (uid, visiblity, limit = 10) => {
+export const getCreatedPosts = async (uid, visiblity, limit = 10, lastDoc = null) => {
   // Build query...
   let postsQuery: Array<any> = [fsLimit(limit)];
   // Get only public posts
   postsQuery.push(where("visibility", "==", visiblity));
   // Get by uid
   postsQuery.push(where("uid", "==", uid));
+  // paginate...
+  if (lastDoc) {
+    postsQuery.push(startAfter(lastDoc));
+  }
 
   return await getPostsByQuery(postsQuery);
 };
@@ -132,11 +144,11 @@ export const getReviewPosts = async (uid) => {
 };
 
 // Can only get 10 at the time
-export const getPostsByState = async (uid, completed = true, from = 0, to = 10, lastDoc = null) => {
+export const getPostsByState = async (uid, completed = true, limit = 10, lastDoc = null, from = 0, to = 10) => {
   const postIdsResponse = await getPostIdsByProgress(uid, completed);
 
   // Build query...
-  let postsQuery: Array<any> = [];
+  let postsQuery: Array<any> = [fsLimit(limit)];
   // Get only public posts
   postsQuery.push(where("visibility", "==", "public"));
   // Get only post for ids...
