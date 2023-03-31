@@ -1,7 +1,7 @@
 import FloatingTopBar from "./primitives/FloatingTopBar";
 import { useCategories } from "../utils/firebase/api/categories";
 import SelectDropDown from "./primitives/SelectDropDown";
-import { Stack } from "@mui/material";
+import { Stack, useMediaQuery } from "@mui/material";
 import Rate from "./primitives/Rate";
 import BorderBox from "./primitives/BorderBox";
 import { useDebouncedQuery } from "../utils/queryUtils";
@@ -16,6 +16,7 @@ const FilterBar = ({}) => {
   const { categories, isLoading: isLoadingCategories } = useCategories();
   const { query, set: setQuery } = useDebouncedQuery({}, { debounceWait: 10 });
   const router = useRouter();
+  const isDesktop = useMediaQuery("(min-width:600px)");
 
   const onChangeCategoryHandler = (value) => {
     if (value === null) {
@@ -35,7 +36,7 @@ const FilterBar = ({}) => {
 
   return (
     <FloatingTopBar>
-      <Stack spacing={2} direction="row">
+      <Stack spacing={2} direction={isDesktop ? "row" : "column"}>
         <SelectDropDown
           onChange={onChangeCategoryHandler}
           label={isLoadingCategories ? "loading..." : "Category"}
