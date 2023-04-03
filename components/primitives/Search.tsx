@@ -24,10 +24,8 @@ const Search: FC<{
   onBlur: (e: any) => void;
   onEnter?: () => void;
   onClear?: () => void;
-  onClickFilter?: (e: any) => void;
   value: string | null;
-  showFilterButton?: boolean;
-}> = ({ onChange, onEnter, onFocus, onClear, onBlur, onClickFilter, value, ...rest }) => {
+}> = ({ onChange, onEnter, onFocus, onClear, onBlur, value, ...rest }) => {
   const theme = useTheme();
 
   const onKeyUpHandler = (e) => {

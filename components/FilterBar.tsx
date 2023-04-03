@@ -4,7 +4,7 @@ import SelectDropDown from "./primitives/SelectDropDown";
 import { Stack, useMediaQuery } from "@mui/material";
 import Rate from "./primitives/Rate";
 import BorderBox from "./primitives/BorderBox";
-import { useDebouncedQuery } from "../utils/queryUtils";
+import { getBasePath, getQuery } from "../utils/queryUtils";
 import styled from "styled-components";
 import { useRouter } from "next/router";
 
@@ -14,21 +14,21 @@ const StyledOutlinedBox = styled(BorderBox)`
 
 const FilterBar = ({}) => {
   const { categories, isLoading: isLoadingCategories } = useCategories();
-  const { query, set: setQuery } = useDebouncedQuery({}, { debounceWait: 10 });
   const router = useRouter();
   const isDesktop = useMediaQuery("(min-width:600px)");
 
   const onChangeCategoryHandler = (value) => {
     if (value === null) {
-      router.push({ pathname: `/posts/search/`, query });
+      router.push({ pathname: `/posts/search/`, query: getQuery() });
     } else {
-      router.push({ pathname: `/posts/category/${value}`, query });
+      router.push({ pathname: `/posts/category/${value}`, query: getQuery() });
     }
   };
 
   const onClickRateHandler = (value) => {
-    const oldValue = query.rated || 0;
-    setQuery({ rated: oldValue === value && value > 0 ? value - 1 : value });
+    const oldValue = Number(router.query.rated) || 0;
+    const rated = oldValue === value && value > 0 ? value - 1 : value;
+    router.replace({ pathname: getBasePath(), query: { ...getQuery(), rated } });
   };
 
   const allCategories = categories.map((category) => ({ label: category.text, value: category.value }));
@@ -44,7 +44,7 @@ const FilterBar = ({}) => {
           options={allCategories}
         />
         <StyledOutlinedBox label="Rated">
-          <Rate size="small" onClick={onClickRateHandler} value={query.rated || 0} />
+          <Rate size="small" onClick={onClickRateHandler} value={Number(router.query.rated) || 0} />
         </StyledOutlinedBox>
       </Stack>
     </FloatingTopBar>

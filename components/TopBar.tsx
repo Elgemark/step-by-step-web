@@ -7,7 +7,7 @@ import CreateIcon from "@mui/icons-material/Create";
 import LoginIcon from "@mui/icons-material/Login";
 import Search from "./primitives/Search";
 import styled from "styled-components";
-import { getBasePath, getQuery, useDebouncedQuery } from "../utils/queryUtils";
+import { getBasePath, getQuery } from "../utils/queryUtils";
 import _ from "lodash";
 import { useUser } from "reactfire";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -48,17 +48,17 @@ const TopBar: FC<{ onClickLogo: () => void; className?: string; actions?: ReactN
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const refArrrow = useRef();
-  const { query, set: setQuery } = useDebouncedQuery();
 
   useEffect(() => {
     setSearchStr(getQuery()?.search || "");
   }, []);
 
   const onSearchEnterHandler = () => {
+    // setQuery({ search: searchStr });
     if (includesAny(getBasePath().split("/"), ["search", "category"])) {
-      setQuery({ search: searchStr });
+      router.replace({ pathname: getBasePath(), query: { ...getQuery(), search: searchStr } });
     } else {
-      router.push({ pathname: `/posts/search/`, query: { ...query, search: searchStr } });
+      router.push({ pathname: `/posts/search/`, query: { ...getQuery(), search: searchStr } });
     }
 
     setAnchorEl(null);
@@ -72,10 +72,6 @@ const TopBar: FC<{ onClickLogo: () => void; className?: string; actions?: ReactN
 
   const handleFilterClose = () => {
     setAnchorEl(null);
-  };
-
-  const onClickFilterHandler = (e) => {
-    setAnchorEl(anchorEl ? null : e.currentTarget);
   };
 
   return (
@@ -98,10 +94,7 @@ const TopBar: FC<{ onClickLogo: () => void; className?: string; actions?: ReactN
             onChange={(e) => setSearchStr(e.currentTarget.value.toLowerCase())}
             onFocus={onSearchFocusHandler}
             onBlur={onFocusBlurHandler}
-            onClickFilter={onClickFilterHandler}
-            showFilterButton={router.asPath.includes("/search")}
             value={searchStr}
-            numFilters={(_.get(query, "category") ? 1 : 0) + (_.get(query, "orderBy") ? 1 : 0)}
           ></StyledSearch>
         )}
 
