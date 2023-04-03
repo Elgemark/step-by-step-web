@@ -26,6 +26,7 @@ import ProfileSection from "../../components/profile/ProfileSection";
 import { Collection, useCollection } from "../../utils/collectionUtils";
 import { useScrolledToBottom } from "../../utils/scrollUtils";
 import { PostsResponse } from "../../utils/firebase/interface";
+import { Posts as PostsType } from "../../utils/firebase/type";
 
 const UserCardControlled: FC<{ userId: string }> = styled(({ userId, ...props }) => {
   const router = useRouter();
@@ -168,10 +169,10 @@ const ProfilePage = ({ tabValue, filterValue, uid, userIds = [] }) => {
           </FloatingTopBar>
 
           <TabPanel value="saved" tabIndex={0}>
-            <Posts posts={posts as Posts} enableLink />
+            <Posts posts={posts as PostsType} enableLink />
           </TabPanel>
           <TabPanel value="published" tabIndex={1}>
-            <Posts posts={posts as Posts} enableLink />
+            <Posts posts={posts as PostsType} enableLink />
           </TabPanel>
           <TabPanel value="created" tabIndex={2}>
             <FilterMenu
@@ -182,7 +183,7 @@ const ProfilePage = ({ tabValue, filterValue, uid, userIds = [] }) => {
               selectedValue={filterValue}
               onClick={onClickFilterHandler}
             ></FilterMenu>
-            <Posts posts={posts as Posts} enableLink />
+            <Posts posts={posts as PostsType} enableLink />
           </TabPanel>
           <TabPanel value="completed" tabIndex={3}>
             <FilterMenu
@@ -190,7 +191,7 @@ const ProfilePage = ({ tabValue, filterValue, uid, userIds = [] }) => {
               selectedValue={filterValue}
               onClick={onClickFilterHandler}
             ></FilterMenu>
-            <Posts posts={posts as Posts} enableLink />
+            <Posts posts={posts as PostsType} enableLink />
           </TabPanel>
           <TabPanel value="follows" tabIndex={4}>
             <Users userIds={userIds} />

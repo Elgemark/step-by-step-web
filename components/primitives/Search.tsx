@@ -42,6 +42,7 @@ const Search: FC<{
     <Root theme={theme} {...rest}>
       <SearchIcon />
       <InputBase
+        type="search"
         value={value}
         onChange={onChange}
         onFocus={onFocus}

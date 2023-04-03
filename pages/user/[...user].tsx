@@ -146,11 +146,11 @@ export async function getServerSideProps(props) {
   let userIds = [];
   switch (tabValue) {
     case "published":
-      const { posts: createdPosts } = await getPublishedPosts(uid);
+      const { data: createdPosts } = await getPublishedPosts(uid);
       posts = createdPosts;
       break;
     case "saved":
-      const { posts: bookmarkedPosts } = await getBookmarkedPosts(uid);
+      const { data: bookmarkedPosts } = await getBookmarkedPosts(uid);
       posts = bookmarkedPosts;
       break;
     case "follows":

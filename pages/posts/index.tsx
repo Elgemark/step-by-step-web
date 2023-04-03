@@ -13,9 +13,9 @@ import SteppoLogo from "../../components/primitives/SteppoLogo";
 import { Typography } from "@mui/material";
 import styled from "styled-components";
 import Accordion from "../../components/primitives/Accordion";
+import Loader from "../../components/Loader";
 
 const Heading = styled.div`
-  padding: 16px 32px 32px;
   margin-bottom: 16px;
 
   .ingresse {
@@ -61,7 +61,10 @@ export default ({ posts }) => (
         <meta content="noindex, nofollow, initial-scale=1, width=device-width" name="robots" />
         <title>STEPS</title>
       </Head>
+
       <Layout>
+        <Loader fullscreen></Loader>
+        <FilterBar></FilterBar>
         <Heading>
           <SteppoLogo className="logo" />
           <Typography variant="h6" className="ingresse">
@@ -69,7 +72,7 @@ export default ({ posts }) => (
             and tutorials!
           </Typography>
 
-          <Accordion title={"Here's how it works:"}>
+          <Accordion title={"Read more..."}>
             {
               <Typography variant="body2">
                 Creating Guides: Start by signing up and creating a profile. Click on "Create Guide" and begin adding
@@ -81,7 +84,6 @@ export default ({ posts }) => (
             }
           </Accordion>
         </Heading>
-        <FilterBar></FilterBar>
         <Posts enableLink={true} posts={posts as PostsType} />
       </Layout>
     </FirebaseWrapper>
