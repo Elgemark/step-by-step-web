@@ -15,8 +15,9 @@ const Root = styled.div`
 `;
 
 const ContentContainer = styled.div`
+  background-color: rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(20px);
-  border-radius: ${({ theme }) => theme.spacing(2)};
+  border-radius: ${({ theme }) => theme.spacing(1)};
   padding: ${({ theme }) => theme.spacing(1)};
   margin: ${({ theme }) => theme.spacing(0.5)} 0 ${({ theme }) => theme.spacing(2)};
   transform: scale(${({ scrollDirection, disableShrink }) => (!disableShrink && scrollDirection === "down" ? 0.8 : 1)});

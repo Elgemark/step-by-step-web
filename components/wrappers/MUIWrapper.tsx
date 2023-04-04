@@ -2,7 +2,26 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { GlobalStyles } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import { FC, ReactNode, createContext, useMemo, useState } from "react";
+import styled from "styled-components";
+import wallpaper from "../../assets/wallpaper.jpeg";
+import Image from "next/image";
 export const ColorModeContext = createContext({ toggleColorMode: () => {} });
+
+const WallpaperContainer = styled.div`
+  z-index: -1;
+  position: fixed;
+  top: -530px;
+  width: 100%;
+  height: auto;
+  /* opacity: 0.5; */
+
+  display: flex;
+  justify-content: center;
+`;
+
+const Wallpaper = styled(Image)`
+  max-width: 1024px;
+`;
 
 const MUIWrapper: FC<{
   children?: ReactNode;
@@ -50,6 +69,9 @@ const MUIWrapper: FC<{
             body: { backgroundColor: mode === "light" ? "white" : "dark", transition: "1s background-color" },
           }}
         />
+        <WallpaperContainer>
+          <Wallpaper src={wallpaper} alt="wallpaper" width={1024}></Wallpaper>
+        </WallpaperContainer>
         {children}
       </ThemeProvider>
     </ColorModeContext.Provider>

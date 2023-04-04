@@ -5,6 +5,8 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 
 const Root = styled(MUIAccordion)`
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(20px);
   position: relative;
   h6,
   p {

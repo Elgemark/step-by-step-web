@@ -3,16 +3,15 @@ import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import Avatar from "@mui/material/Avatar";
 import { red } from "@mui/material/colors";
-import CardMedia from "@mui/material/CardMedia";
 import styled from "styled-components";
 import { FC } from "react";
 import settings from "../../config";
 import StepMoreMenu from "../StepMoreMenu";
 import CardImage from "../CardImage";
 
-const StyledCardMedia = styled(CardMedia)`
-  object-fit: contain;
-  cursor: zoom-in;
+const Root = styled(Card)`
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(20px);
 `;
 
 interface Media {
@@ -30,7 +29,7 @@ const Step: FC<{
   onRollBack?: Function;
 }> = ({ postId, id, index, title, body, media, onRollBack, className }) => {
   return (
-    <Card className={className}>
+    <Root className={className}>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="post">
@@ -44,7 +43,7 @@ const Step: FC<{
       <CardContent>
         <Typography variant="body2">{body}</Typography>
       </CardContent>
-    </Card>
+    </Root>
   );
 };
 

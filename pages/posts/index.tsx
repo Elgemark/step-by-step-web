@@ -26,6 +26,13 @@ const Heading = styled.div`
   }
 `;
 
+const LogoContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 16px 0;
+`;
+
 const collection = new Collection();
 let lastDoc;
 
@@ -63,10 +70,11 @@ export default ({ posts }) => (
       </Head>
 
       <Layout>
-        <Loader fullscreen></Loader>
+        <LogoContainer>
+          <SteppoLogo className="logo" />
+        </LogoContainer>
         <FilterBar></FilterBar>
         <Heading>
-          <SteppoLogo className="logo" />
           <Typography variant="h6" className="ingresse">
             Welcome to Steppo! The step-by-step instructions app where you can easily create and share your DIY projects
             and tutorials!

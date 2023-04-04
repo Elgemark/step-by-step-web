@@ -21,8 +21,12 @@ const Root = styled.div`
   .content {
     margin-top: 68px;
     width: 1024px;
+    padding: 0 ${({ theme }) => theme.spacing(1)};
+    @media (min-width: 1024px) {
+      padding: 0 ${({ theme }) => theme.spacing(2)};
+    }
     @media (min-width: 600px) {
-      margin: 74px ${({ theme }) => theme.spacing(1)};
+      margin: 74px 0;
     }
   }
   .info {
