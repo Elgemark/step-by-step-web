@@ -13,11 +13,16 @@ import { useUser } from "reactfire";
 import FirebaseWrapper from "../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../components/wrappers/MUIWrapper";
 import { useRouter } from "next/router";
+import SteppoLogo from "../../components/primitives/SteppoLogo";
 
 const Root = styled.div`
+  .logo {
+    margin-bottom: 32px;
+  }
   .login-container {
     width: 100%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
   }
@@ -53,8 +58,10 @@ const LogInPage = () => {
         <title>STEPS | LogIn</title>
       </Head>
       <Layout />
+
       <div className="login-container">
         {status === "loading" ? <CircularProgress /> : null}
+        <SteppoLogo className="logo"></SteppoLogo>
         {/* Buttons not showing when in Layout */}
         <div className="firebaseui-auth-container" />
       </div>

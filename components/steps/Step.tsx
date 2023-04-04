@@ -1,4 +1,4 @@
-import { Card, Typography } from "@mui/material";
+import { alpha, Card, Typography, useTheme } from "@mui/material";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import Avatar from "@mui/material/Avatar";
@@ -10,7 +10,7 @@ import StepMoreMenu from "../StepMoreMenu";
 import CardImage from "../CardImage";
 
 const Root = styled(Card)`
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: ${({ theme }) => alpha(theme.palette.background.paper, 0.35)};
   backdrop-filter: blur(20px);
 `;
 
@@ -28,8 +28,9 @@ const Step: FC<{
   media: Media;
   onRollBack?: Function;
 }> = ({ postId, id, index, title, body, media, onRollBack, className }) => {
+  const theme = useTheme();
   return (
-    <Root className={className}>
+    <Root className={className} theme={theme}>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="post">

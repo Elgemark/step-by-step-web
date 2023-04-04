@@ -10,13 +10,13 @@ import FilterBar from "../../components/FilterBar";
 import Posts from "../../components/posts/Posts";
 import { Posts as PostsType } from "../../utils/firebase/type";
 import SteppoLogo from "../../components/primitives/SteppoLogo";
-import { Paper, Typography } from "@mui/material";
+import { alpha, Paper, Typography } from "@mui/material";
 import styled from "styled-components";
 import Accordion from "../../components/primitives/Accordion";
-import Loader from "../../components/Loader";
+import { useTheme } from "@emotion/react";
 
-const Heading = styled(Paper)`
-  background-color: rgba(0, 0, 0, 0.3);
+const HeadingRoot = styled(Paper)`
+  background-color: ${({ theme }) => alpha(theme.palette.background.paper, 0.35)};
   backdrop-filter: blur(20px);
   padding: 16px;
   margin-top: 100px;
@@ -73,6 +73,34 @@ export async function getServerSideProps({ query }) {
   return { props: { posts: items, categories: categories.data } };
 }
 
+const Heading = () => {
+  const theme = useTheme();
+
+  return (
+    <HeadingRoot theme={theme}>
+      <Accordion
+        summary={
+          <div className="header-container">
+            <Typography className="header" variant="h6">
+              Welcome to Steppo! The step-by-step instructions app where you can easily create and share your DIY
+              projects and tutorials!
+            </Typography>
+          </div>
+        }
+        elevation={0}
+      >
+        {
+          <Typography variant="body2">
+            Creating Guides: Start by signing up and creating a profile. Click on "Create Guide" and begin adding your
+            steps. You can include text and images to make it easy for others to follow. Add a list of prerequisites for
+            completing the steps. This will help other users know what they need before starting the project. Once your
+            guide is complete, hit "Publish" and it will be available for other users to view and use.
+          </Typography>
+        }
+      </Accordion>
+    </HeadingRoot>
+  );
+};
 export default ({ posts }) => (
   <MUIWrapper>
     <FirebaseWrapper>
@@ -86,29 +114,7 @@ export default ({ posts }) => (
           <SteppoLogo className="logo" />
         </LogoContainer>
         <FilterBar></FilterBar>
-        <Heading>
-          <Accordion
-            summary={
-              <div className="header-container">
-                <Typography className="header" variant="h6">
-                  Welcome to Steppo! The step-by-step instructions app where you can easily create and share your DIY
-                  projects and tutorials!
-                </Typography>
-              </div>
-            }
-            elevation={0}
-          >
-            {
-              <Typography variant="body2">
-                Creating Guides: Start by signing up and creating a profile. Click on "Create Guide" and begin adding
-                your steps. You can include text and images to make it easy for others to follow. Add a list of
-                prerequisites for completing the steps. This will help other users know what they need before starting
-                the project. Once your guide is complete, hit "Publish" and it will be available for other users to view
-                and use.
-              </Typography>
-            }
-          </Accordion>
-        </Heading>
+        <Heading></Heading>
         <Posts enableLink={true} posts={posts as PostsType} />
       </Layout>
     </FirebaseWrapper>

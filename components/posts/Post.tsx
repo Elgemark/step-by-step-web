@@ -1,4 +1,4 @@
-import { Card, useTheme } from "@mui/material";
+import { alpha, Card, useTheme } from "@mui/material";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
@@ -25,7 +25,7 @@ import settings from "../../config";
 import Rate from "../primitives/Rate";
 
 const Root = styled(Card)`
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: ${({ theme }) => alpha(theme.palette.background.paper, 0.35)};
   backdrop-filter: blur(20px);
 
   .button-link {

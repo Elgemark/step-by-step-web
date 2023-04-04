@@ -77,7 +77,7 @@ export default function FirebaseWrapper({ children }) {
   return (
     <FirebaseAppProviderWrapper>
       <AuthAndDatabaseProviderWrapper>
-        <LoginCheck>{children}</LoginCheck>
+        <LoginCheck enable={false}>{children}</LoginCheck>
       </AuthAndDatabaseProviderWrapper>
     </FirebaseAppProviderWrapper>
   );

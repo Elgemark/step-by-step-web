@@ -41,9 +41,8 @@ const StyledLayout = styled(Layout)`
     position: sticky;
     top: 60px;
     z-index: 999;
-    background-color: rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(20px);
-    padding-bottom: 1rem;
+    margin-bottom: 1rem;
   }
 `;
 

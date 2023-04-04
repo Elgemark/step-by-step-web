@@ -1,4 +1,4 @@
-import { AppBar, Toolbar, Button, IconButton, useTheme, Popover, useMediaQuery } from "@mui/material";
+import { AppBar, Toolbar, Button, IconButton, useTheme, Popover, useMediaQuery, alpha } from "@mui/material";
 import { useRouter } from "next/router";
 import UserAvatar from "./UserAvatar";
 import { FC, ReactNode, useRef, useState } from "react";
@@ -16,7 +16,7 @@ import { useEffect } from "react";
 
 const StyledAppbar = styled(AppBar)`
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: ${({ theme }) => alpha(theme.palette.background.paper, 0.35)};
   backdrop-filter: blur(20px);
 `;
 
@@ -77,7 +77,7 @@ const TopBar: FC<{ onClickLogo: () => void; className?: string; actions?: ReactN
   };
 
   return (
-    <StyledAppbar {...props}>
+    <StyledAppbar theme={theme} {...props}>
       <StyledToolbar disableGutters theme={theme}>
         {/* LOGO */}
         <IconButton

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useTheme } from "@mui/material";
+import { alpha, useTheme } from "@mui/material";
 import { useScrollDirection } from "../../hooks/scroll";
 import { FC } from "react";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
@@ -15,7 +15,7 @@ const Root = styled.div`
 `;
 
 const ContentContainer = styled.div`
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: ${({ theme }) => alpha(theme.palette.background.paper, 0.35)};
   backdrop-filter: blur(20px);
   border-radius: ${({ theme }) => theme.spacing(1)};
   padding: ${({ theme }) => theme.spacing(1)};
