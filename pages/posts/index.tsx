@@ -19,6 +19,7 @@ const Heading = styled(Paper)`
   background-color: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(20px);
   padding: 16px;
+  margin-top: 100px;
   margin-bottom: 16px;
 
   .header-container {
@@ -81,11 +82,11 @@ export default ({ posts }) => (
       </Head>
 
       <Layout>
+        <LogoContainer>
+          <SteppoLogo className="logo" />
+        </LogoContainer>
         <FilterBar></FilterBar>
         <Heading>
-          <LogoContainer>
-            <SteppoLogo className="logo" />
-          </LogoContainer>
           <Accordion
             summary={
               <div className="header-container">
