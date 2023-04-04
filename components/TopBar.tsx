@@ -16,7 +16,7 @@ import { useEffect } from "react";
 
 const StyledAppbar = styled(AppBar)`
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(20px);
 `;
 

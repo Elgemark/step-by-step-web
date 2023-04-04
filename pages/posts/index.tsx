@@ -10,19 +10,30 @@ import FilterBar from "../../components/FilterBar";
 import Posts from "../../components/posts/Posts";
 import { Posts as PostsType } from "../../utils/firebase/type";
 import SteppoLogo from "../../components/primitives/SteppoLogo";
-import { Typography } from "@mui/material";
+import { Paper, Typography } from "@mui/material";
 import styled from "styled-components";
 import Accordion from "../../components/primitives/Accordion";
 import Loader from "../../components/Loader";
 
-const Heading = styled.div`
+const Heading = styled(Paper)`
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(20px);
+  padding: 16px;
   margin-bottom: 16px;
+
+  .header-container {
+    width: 100%;
+    position: relative;
+  }
+  .header {
+    width: 90%;
+  }
 
   .ingresse {
     margin-bottom: 32px;
   }
   .logo {
-    margin-bottom: 32px;
+    margin: 0 32px;
   }
 `;
 
@@ -70,17 +81,22 @@ export default ({ posts }) => (
       </Head>
 
       <Layout>
-        <LogoContainer>
-          <SteppoLogo className="logo" />
-        </LogoContainer>
         <FilterBar></FilterBar>
         <Heading>
-          <Typography variant="h6" className="ingresse">
-            Welcome to Steppo! The step-by-step instructions app where you can easily create and share your DIY projects
-            and tutorials!
-          </Typography>
-
-          <Accordion title={"Read more..."}>
+          <LogoContainer>
+            <SteppoLogo className="logo" />
+          </LogoContainer>
+          <Accordion
+            summary={
+              <div className="header-container">
+                <Typography className="header" variant="h6">
+                  Welcome to Steppo! The step-by-step instructions app where you can easily create and share your DIY
+                  projects and tutorials!
+                </Typography>
+              </div>
+            }
+            elevation={0}
+          >
             {
               <Typography variant="body2">
                 Creating Guides: Start by signing up and creating a profile. Click on "Create Guide" and begin adding

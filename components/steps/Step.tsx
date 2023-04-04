@@ -10,7 +10,7 @@ import StepMoreMenu from "../StepMoreMenu";
 import CardImage from "../CardImage";
 
 const Root = styled(Card)`
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(20px);
 `;
 

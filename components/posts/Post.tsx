@@ -25,7 +25,7 @@ import settings from "../../config";
 import Rate from "../primitives/Rate";
 
 const Root = styled(Card)`
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(20px);
 
   .button-link {

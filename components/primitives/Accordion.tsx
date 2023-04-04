@@ -5,8 +5,10 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 
 const Root = styled(MUIAccordion)`
-  background-color: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(20px);
+  /* background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(20px); */
+
+  background-color: transparent;
   position: relative;
   h6,
   p {
@@ -14,12 +16,12 @@ const Root = styled(MUIAccordion)`
   }
 `;
 
-const Accordion: FC<{ title?: string; summary?: ReactJSXElement; children: ReactJSXElement }> = ({
-  title,
-  summary,
-  children,
-  ...rest
-}) => {
+const Accordion: FC<{
+  title?: string;
+  summary?: ReactJSXElement;
+  children: ReactJSXElement;
+  [key: string]: any;
+}> = ({ title, summary, children, ...rest }) => {
   const [collapse, setCollapse] = useState(true);
   const theme = useTheme();
 
@@ -34,7 +36,7 @@ const Accordion: FC<{ title?: string; summary?: ReactJSXElement; children: React
     >
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         {summary}
-        <Typography variant="h6">{title}</Typography>
+        {title ? <Typography variant="h6">{title}</Typography> : null}
       </AccordionSummary>
 
       <AccordionDetails>{children}</AccordionDetails>
