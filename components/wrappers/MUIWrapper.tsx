@@ -3,24 +3,21 @@ import { GlobalStyles } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import { FC, ReactNode, createContext, useMemo, useState } from "react";
 import styled from "styled-components";
-import wallpaper from "../../assets/wallpaper.jpeg";
-import Image from "next/image";
+import Wallpaper from "../primitives/Wallpaper";
 export const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
 const WallpaperContainer = styled.div`
   z-index: -1;
   position: fixed;
-  top: -530px;
   width: 100%;
   height: auto;
   /* opacity: 0.5; */
-
   display: flex;
   justify-content: center;
 `;
 
-const Wallpaper = styled(Image)`
-  max-width: 1024px;
+const StyledWallpaper = styled(Wallpaper)`
+  max-width: 1280px;
 `;
 
 const MUIWrapper: FC<{
@@ -70,7 +67,7 @@ const MUIWrapper: FC<{
           }}
         />
         <WallpaperContainer>
-          <Wallpaper src={wallpaper} alt="wallpaper" width={1024}></Wallpaper>
+          <StyledWallpaper />
         </WallpaperContainer>
         {children}
       </ThemeProvider>
