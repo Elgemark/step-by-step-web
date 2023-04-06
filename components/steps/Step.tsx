@@ -40,7 +40,7 @@ const Step: FC<{
         title={<Typography>{title}</Typography>}
         action={<StepMoreMenu postId={postId} stepId={id} onRollBack={onRollBack} />}
       />
-      <CardImage height={settings.image.height} src={media.imageURI} enableFullscreen />
+      <CardImage src={media.imageURI} enableFullscreen />
       <CardContent>
         <Typography variant="body2">{body}</Typography>
       </CardContent>

@@ -1,4 +1,4 @@
-import { Button, Card, CardActions, Chip, Collapse } from "@mui/material";
+import { alpha, Button, CardActions, Chip, Collapse, useTheme } from "@mui/material";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import TextField from "@mui/material/TextField";
@@ -20,6 +20,7 @@ import UserAvatar from "../UserAvatar";
 import { addCollectionItem, useCollection } from "../../utils/firebase/hooks/collections";
 import { v4 as uuid } from "uuid";
 import { useMessages } from "../../hooks/message";
+import Card from "../primitives/Card";
 
 const Root = styled(Stack)`
   .card-actions {
@@ -42,6 +43,7 @@ const PostEditable: FC<{
   const [tag, setTag] = useState("");
   const { object: data, setValue: setData } = useStateObject(post);
   const { addMessage } = useMessages();
+  const theme = useTheme();
 
   const updateData = (path, value) => {
     const updatedData = setData(path, value);
@@ -88,7 +90,7 @@ const PostEditable: FC<{
   return (
     <Root spacing={2}>
       {/* SETTINGS */}
-      <Card>
+      <Card theme={theme}>
         <CardHeader
           avatar={<SettingsIcon fontSize="large" />}
           title="Settings"
@@ -141,7 +143,7 @@ const PostEditable: FC<{
       </Card>
       {/* POST */}
       <Collapse in={data.category && data.tags.length > 0}>
-        <Card>
+        <Card theme={theme}>
           <CardHeader
             avatar={<UserAvatar size={48} />}
             title={

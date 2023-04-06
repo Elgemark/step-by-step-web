@@ -14,8 +14,7 @@ const StyledAccordion = styled(Accordion)`
   position: relative;
   top: ${({ pin }) => (pin ? "0" : "auto")};
   left: ${({ pin }) => (pin ? "0" : "auto")};
-  background-color: ${({ theme, pin }) =>
-    pin ? alpha(theme.palette.background.paper, 0.5) : theme.palette.background.paper};
+  background-color: ${({ theme, pin }) => (pin ? alpha(theme.palette.background.paper, 0.35) : "transparent")};
   .button-pin {
     transform: rotate(-45deg);
     margin: 3px 5px 0 -5px;

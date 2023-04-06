@@ -14,7 +14,6 @@ const StyledModal = styled(Modal)`
 `;
 
 const StyledCardMedia = styled(CardMedia)`
-  object-fit: contain;
   cursor: ${({ enableFullscreen }) => (enableFullscreen ? "zoom-in" : "auto")};
 `;
 
@@ -34,7 +33,8 @@ const CardImage: FC<{ height?: any; src?: string; enableFullscreen?: boolean }> 
     <>
       <StyledCardMedia
         component="img"
-        height={height}
+        width="100%"
+        height="auto"
         image={src}
         onClick={() => enableFullscreen && setFullscreen(true)}
         enableFullscreen={enableFullscreen}

@@ -1,4 +1,4 @@
-import { Card, Collapse, IconButton } from "@mui/material";
+import { alpha, Card, Collapse, IconButton, useTheme } from "@mui/material";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import Avatar from "@mui/material/Avatar";
@@ -13,6 +13,11 @@ import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import styled from "styled-components";
 import { CollectionItems } from "../../utils/firebase/hooks/collections";
+
+const StyledCard = styled(Card)`
+  background-color: ${({ theme }) => alpha(theme.palette.background.paper, 0.35)};
+  backdrop-filter: blur(20px);
+`;
 
 const ButtonAddMediaContainer = styled.div`
   width: 100%;
@@ -33,6 +38,7 @@ const StepEditable: FC<{
   const ref = useRef<HTMLInputElement>(null);
   const { object: data, setValue } = useStateObject(step);
   const [openMediaEdit, setOpenMediaEdit] = useState(step.media.imageURI ? true : false);
+  const theme = useTheme();
 
   useEffect(() => {
     if (ref && scrollIntoView) {
@@ -49,7 +55,7 @@ const StepEditable: FC<{
   };
 
   return (
-    <Card ref={ref} {...props}>
+    <StyledCard ref={ref} theme={theme} {...props}>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="post">
@@ -101,7 +107,7 @@ const StepEditable: FC<{
           }}
         />
       </CardContent>
-    </Card>
+    </StyledCard>
   );
 };
 

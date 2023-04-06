@@ -13,6 +13,7 @@ import { useCollection } from "../../utils/firebase/hooks/collections";
 const StyledPaper = styled(Paper)`
   padding: ${({ theme }) => theme.spacing(1)};
   margin-bottom: ${({ theme }) => theme.spacing(1)};
+  background-color: transparent;
 `;
 
 const StyledTable = styled.table`

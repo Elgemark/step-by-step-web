@@ -1,3 +1,4 @@
+import { CircularProgress } from "@mui/material";
 import styled from "styled-components";
 
 const CubeRoot = styled.div`
@@ -86,10 +87,7 @@ const Cube = ({ size = 50, color = "#2277ff", ...rest }) => {
 const LogoLoader = () => {
   return (
     <Root>
-      <LoaderContainer>
-        <Cube></Cube>
-        <Cube size={25} color="#EEAA00" className="cube-orange" style={{ transform: "translateZ(-100px)" }}></Cube>
-      </LoaderContainer>
+      <CircularProgress />
     </Root>
   );
 };

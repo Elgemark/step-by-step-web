@@ -142,12 +142,7 @@ const Post: FC<{
       />
 
       <MediaContainer slug={id} hrefBasePath={hrefBasePath} enableLink={enableLink}>
-        <StyledCardImage
-          height={settings.image.height}
-          src={media.imageURI}
-          enableLink={enableLink}
-          enableFullscreen={!enableLink}
-        />
+        <StyledCardImage src={media.imageURI} enableLink={enableLink} enableFullscreen={!enableLink} />
       </MediaContainer>
 
       <CardContent>
