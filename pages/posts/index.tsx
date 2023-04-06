@@ -39,8 +39,9 @@ const LogoContainer = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
-  padding: 16px;
+
   .logo {
+    margin: 3em;
     max-width: 260px;
     @media (min-width: 600px) {
       max-width: 320px;
@@ -104,22 +105,24 @@ const Heading = () => {
     </HeadingRoot>
   );
 };
-export default ({ posts }) => (
-  <MUIWrapper>
-    <FirebaseWrapper>
-      <Head>
-        <meta content="noindex, nofollow, initial-scale=1, width=device-width" name="robots" />
-        <title>STEPS</title>
-      </Head>
+export default ({ posts }) => {
+  return (
+    <MUIWrapper>
+      <FirebaseWrapper>
+        <Head>
+          <meta content="noindex, nofollow, initial-scale=1, width=device-width" name="robots" />
+          <title>STEPS</title>
+        </Head>
 
-      <Layout>
-        <LogoContainer>
-          <SteppoLogo className="logo" />
-        </LogoContainer>
-        <FilterBar></FilterBar>
-        <Heading></Heading>
-        <Posts enableLink={true} posts={posts as PostsType} />
-      </Layout>
-    </FirebaseWrapper>
-  </MUIWrapper>
-);
+        <Layout>
+          <LogoContainer>
+            <SteppoLogo className="logo" />
+          </LogoContainer>
+          <FilterBar></FilterBar>
+          <Heading></Heading>
+          <Posts enableLink={true} posts={posts as PostsType} />
+        </Layout>
+      </FirebaseWrapper>
+    </MUIWrapper>
+  );
+};
