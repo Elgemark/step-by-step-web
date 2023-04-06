@@ -5,7 +5,7 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { FC } from "react";
 import styled from "styled-components";
 import { Grow } from "@mui/material";
-import IconSteppoCheckColor from "./primitives/IconSteppoCheckColor";
+import IconSteppoCheckColor from "./primitives/IconCheck";
 
 const Root = styled(Box)`
   .icon-done {

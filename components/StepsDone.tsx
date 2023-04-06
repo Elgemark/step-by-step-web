@@ -1,7 +1,7 @@
 import { Collapse, Divider, Typography, useTheme } from "@mui/material";
 import { useRef } from "react";
 import { FC } from "react";
-import IconSteppoCheckColor from "./primitives/IconSteppoCheckColor";
+import IconSteppoCheckColor from "./primitives/IconCheck";
 import styled from "styled-components";
 import Rate from "./primitives/Rate";
 
