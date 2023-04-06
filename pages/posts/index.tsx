@@ -33,16 +33,19 @@ const HeadingRoot = styled(Paper)`
   .ingresse {
     margin-bottom: 32px;
   }
-  .logo {
-    margin: 0 32px;
-  }
 `;
 
 const LogoContainer = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
-  margin: 16px 0;
+  padding: 16px;
+  .logo {
+    max-width: 260px;
+    @media (min-width: 600px) {
+      max-width: 320px;
+    }
+  }
 `;
 
 const collection = new Collection();

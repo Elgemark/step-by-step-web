@@ -18,6 +18,7 @@ const WallpaperContainer = styled.div`
 
 const StyledWallpaper = styled(Wallpaper)`
   max-width: 1280px;
+  min-width: 680px;
 `;
 
 const MUIWrapper: FC<{

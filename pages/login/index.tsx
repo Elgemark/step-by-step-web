@@ -14,17 +14,26 @@ import FirebaseWrapper from "../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../components/wrappers/MUIWrapper";
 import { useRouter } from "next/router";
 import SteppoLogo from "../../components/primitives/SteppoLogo";
+import { useTheme } from "@emotion/react";
 
 const Root = styled.div`
-  .logo {
-    margin-bottom: 32px;
-  }
   .login-container {
+    position: absolute;
+    top: 72px;
+    left: 0;
     width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+
+    .logo {
+      max-width: 260px;
+      margin: ${({ theme }) => theme.spacing(5)};
+      @media (min-width: 600px) {
+        max-width: 320px;
+      }
+    }
   }
   .firebaseui-auth-container {
     opacity: ${({ status }) => (status === "success" ? 1 : 0)};
@@ -35,6 +44,7 @@ const Root = styled.div`
 const LogInPage = () => {
   const { status, data: user } = useUser();
   const router = useRouter();
+  const theme = useTheme();
 
   const loadFirebaseui = useCallback(async () => {
     const firebaseui = await import("firebaseui");
@@ -53,14 +63,12 @@ const LogInPage = () => {
   }, [status, user]);
 
   return (
-    <Root status={status}>
+    <Root status={status} theme={theme}>
       <Head>
         <title>STEPS | LogIn</title>
       </Head>
       <Layout />
-
       <div className="login-container">
-        {status === "loading" ? <CircularProgress /> : null}
         <SteppoLogo className="logo"></SteppoLogo>
         {/* Buttons not showing when in Layout */}
         <div className="firebaseui-auth-container" />
