@@ -14,6 +14,7 @@ import { alpha, Paper, Typography } from "@mui/material";
 import styled from "styled-components";
 import Accordion from "../../components/primitives/Accordion";
 import { useTheme } from "@emotion/react";
+import LogoResponsive from "../../components/primitives/LogoResponsive";
 
 const HeadingRoot = styled(Paper)`
   background-color: ${({ theme }) => alpha(theme.palette.background.paper, 0.35)};
@@ -115,9 +116,7 @@ export default ({ posts }) => {
         </Head>
 
         <Layout>
-          <LogoContainer>
-            <SteppoLogo className="logo" />
-          </LogoContainer>
+          <LogoResponsive />
           <FilterBar></FilterBar>
           <Heading></Heading>
           <Posts enableLink={true} posts={posts as PostsType} />
