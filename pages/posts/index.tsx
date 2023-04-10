@@ -9,7 +9,6 @@ import Layout from "../../components/Layout";
 import FilterBar from "../../components/FilterBar";
 import Posts from "../../components/posts/Posts";
 import { Posts as PostsType } from "../../utils/firebase/type";
-import SteppoLogo from "../../components/primitives/SteppoLogo";
 import { alpha, Paper, Typography } from "@mui/material";
 import styled from "styled-components";
 import Accordion from "../../components/primitives/Accordion";
@@ -20,8 +19,12 @@ const HeadingRoot = styled(Paper)`
   background-color: ${({ theme }) => alpha(theme.palette.background.paper, 0.35)};
   backdrop-filter: blur(20px);
   padding: 16px;
-  margin-top: 100px;
-  margin-bottom: 16px;
+  margin-top: ${({ theme }) => theme.spacing(4)};
+  margin-bottom: ${({ theme }) => theme.spacing(2)};
+
+  @media (min-width: 600px) {
+    margin-top: ${({ theme }) => theme.spacing(12)};
+  }
 
   .header-container {
     width: 100%;
@@ -33,20 +36,6 @@ const HeadingRoot = styled(Paper)`
 
   .ingresse {
     margin-bottom: 32px;
-  }
-`;
-
-const LogoContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  width: 100%;
-
-  .logo {
-    margin: 3em;
-    max-width: 260px;
-    @media (min-width: 600px) {
-      max-width: 320px;
-    }
   }
 `;
 
