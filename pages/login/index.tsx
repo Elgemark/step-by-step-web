@@ -2,7 +2,6 @@ import { useEffect, useCallback } from "react";
 import Head from "next/head";
 import Layout from "../../components/Layout";
 import styled from "styled-components";
-import { CircularProgress } from "@mui/material";
 // Firebase related
 import { getAuth } from "firebase/auth";
 import firebase from "firebase/compat/app";
@@ -13,8 +12,8 @@ import { useUser } from "reactfire";
 import FirebaseWrapper from "../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../components/wrappers/MUIWrapper";
 import { useRouter } from "next/router";
-import SteppoLogo from "../../components/primitives/SteppoLogo";
 import { useTheme } from "@emotion/react";
+import LogoResponsive from "../../components/primitives/LogoResponsive";
 
 const Root = styled.div`
   .login-container {
@@ -69,7 +68,7 @@ const LogInPage = () => {
       </Head>
       <Layout />
       <div className="login-container">
-        <SteppoLogo className="logo"></SteppoLogo>
+        <LogoResponsive></LogoResponsive>
         {/* Buttons not showing when in Layout */}
         <div className="firebaseui-auth-container" />
       </div>

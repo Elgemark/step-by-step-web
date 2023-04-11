@@ -18,7 +18,7 @@ import LogoResponsive from "../../components/primitives/LogoResponsive";
 const HeadingRoot = styled(Paper)`
   background-color: ${({ theme }) => alpha(theme.palette.background.paper, 0.35)};
   backdrop-filter: blur(20px);
-  padding: 16px;
+  padding: ${({ theme }) => theme.spacing(1)};
   margin-top: ${({ theme }) => theme.spacing(4)};
   margin-bottom: ${({ theme }) => theme.spacing(2)};
 

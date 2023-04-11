@@ -14,6 +14,7 @@ const Root = styled.div`
     @media (min-width: 600px) {
       max-width: 260px;
     }
+    filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.2));
   }
 `;
 
