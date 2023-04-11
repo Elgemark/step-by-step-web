@@ -14,10 +14,14 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { includesAny } from "../utils/arrayUtils";
 import { useEffect } from "react";
 
-const StyledAppbar = styled(AppBar)`
+const Root = styled(AppBar)`
   align-items: center;
   background-color: ${({ theme }) => alpha(theme.palette.background.paper, 0.35)};
   backdrop-filter: blur(20px);
+
+  .login-button {
+    margin: 0 ${({ theme }) => theme.spacing(1)};
+  }
 `;
 
 const StyledToolbar = styled(Toolbar)`
@@ -29,11 +33,9 @@ const StyledToolbar = styled(Toolbar)`
 
 const StyledSearch = styled(Search)`
   @media (min-width: 600px) {
-    margin-left: ${({ theme }) => theme.spacing(3)};
-    margin-right: ${({ theme }) => theme.spacing(4)};
+    margin: 0 ${({ theme }) => theme.spacing(2)};
   }
-  margin-left: ${({ theme }) => theme.spacing(0)};
-  margin-right: ${({ theme }) => theme.spacing(1)};
+  margin: 0 ${({ theme }) => theme.spacing(1)};
   border-radius: 16px;
 `;
 
@@ -77,7 +79,7 @@ const TopBar: FC<{ onClickLogo: () => void; className?: string; actions?: ReactN
   };
 
   return (
-    <StyledAppbar theme={theme} {...props}>
+    <Root theme={theme} {...props}>
       <StyledToolbar disableGutters theme={theme}>
         {/* LOGO */}
         <IconButton
@@ -138,6 +140,7 @@ const TopBar: FC<{ onClickLogo: () => void; className?: string; actions?: ReactN
         {!user &&
           (isDesktop ? (
             <Button
+              className="login-button"
               size="small"
               startIcon={<LoginIcon />}
               variant="contained"
@@ -149,6 +152,7 @@ const TopBar: FC<{ onClickLogo: () => void; className?: string; actions?: ReactN
             </Button>
           ) : (
             <IconButton
+              className="login-button"
               onClick={() => {
                 router.push("/login");
               }}
@@ -171,7 +175,7 @@ const TopBar: FC<{ onClickLogo: () => void; className?: string; actions?: ReactN
           </IconButton>
         )}
       </StyledToolbar>
-    </StyledAppbar>
+    </Root>
   );
 };
 
