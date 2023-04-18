@@ -2,8 +2,8 @@ import TopBar from "./TopBar";
 import Box from "@mui/material/Box";
 import styled from "styled-components";
 import { FC, ReactNode, createContext, useState } from "react";
-import Messages, { useMessages } from "./Messages";
-import { Alert, Drawer, Snackbar, Stack } from "@mui/material";
+import Messages from "./Messages";
+import { Drawer } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import SideMenu from "./primitives/SideMenu";
 import { useRouter } from "next/router";
@@ -44,7 +44,6 @@ const Layout: FC<{
 
   const router = useRouter();
   const theme = useTheme();
-  const { messages, removeMessage } = useMessages();
   const [showSideMenu, setShowSideMenu] = useState(false);
 
   const isSignedId = signInCheckResult?.signedIn && user;
