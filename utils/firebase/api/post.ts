@@ -178,6 +178,25 @@ export const getPost = async (id: string) => {
   return result;
 };
 
+export const getPostBySlug = async (slug: string) => {
+  const result = { data: null, error: null };
+  // Build query...
+  let postsQuery: Array<any> = [];
+  // Get only public posts
+  postsQuery.push(where("slug", "==", slug));
+
+  let postsResponse = await getPostsByQuery(postsQuery);
+  // Compuond queries can not contain range filter on different values. Using JS filtering...
+  // rated...
+  if (postsResponse.data && postsResponse.data.length) {
+    result.data = postsResponse.data[0];
+  } else {
+    result.error = "No post found!";
+  }
+
+  return result;
+};
+
 export const deletePost = async (id: string) => {
   const firebase = getFirestore();
   const batch = writeBatch(firebase);

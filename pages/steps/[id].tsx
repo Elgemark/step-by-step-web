@@ -8,7 +8,6 @@ import Post from "../../components/posts/Post";
 import { post as postModel } from "../../utils/firebase/models";
 import StepsProgress from "../../components/StepsProgress";
 import { useRouter } from "next/router";
-import { v4 as uuid } from "uuid";
 import { FC, useState } from "react";
 import { Post as PostType } from "../../utils/firebase/interface";
 import { Steps } from "../../utils/firebase/type";
@@ -23,6 +22,7 @@ import { Lists, ListsResponse } from "../../utils/firebase/api/list";
 import _ from "lodash";
 import StepsDone from "../../components/StepsDone";
 import { ratePost, useRatesForPostAndUser } from "../../utils/firebase/api/rate";
+import { getPostBySlug } from "../../utils/firebase/api/post";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -202,8 +202,8 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> 
 };
 
 export async function getServerSideProps({ query }) {
-  const id = query.id || uuid();
-  const post = await getPost(id);
+  const id = query.id;
+  const post = (await getPostBySlug(id)) || (await getPost(id));
   const stepsResponse = await getSteps(id);
   const listsResp: ListsResponse = await getLists(id);
   return {

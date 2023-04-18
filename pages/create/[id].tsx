@@ -31,6 +31,7 @@ import UnpublishedIcon from "@mui/icons-material/Unpublished";
 import { useRefresh } from "../../utils/firebaseUtils";
 import BottomBar from "../../components/primitives/BottomBar";
 import { saveAll as saveAllLists } from "../../utils/firebase/hooks/collections";
+import { createSlug } from "../../utils/queryUtils";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -129,9 +130,12 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
       _.set(saveData, "post.media.imageURI", responseUploadSplash.url);
       _.unset(saveData, "post.blob");
     }
+    // Create slug
+    //const slug = `${saveData.post.category}-${saveData.post.title}-${saveData.post.tags.join("-")}`;
+    const slug = createSlug(saveData.post);
     // Save post...
     if (saveData.post) {
-      await setPost(id, { ...saveData.post, uid: userId });
+      await setPost(id, { ...saveData.post, slug: _.kebabCase(slug), uid: userId });
     }
     // Uploas steps images
     const imageUploads: ImageUploads = [];

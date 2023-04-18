@@ -82,6 +82,7 @@ const ListController: FC<{ postId: string; listId: string; listTitle: string; pr
 const Post: FC<{
   uid: string;
   id: string;
+  slug?: string;
   title: string;
   descr?: string;
   enableLink: boolean;
@@ -102,6 +103,7 @@ const Post: FC<{
   title = "Title",
   descr = "Body",
   id,
+  slug,
   enableLink,
   hrefBasePath = "/steps/",
   lists = [],
@@ -141,7 +143,7 @@ const Post: FC<{
         title={<Typography>{title}</Typography>}
       />
 
-      <MediaContainer slug={id} hrefBasePath={hrefBasePath} enableLink={enableLink}>
+      <MediaContainer slug={slug || id} hrefBasePath={hrefBasePath} enableLink={enableLink}>
         <StyledCardImage src={media.imageURI} enableLink={enableLink} enableFullscreen={!enableLink} />
       </MediaContainer>
 

@@ -20,3 +20,13 @@ export const parseURL = (url) => {
   const urlArr = url.split("?");
   return { base: urlArr[0], query: urlArr[1] };
 };
+
+export const shortUUID = () => {
+  // I generate the UID from two parts here
+  // to ensure the random number provide enough bits.
+  let firstPart = String((Math.random() * 46656) | 0);
+  let secondPart = String((Math.random() * 46656) | 0);
+  firstPart = ("000" + firstPart).slice(-3);
+  secondPart = ("000" + secondPart).slice(-3);
+  return firstPart + secondPart;
+};
