@@ -23,6 +23,7 @@ import _ from "lodash";
 import StepsDone from "../../components/StepsDone";
 import { ratePost, useRatesForPostAndUser } from "../../utils/firebase/api/rate";
 import { getPostBySlug } from "../../utils/firebase/api/post";
+import { backgroundBlurMixin } from "../../utils/styleUtils";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -41,7 +42,7 @@ const StyledLayout = styled(Layout)`
     position: sticky;
     top: 60px;
     z-index: 999;
-    backdrop-filter: blur(20px);
+    ${backgroundBlurMixin}
     margin-bottom: 1rem;
   }
 `;
@@ -203,15 +204,17 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> 
 
 export async function getServerSideProps({ query }) {
   const id = query.id;
-  const post = (await getPostBySlug(id)) || (await getPost(id));
-  const stepsResponse = await getSteps(id);
-  const listsResp: ListsResponse = await getLists(id);
+  let post = await getPostBySlug(id);
+  post = post.error ? await getPost(id) : post;
+  const postId = post.data?.id || id;
+  const stepsResponse = await getSteps(postId);
+  const listsResp: ListsResponse = await getLists(postId);
   return {
     props: {
-      post: post.data || { ...postModel, id },
+      post: post.data || { ...postModel, id: postId },
       steps: stepsResponse.data,
       lists: listsResp.data,
-      id,
+      id: postId,
     },
   };
 }

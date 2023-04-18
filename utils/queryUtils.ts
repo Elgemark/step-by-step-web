@@ -13,8 +13,11 @@ export const getBasePath = () => {
 };
 
 export const createSlug = (post: any) => {
-  let slugArray = _.flatten([[post.category], post.title.split(" "), post.tags, [shortUUID()]]);
+  let slugArray = _.flatten([[post?.category], post?.title.split(" "), post?.tags, [shortUUID()]]);
+  slugArray = slugArray.map((fraction) => _.lowerCase(fraction));
   slugArray = _.compact(slugArray);
   slugArray = _.uniq(slugArray);
-  return _.kebabCase(slugArray.join("-"));
+  slugArray = _.kebabCase(slugArray.join("-"));
+  console.log({ slugArray });
+  return slugArray;
 };

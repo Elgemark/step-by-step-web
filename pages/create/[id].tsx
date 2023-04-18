@@ -132,7 +132,7 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
     }
     // Create slug
     //const slug = `${saveData.post.category}-${saveData.post.title}-${saveData.post.tags.join("-")}`;
-    const slug = createSlug(saveData.post);
+    const slug = createSlug({ ...post, ...saveData.post });
     // Save post...
     if (saveData.post) {
       await setPost(id, { ...saveData.post, slug: _.kebabCase(slug), uid: userId });
