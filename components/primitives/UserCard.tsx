@@ -11,6 +11,7 @@ import { LoadingButton } from "@mui/lab";
 import SelectChips, { ChipItem } from "./SelectChips";
 import { Categories } from "../../utils/firebase/api/categories";
 import BorderBox from "./BorderBox";
+import { backgroundBlurMixin } from "../../utils/styleUtils";
 
 const RootSmall = styled.div`
   border-radius: ${({ spacing }) => spacing(1)};
@@ -64,6 +65,7 @@ const RootBig = styled.div`
   flex-direction: column;
   margin-top: -10px;
   background-color: #272727;
+  ${backgroundBlurMixin}
   border-radius: 0 0 10px 10px;
   position: relative;
   width: 100%;
@@ -79,7 +81,7 @@ const RootBig = styled.div`
     border-radius: 0 0 10px 10px;
   }
   .user-avatar {
-    border: 8px solid ${({ palette }) => (palette.mode === "dark" ? "#272727" : "white")};
+    filter: drop-shadow(0px 0px 8px rgba(0, 0, 0, 0.5));
     box-sizing: content-box;
     margin-top: -60px;
   }
@@ -171,7 +173,7 @@ export const UserCardBig: FC<{
   }
 
   return (
-    <RootBig spacing={theme.spacing} palette={theme.palette} src={background} {...props}>
+    <RootBig theme={theme} src={background} {...props}>
       <div className="background"></div>
       <Stack spacing={2} width="100%" height="100%" alignItems="center" className="profile-content">
         <Avatar className="user-avatar" src={avatar} sx={{ width: 120, height: 120 }} />

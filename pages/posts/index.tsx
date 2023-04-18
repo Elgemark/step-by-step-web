@@ -9,15 +9,15 @@ import Layout from "../../components/Layout";
 import FilterBar from "../../components/FilterBar";
 import Posts from "../../components/posts/Posts";
 import { Posts as PostsType } from "../../utils/firebase/type";
-import { alpha, Paper, Typography } from "@mui/material";
+import { Paper, Typography } from "@mui/material";
 import styled from "styled-components";
 import Accordion from "../../components/primitives/Accordion";
 import { useTheme } from "@emotion/react";
 import LogoResponsive from "../../components/primitives/LogoResponsive";
+import { backgroundBlurMixin } from "../../utils/styleUtils";
 
 const HeadingRoot = styled(Paper)`
-  background-color: ${({ theme }) => alpha(theme.palette.background.paper, 0.35)};
-  backdrop-filter: blur(20px);
+  ${backgroundBlurMixin}
   padding: ${({ theme }) => theme.spacing(1)};
   margin-top: ${({ theme }) => theme.spacing(4)};
   margin-bottom: ${({ theme }) => theme.spacing(2)};

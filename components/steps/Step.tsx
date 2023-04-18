@@ -1,17 +1,16 @@
-import { alpha, Card, Typography, useTheme } from "@mui/material";
+import { Card, Typography, useTheme } from "@mui/material";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import Avatar from "@mui/material/Avatar";
 import { red } from "@mui/material/colors";
 import styled from "styled-components";
 import { FC } from "react";
-import settings from "../../config";
 import StepMoreMenu from "../StepMoreMenu";
 import CardImage from "../CardImage";
+import { backgroundBlurMixin } from "../../utils/styleUtils";
 
 const Root = styled(Card)`
-  background-color: ${({ theme }) => alpha(theme.palette.background.paper, 0.35)};
-  backdrop-filter: blur(20px);
+  ${backgroundBlurMixin}
 `;
 
 interface Media {

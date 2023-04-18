@@ -13,11 +13,11 @@ import { useUser } from "reactfire";
 import MenuIcon from "@mui/icons-material/Menu";
 import { includesAny } from "../utils/arrayUtils";
 import { useEffect } from "react";
+import { backgroundBlurMixin } from "../utils/styleUtils";
 
 const Root = styled(AppBar)`
   align-items: center;
-  background-color: ${({ theme }) => alpha(theme.palette.background.paper, 0.35)};
-  backdrop-filter: blur(20px);
+  ${backgroundBlurMixin}
 
   .login-button {
     margin: 0 ${({ theme }) => theme.spacing(1)};

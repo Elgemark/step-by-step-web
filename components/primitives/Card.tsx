@@ -1,9 +1,9 @@
-import { alpha, Card as MUICard, useTheme } from "@mui/material";
+import { Card as MUICard, useTheme } from "@mui/material";
 import styled from "styled-components";
+import { backgroundBlurMixin } from "../../utils/styleUtils";
 
 const Root = styled(MUICard)`
-  background-color: ${({ theme }) => alpha(theme.palette.background.paper, 0.35)};
-  backdrop-filter: blur(20px);
+  ${backgroundBlurMixin}
 `;
 
 const Card = ({ children, ...rest }) => {

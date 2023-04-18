@@ -21,12 +21,11 @@ import { ListItems, Lists } from "../../utils/firebase/api/list";
 import { Progress, useProgress } from "../../utils/firebase/api/progress";
 import _ from "lodash";
 import CardImage from "../CardImage";
-import settings from "../../config";
 import Rate from "../primitives/Rate";
+import { backgroundBlurMixin } from "../../utils/styleUtils";
 
 const Root = styled(Card)`
-  background-color: ${({ theme }) => alpha(theme.palette.background.paper, 0.35)};
-  backdrop-filter: blur(20px);
+  ${backgroundBlurMixin}
 
   .button-link {
     margin-left: auto;
