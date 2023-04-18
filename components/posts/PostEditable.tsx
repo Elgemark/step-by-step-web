@@ -19,7 +19,7 @@ import { toSanitizedArray } from "../../utils/stringUtils";
 import UserAvatar from "../UserAvatar";
 import { addCollectionItem, useCollection } from "../../utils/firebase/hooks/collections";
 import { v4 as uuid } from "uuid";
-import { useMessages } from "../../hooks/message";
+import { useMessages } from "../Messages";
 import Card from "../primitives/Card";
 
 const Root = styled(Stack)`

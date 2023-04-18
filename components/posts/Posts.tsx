@@ -9,6 +9,7 @@ import { useUser } from "reactfire";
 import PostMoreMenu from "../PostMoreMenu";
 import DialogReport, { ReportData } from "../DialogReport";
 import DialogDeletePost from "../DialogDeletePost";
+import { useMessages } from "../Messages";
 
 const Posts: FC<{
   posts: Posts;
@@ -18,6 +19,7 @@ const Posts: FC<{
   const router = useRouter();
   const [report, setReport] = useState<ReportData>();
   const [deletePost, setDeletePost] = useState<string>();
+  const { addMessage } = useMessages();
 
   const { data: user } = useUser();
 
@@ -38,6 +40,15 @@ const Posts: FC<{
       router.push("/profile/" + uid);
     } else {
       router.push("/user/" + uid + "/published");
+    }
+  };
+
+  const onReportHandler = (postId) => {
+    if (user?.uid) {
+      setReport({ postId, userId: user.uid });
+    } else {
+      debugger;
+      addMessage({ id: "alert", message: "Please sign in to use the report function!" });
     }
   };
 
@@ -65,7 +76,7 @@ const Posts: FC<{
                       }
                     : undefined
                 }
-                onReport={() => setReport({ postId: data.id, userId: user.uid })}
+                onReport={() => onReportHandler(data.id)}
               />
             }
             onLike={() => onLikeHandler(data)}

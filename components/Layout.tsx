@@ -2,7 +2,7 @@ import TopBar from "./TopBar";
 import Box from "@mui/material/Box";
 import styled from "styled-components";
 import { FC, ReactNode, createContext, useState } from "react";
-import { useMessages } from "../hooks/message";
+import Messages, { useMessages } from "./Messages";
 import { Alert, Drawer, Snackbar, Stack } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import SideMenu from "./primitives/SideMenu";
@@ -103,18 +103,7 @@ const Layout: FC<{
         />
       </Drawer>
       {/* SNACKBAR */}
-      <Snackbar open={messages.alert} autoHideDuration={6000} onClose={() => removeMessage("alert")}>
-        <Alert
-          onClose={() => {
-            removeMessage("alert");
-            messages.alert?.onRemove();
-          }}
-          severity="success"
-          sx={{ width: "100%" }}
-        >
-          {messages.alert?.message}
-        </Alert>
-      </Snackbar>
+      <Messages />
     </Root>
   );
 };

@@ -1,6 +1,6 @@
 import { Dialog } from "@mui/material";
 import { FC } from "react";
-import { useMessages } from "../hooks/message";
+import { useMessages } from "./Messages";
 import { setReport } from "../utils/firebase/api/report";
 import ReportDialogContent from "./primitives/ReportDialogContent";
 
