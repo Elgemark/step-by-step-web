@@ -9,25 +9,34 @@ import FilterBar from "../../../components/FilterBar";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useCollection } from "../../../utils/collectionUtils";
+import { useScrolledToBottom } from "../../../utils/scrollUtils";
 
 export default () => {
   const router = useRouter();
   const { collection: posts, addItems: addPosts, replaceItems: replacePosts } = useCollection();
+  const [lastDoc, setLastDoc] = useState();
   const [isFetching, setIsFetching] = useState(false);
+  const isBottom = useScrolledToBottom(100);
 
   useEffect(() => {
     fetchBySearch(true);
   }, [router.query]);
 
+  useEffect(() => {
+    fetchBySearch(false);
+  }, [isBottom]);
+
   const fetchBySearch = async (replace = false) => {
     setIsFetching(true);
     const { search, category, rated } = router.query;
-    const response = await getPostsBySearch(search, { category, rated });
+    const response = await getPostsBySearch(search, { category, rated }, 10, lastDoc);
     if (replace) {
       replacePosts(response.data);
     } else {
       addPosts(response.data);
     }
+
+    setLastDoc(response.lastDoc);
 
     setIsFetching(false);
   };
@@ -37,7 +46,7 @@ export default () => {
       <FirebaseWrapper>
         <Head>
           <meta content="noindex, nofollow, initial-scale=1, width=device-width" name="robots" />
-          <title>{"STEPS | Search"}</title>
+          <title>{"STEPPO | Search"}</title>
         </Head>
         <Layout>
           <FilterBar></FilterBar>
