@@ -1,4 +1,4 @@
-import { getFirestore, getDoc, collection, getDocs } from "firebase/firestore";
+import { getFirestore, getDoc, collection, getDocs, doc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
 export type Category = {
@@ -6,10 +6,21 @@ export type Category = {
   text: string;
 };
 
+export type CategoryObject = {
+  id: string;
+  meta: object;
+  texts: object;
+};
+
 export type Categories = Array<Category>;
 
 type CategoriesResponse = {
   data: Categories;
+  error: any;
+};
+
+type CategoryResponse = {
+  data: CategoryObject;
   error: any;
 };
 
@@ -27,6 +38,19 @@ export const getCategories = async (language = "en-global") => {
     response.error = error;
   }
   return response;
+};
+
+export const getCategory = async (category: string) => {
+  const firebase = getFirestore();
+  const result: CategoryResponse = { data: { id: category, meta: {}, texts: {} }, error: null };
+  try {
+    const docRef = doc(firebase, "config", "categories", "list", category);
+    const docSnap = await getDoc(docRef);
+    result.data = docSnap.exists() ? ({ ...docSnap.data(), id: category } as CategoryObject) : null;
+  } catch (error) {
+    result.error = error;
+  }
+  return result;
 };
 
 export const useCategories = (language = "en-global"): { categories: Categories; isLoading: boolean } => {

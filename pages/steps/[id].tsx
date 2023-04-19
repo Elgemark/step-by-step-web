@@ -24,6 +24,7 @@ import StepsDone from "../../components/StepsDone";
 import { ratePost, useRatesForPostAndUser } from "../../utils/firebase/api/rate";
 import { getPostBySlug } from "../../utils/firebase/api/post";
 import { backgroundBlurMixin } from "../../utils/styleUtils";
+import { getCategory } from "../../utils/firebase/api/categories";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -56,7 +57,13 @@ const StyledStepsProgress = styled(StepsProgress)`
   flex-grow: 1;
 `;
 
-const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> = ({ id, post, steps, lists }) => {
+const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps; metaTags: string }> = ({
+  id,
+  post,
+  steps,
+  lists,
+  metaTags,
+}) => {
   const theme = useTheme();
   const [showDeleteDialog, setShowDeleteDialog] = useState<string>();
   const router = useRouter();
@@ -120,8 +127,10 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps }> 
   return (
     <>
       <Head>
-        <title>{"STEPS | " + (post?.title || "untitled")}</title>
+        <title>{"STEPPO | " + (post?.title || "untitled") + " - " + metaTags}</title>
+        <meta name="description" content={post.descr} />
       </Head>
+
       <StyledLayout
         theme={theme}
         propsTopbar={{
@@ -209,11 +218,15 @@ export async function getServerSideProps({ query }) {
   const postId = post.data?.id || id;
   const stepsResponse = await getSteps(postId);
   const listsResp: ListsResponse = await getLists(postId);
+  const categoryResp = await getCategory(post.data.category);
+  // extract meta
+  const metaTags = categoryResp.data?.meta ? categoryResp.data?.meta["en-global"] : "";
   return {
     props: {
       post: post.data || { ...postModel, id: postId },
       steps: stepsResponse.data,
       lists: listsResp.data,
+      metaTags,
       id: postId,
     },
   };

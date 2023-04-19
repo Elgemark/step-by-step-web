@@ -38,6 +38,9 @@ const Root = styled(Card)`
     display: flex;
     justify-content: center;
   }
+  .MuiCardContent-root {
+    margin-top: ${({ theme }) => theme.spacing(-2)};
+  }
 `;
 
 const StyledCardImage = styled(CardImage)`
@@ -146,12 +149,6 @@ const Post: FC<{
         <StyledCardImage src={media.imageURI} enableLink={enableLink} enableFullscreen={!enableLink} />
       </MediaContainer>
 
-      <CardContent>
-        <Typography variant="body2" color="text.secondary">
-          {descr}
-        </Typography>
-      </CardContent>
-
       <CardActions disableSpacing>
         {/* LIKE */}
         {/* {onLike && (
@@ -186,6 +183,11 @@ const Post: FC<{
           </IconButton>
         )}
       </CardActions>
+      <CardContent>
+        <Typography variant="body2" color="text.secondary">
+          {descr}
+        </Typography>
+      </CardContent>
       {lists.length ? (
         <CardContent>
           {lists.map((list) => (
