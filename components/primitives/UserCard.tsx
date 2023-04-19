@@ -22,7 +22,7 @@ const RootSmall = styled.div`
   flex-direction: column;
   width: 100%;
   position: relative;
-  background-color: #272727;
+  ${backgroundBlurMixin}
   background-image: ${({ backgroundImage }) => "url(" + backgroundImage + ")"};
   background-repeat: no-repeat;
   background-position: center;
@@ -36,7 +36,7 @@ const RootSmall = styled.div`
   }
   .user-avatar {
     margin-top: -50px;
-    border: 8px solid ${({ palette }) => (palette.mode === "dark" ? "black" : "white")};
+    filter: drop-shadow(0px 0px 8px rgba(0, 0, 0, 0.5));
     box-sizing: content-box;
   }
   .user-selectedCategories {
@@ -64,7 +64,6 @@ const RootBig = styled.div`
   align-items: center;
   flex-direction: column;
   margin-top: -10px;
-  background-color: #272727;
   ${backgroundBlurMixin}
   border-radius: 0 0 10px 10px;
   position: relative;
@@ -265,7 +264,7 @@ const UserCardSmall: FC<{
   const theme = useTheme();
 
   return (
-    <RootSmall spacing={theme.spacing} palette={theme.palette} backgroundImage={background} {...props}>
+    <RootSmall theme={theme} spacing={theme.spacing} palette={theme.palette} backgroundImage={background} {...props}>
       <Stack spacing={2} width="100%" height="100%" alignItems="center">
         <Avatar className="user-avatar" src={avatar} sx={{ width: 56, height: 56 }} />
         <Typography className="user-alias" variant="h5">
