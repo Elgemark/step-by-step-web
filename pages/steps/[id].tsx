@@ -129,6 +129,9 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps; me
       <Head>
         <title>{"STEPPO | " + (post?.title || "untitled") + " - " + metaTags}</title>
         <meta name="description" content={post.descr} />
+        <meta property="og:title" content={"STEPPO - " + (post?.title || "untitled")} />
+        <meta property="og:description" content={post.descr} />
+        <meta property="og:image" content={post?.media?.imageURI} />
       </Head>
 
       <StyledLayout
