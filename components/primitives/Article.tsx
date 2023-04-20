@@ -11,7 +11,7 @@ const Root = styled(Paper)`
   ${backgroundBlurMixin}
 
   .article-content {
-    padding: ${({ theme }) => theme.spacing(4)};
+    padding: ${({ theme }) => `0 ${theme.spacing(4)} ${theme.spacing(4)}`};
   }
 
   .user-avatar {
@@ -33,11 +33,11 @@ const BackgroundImage = styled.div`
   border-radius: 10px 10px 10px 10px;
 `;
 
-const Article = ({ image, avatar, children }) => {
+const Article = ({ image, avatar, children, backgroundContent }) => {
   const theme = useTheme();
   return (
     <Root theme={theme}>
-      <BackgroundImage src={image}></BackgroundImage>
+      <BackgroundImage src={image}>{backgroundContent}</BackgroundImage>
       <Avatar className="user-avatar" src={avatar} sx={{ width: 120, height: 120 }} />
       <div className="article-content">{children}</div>
     </Root>

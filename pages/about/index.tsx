@@ -22,14 +22,15 @@ const AboutPage = () => {
   return (
     <Layout>
       <SteppoHead description="About Steppo" title="About Steppo"></SteppoHead>
-      <LogoResponsive></LogoResponsive>
+
       <Article
         image="/images/steppo_box_origami.png"
         avatar={
           "https://firebasestorage.googleapis.com/v0/b/step-by-step-37f76.appspot.com/o/users%2F17f4uCCESETNm1qM7xm366cXRz22%2Favatar_1024x1024?alt=media&token=b86ecd50-a07a-4442-9f04-03864e110c44"
         }
       >
-        <Typography variant="h5">Why Steppo?</Typography>
+        <LogoResponsive></LogoResponsive>
+        {/* <Typography variant="h5">Why Steppo?</Typography> */}
         <Typography>
           The inspiration for this app struck when my daughter had a meltdown over a paper box folding guide she
           stumbled upon on Instagram. That's when I realized there had to be a better way to share step-by-step
