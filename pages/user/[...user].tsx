@@ -98,6 +98,7 @@ const UserPage = ({ posts, user, userIds, uid, tabValue }) => {
     <>
       <Head>
         <title>STEPS | User</title>
+        <link rel="icon" href="images/favicon.ico" />
       </Head>
       <StyledLayout theme={theme}>
         <UserCard variant="big" className="user-card" {...user}>

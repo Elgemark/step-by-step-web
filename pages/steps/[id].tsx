@@ -25,6 +25,7 @@ import { ratePost, useRatesForPostAndUser } from "../../utils/firebase/api/rate"
 import { getPostBySlug } from "../../utils/firebase/api/post";
 import { backgroundBlurMixin } from "../../utils/styleUtils";
 import { getCategory } from "../../utils/firebase/api/categories";
+import SteppoHead from "../../components/SteppoHead";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -126,14 +127,7 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps; me
 
   return (
     <>
-      <Head>
-        <title>{"STEPPO | " + (post?.title || "untitled") + " - " + metaTags}</title>
-        <meta name="description" content={post.descr} />
-        <meta property="og:title" content={"STEPPO - " + (post?.title || "untitled")} />
-        <meta property="og:description" content={post.descr} />
-        <meta property="og:image" content={post?.media?.imageURI} />
-      </Head>
-
+      <SteppoHead title={post?.title} description={post.descr} titleTags={metaTags} image={post?.media?.imageURI} />
       <StyledLayout
         theme={theme}
         propsTopbar={{

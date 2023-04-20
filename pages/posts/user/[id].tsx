@@ -115,7 +115,8 @@ const UserPage = ({ follows }) => {
     <>
       <Head>
         <meta content="noindex, nofollow, initial-scale=1, width=device-width" name="robots" />
-        <title>{"STEPPO"}</title>
+        <title>{"Steppo"}</title>
+        <link rel="shortcut icon" href="/images/favicon.ico" />
       </Head>
       <Layout>
         <Posts enableLink={true} posts={posts as PostsType} />
