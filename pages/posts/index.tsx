@@ -15,6 +15,7 @@ import Accordion from "../../components/primitives/Accordion";
 import { useTheme } from "@emotion/react";
 import LogoResponsive from "../../components/primitives/LogoResponsive";
 import { backgroundBlurMixin } from "../../utils/styleUtils";
+import SteppoHead from "../../components/SteppoHead";
 
 const HeadingRoot = styled(Paper)`
   ${backgroundBlurMixin}
@@ -99,11 +100,12 @@ export default ({ posts }) => {
   return (
     <MUIWrapper>
       <FirebaseWrapper>
-        <Head>
-          <meta content="noindex, nofollow, initial-scale=1, width=device-width" name="robots" />
-          <title>STEPS</title>
-        </Head>
-
+        <SteppoHead
+          title="Create and share your step by step instruction guides!"
+          titleTags="DIY, Share, follow and rate creators and topics"
+          description="Steppo is an app for creating and sharing step by step instructions and guides."
+          image="/images/steppo_landing_page.jpg"
+        />
         <Layout>
           <LogoResponsive />
           <FilterBar></FilterBar>

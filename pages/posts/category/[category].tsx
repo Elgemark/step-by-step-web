@@ -2,7 +2,6 @@ import { getPostsBySearch } from "../../../utils/firebase/api/post";
 import _ from "lodash";
 import FirebaseWrapper from "../../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../../components/wrappers/MUIWrapper";
-import Head from "next/head";
 import Layout from "../../../components/Layout";
 import FilterBar from "../../../components/FilterBar";
 import Posts from "../../../components/posts/Posts";
@@ -27,7 +26,7 @@ export async function getServerSideProps({ query }) {
   };
 }
 
-export default ({ category, posts, descr, metaTags }) => {
+export default ({ posts, descr, metaTags }) => {
   return (
     <MUIWrapper>
       <FirebaseWrapper>
