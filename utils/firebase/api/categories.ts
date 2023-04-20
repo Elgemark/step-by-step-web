@@ -43,7 +43,7 @@ export const getCategories = async (language = "en-global") => {
 
 export const getCategory = async (category: string) => {
   const firebase = getFirestore();
-  const result: CategoryResponse = { data: { id: category, meta: {}, texts: {} }, error: null };
+  const result: CategoryResponse = { data: { id: category, meta: {}, texts: {}, descr: {} }, error: null };
   try {
     const docRef = doc(firebase, "config", "categories", "list", category);
     const docSnap = await getDoc(docRef);
