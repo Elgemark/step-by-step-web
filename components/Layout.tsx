@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import styled from "styled-components";
 import { FC, ReactNode, createContext, useState } from "react";
 import Messages from "./Messages";
-import { Drawer } from "@mui/material";
+import { Alert, Drawer, Stack } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import SideMenu from "./primitives/SideMenu";
 import { useRouter } from "next/router";
@@ -53,11 +53,11 @@ const Layout: FC<{
       {/* TOPBAR */}
       <TopBar onClickLogo={() => setShowSideMenu(true)} className="top-bar" {...propsTopbar} />
       <Box className="content" {...propsContent}>
-        {/* <Stack direction={"row"} justifyContent="center">
+        <Stack direction={"row"} justifyContent="center">
           <Alert className="info" severity="info" color="warning">
             This is site is under development. Please come back later!
           </Alert>
-        </Stack> */}
+        </Stack>
         {children}
       </Box>
       {/* SIDEMENU */}

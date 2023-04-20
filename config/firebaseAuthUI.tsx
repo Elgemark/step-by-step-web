@@ -5,8 +5,8 @@ export const config = (firebase) => {
   return {
     signInFlow: "popup",
     signInSuccessUrl: "/",
-    tosUrl: "/terms-of-service",
-    privacyPolicyUrl: "/privacy-policy",
+    tosUrl: "/about/terms-of-service",
+    privacyPolicyUrl: "/about/privacy-policy",
     signInOptions: [
       { provider: firebase.auth.EmailAuthProvider.PROVIDER_ID, requireDisplayName: false },
       {

@@ -15,18 +15,19 @@ const Root = styled(MUIAccordion)`
 
 const Accordion: FC<{
   title?: string;
+  collapse?: boolean;
   summary?: ReactJSXElement;
   children: ReactJSXElement;
   [key: string]: any;
-}> = ({ title, summary, children, ...rest }) => {
-  const [collapse, setCollapse] = useState(true);
+}> = ({ title, summary, children, collapse = true, ...rest }) => {
+  const [_collapse, setCollapse] = useState(collapse);
   const theme = useTheme();
 
   return (
     <Root
       disableGutters
-      expanded={!collapse}
-      onChange={() => setCollapse(!collapse)}
+      expanded={!_collapse}
+      onChange={() => setCollapse(!_collapse)}
       elevation={3}
       theme={theme}
       {...rest}
