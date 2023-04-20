@@ -13,10 +13,33 @@ const StyledAccordion = styled(Accordion)`
   margin-bottom: ${({ theme }) => theme.spacing(1)};
 `;
 const PrivacyPolicePage = () => {
+  const theme = useTheme();
   return (
     <Layout>
-      <SteppoHead description="Terms of service" title="Terms of service"></SteppoHead>
+      <SteppoHead description="Steppo privacy policy" title="Privacy policy"></SteppoHead>
       <LogoResponsive></LogoResponsive>
+      <StyledAccordion title="Privacy policy" theme={theme} collapse={false}>
+        <Typography>
+          1. Steppo collects various types of information from users, such as account and profile information, content
+          and activity data, and device and usage information.
+        </Typography>
+        <Typography>
+          2. Steppo uses this information to provide and improve its services, personalize user experiences, and show
+          users relevant content.
+        </Typography>
+        <Typography>
+          3. Steppo may share user information with third-party service providers, advertisers, and business partners,
+          but only as necessary to provide and improve its services and as permitted by law.
+        </Typography>
+        <Typography>
+          4. Users can control some of the information Steppo collects and how it's used, such as through account
+          settings and privacy controls.
+        </Typography>
+        <Typography>
+          5. Steppo takes various measures to protect user information, such as encryption, access controls, and regular
+          security assessments.
+        </Typography>
+      </StyledAccordion>
     </Layout>
   );
 };

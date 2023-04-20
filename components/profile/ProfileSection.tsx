@@ -69,7 +69,6 @@ const ProfileSctionEditable: FC<{
     }
 
     const resp = await saveUser(update);
-    console.log("resp", { resp, update });
     setIsSaving(false);
     setEdit(false);
     onSave();
