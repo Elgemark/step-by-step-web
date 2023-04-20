@@ -7,6 +7,8 @@ import Layout from "../../../components/Layout";
 import FilterBar from "../../../components/FilterBar";
 import Posts from "../../../components/posts/Posts";
 import { Posts as PostsType } from "../../../utils/firebase/type";
+import SteppoHead from "../../../components/SteppoHead";
+import { getCategory } from "../../../utils/firebase/api/categories";
 
 export async function getServerSideProps({ query }) {
   const { category, search, rated } = query;
@@ -14,19 +16,22 @@ export async function getServerSideProps({ query }) {
   const response = await getPostsBySearch(search, { category, rated });
   const items = response.data || [];
 
+  const categoryResp = await getCategory(category);
+  // extract meta
+  const metaTags = categoryResp.data?.meta ? categoryResp.data?.meta["en-global"] : "";
+  // extract descr
+  const descr = categoryResp.data?.descr ? categoryResp.data?.descr["en-global"] : "";
+
   return {
-    props: { posts: items, category, search: search || null },
+    props: { posts: items, category, search: search || null, descr, metaTags },
   };
 }
 
-export default ({ category, posts }) => {
+export default ({ category, posts, descr, metaTags }) => {
   return (
     <MUIWrapper>
       <FirebaseWrapper>
-        <Head>
-          <meta content="noindex, nofollow, initial-scale=1, width=device-width" name="robots" />
-          <title>{"STEPS | " + _.capitalize(category)}</title>
-        </Head>
+        <SteppoHead titleTags={metaTags} description={descr} />
         <Layout>
           <FilterBar></FilterBar>
           <Posts enableLink={true} posts={posts as PostsType} />

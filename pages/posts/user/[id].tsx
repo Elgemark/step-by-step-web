@@ -10,6 +10,7 @@ import Posts from "../../../components/posts/Posts";
 import { Posts as PostsType } from "../../../utils/firebase/type";
 import { useUser } from "../../../utils/firebase/api/user";
 import { getFollows } from "../../../utils/firebase/api/follow";
+import SteppoHead from "../../../components/SteppoHead";
 
 type FetchResponse = {
   hasMorePosts: boolean;
@@ -113,11 +114,7 @@ const UserPage = ({ follows }) => {
 
   return (
     <>
-      <Head>
-        <meta content="noindex, nofollow, initial-scale=1, width=device-width" name="robots" />
-        <title>{"Steppo"}</title>
-        <link rel="shortcut icon" href="/images/favicon.ico" />
-      </Head>
+      <SteppoHead description="User generated feed" />
       <Layout>
         <Posts enableLink={true} posts={posts as PostsType} />
       </Layout>

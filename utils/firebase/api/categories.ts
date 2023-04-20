@@ -9,6 +9,7 @@ export type Category = {
 export type CategoryObject = {
   id: string;
   meta: object;
+  descr: object;
   texts: object;
 };
 
