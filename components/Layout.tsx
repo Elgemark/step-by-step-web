@@ -68,48 +68,14 @@ const Layout: FC<{
         ModalProps={{ keepMounted: true }}
       >
         <SideMenu
+          hrefFeed={isSignedId ? "/posts/user/" + user.uid : "/posts/"}
+          hrefDiscover={"/posts/search/"}
+          hrefLogin={!isSignedId ? "/login/" : null}
+          hrefProfile={isSignedId ? "/profile/" : null}
+          hrefBookmarks={isSignedId ? "/profile/" + user.uid + "/saved/" : null}
+          hrefAbout={"/about/"}
+          hrefReview={isSignedId && user?.roles?.includes("admin") ? "/admin/review" : null}
           onClose={() => setShowSideMenu(false)}
-          onClickFeed={() => {
-            if (isSignedId) {
-              router.push("/posts/user/" + user.uid);
-            } else {
-              router.push("/posts/");
-            }
-          }}
-          onClickSearch={() => {
-            router.push("/posts/search/");
-          }}
-          onClickLogin={
-            !isSignedId &&
-            (() => {
-              router.push("/login/");
-            })
-          }
-          onClickProfile={
-            isSignedId &&
-            (() => {
-              router.push("/profile/" + user.uid);
-            })
-          }
-          onClickBookmarks={
-            isSignedId &&
-            (() => {
-              router.push("/profile/" + user.uid + "/saved/");
-            })
-          }
-          onClickAbout={
-            isSignedId &&
-            (() => {
-              router.push("/about/");
-            })
-          }
-          onClickReview={
-            isSignedId &&
-            user?.roles?.includes("admin") &&
-            (() => {
-              router.push("/admin/review");
-            })
-          }
         />
       </Drawer>
       {/* SNACKBAR */}
