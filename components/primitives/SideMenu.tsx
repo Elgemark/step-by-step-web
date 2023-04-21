@@ -11,6 +11,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import LoginIcon from "@mui/icons-material/Login";
 import PersonIcon from "@mui/icons-material/Person";
 import FeedIcon from "@mui/icons-material/Feed";
+import InfoIcon from "@mui/icons-material/Info";
 import TroubleshootIcon from "@mui/icons-material/Troubleshoot";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 
@@ -40,9 +41,19 @@ const SideMenu: FC<{
   onClickProfile?: MouseEventHandler;
   onClickBookmarks?: MouseEventHandler;
   onClickReview?: MouseEventHandler;
-}> = ({ onClose, onClickFeed, onClickSearch, onClickLogin, onClickProfile, onClickBookmarks, onClickReview }) => {
+  onClickAbout?: MouseEventHandler;
+}> = ({
+  onClose,
+  onClickFeed,
+  onClickSearch,
+  onClickLogin,
+  onClickProfile,
+  onClickBookmarks,
+  onClickReview,
+  onClickAbout,
+}) => {
   return (
-    <Box sx={{ width: 200 }} role="presentation" onClick={onClose}>
+    <Box sx={{ width: 200 }} role="presentation" onClick={onClose} component="nav">
       <List>
         <SideMenuItem onClick={onClickFeed} label="Feed" icon={<FeedIcon />} dense />
       </List>
@@ -59,8 +70,9 @@ const SideMenu: FC<{
       </List>
       {/* USER */}
       <List>{/* <SideMenuItem onClick={onClickHome} label="Home" icon={<MailIcon />} /> */}</List>
+      <Divider />
+      {onClickBookmarks && <SideMenuItem onClick={onClickAbout} label="About" icon={<InfoIcon />} dense />}
       {/* ADMIN */}
-      {onClickReview ? <Divider /> : null}
       {onClickReview && <SideMenuItem onClick={onClickReview} label="Review" icon={<TroubleshootIcon />} dense />}
     </Box>
   );

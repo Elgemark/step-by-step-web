@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { Avatar, Paper, useTheme } from "@mui/material";
 import { backgroundBlurMixin } from "../../utils/styleUtils";
+import React, { FC } from "react";
 
 const Root = styled(Paper)`
   display: flex;
@@ -33,13 +34,18 @@ const BackgroundImage = styled.div`
   border-radius: 10px 10px 10px 10px;
 `;
 
-const Article = ({ image, avatar, children, backgroundContent }) => {
+const Article: FC<{
+  image?: string;
+  avatar?: string;
+  children: React.ReactNode;
+  backgroundContent: React.ReactNode;
+}> = ({ image, avatar, children, backgroundContent }) => {
   const theme = useTheme();
   return (
     <Root theme={theme}>
       <BackgroundImage src={image}>{backgroundContent}</BackgroundImage>
       <Avatar className="user-avatar" src={avatar} sx={{ width: 120, height: 120 }} />
-      <div className="article-content">{children}</div>
+      <article className="article-content">{children}</article>
     </Root>
   );
 };

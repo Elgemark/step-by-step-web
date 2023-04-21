@@ -23,6 +23,7 @@ import _ from "lodash";
 import CardImage from "../CardImage";
 import Rate from "../primitives/Rate";
 import { backgroundBlurMixin } from "../../utils/styleUtils";
+import { post } from "../../utils/firebase/models";
 
 const Root = styled(Card)`
   ${backgroundBlurMixin}
@@ -49,10 +50,11 @@ const StyledCardImage = styled(CardImage)`
   cursor: ${({ enableLink }) => (enableLink ? "pointer" : "auo")};
 `;
 
-const MediaContainer = ({ children, hrefBasePath, slug, enableLink }) => {
+const MediaContainer = ({ children, hrefBasePath, slug, enableLink, title }) => {
+  console.log("title", title);
   if (enableLink) {
     return (
-      <a href={`${hrefBasePath}${slug}`}>
+      <a href={`${hrefBasePath}${slug}`} title={title}>
         <CardActionArea>{children}</CardActionArea>
       </a>
     );
@@ -145,8 +147,8 @@ const Post: FC<{
         title={<Typography>{title}</Typography>}
       />
 
-      <MediaContainer slug={slug || id} hrefBasePath={hrefBasePath} enableLink={enableLink}>
-        <StyledCardImage src={media.imageURI} enableLink={enableLink} enableFullscreen={!enableLink} />
+      <MediaContainer slug={slug || id} hrefBasePath={hrefBasePath} enableLink={enableLink} title={title}>
+        <StyledCardImage src={media.imageURI} enableLink={enableLink} enableFullscreen={!enableLink} alt={title} />
       </MediaContainer>
 
       <CardActions disableSpacing>

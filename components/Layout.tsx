@@ -61,7 +61,12 @@ const Layout: FC<{
         {children}
       </Box>
       {/* SIDEMENU */}
-      <Drawer anchor={"left"} open={showSideMenu} onClose={() => setShowSideMenu(false)}>
+      <Drawer
+        anchor={"left"}
+        open={showSideMenu}
+        onClose={() => setShowSideMenu(false)}
+        ModalProps={{ keepMounted: true }}
+      >
         <SideMenu
           onClose={() => setShowSideMenu(false)}
           onClickFeed={() => {
@@ -90,6 +95,12 @@ const Layout: FC<{
             isSignedId &&
             (() => {
               router.push("/profile/" + user.uid + "/saved/");
+            })
+          }
+          onClickAbout={
+            isSignedId &&
+            (() => {
+              router.push("/about/");
             })
           }
           onClickReview={

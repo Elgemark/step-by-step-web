@@ -17,10 +17,11 @@ const StyledCardMedia = styled(CardMedia)`
   cursor: ${({ enableFullscreen }) => (enableFullscreen ? "zoom-in" : "auto")};
 `;
 
-const CardImage: FC<{ height?: any; src?: string; enableFullscreen?: boolean }> = ({
+const CardImage: FC<{ height?: any; src?: string; enableFullscreen?: boolean; alt: string }> = ({
   height,
   src,
   enableFullscreen = false,
+  alt,
   ...rest
 }) => {
   const [fullscreen, setFullscreen] = useState(false);
@@ -38,6 +39,7 @@ const CardImage: FC<{ height?: any; src?: string; enableFullscreen?: boolean }> 
         image={src}
         onClick={() => enableFullscreen && setFullscreen(true)}
         enableFullscreen={enableFullscreen}
+        alt={alt}
         {...rest}
       />
       {enableFullscreen ? (

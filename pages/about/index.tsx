@@ -21,14 +21,9 @@ const AboutPage = () => {
   const theme = useTheme();
   return (
     <Layout>
-      <SteppoHead description="About Steppo" title="About Steppo"></SteppoHead>
+      <SteppoHead description="About Steppo" title="About Steppo" image="/images/steppo_box_origami.png"></SteppoHead>
 
-      <Article
-        image="/images/steppo_box_origami.png"
-        avatar={
-          "https://firebasestorage.googleapis.com/v0/b/step-by-step-37f76.appspot.com/o/users%2F17f4uCCESETNm1qM7xm366cXRz22%2Favatar_1024x1024?alt=media&token=b86ecd50-a07a-4442-9f04-03864e110c44"
-        }
-      >
+      <Article image="/images/steppo_box_origami.png" avatar={"/images/steppo_avatar.png"}>
         <LogoResponsive></LogoResponsive>
         {/* <Typography variant="h5">Why Steppo?</Typography> */}
         <Typography>
