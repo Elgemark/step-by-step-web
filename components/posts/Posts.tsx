@@ -54,7 +54,7 @@ const Posts: FC<{
 
   return (
     <div style={{ width: "100%" }}>
-      <Masonry>
+      <Masonry component="nav" aria-label="posts">
         {posts.map((data, index) => (
           <Post
             key={index}
