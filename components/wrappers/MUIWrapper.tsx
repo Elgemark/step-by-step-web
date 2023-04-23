@@ -46,6 +46,7 @@ const MUIWrapper: FC<{
     [mode]
   );
 
+  // Red "#FF5733"
   const theme = useMemo(
     () =>
       createTheme({

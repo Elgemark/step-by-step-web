@@ -32,7 +32,7 @@ const CustomBadge = ({ badgeContent, ...rest }) => {
 
 const StyledCustomBadge = styled(CustomBadge)`
   animation: pulse 2s infinite;
-  background-color: ${() => red[500]};
+  background-color: ${() => "#FF5733"};
   width: 18px;
   height: 18px;
   border-radius: 8px;

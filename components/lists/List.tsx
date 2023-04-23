@@ -69,7 +69,7 @@ const List: FC<{
               e.stopPropagation();
             }}
           >
-            <PushPinIcon sx={{ color: foundItemWithBadge ? red[500] : "white" }} fontSize="small" />
+            <PushPinIcon sx={{ color: foundItemWithBadge ? "#FF5733" : "white" }} fontSize="small" />
           </IconButton>
 
           <Typography variant="h6">{title}</Typography>

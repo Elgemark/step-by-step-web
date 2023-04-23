@@ -32,7 +32,7 @@ const Step: FC<{
     <Root className={className} theme={theme}>
       <CardHeader
         avatar={
-          <Avatar sx={{ bgcolor: red[500] }} aria-label="post">
+          <Avatar sx={{ bgcolor: "#FF5733" }} aria-label="post">
             {index + 1}
           </Avatar>
         }

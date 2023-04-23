@@ -58,7 +58,7 @@ const StepEditable: FC<{
     <StyledCard ref={ref} theme={theme} {...props}>
       <CardHeader
         avatar={
-          <Avatar sx={{ bgcolor: red[500] }} aria-label="post">
+          <Avatar sx={{ bgcolor: "#FF5733" }} aria-label="post">
             {index + 1}
           </Avatar>
         }
