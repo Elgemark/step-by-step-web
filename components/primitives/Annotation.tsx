@@ -1,6 +1,7 @@
-import { useEffect, useRef, FC } from "react";
+import { useEffect, FC } from "react";
 import * as mjslive from "markerjs-live";
 import styled from "styled-components";
+import { useAnnotateLive } from "../../hooks/annotate";
 
 const Root = styled.div`
   position: absolute;
@@ -16,28 +17,14 @@ const Root = styled.div`
 `;
 
 const Annotation: FC<{ state: mjslive.MarkerAreaState }> = ({ state }) => {
-  let markerView: mjslive.MarkerView;
-  const imgOverlayRef = useRef<HTMLElement>(null);
+  const { ref: imgOverlayRef, update: updateAnnotateLive } = useAnnotateLive();
 
   useEffect(() => {
-    showMarkerAreaLive(state);
+    updateAnnotateLive();
+    setTimeout(() => {
+      updateAnnotateLive(state);
+    }, 100);
   }, [state]);
-
-  const showMarkerAreaLive = (state?: mjslive.MarkerAreaState) => {
-    if (imgOverlayRef.current !== null) {
-      // create a marker.js MarkerArea
-      if (!markerView) {
-        markerView = new mjslive.MarkerView(imgOverlayRef.current);
-        markerView.targetRoot = imgOverlayRef.current;
-      }
-
-      if (state) {
-        markerView.show(state);
-      } else {
-        markerView.close();
-      }
-    }
-  };
 
   return <Root ref={imgOverlayRef} className="annotate-overlay" />;
 };

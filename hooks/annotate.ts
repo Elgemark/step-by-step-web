@@ -23,6 +23,7 @@ export const useAnnotateLive = (annotation?: mjslive.MarkerAreaState) => {
   const updateMarkerAreaLive = (_markerView: mjslive.MarkerView, newState?: mjslive.MarkerAreaState) => {
     if (_markerView) {
       if (newState) {
+        console.log("updateMarkerAreaLive", newState);
         _markerView.show(newState);
       } else {
         _markerView.close();
