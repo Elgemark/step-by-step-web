@@ -82,20 +82,12 @@ const ImageEditable: FC<{
   const [previewImageURI, setPreviewImageURI] = useState();
   const [selectedImageURI, setSelectedImageURI] = useState();
   const imgRef = useRef<HTMLImageElement>(null);
-  // const imgOverlayRef = useRef<HTMLElement>(null);
-  // const [annotateState, setAnnotateState] = useState(annotation);
   const { ref: imgOverlayRef, update: updateAnnotateLive, state: annotateState } = useAnnotateLive(annotation);
   // Prevents typing in paste textField
   const [emptyrStr, setEmptyStr] = useState("");
   const [cropSettings, setCropSettings] = useState({ crop: { x: 0, y: 0 }, zoom: 1 });
 
   const hasImage = previewImageURI || selectedImageURI || media?.imageURI;
-
-  // useEffect(() => {
-  //   if (annotateState) {
-  //     showMarkerAreaLive(annotateState);
-  //   }
-  // }, [annotateState]);
 
   useEffect(() => {
     if (blob) {
@@ -158,7 +150,6 @@ const ImageEditable: FC<{
       // attach an event handler to assign annotated image back to our image element
       markerArea.addEventListener("render", (event) => {
         if (imgRef.current) {
-          // setAnnotateState(event.state);
           updateAnnotateLive(event.state);
           onAnnotationChange && onAnnotationChange(JSON.stringify(event.state));
         }
@@ -168,30 +159,12 @@ const ImageEditable: FC<{
       markerArea.show();
       // Close live view
       updateAnnotateLive();
-      // if (markerView) {
-      //   // markerView.close();
-      //   updateAnnotateLive();
-      // }
       //restore
       if (annotateState) {
         markerArea.restoreState(annotateState);
       }
     }
   };
-
-  // const showMarkerAreaLive = (state: any) => {
-  //   if (imgOverlayRef.current !== null) {
-  //     // create a marker.js MarkerArea
-  //     if (!markerView) {
-  //       markerView = new mjslive.MarkerView(imgOverlayRef.current);
-  //       markerView.targetRoot = imgOverlayRef.current;
-  //     }
-
-  //     if (state) {
-  //       markerView.show(state);
-  //     }
-  //   }
-  // };
 
   return (
     <StyledCardMediaContainer onPaste={onPasteHandler} hasImage={hasImage} {...props} height={settings.image.height}>
