@@ -40,8 +40,6 @@ const StepEditable: FC<{
   const [openMediaEdit, setOpenMediaEdit] = useState(step.media.imageURI ? true : false);
   const theme = useTheme();
 
-  console.log("annotation", data.annotation);
-
   useEffect(() => {
     if (ref && scrollIntoView) {
       setTimeout(() => {
