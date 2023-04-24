@@ -5,6 +5,8 @@ import { useAnnotateLive } from "../../hooks/annotate";
 
 const Root = styled.div`
   position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   pointer-events: none !important;
@@ -16,14 +18,14 @@ const Root = styled.div`
   }
 `;
 
-const Annotation: FC<{ state: mjslive.MarkerAreaState }> = ({ state }) => {
+const Annotation: FC<{ state: mjslive.MarkerAreaState; delay?: number }> = ({ state, delay = 100 }) => {
   const { ref: imgOverlayRef, update: updateAnnotateLive } = useAnnotateLive();
 
   useEffect(() => {
-    updateAnnotateLive();
+    // updateAnnotateLive();
     setTimeout(() => {
       updateAnnotateLive(state);
-    }, 100);
+    }, delay);
   }, [state]);
 
   return <Root ref={imgOverlayRef} className="annotate-overlay" />;

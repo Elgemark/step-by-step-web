@@ -3,7 +3,7 @@ import * as mjslive from "markerjs-live";
 
 export const useAnnotateLive = (annotation?: mjslive.MarkerAreaState) => {
   const [markerView, setMarkerView] = useState<mjslive.MarkerView>(null);
-  const ref = useRef<HTMLElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const [state, setState] = useState<mjslive.MarkerAreaState>(annotation);
 
   useEffect(() => {
@@ -23,13 +23,11 @@ export const useAnnotateLive = (annotation?: mjslive.MarkerAreaState) => {
   const updateMarkerAreaLive = (_markerView: mjslive.MarkerView, newState?: mjslive.MarkerAreaState) => {
     if (_markerView) {
       if (newState) {
-        console.log("updateMarkerAreaLive", newState);
         _markerView.show(newState);
       } else {
         _markerView.close();
       }
     }
-    setState(newState);
   };
 
   return {

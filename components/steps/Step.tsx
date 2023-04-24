@@ -2,12 +2,12 @@ import { Card, Typography, useTheme } from "@mui/material";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import Avatar from "@mui/material/Avatar";
-import { red } from "@mui/material/colors";
 import styled from "styled-components";
 import { FC } from "react";
 import StepMoreMenu from "../StepMoreMenu";
 import CardImage from "../CardImage";
 import { backgroundBlurMixin } from "../../utils/styleUtils";
+import { useAnnotateLive } from "../../hooks/annotate";
 
 const Root = styled(Card)`
   ${backgroundBlurMixin}
@@ -25,8 +25,9 @@ const Step: FC<{
   body: string;
   className: string;
   media: Media;
+  annotation?: string;
   onRollBack?: Function;
-}> = ({ postId, id, index, title, body, media, onRollBack, className }) => {
+}> = ({ postId, id, index, title, body, media, annotation, onRollBack, className }) => {
   const theme = useTheme();
   return (
     <Root className={className} theme={theme}>
@@ -39,7 +40,10 @@ const Step: FC<{
         title={<Typography>{title}</Typography>}
         action={<StepMoreMenu postId={postId} stepId={id} onRollBack={onRollBack} />}
       />
-      <CardImage src={media.imageURI} enableFullscreen alt={title} />
+
+      <CardImage src={media.imageURI} enableFullscreen alt={title} annotation={annotation} />
+
+      {/* <Annotation state={JSON.parse(annotation)} /> */}
       <CardContent>
         <Typography variant="body2">{body}</Typography>
       </CardContent>

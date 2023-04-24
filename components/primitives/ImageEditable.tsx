@@ -42,6 +42,10 @@ const StyledCardMediaContainer = styled.div`
   &:hover .actions-overlay {
     opacity: 1;
   }
+
+  .__markerjs2_ {
+    position: fixed;
+  }
 `;
 
 const StyledCardMedia = styled(CardMedia)`
@@ -144,6 +148,8 @@ const ImageEditable: FC<{
       markerArea.renderImageType = "image/png";
       markerArea.renderMarkersOnly = true;
       markerArea.renderAtNaturalSize = true;
+      markerArea.settings.displayMode = "popup";
+      markerArea.styles.addRule({ selector: ".__markerjs2_ ", style: "position: fixed !important;" });
       markerArea.uiStyleSettings.zIndex = "99999";
       markerArea.uiStyleSettings.canvasBackgroundColor = "rgba(0,0,0,0)";
 
@@ -155,7 +161,6 @@ const ImageEditable: FC<{
         }
       });
 
-      markerArea.settings.displayMode = "popup";
       markerArea.show();
       // Close live view
       updateAnnotateLive();
