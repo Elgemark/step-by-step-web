@@ -149,7 +149,7 @@ const ImageEditable: FC<{
       markerArea.renderImageType = "image/png";
       markerArea.renderMarkersOnly = true;
       markerArea.renderAtNaturalSize = true;
-      markerArea.uiStyleSettings.zIndex = "9999";
+      markerArea.uiStyleSettings.zIndex = "99999";
       markerArea.uiStyleSettings.canvasBackgroundColor = "rgba(0,0,0,0)";
 
       // attach an event handler to assign annotated image back to our image element
@@ -229,13 +229,11 @@ const ImageEditable: FC<{
           </IconButton>
         ) : null}
         {/* ANNOTATE */}
-        {previewImageURI ||
-          selectedImageURI ||
-          (media?.imageURI && (
-            <IconButton className="button-annotate-image" aria-label="annotate" onClick={onClickAnnotateHandler}>
-              <BrushIcon />
-            </IconButton>
-          ))}
+        {previewImageURI || selectedImageURI || media?.imageURI ? (
+          <IconButton className="button-annotate-image" aria-label="annotate" onClick={onClickAnnotateHandler}>
+            <BrushIcon />
+          </IconButton>
+        ) : null}
       </Stack>
 
       <Modal open={openEditor} onClose={onCloseEditorHandle}>
