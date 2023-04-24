@@ -158,6 +158,7 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
     responseImageUploads.forEach((imageUpload) => {
       _.set(saveData, `steps.${imageUpload.id}.media.imageURI`, imageUpload.url);
     });
+
     // Save steps...
     const steps: Steps = [];
     _.forIn(saveData.steps, (value) => {

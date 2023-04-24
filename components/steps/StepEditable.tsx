@@ -40,6 +40,8 @@ const StepEditable: FC<{
   const [openMediaEdit, setOpenMediaEdit] = useState(step.media.imageURI ? true : false);
   const theme = useTheme();
 
+  console.log("annotation", data.annotation);
+
   useEffect(() => {
     if (ref && scrollIntoView) {
       setTimeout(() => {
@@ -87,11 +89,16 @@ const StepEditable: FC<{
             const updatedData = setValue("blob", blob);
             onChange(updatedData);
           }}
+          onAnnotationChange={(annotation) => {
+            const updatedData = setValue("annotation", annotation);
+            onChange(updatedData);
+          }}
           onDelete={() => {
             const updatedData = setValue("media.imageURI", null);
             onChange(updatedData);
           }}
           media={data.media}
+          annotation={data.annotation && JSON.parse(data.annotation)}
         />
       </Collapse>
       <CardContent>

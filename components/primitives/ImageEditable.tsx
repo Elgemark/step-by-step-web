@@ -27,7 +27,9 @@ const StyledCardMediaContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  &:hover img {
+
+  &:hover img,
+  &:hover .annotate-overlay {
     opacity: ${({ hasImage }) => (hasImage ? 0.2 : 1)};
     transition: 0.2s opacity;
   }
@@ -66,10 +68,11 @@ let markerView: mjslive.MarkerView;
 
 const ImageEditable: FC<{
   media: Media;
+  annotation?: markerjs2.MarkerAreaState;
   onBlobChange: Function;
   onAnnotationChange?: Function;
   onDelete: Function;
-}> = ({ media = { imageURI: "" }, onBlobChange, onDelete, onAnnotationChange, ...props }) => {
+}> = ({ media = { imageURI: "" }, annotation, onBlobChange, onDelete, onAnnotationChange, ...props }) => {
   const [showDeleteMediaDialog, setShowDeleteMediaDialog] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [openEditor, setOpenEditor] = useState(false);
@@ -78,12 +81,18 @@ const ImageEditable: FC<{
   const [selectedImageURI, setSelectedImageURI] = useState();
   const imgRef = useRef<HTMLImageElement>(null);
   const imgOverlayRef = useRef<HTMLElement>(null);
-  const [annotateState, setAnnotateState] = useState(null);
+  const [annotateState, setAnnotateState] = useState(annotation);
   // Prevents typing in paste textField
   const [emptyrStr, setEmptyStr] = useState("");
   const [cropSettings, setCropSettings] = useState({ crop: { x: 0, y: 0 }, zoom: 1 });
 
   const hasImage = previewImageURI || selectedImageURI || media?.imageURI;
+
+  useEffect(() => {
+    if (annotateState) {
+      showMarkerAreaLive(annotateState);
+    }
+  }, [annotateState]);
 
   useEffect(() => {
     if (blob) {
@@ -146,19 +155,17 @@ const ImageEditable: FC<{
       // attach an event handler to assign annotated image back to our image element
       markerArea.addEventListener("render", (event) => {
         if (imgRef.current) {
-          // imgRef.current.src = event.dataUrl;
           setAnnotateState(event.state);
-          onAnnotationChange && onAnnotationChange(event.state);
-          //
-          showMarkerAreaLive(event.state);
+          onAnnotationChange && onAnnotationChange(JSON.stringify(event.state));
         }
       });
 
-      markerArea.addEventListener("close", (event) => {
-        showMarkerAreaLive(annotateState);
-      });
       markerArea.settings.displayMode = "popup";
       markerArea.show();
+      // Close live view
+      if (markerView) {
+        markerView.close();
+      }
       //restore
       if (annotateState) {
         markerArea.restoreState(annotateState);
@@ -176,7 +183,6 @@ const ImageEditable: FC<{
 
       if (state) {
         markerView.show(state);
-        console.log("markerView.show", state);
       }
     }
   };
