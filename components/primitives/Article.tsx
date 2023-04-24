@@ -38,7 +38,7 @@ const Article: FC<{
   image?: string;
   avatar?: string;
   children: React.ReactNode;
-  backgroundContent: React.ReactNode;
+  backgroundContent?: React.ReactNode;
 }> = ({ image, avatar, children, backgroundContent }) => {
   const theme = useTheme();
   return (
