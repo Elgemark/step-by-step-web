@@ -16,8 +16,6 @@ import ImageEditor from "../ImageEditor";
 import settings from "../../config";
 import Dialog from "./Dialog";
 import * as markerjs2 from "markerjs2";
-import * as mjslive from "markerjs-live";
-import Annotation from "./Annotation";
 import { useAnnotateLive } from "../../hooks/annotate";
 
 const StyledCardMediaContainer = styled.div`
@@ -69,8 +67,6 @@ const StyledAnnotateView = styled.div`
 interface Media {
   imageURI?: String;
 }
-
-let markerView: mjslive.MarkerView;
 
 const ImageEditable: FC<{
   media: Media;

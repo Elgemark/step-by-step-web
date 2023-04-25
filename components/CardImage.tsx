@@ -2,7 +2,6 @@ import { CardMedia } from "@mui/material";
 import { Modal } from "@mui/material";
 import styled from "styled-components";
 import { FC, useState } from "react";
-import { useAnnotateLive } from "../hooks/annotate";
 import Annotation from "./primitives/Annotation";
 
 const StyledModal = styled(Modal)`

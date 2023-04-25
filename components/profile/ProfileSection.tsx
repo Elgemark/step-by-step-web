@@ -1,6 +1,6 @@
 import { useUser } from "../../utils/firebase/api";
-import { useState, FC, useEffect } from "react";
-import { Button, ButtonGroup, CircularProgress, Modal } from "@mui/material";
+import { useState, FC } from "react";
+import { Modal } from "@mui/material";
 import { useSignOut } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
 import { useStateObject } from "../../utils/object";
