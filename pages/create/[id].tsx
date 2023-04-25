@@ -146,7 +146,6 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
           blob: value.blob,
           imageSize: "1024x1024",
           locationPath: ["users", userId, "post", id, `step_${value.id}`],
-          id: value.id,
         });
         // Remove blob...
         delete value.blob;

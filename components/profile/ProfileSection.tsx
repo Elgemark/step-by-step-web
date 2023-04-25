@@ -16,7 +16,6 @@ import { useUserStats } from "../../utils/firebase/api/user";
 
 const ProfileSctionEditable: FC<{
   userId?: string;
-
   onSave: Function;
   onCancel: Function;
   onEdit: any;
@@ -50,22 +49,20 @@ const ProfileSctionEditable: FC<{
 
   const onSaveHandler = async () => {
     setIsSaving(true);
-    const update = _.pick(user, ["biography", "alias", "categories"]);
+    const update = _.pick(user, ["biography", "alias", "categories", "background", "avatar"]);
     // Avatar...
     if (avatarData.file) {
-      const avatarResp: UploadResponse = await uploadImage(avatarData.file, "1024x1024", ["users", userId], "avatar");
+      const avatarResp: UploadResponse = await uploadImage(avatarData.file, "1024x1024", ["users", userId, "avatar"]);
       update.avatar = avatarResp.url;
     }
     // Background...
     if (backgroundData.file) {
-      const backgroundResp: UploadResponse = await uploadImage(
-        backgroundData.file,
-        "1024x1024",
-        ["users", userId],
-        "background"
-      );
+      const backgroundResp: UploadResponse = await uploadImage(backgroundData.file, "1024x1024", [
+        "users",
+        userId,
+        "background",
+      ]);
       update.background = backgroundResp.url;
-      setEdit(false);
     }
 
     const resp = await saveUser(update);

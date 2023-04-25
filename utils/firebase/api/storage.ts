@@ -4,15 +4,11 @@ import { useState } from "react";
 import { UploadResponse } from "../interface";
 import { ImageUploads } from "../type";
 
-export const uploadImage = async (
-  blob: Blob,
-  imageSize: string = "1024x1024",
-  locationPath: Array<string>,
-  id?: string
-) => {
-  const response: UploadResponse = { error: null, url: null, id };
+export const uploadImage = async (blob: Blob, imageSize: string = "1024x1024", locationPath: Array<string>) => {
+  const response: UploadResponse = { error: null, url: null };
   try {
     const pathArr = locationPath.join("/");
+    console.log("pathArr", pathArr);
     const fileRef = ref(getStorage(), pathArr);
     await uploadBytes(fileRef, blob);
     const receivedURL = await getDownloadURL(fileRef);
@@ -28,7 +24,7 @@ export const uploadImages = (uploadData: ImageUploads) => {
   const promises = [];
   uploadData.forEach((data) => {
     const promise = new Promise((resolve, reject) => {
-      uploadImage(data.blob, data.imageSize, data.locationPath, data.id)
+      uploadImage(data.blob, data.imageSize, data.locationPath)
         .then((response) => {
           resolve(response);
         })
