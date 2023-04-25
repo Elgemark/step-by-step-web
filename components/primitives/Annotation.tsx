@@ -22,7 +22,7 @@ const Annotation: FC<{ state: mjslive.MarkerAreaState; delay?: number }> = ({ st
   const { ref: imgOverlayRef, update: updateAnnotateLive } = useAnnotateLive();
 
   useEffect(() => {
-    // updateAnnotateLive();
+    updateAnnotateLive();
     setTimeout(() => {
       updateAnnotateLive(state);
     }, delay);

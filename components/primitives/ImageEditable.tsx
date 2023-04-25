@@ -16,7 +16,8 @@ import ImageEditor from "../ImageEditor";
 import settings from "../../config";
 import Dialog from "./Dialog";
 import * as markerjs2 from "markerjs2";
-import { useAnnotateLive } from "../../hooks/annotate";
+import AnnotationEditor from "./AnnotationEditor";
+import Annotation from "./Annotation";
 
 const StyledCardMediaContainer = styled.div`
   position: relative !important;
@@ -51,21 +52,8 @@ const StyledCardMedia = styled(CardMedia)`
   object-fit: cover;
 `;
 
-const StyledAnnotateView = styled.div`
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  pointer-events: none !important;
-  .__markerjslive_ {
-    z-index: unset !important;
-  }
-  svg {
-    pointer-events: none !important;
-  }
-`;
-
 interface Media {
-  imageURI?: String;
+  imageURI?: string;
 }
 
 const ImageEditable: FC<{
@@ -75,6 +63,7 @@ const ImageEditable: FC<{
   onAnnotationChange?: Function;
   onDelete: Function;
 }> = ({ media = { imageURI: "" }, annotation, onBlobChange, onDelete, onAnnotationChange, ...props }) => {
+  const [showAnnotationEditor, setShowAnnotationEditor] = useState(false);
   const [showDeleteMediaDialog, setShowDeleteMediaDialog] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [openEditor, setOpenEditor] = useState(false);
@@ -82,7 +71,6 @@ const ImageEditable: FC<{
   const [previewImageURI, setPreviewImageURI] = useState();
   const [selectedImageURI, setSelectedImageURI] = useState();
   const imgRef = useRef<HTMLImageElement>(null);
-  const { ref: imgOverlayRef, update: updateAnnotateLive, state: annotateState } = useAnnotateLive(annotation);
   // Prevents typing in paste textField
   const [emptyrStr, setEmptyStr] = useState("");
   const [cropSettings, setCropSettings] = useState({ crop: { x: 0, y: 0 }, zoom: 1 });
@@ -134,37 +122,11 @@ const ImageEditable: FC<{
   };
 
   const onClickAnnotateHandler = () => {
-    showPopMarkerArea();
+    setShowAnnotationEditor(true);
   };
 
-  const showPopMarkerArea = () => {
-    if (imgRef.current !== null) {
-      // create a marker.js MarkerArea
-      const markerArea = new markerjs2.MarkerArea(imgRef.current);
-      markerArea.renderImageType = "image/png";
-      markerArea.renderMarkersOnly = true;
-      markerArea.renderAtNaturalSize = true;
-      markerArea.settings.displayMode = "popup";
-      markerArea.styles.addRule({ selector: ".__markerjs2_ ", style: "position: fixed !important;" });
-      markerArea.uiStyleSettings.zIndex = "99999";
-      markerArea.uiStyleSettings.canvasBackgroundColor = "rgba(0,0,0,0)";
-
-      // attach an event handler to assign annotated image back to our image element
-      markerArea.addEventListener("render", (event) => {
-        if (imgRef.current) {
-          updateAnnotateLive(event.state);
-          onAnnotationChange && onAnnotationChange(JSON.stringify(event.state));
-        }
-      });
-
-      markerArea.show();
-      // Close live view
-      updateAnnotateLive();
-      //restore
-      if (annotateState) {
-        markerArea.restoreState(annotateState);
-      }
-    }
+  const onAnnotationChangeHandler = (state) => {
+    onAnnotationChange && onAnnotationChange(JSON.stringify(state));
   };
 
   return (
@@ -179,7 +141,7 @@ const ImageEditable: FC<{
           ref={imgRef}
         />
       )}
-      <StyledAnnotateView ref={imgOverlayRef} className="annotate-overlay" />
+      <Annotation state={annotation} />
 
       <Stack direction="row" className="actions-overlay" spacing={1}>
         <TextField
@@ -238,6 +200,14 @@ const ImageEditable: FC<{
         }}
         onClickCancel={() => setShowDeleteMediaDialog(false)}
         content={"Delete image?"}
+      />
+
+      <AnnotationEditor
+        state={annotation}
+        onClose={() => setShowAnnotationEditor(false)}
+        onChange={onAnnotationChangeHandler}
+        open={showAnnotationEditor}
+        src={previewImageURI || selectedImageURI || media?.imageURI}
       />
     </StyledCardMediaContainer>
   );
