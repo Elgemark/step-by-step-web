@@ -61,7 +61,7 @@ const ReviewPostPage: FC<{ id: string; lists: Lists; steps: Steps }> = ({ id, st
   return (
     <>
       <Head>
-        <title>{"STEPS | Review: " + (post?.title || "untitled")}</title>
+        <title>{"STEPPO | Review: " + (post?.title || "untitled")}</title>
       </Head>
       <StyledLayout>
         <Post {...post} enableLink={false} lists={lists} />

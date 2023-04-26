@@ -220,7 +220,7 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
   return (
     <>
       <Head>
-        <title>STEPS | Create</title>
+        <title>STEPPO | Create</title>
       </Head>
       {isLoadingUser ? (
         <Loader />

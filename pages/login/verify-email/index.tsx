@@ -43,7 +43,7 @@ const VerifyEmail = () => {
   return (
     <>
       <Head>
-        <title>STEPS | Verify EMail</title>
+        <title>STEPPO | Verify EMail</title>
       </Head>
       <Layout />
     </>

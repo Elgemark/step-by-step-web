@@ -97,7 +97,7 @@ const UserPage = ({ posts, user, userIds, uid, tabValue }) => {
   return (
     <>
       <Head>
-        <title>STEPS | User</title>
+        <title>STEPPO | User</title>
         <link rel="icon" href="images/favicon.ico" />
       </Head>
       <StyledLayout theme={theme}>

@@ -145,7 +145,7 @@ const ProfilePage = ({ tabValue, filterValue, uid, userIds = [] }) => {
   return (
     <>
       <Head>
-        <title>STEPS | Profile</title>
+        <title>STEPPO | Profile</title>
       </Head>
       <StyledLayout theme={theme}>
         {/* LOGGED IN */}

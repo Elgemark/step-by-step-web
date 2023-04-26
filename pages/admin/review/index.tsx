@@ -55,7 +55,7 @@ const ReviewPage = ({ posts }) => {
     <>
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
-        <title>{"STEPS | Admin"}</title>
+        <title>{"STEPPO | Admin"}</title>
       </Head>
       <Layout>
         <Masonry>

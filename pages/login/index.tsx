@@ -64,7 +64,7 @@ const LogInPage = () => {
   return (
     <Root status={status} theme={theme}>
       <Head>
-        <title>STEPS | LogIn</title>
+        <title>STEPPO | LogIn</title>
       </Head>
       <Layout />
       <div className="login-container">
