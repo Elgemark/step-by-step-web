@@ -30,7 +30,7 @@ const AnnotationEditor: FC<{
       _markerArea.renderMarkersOnly = true;
       _markerArea.renderAtNaturalSize = true;
       _markerArea.styles.addRule({ selector: ".__markerjs2_ ", style: "position: fixed !important;" });
-      _markerArea.uiStyleSettings.zIndex = "99999";
+      _markerArea.uiStyleSettings.zIndex = "9999";
       //   markerArea.uiStyleSettings.canvasBackgroundColor = "rgba(0,0,0,0)";
 
       // attach an event handler to assign annotated image back to our image element
