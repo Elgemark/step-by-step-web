@@ -14,6 +14,7 @@ import MUIWrapper from "../../components/wrappers/MUIWrapper";
 import { useRouter } from "next/router";
 import { useTheme } from "@emotion/react";
 import LogoResponsive from "../../components/primitives/LogoResponsive";
+import SteppoHead from "../../components/SteppoHead";
 
 const Root = styled.div`
   .login-container {
@@ -63,9 +64,10 @@ const LogInPage = () => {
 
   return (
     <Root status={status} theme={theme}>
-      <Head>
-        <title>STEPPO | LogIn</title>
-      </Head>
+      <SteppoHead
+        title="Sign in"
+        description={"Start creating you own step by step instruction guides by signing in or create a new account."}
+      />
       <Layout />
       <div className="login-container">
         <LogoResponsive></LogoResponsive>

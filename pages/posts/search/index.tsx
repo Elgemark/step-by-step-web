@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useCollection } from "../../../utils/collectionUtils";
 import { useScrolledToBottom } from "../../../utils/scrollUtils";
+import SteppoHead from "../../../components/SteppoHead";
 
 export default () => {
   const router = useRouter();
@@ -44,10 +45,10 @@ export default () => {
   return (
     <MUIWrapper>
       <FirebaseWrapper>
-        <Head>
-          <meta content="noindex, nofollow, initial-scale=1, width=device-width" name="robots" />
-          <title>{"STEPPO | Search"}</title>
-        </Head>
+        <SteppoHead
+          title="Explore"
+          description={"Steppo search page. Search step by step instruction or guides by category or rating."}
+        />
         <Layout>
           <FilterBar></FilterBar>
           <Posts enableLink={true} posts={posts as PostsType} />

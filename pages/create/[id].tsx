@@ -32,6 +32,7 @@ import { useRefresh } from "../../utils/firebaseUtils";
 import BottomBar from "../../components/primitives/BottomBar";
 import { saveAll as saveAllLists } from "../../utils/firebase/hooks/collections";
 import { createSlug } from "../../utils/queryUtils";
+import SteppoHead from "../../components/SteppoHead";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -219,9 +220,11 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
 
   return (
     <>
-      <Head>
-        <title>STEPPO | Create</title>
-      </Head>
+      <SteppoHead
+        title="Create"
+        titleTags="DIY, Create, Step by step, Guide"
+        description={"Create you own step by step instruction guide"}
+      />
       {isLoadingUser ? (
         <Loader />
       ) : (

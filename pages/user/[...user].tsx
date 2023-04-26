@@ -19,6 +19,7 @@ import MUIWrapper from "../../components/wrappers/MUIWrapper";
 import { getBookmarkedPosts, getPublishedPosts } from "../../utils/firebase/api/post";
 import GridViewIcon from "@mui/icons-material/GridView";
 import { TabContext, TabPanel } from "@mui/lab";
+import SteppoHead from "../../components/SteppoHead";
 
 const UserCardControlled: FC<{ userId: string }> = styled(({ userId, ...props }) => {
   const router = useRouter();
@@ -96,10 +97,7 @@ const UserPage = ({ posts, user, userIds, uid, tabValue }) => {
 
   return (
     <>
-      <Head>
-        <title>STEPPO | User</title>
-        <link rel="icon" href="images/favicon.ico" />
-      </Head>
+      <SteppoHead title="User" description={"User page"} />
       <StyledLayout theme={theme}>
         <UserCard variant="big" className="user-card" {...user}>
           {isFollowing ? (

@@ -7,6 +7,7 @@ import FirebaseWrapper from "../../../components/wrappers/FirebaseWrapper";
 import { useUser } from "reactfire";
 
 import { getAuth, sendSignInLinkToEmail } from "firebase/auth";
+import SteppoHead from "../../../components/SteppoHead";
 
 const VerifyEmail = () => {
   const { data: user } = useUser();
@@ -42,9 +43,7 @@ const VerifyEmail = () => {
 
   return (
     <>
-      <Head>
-        <title>STEPPO | Verify EMail</title>
-      </Head>
+      <SteppoHead title="Verify EMail" description={"Verify your email."} />
       <Layout />
     </>
   );

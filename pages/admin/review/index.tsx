@@ -15,6 +15,7 @@ import PostMoreMenu from "../../../components/PostMoreMenu";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import Post from "../../../components/posts/Post";
+import SteppoHead from "../../../components/SteppoHead";
 
 const collection = new Collection();
 let lastDoc;
@@ -53,10 +54,9 @@ const ReviewPage = ({ posts }) => {
 
   return (
     <>
-      <Head>
-        <meta name="viewport" content="initial-scale=1, width=device-width" />
-        <title>{"STEPPO | Admin"}</title>
-      </Head>
+      <SteppoHead title="Admin" description="">
+        <meta content="noindex, nofollow, initial-scale=1, width=device-width" name="robots" />
+      </SteppoHead>
       <Layout>
         <Masonry>
           {posts.map((data, index) => (

@@ -1,4 +1,3 @@
-import Head from "next/head";
 import Layout from "../../../../components/Layout";
 import styled from "styled-components";
 import { getSteps, getLists } from "../../../../utils/firebase/api";
@@ -13,12 +12,12 @@ import DialogDeletePost from "../../../../components/DialogDeletePost";
 import BottomBar from "../../../../components/primitives/BottomBar";
 import { LoadingButton } from "@mui/lab";
 import { Alert, ButtonGroup, Snackbar } from "@mui/material";
-import PublishIcon from "@mui/icons-material/Publish";
 import BlockIcon from "@mui/icons-material/Block";
 import { updatePost, useGetPost } from "../../../../utils/firebase/api/post";
 import Loader from "../../../../components/Loader";
 import DoneIcon from "@mui/icons-material/Done";
 import { Lists, ListsResponse } from "../../../../utils/firebase/api/list";
+import SteppoHead from "../../../../components/SteppoHead";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -60,9 +59,9 @@ const ReviewPostPage: FC<{ id: string; lists: Lists; steps: Steps }> = ({ id, st
 
   return (
     <>
-      <Head>
-        <title>{"STEPPO | Review: " + (post?.title || "untitled")}</title>
-      </Head>
+      <SteppoHead title="Review" description="Admin review page">
+        <meta content="noindex, nofollow, initial-scale=1, width=device-width" name="robots" />
+      </SteppoHead>
       <StyledLayout>
         <Post {...post} enableLink={false} lists={lists} />
         {/* STEPS */}

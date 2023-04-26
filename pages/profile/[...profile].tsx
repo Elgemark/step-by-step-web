@@ -27,6 +27,7 @@ import { Collection, useCollection } from "../../utils/collectionUtils";
 import { useScrolledToBottom } from "../../utils/scrollUtils";
 import { PostsResponse } from "../../utils/firebase/interface";
 import { Posts as PostsType } from "../../utils/firebase/type";
+import SteppoHead from "../../components/SteppoHead";
 
 const UserCardControlled: FC<{ userId: string }> = styled(({ userId, ...props }) => {
   const router = useRouter();
@@ -144,9 +145,7 @@ const ProfilePage = ({ tabValue, filterValue, uid, userIds = [] }) => {
 
   return (
     <>
-      <Head>
-        <title>STEPPO | Profile</title>
-      </Head>
+      <SteppoHead title="Profile" description={"Steppor profile page"} />
       <StyledLayout theme={theme}>
         {/* LOGGED IN */}
         <ProfileSection userId={uid} />
