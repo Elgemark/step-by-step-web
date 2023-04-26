@@ -39,9 +39,11 @@ export type ListsResponse = {
 
 export const setList = async (postId: string, id: string, data: List) => {
   const response: ListResponse = { id, data, error: null };
+  const auth = getAuth();
+  const uid = auth.currentUser.uid;
   const firebase = getFirestore();
   try {
-    await setDoc(doc(firebase, "posts", postId, "lists", id), data);
+    await setDoc(doc(firebase, "posts", postId, "lists", id), { ...data, uid });
   } catch (error) {
     response.error = error;
   }
@@ -51,13 +53,13 @@ export const setList = async (postId: string, id: string, data: List) => {
 export const updateLists = async (postId: string, data: Lists) => {
   const response = { error: null, data };
   const auth = getAuth();
-  const userId = auth.currentUser.uid;
+  const uid = auth.currentUser.uid;
   const firebase = getFirestore();
   const batch = writeBatch(firebase);
   // Batch set
   data.forEach((list) => {
     const stepsRef = doc(firebase, "posts", postId, "lists", list.id);
-    const listsData = { ...list, userId, uid: userId };
+    const listsData = { ...list, userId: uid, uid };
     batch.update(stepsRef, listsData);
   });
 
@@ -72,13 +74,13 @@ export const updateLists = async (postId: string, data: Lists) => {
 export const setLists = async (postId: string, data: Lists) => {
   const response: ListsResponse = { data: data, id: postId, error: null };
   const auth = getAuth();
-  const userId = auth.currentUser.uid;
+  const uid = auth.currentUser.uid;
   const firebase = getFirestore();
   const batch = writeBatch(firebase);
   // Batch set
   data.forEach((list) => {
     const stepsRef = doc(firebase, "posts", postId, "lists", list.id);
-    const listsData = { ...list, userId };
+    const listsData = { ...list, userId: uid, uid };
     batch.set(stepsRef, listsData);
   });
 

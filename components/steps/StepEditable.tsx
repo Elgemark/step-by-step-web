@@ -2,7 +2,6 @@ import { Card, Collapse, IconButton, useTheme } from "@mui/material";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import Avatar from "@mui/material/Avatar";
-import { red } from "@mui/material/colors";
 import TextField from "@mui/material/TextField";
 import { useRef, useEffect, FC, useState } from "react";
 import StepEditableMoreMenu from "../StepEditableMoreMenu";

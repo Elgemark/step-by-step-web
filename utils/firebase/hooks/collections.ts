@@ -28,9 +28,11 @@ const mergeCollections = (a: Array<object>, b: Array<object>, key: string) => {
 
 export const addCollectionItem = async (path: Array<string>, data: CollectionItem) => {
   const response = { data, error: null };
+  const auth = getAuth();
+  const uid = auth.currentUser.uid;
   const firebase = getFirestore();
   try {
-    await setDoc(doc(firebase, path.join("/")), data);
+    await setDoc(doc(firebase, path.join("/")), { ...data, uid });
   } catch (error) {
     response.error = error;
   }
@@ -44,13 +46,13 @@ export const setCollectionItems = async (
 ): Promise<{ data: CollectionItems; error: any }> => {
   const response = { data: data, error: null };
   const auth = getAuth();
-  const userId = auth.currentUser.uid;
+  const uid = auth.currentUser.uid;
   const firebase = getFirestore();
   const batch = writeBatch(firebase);
   // Batch set
   data.forEach((listItem) => {
     const docRef = doc(firebase, path.join("/") + "/" + listItem.id);
-    const listsData = { ...listItem, uid: userId };
+    const listsData = { ...listItem, uid };
     batch.set(docRef, listsData, setOptions);
   });
 
@@ -137,7 +139,6 @@ export const useCollection = (
 
   // Save function
   const save = async (saveData: CollectionItems) => {
-    console.log("save", { saveData });
     const response = await setCollectionItems(path, saveData, { merge: true });
     if (!response.error) {
       setUpdates([]);

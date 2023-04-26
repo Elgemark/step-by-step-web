@@ -49,7 +49,7 @@ export const updateUser = async (uid, data) => {
   const firebase = getFirestore();
   const userRef = doc(firebase, "users", uid);
   try {
-    await updateDoc(userRef, data);
+    await updateDoc(userRef, { ...data, uid });
   } catch (error) {
     response.error = error;
   }

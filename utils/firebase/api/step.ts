@@ -19,9 +19,11 @@ import { Steps } from "../type";
 
 export const setStep = async (postId: string, id: string, step: Step) => {
   const response: StepResponse = { data: step, error: null };
+  const auth = getAuth();
+  const uid = auth.currentUser.uid;
   const firebase = getFirestore();
   try {
-    await setDoc(doc(firebase, "posts", postId, "steps", id), step);
+    await setDoc(doc(firebase, "posts", postId, "steps", id), { ...step, uid });
   } catch (error) {
     response.error = error;
   }
@@ -37,7 +39,7 @@ export const setSteps = async (postId: string, steps: Steps) => {
   // Batch set
   steps.forEach((step) => {
     const stepsRef = doc(firebase, "posts", postId, "steps", step.id);
-    const stepsData = { ...step, userId };
+    const stepsData = { ...step, userId, uid: userId };
     batch.set(stepsRef, stepsData);
   });
 
@@ -51,9 +53,11 @@ export const setSteps = async (postId: string, steps: Steps) => {
 
 export const updateStep = async (postId, id, updates: object) => {
   const response: StepResponse = { data: null, error: null };
+  const auth = getAuth();
+  const uid = auth.currentUser.uid;
   const firebase = getFirestore();
   try {
-    await updateDoc(doc(firebase, "posts", postId, "steps", id), updates);
+    await updateDoc(doc(firebase, "posts", postId, "steps", id), { ...updates, uid });
   } catch (error) {
     response.error = error;
   }
