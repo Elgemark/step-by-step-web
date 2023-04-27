@@ -1,4 +1,3 @@
-import Head from "next/head";
 import Layout from "../../components/Layout";
 import styled from "styled-components";
 import { getPost, getSteps, likePost, getLists } from "../../utils/firebase/api";
@@ -11,7 +10,7 @@ import { useRouter } from "next/router";
 import { FC, useState } from "react";
 import { Post as PostType } from "../../utils/firebase/interface";
 import { Steps } from "../../utils/firebase/type";
-import { useProgress } from "../../utils/firebase/api/progress";
+import { Progress, useProgress } from "../../utils/firebase/api/progress";
 import FirebaseWrapper from "../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../components/wrappers/MUIWrapper";
 import PostMoreMenu from "../../components/PostMoreMenu";
@@ -144,6 +143,7 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps; me
         <div id="pinned-lists"></div>
         <Post
           {...post}
+          progress={progress as Progress}
           action={
             <PostMoreMenu
               onEdit={

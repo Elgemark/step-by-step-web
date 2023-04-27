@@ -7,7 +7,6 @@ import { FC } from "react";
 import StepMoreMenu from "../StepMoreMenu";
 import CardImage from "../CardImage";
 import { backgroundBlurMixin } from "../../utils/styleUtils";
-import { useAnnotateLive } from "../../hooks/annotate";
 
 const Root = styled(Card)`
   ${backgroundBlurMixin}

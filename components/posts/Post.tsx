@@ -18,7 +18,7 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import { useCollection } from "../../utils/firebase/hooks/collections";
 import { ListItems, Lists } from "../../utils/firebase/api/list";
-import { Progress, useProgress } from "../../utils/firebase/api/progress";
+import { Progress } from "../../utils/firebase/api/progress";
 import _ from "lodash";
 import CardImage from "../CardImage";
 import Rate from "../primitives/Rate";
@@ -90,13 +90,12 @@ const Post: FC<{
   enableLink: boolean;
   hrefBasePath?: string;
   lists?: Lists;
+  progress?: Progress;
   media: Media;
-  likes?: number;
   ratesNum?: number;
   ratesTotal?: number;
   currentUserId?: string;
   action?: ReactNode | ReactJSXElement;
-  onLike?: Function;
   onBookmark?: Function;
   onClickAvatar?: ({ uid }) => void;
 }> = ({
@@ -109,25 +108,15 @@ const Post: FC<{
   enableLink,
   hrefBasePath = "/steps/",
   lists = [],
+  progress,
   media = { imageURI: "" },
   action,
-  likes = 0,
   ratesNum = 0,
   ratesTotal = 0,
-  onLike,
   onClickAvatar,
 }) => {
   const theme = useTheme();
-  const [numLikes, setNumLikes] = useState(likes);
-  const { isLiked, toggle: toggleLike } = useLikes(id);
   const { isBookmarked, toggle: toogleBookmark } = useBookmarks(id);
-  const { progress } = useProgress(id, true);
-
-  const onLikeHandler = () => {
-    setNumLikes(numLikes + (isLiked ? -1 : 1));
-    toggleLike();
-    onLike();
-  };
 
   const onBookmarkHandler = () => {
     toogleBookmark(id);
@@ -188,7 +177,7 @@ const Post: FC<{
           {descr}
         </Typography>
       </CardContent>
-      {lists.length ? (
+      {lists.length && progress ? (
         <CardContent>
           {lists.map((list) => (
             // <List {...list} />
