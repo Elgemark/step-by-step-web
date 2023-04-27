@@ -21,12 +21,12 @@ export const ratePost = async (postId: string, userId: string, value: number): P
   // Diff value
   const diffValue = value - prevValue;
   // Update user rate value
-  await batch.set(rateRef, { value });
+  await batch.set(rateRef, { value, uid: userId });
   // update total Rates on post...
   const incrementRatesTotal = increment(diffValue);
   const incrementRatesNum = increment(rateSnap.exists() ? 0 : 1);
   const postRef = doc(firebase, "posts", postId);
-  await batch.update(postRef, { ratesTotal: incrementRatesTotal, ratesNum: incrementRatesNum });
+  await batch.update(postRef, { ratesTotal: incrementRatesTotal, ratesNum: incrementRatesNum, uid: userId });
 
   try {
     // commit batch
