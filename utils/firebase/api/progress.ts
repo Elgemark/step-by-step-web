@@ -11,6 +11,7 @@ import {
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useSigninCheck } from "reactfire";
+import { useLocalStorage } from "../../../hooks/storage";
 import { useUser } from "./user";
 
 export interface Progress {
@@ -70,11 +71,20 @@ export const getPostIdsByProgress = async (uid, completed = true) => {
 };
 
 export const useProgress = (postId: string, createIfMissing = false) => {
+  const { save: saveLocalData, restore: restoreLocalData } = useLocalStorage(postId, "progress", true);
   const [dataCreated, setDataCreated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { data: signInCheckResult } = useSigninCheck();
   const [data, setData] = useState({ completed: false, stepsCompleted: [], completions: 0 });
   const { data: user } = useUser(null, true);
+
+  // limb mode
+  useEffect(() => {
+    if (signInCheckResult && !signInCheckResult.signedIn) {
+      setData({ ...data, ...restoreLocalData() });
+      setIsLoading(false);
+    }
+  }, [postId, signInCheckResult]);
 
   useEffect(() => {
     if (user?.uid) {
@@ -107,6 +117,7 @@ export const useProgress = (postId: string, createIfMissing = false) => {
       return updateProgress(userId, postId, updates);
     } else {
       setData(updates as Progress);
+      saveLocalData(updates);
       setIsLoading(false);
     }
   };
