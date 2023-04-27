@@ -1,6 +1,6 @@
 import Layout from "../../components/Layout";
 import styled from "styled-components";
-import { getPost, getSteps, likePost, getLists } from "../../utils/firebase/api";
+import { getPost, getSteps, getLists } from "../../utils/firebase/api";
 import RevealNext from "../../components/RevealNext";
 import Step from "../../components/steps/Step";
 import Post from "../../components/posts/Post";
@@ -16,7 +16,7 @@ import MUIWrapper from "../../components/wrappers/MUIWrapper";
 import PostMoreMenu from "../../components/PostMoreMenu";
 import DialogDeletePost from "../../components/DialogDeletePost";
 import DialogReport, { ReportData } from "../../components/DialogReport";
-import { useTheme } from "@mui/material";
+import { Alert, Box, Stack, useTheme } from "@mui/material";
 import { Lists, ListsResponse } from "../../utils/firebase/api/list";
 import _ from "lodash";
 import StepsDone from "../../components/StepsDone";
@@ -65,6 +65,22 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps; me
   metaTags,
 }) => {
   const theme = useTheme();
+
+  if (!post) {
+    return (
+      <>
+        <StyledLayout theme={theme}></StyledLayout>
+        <Box className="content" component="main">
+          <Stack direction={"row"} justifyContent="center">
+            <Alert className="info" severity="info" color="warning">
+              Sorry... Steppo are not able to find this post anymore!
+            </Alert>
+          </Stack>
+        </Box>
+      </>
+    );
+  }
+
   const [showDeleteDialog, setShowDeleteDialog] = useState<string>();
   const router = useRouter();
   const { user, progress, updateProgress, isLoading } = useProgress(id, true);
@@ -77,10 +93,6 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps; me
 
   const onDeleteHandler = ({ id }) => {
     setShowDeleteDialog(id);
-  };
-
-  const onLikeHandler = async ({ id }) => {
-    await likePost(id);
   };
 
   const onStartOverHandler = async () => {
@@ -168,7 +180,6 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps; me
           enableLink={false}
           currentUserId={user?.uid}
           lists={lists}
-          onLike={() => onLikeHandler(post)}
           onClickAvatar={onClickAvatarHandler}
         />
         {/* START BUTTON */}
@@ -212,6 +223,18 @@ export async function getServerSideProps({ query }) {
   const id = query.id;
   let post = await getPostBySlug(id);
   post = post.error ? await getPost(id) : post;
+
+  if (!post.data) {
+    return {
+      props: {
+        post: null,
+        steps: [],
+        lists: [],
+        metaTags: "",
+        id: null,
+      },
+    };
+  }
   const postId = post.data?.id || id;
   const stepsResponse = await getSteps(postId);
   const listsResp: ListsResponse = await getLists(postId);
