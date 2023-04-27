@@ -31,10 +31,6 @@ const Posts: FC<{
     router.push("/create/" + id);
   };
 
-  const onLikeHandler = async ({ id }) => {
-    await likePost(id);
-  };
-
   const onClickAvatarHandler = ({ uid }) => {
     if (user.uid === uid) {
       router.push("/profile/" + uid);
@@ -79,7 +75,6 @@ const Posts: FC<{
                 onReport={() => onReportHandler(data.id)}
               />
             }
-            onLike={() => onLikeHandler(data)}
             onClickAvatar={({ uid }) => {
               onClickAvatarHandler({ uid });
             }}

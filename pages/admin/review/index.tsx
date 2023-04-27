@@ -32,10 +32,6 @@ const ReviewPage = ({ posts }) => {
     router.push("/create/" + id);
   };
 
-  const onLikeHandler = async ({ id }) => {
-    await likePost(id);
-  };
-
   const onClickAvatarHandler = ({ userId }) => {
     if (user.uid === userId) {
       router.push("/profile/" + userId);
@@ -84,7 +80,6 @@ const ReviewPage = ({ posts }) => {
                   onReport={() => setReport({ postId: data.id, userId: user.uid })}
                 />
               }
-              onLike={() => onLikeHandler(data)}
               onClickAvatar={() => onClickAvatarHandler(data)}
               {...data}
             />
