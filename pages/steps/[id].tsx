@@ -209,7 +209,12 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps; me
           );
         })}
         {/* STEPS DONE */}
-        <StepsDone open={progress.completed} onClickRate={onClickRateHandler} rateValue={userRateValue} />
+        <StepsDone
+          open={progress.completed}
+          onClickRate={user?.uid && onClickRateHandler}
+          rateValue={userRateValue}
+          rateLabel={user?.uid ? undefined : "Login to rate!"}
+        />
       </StyledLayout>
       {/* DELETE DIALOG */}
       <DialogDeletePost open={showDeleteDialog} onClose={() => setShowDeleteDialog(null)} />

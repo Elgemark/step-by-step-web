@@ -23,7 +23,8 @@ const StepsDone: FC<{
   scrollIntoViewTimeout?: number;
   onClickRate?: (value) => void;
   rateValue?: number;
-}> = ({ open = false, scrollIntoViewTimeout = 500, onClickRate, rateValue = 0 }) => {
+  rateLabel?: string;
+}> = ({ open = false, scrollIntoViewTimeout = 500, onClickRate, rateValue = 0, rateLabel = "Feel free to rate!" }) => {
   const ref = useRef<HTMLInputElement>(null);
   const theme = useTheme();
 
@@ -34,15 +35,19 @@ const StepsDone: FC<{
       });
     }, scrollIntoViewTimeout);
   };
+
+  const onClickRateHandler = (value) => {
+    onClickRate && onClickRate(value);
+  };
   return (
     <Collapse ref={ref} in={open} addEndListener={onEndHandler}>
       <StyledInnerContainer theme={theme}>
         <IconSteppoCheckColor className="icon-complete" fontSize="large" />
         <Divider />
         <Collapse in={rateValue < 1}>
-          <Typography variant="subtitle2">{"Feel free to rate!"}</Typography>
+          <Typography variant="subtitle2">{rateLabel}</Typography>
         </Collapse>
-        <Rate value={rateValue} onClick={onClickRate} size="large" />
+        <Rate value={rateValue} onClick={onClickRateHandler} size="large" />
       </StyledInnerContainer>
     </Collapse>
   );
