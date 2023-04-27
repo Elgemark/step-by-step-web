@@ -58,6 +58,16 @@ const StyledStepsProgress = styled(StepsProgress)`
   flex-grow: 1;
 `;
 
+const _StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps; metaTags: string }> = ({
+  id,
+  post,
+  steps,
+  lists,
+  metaTags,
+}) => {
+  const { user, progress, updateProgress, isLoading } = useProgress(id, true);
+  return <></>;
+};
 const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps; metaTags: string }> = ({
   id,
   post,

@@ -31,7 +31,7 @@ export const setProgress = async (userId: string, postId: string, progress: Prog
   const response: ProgressResponse = { id: postId, data: progress, error: null };
   const firebase = getFirestore();
   try {
-    await setDoc(doc(firebase, "users", userId, "progress", postId), progress);
+    await setDoc(doc(firebase, "users", userId, "progress", postId), { ...progress, uid: userId });
   } catch (error) {
     response.error = error;
   }
@@ -42,7 +42,7 @@ export const updateProgress = async (userId: string, postId: string, updates: ob
   const response: ProgressResponse = { id: postId, data: null, error: null };
   const firebase = getFirestore();
   try {
-    await updateDoc(doc(firebase, "users", userId, "progress", postId), updates);
+    await updateDoc(doc(firebase, "users", userId, "progress", postId), { ...updates, uid: userId });
   } catch (error) {
     response.error = error;
   }
@@ -70,6 +70,7 @@ export const getPostIdsByProgress = async (uid, completed = true) => {
 };
 
 export const useProgress = (postId: string, createIfMissing = false) => {
+  const [dataCreated, setDataCreated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { data: signInCheckResult } = useSigninCheck();
   const [data, setData] = useState({ completed: false, stepsCompleted: [], completions: 0 });
@@ -82,7 +83,7 @@ export const useProgress = (postId: string, createIfMissing = false) => {
       const unsubscribe = onSnapshot(progressDoc, (doc) => {
         if (doc.exists()) {
           setData({ ...data, ...doc.data() } as Progress);
-        } else if (createIfMissing) {
+        } else if (createIfMissing && !dataCreated) {
           setProgress(user.uid, postId, {
             completed: false,
             id: postId,
@@ -90,6 +91,8 @@ export const useProgress = (postId: string, createIfMissing = false) => {
             completions: 0,
             stepsCompleted: [],
           });
+          // Force one try
+          setDataCreated(true);
         }
       });
       setIsLoading(false);

@@ -1,4 +1,4 @@
-import { alpha, Card, useTheme } from "@mui/material";
+import { Card, useTheme } from "@mui/material";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
@@ -23,7 +23,6 @@ import _ from "lodash";
 import CardImage from "../CardImage";
 import Rate from "../primitives/Rate";
 import { backgroundBlurMixin } from "../../utils/styleUtils";
-import { post } from "../../utils/firebase/models";
 
 const Root = styled(Card)`
   ${backgroundBlurMixin}
@@ -51,7 +50,6 @@ const StyledCardImage = styled(CardImage)`
 `;
 
 const MediaContainer = ({ children, hrefBasePath, slug, enableLink, title }) => {
-  console.log("title", title);
   if (enableLink) {
     return (
       <a href={`${hrefBasePath}${slug}`} title={title}>

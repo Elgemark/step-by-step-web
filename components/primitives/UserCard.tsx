@@ -227,7 +227,7 @@ export const UserCardBig: FC<{
           onChange={onChangeBiography}
           disabled={!edit}
         />
-        <BorderBox label="Interests (max 3)" className="border-box">
+        <BorderBox label="Interests (max 5)" className="border-box">
           <SelectChips
             items={categoryValues}
             selectedItems={selectedCategories}

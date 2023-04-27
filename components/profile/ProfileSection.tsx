@@ -103,7 +103,7 @@ const ProfileSctionEditable: FC<{
     }
     console.log("newUserCategories", newUserCategories);
     // Max 3!
-    if (newUserCategories.length <= 3) {
+    if (newUserCategories.length <= 5) {
       updateUser("categories", newUserCategories);
     }
   };
