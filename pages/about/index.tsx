@@ -27,9 +27,9 @@ const AboutPage = () => {
         <LogoResponsive></LogoResponsive>
         {/* <Typography variant="h5">Why Steppo?</Typography> */}
         <Typography>
-          The inspiration for this app struck when my daughter had a meltdown over a paper box folding guide she
-          stumbled upon on Instagram. That's when I realized there had to be a better way to share step-by-step
-          instructions, and Steppo was born!
+          The inspiration for this app struck me when my daughter had a meltdown over a paper box folding guide she
+          stumbled upon on Instagram. That's when I realized there had to be a better way to make and share step-by-step
+          instructions, so I created Steppo!
         </Typography>
       </Article>
     </Layout>

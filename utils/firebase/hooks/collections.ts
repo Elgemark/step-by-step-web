@@ -7,8 +7,6 @@ import {
   deleteDoc,
   onSnapshot,
   writeBatch,
-  query,
-  orderBy,
   SetOptions,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";

@@ -147,6 +147,7 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
           blob: value.blob,
           imageSize: "1024x1024",
           locationPath: ["users", userId, "post", id, `step_${value.id}`],
+          id: value.id,
         });
         // Remove blob...
         delete value.blob;
@@ -158,12 +159,12 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
     responseImageUploads.forEach((imageUpload) => {
       _.set(saveData, `steps.${imageUpload.id}.media.imageURI`, imageUpload.url);
     });
-
     // Save steps...
     const steps: Steps = [];
     _.forIn(saveData.steps, (value) => {
       steps.push(value);
     });
+
     await setSteps(id, steps);
     // Reset all saveData
     resetSaveData();
@@ -222,7 +223,7 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
     <>
       <SteppoHead
         title="Create"
-        titleTags="DIY, Create, Step by step, Guide"
+        titleTags="DIY, Create, Step by step, uide"
         description={"Create you own step by step instruction guide"}
       />
       {isLoadingUser ? (
