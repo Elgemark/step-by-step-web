@@ -4,7 +4,6 @@ import MUIWrapper from "../../../components/wrappers/MUIWrapper";
 import { useEffect, useState } from "react";
 import { useCollection } from "../../../utils/collectionUtils";
 import { useScrolledToBottom } from "../../../utils/scrollUtils";
-import Head from "next/head";
 import Layout from "../../../components/Layout";
 import Posts from "../../../components/posts/Posts";
 import { Posts as PostsType } from "../../../utils/firebase/type";
@@ -126,7 +125,6 @@ export async function getServerSideProps({ query }) {
   const uid = query.id;
   const followsResp = await getFollows(uid);
   const follows = followsResp.data.map((doc) => doc.id);
-
   return { props: { follows } };
 }
 
