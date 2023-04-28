@@ -13,7 +13,6 @@ import { CircularProgress, Stack } from "@mui/material";
 import { FC } from "react";
 import Modal from "@mui/material/Modal";
 import ImageEditor from "../ImageEditor";
-import settings from "../../config";
 import Dialog from "./Dialog";
 import * as markerjs2 from "markerjs2";
 import AnnotationEditor from "./AnnotationEditor";
@@ -22,13 +21,15 @@ import Annotation from "./Annotation";
 const StyledCardMediaContainer = styled.div`
   position: relative !important;
   user-select: initial;
-  width: 100%;
-  min-height: 320px;
   overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
 
+  .card-media {
+    min-height: 100px;
+    border: 0;
+  }
   &:hover img,
   &:hover .annotate-overlay {
     opacity: ${({ hasImage }) => (hasImage ? 0.2 : 1)};
@@ -45,11 +46,6 @@ const StyledCardMediaContainer = styled.div`
   .__markerjs2_ {
     position: fixed;
   }
-`;
-
-const StyledCardMedia = styled(CardMedia)`
-  position: absolute;
-  object-fit: cover;
 `;
 
 interface Media {
@@ -130,18 +126,20 @@ const ImageEditable: FC<{
   };
 
   return (
-    <StyledCardMediaContainer onPaste={onPasteHandler} hasImage={hasImage} {...props} height={settings.image.height}>
+    <StyledCardMediaContainer onPaste={onPasteHandler} hasImage={hasImage} {...props}>
       {isLoading ? (
         <CircularProgress />
       ) : (
-        <StyledCardMedia
+        <CardMedia
           className="card-media"
           component="img"
+          width="100%"
+          height="auto"
           image={previewImageURI || selectedImageURI || media?.imageURI}
           ref={imgRef}
         />
       )}
-      <Annotation state={annotation} />
+      <Annotation state={annotation} delay={500} />
 
       <Stack direction="row" className="actions-overlay" spacing={1}>
         <TextField
