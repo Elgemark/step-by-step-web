@@ -23,6 +23,7 @@ const Annotation: FC<{ state: mjslive.MarkerAreaState; delay?: number }> = ({ st
 
   useEffect(() => {
     updateAnnotateLive();
+    // Sometimes the annotaion is not showing up until retriggering by delay
     setTimeout(() => {
       updateAnnotateLive(state);
     }, delay);
