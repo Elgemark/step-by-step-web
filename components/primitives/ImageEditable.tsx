@@ -55,10 +55,19 @@ interface Media {
 const ImageEditable: FC<{
   media: Media;
   annotation?: markerjs2.MarkerAreaState;
+  enableAnnotation?: boolean;
   onBlobChange: Function;
   onAnnotationChange?: Function;
   onDelete: Function;
-}> = ({ media = { imageURI: "" }, annotation, onBlobChange, onDelete, onAnnotationChange, ...props }) => {
+}> = ({
+  media = { imageURI: "" },
+  annotation,
+  onBlobChange,
+  onDelete,
+  onAnnotationChange,
+  enableAnnotation = false,
+  ...props
+}) => {
   const [showAnnotationEditor, setShowAnnotationEditor] = useState(false);
   const [showDeleteMediaDialog, setShowDeleteMediaDialog] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -169,7 +178,7 @@ const ImageEditable: FC<{
           </IconButton>
         ) : null}
         {/* ANNOTATE */}
-        {previewImageURI || selectedImageURI || media?.imageURI ? (
+        {enableAnnotation && (previewImageURI || selectedImageURI || media?.imageURI) ? (
           <IconButton className="button-annotate-image" aria-label="annotate" onClick={onClickAnnotateHandler}>
             <BrushIcon />
           </IconButton>

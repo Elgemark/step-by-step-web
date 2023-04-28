@@ -82,6 +82,7 @@ const StepEditable: FC<{
       </ButtonAddMediaContainer>
       <Collapse in={openMediaEdit}>
         <ImageEditable
+          enableAnnotation
           onBlobChange={(blob) => {
             const updatedData = setValue("blob", blob);
             onChange(updatedData);
