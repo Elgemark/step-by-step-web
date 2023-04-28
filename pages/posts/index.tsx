@@ -4,7 +4,6 @@ import Collection from "../../classes/Collection";
 import FirebaseWrapper from "../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../components/wrappers/MUIWrapper";
 import { getCategories } from "../../utils/firebase/api";
-import Head from "next/head";
 import Layout from "../../components/Layout";
 import FilterBar from "../../components/FilterBar";
 import Posts from "../../components/posts/Posts";
@@ -16,6 +15,16 @@ import { useTheme } from "@emotion/react";
 import LogoResponsive from "../../components/primitives/LogoResponsive";
 import { backgroundBlurMixin } from "../../utils/styleUtils";
 import SteppoHead from "../../components/SteppoHead";
+import { useCollection } from "../../utils/collectionUtils";
+import { useEffect, useState } from "react";
+import { useScrolledToBottom } from "../../utils/scrollUtils";
+
+const LIMIT = 5;
+
+type FetchResponse = {
+  hasMorePosts: boolean;
+  posts: PostsType;
+};
 
 const HeadingRoot = styled(Paper)`
   ${backgroundBlurMixin}
@@ -39,34 +48,6 @@ const HeadingRoot = styled(Paper)`
     margin-bottom: 32px;
   }
 `;
-
-const collection = new Collection();
-let lastDoc;
-
-export async function getServerSideProps({ query }) {
-  const { search, category, rated } = query;
-  let response: PostsResponse = { data: [], error: null };
-
-  const categories = await getCategories();
-
-  if (search || category) {
-    // Search...
-    response = await getPostsBySearch(search, category);
-  } else {
-    response = await getPostsForAnonymousUser({ rated });
-  }
-
-  lastDoc = response.lastDoc;
-
-  const items = collection
-    .union(response.data, [category, search], () => {
-      lastDoc = null;
-    })
-    // Filter by rated
-    .filter((item) => (rated && item.ratesValue ? item.ratesValue >= rated : true));
-
-  return { props: { posts: items, categories: categories.data } };
-}
 
 const Heading = () => {
   const theme = useTheme();
@@ -96,7 +77,48 @@ const Heading = () => {
     </HeadingRoot>
   );
 };
-export default ({ posts }) => {
+export default () => {
+  const isBottom = useScrolledToBottom(100);
+  const [isFetching, setIsFetching] = useState(false);
+  const { collection: posts, addItems: addPosts } = useCollection();
+  const [lastDocByAnonymousUser, setLastDocByAnonymousUser] = useState();
+  const [hasMorePostsByAnonymousUser, setHasMorePostsByAnonymousUser] = useState(true);
+
+  const fetchPostForAnonymousUser = async () => {
+    if (!hasMorePostsByAnonymousUser) {
+      return { hasMorePosts: false, posts: [] };
+    }
+    //
+    const response = await getPostsForAnonymousUser({}, LIMIT, lastDocByAnonymousUser);
+    addPosts(response.data);
+    setLastDocByAnonymousUser(response.lastDoc);
+    const hasMorePosts = response.data.length > 0;
+    setHasMorePostsByAnonymousUser(hasMorePosts);
+    console.log("fetch by anonymous user", hasMorePosts);
+    return { hasMorePosts, posts: response.data };
+  };
+
+  const fetchPosts = async () => {
+    console.log("fetchPosts");
+    setIsFetching(true);
+    let resp: FetchResponse = { hasMorePosts: false, posts: [] };
+
+    if (!resp.posts.length) {
+      resp = await fetchPostForAnonymousUser();
+    }
+    setIsFetching(false);
+  };
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  useEffect(() => {
+    if (isBottom) {
+      !isFetching && fetchPosts();
+    }
+  }, [isBottom]);
+
   return (
     <MUIWrapper>
       <FirebaseWrapper>
@@ -108,7 +130,7 @@ export default ({ posts }) => {
         />
         <Layout>
           <LogoResponsive />
-          <FilterBar></FilterBar>
+          <FilterBar enableRate={false} />
           <Heading></Heading>
           <Posts enableLink={true} posts={posts as PostsType} />
         </Layout>

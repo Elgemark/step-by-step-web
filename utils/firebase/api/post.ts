@@ -27,6 +27,7 @@ import { getPostIdsByProgress } from "./progress";
 interface SearchFilter {
   category?: string | string[];
   rated?: number | string | string[];
+  lang?: string;
 }
 
 export const setPost = async (id, post: Post) => {
@@ -244,11 +245,15 @@ export const useGetPostsByQuery = () => {
 
 // ::: Custom query functions...
 
-export const getPostsForAnonymousUser = async (filter: SearchFilter = {}, limit = 10, lastDoc = null) => {
+export const getPostsForAnonymousUser = async (filter: SearchFilter = {}, limit = 4, lastDoc = null) => {
   // Build query...
   let postsQuery: Array<any> = [];
   // Get only public posts
   postsQuery.push(where("visibility", "==", "public"));
+  // test
+  if (filter.lang) {
+    postsQuery.push(where("lang", "==", filter.lang));
+  }
   // Order by timeStamp
   postsQuery.push(orderBy("timeStamp", "desc"));
   // Indexed by visibility &  timeStamp!!!

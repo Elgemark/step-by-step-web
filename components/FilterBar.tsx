@@ -7,12 +7,16 @@ import BorderBox from "./primitives/BorderBox";
 import { getBasePath, getQuery } from "../utils/queryUtils";
 import styled from "styled-components";
 import { useRouter } from "next/router";
+import { FC } from "react";
 
 const StyledOutlinedBox = styled(BorderBox)`
   padding: 0 4px;
 `;
 
-const FilterBar = ({}) => {
+const FilterBar: FC<{ enableRate?: boolean; enableCategory?: boolean }> = ({
+  enableRate = true,
+  enableCategory = true,
+}) => {
   const { categories, isLoading: isLoadingCategories } = useCategories();
   const router = useRouter();
   const isDesktop = useMediaQuery("(min-width:600px)");
@@ -37,15 +41,19 @@ const FilterBar = ({}) => {
   return (
     <FloatingTopBar>
       <Stack spacing={2} direction={isDesktop ? "row" : "column"}>
-        <SelectDropDown
-          onChange={onChangeCategoryHandler}
-          label={isLoadingCategories ? "loading..." : "Category"}
-          value={router.query.category as string}
-          options={allCategories}
-        />
-        <StyledOutlinedBox label="Rated">
-          <Rate size="small" onClick={onClickRateHandler} value={Number(router.query.rated) || 0} />
-        </StyledOutlinedBox>
+        {enableCategory ? (
+          <SelectDropDown
+            onChange={onChangeCategoryHandler}
+            label={isLoadingCategories ? "loading..." : "Category"}
+            value={router.query.category as string}
+            options={allCategories}
+          />
+        ) : null}
+        {enableRate ? (
+          <StyledOutlinedBox label="Rated">
+            <Rate size="small" onClick={onClickRateHandler} value={Number(router.query.rated) || 0} />
+          </StyledOutlinedBox>
+        ) : null}
       </Stack>
     </FloatingTopBar>
   );
