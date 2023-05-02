@@ -57,7 +57,7 @@ const ImageEditor: FC<{
   settings?: CropSetting;
   onDone: Function;
   onClose: React.MouseEventHandler<HTMLElement>;
-}> = ({ src, settings = { crop: { x: 0, y: 0 }, zoom: 1 }, onDone, onClose }) => {
+}> = ({ src, settings = appSettings.crop, onDone, onClose }) => {
   const [croppedArea, setCroppedArea] = useState(null);
   const [crop, setCrop] = useState<Point>(settings.crop);
   const [zoom, setZoom] = useState<number>(settings.zoom);
@@ -79,12 +79,10 @@ const ImageEditor: FC<{
     <Root>
       <div className="crop-container">
         <Cropper
+          {...settings}
           image={src}
           crop={crop}
           zoom={zoom}
-          minZoom={settings.minZoom}
-          restrictPosition={settings.restrictPosition}
-          aspect={settings.aspect || appSettings.image.aspect}
           onCropChange={setCrop}
           onCropComplete={onCropComplete}
           onZoomChange={setZoom}
@@ -93,7 +91,7 @@ const ImageEditor: FC<{
       <div className="controls">
         <Slider
           value={zoom}
-          min={1}
+          min={settings.minZoom}
           max={3}
           step={0.1}
           aria-labelledby="Zoom"

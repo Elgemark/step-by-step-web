@@ -17,6 +17,7 @@ import Dialog from "./Dialog";
 import * as markerjs2 from "markerjs2";
 import AnnotationEditor from "./AnnotationEditor";
 import Annotation from "./Annotation";
+import appSettings from "../../config";
 
 const StyledCardMediaContainer = styled.div`
   position: relative !important;
@@ -79,12 +80,7 @@ const ImageEditable: FC<{
   const imgRef = useRef<HTMLImageElement>(null);
   // Prevents typing in paste textField
   const [emptyrStr, setEmptyStr] = useState("");
-  const [cropSettings, setCropSettings] = useState<CropSetting>({
-    crop: { x: 0, y: 0 },
-    zoom: 1,
-    minZoom: 0.4,
-    restrictPosition: false,
-  });
+  const [cropSettings, setCropSettings] = useState<CropSetting>(appSettings.crop);
 
   const hasImage = previewImageURI || selectedImageURI || media?.imageURI;
 
