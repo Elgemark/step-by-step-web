@@ -5,8 +5,6 @@ import Slider from "@mui/material/Slider";
 import Cropper from "react-easy-crop";
 import { Point, Area } from "react-easy-crop/types";
 import { generateBlob } from "../utils/imageUtils";
-import IconButton from "@mui/material/IconButton";
-import CancelIcon from "@mui/icons-material/Cancel";
 import appSettings from "../config";
 
 const Root = styled(Box)`
@@ -49,6 +47,8 @@ const Root = styled(Box)`
 export interface CropSetting {
   crop: Point;
   zoom: number;
+  restrictPosition?: boolean;
+  minZoom?: number;
   aspect?: number;
 }
 
@@ -82,6 +82,8 @@ const ImageEditor: FC<{
           image={src}
           crop={crop}
           zoom={zoom}
+          minZoom={settings.minZoom}
+          restrictPosition={settings.restrictPosition}
           aspect={settings.aspect || appSettings.image.aspect}
           onCropChange={setCrop}
           onCropComplete={onCropComplete}

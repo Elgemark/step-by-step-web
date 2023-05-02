@@ -18,7 +18,7 @@ const Root = styled.div`
   }
 `;
 
-const Annotation: FC<{ state: mjslive.MarkerAreaState; delay?: number }> = ({ state, delay = 100 }) => {
+const Annotation: FC<{ state: mjslive.MarkerAreaState; delay?: number }> = ({ state, delay = 200 }) => {
   const { ref: imgOverlayRef, update: updateAnnotateLive } = useAnnotateLive();
 
   useEffect(() => {

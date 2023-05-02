@@ -12,7 +12,7 @@ import OpenDialog from "./OpenDialog";
 import { CircularProgress, Stack } from "@mui/material";
 import { FC } from "react";
 import Modal from "@mui/material/Modal";
-import ImageEditor from "../ImageEditor";
+import ImageEditor, { CropSetting } from "../ImageEditor";
 import Dialog from "./Dialog";
 import * as markerjs2 from "markerjs2";
 import AnnotationEditor from "./AnnotationEditor";
@@ -25,6 +25,7 @@ const StyledCardMediaContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: ${({ hasImage }) => (hasImage ? "black" : "transparent")};
 
   .card-media {
     min-height: 100px;
@@ -78,7 +79,12 @@ const ImageEditable: FC<{
   const imgRef = useRef<HTMLImageElement>(null);
   // Prevents typing in paste textField
   const [emptyrStr, setEmptyStr] = useState("");
-  const [cropSettings, setCropSettings] = useState({ crop: { x: 0, y: 0 }, zoom: 1 });
+  const [cropSettings, setCropSettings] = useState<CropSetting>({
+    crop: { x: 0, y: 0 },
+    zoom: 1,
+    minZoom: 0.4,
+    restrictPosition: false,
+  });
 
   const hasImage = previewImageURI || selectedImageURI || media?.imageURI;
 
@@ -166,11 +172,11 @@ const ImageEditable: FC<{
           </IconButton>
         </OpenDialog>
         {/* CROP */}
-        {selectedImageURI && (
+        {previewImageURI ? (
           <IconButton className="button-edit-image" aria-label="edit" onClick={onClickEditHandler}>
             <CropIcon />
           </IconButton>
-        )}
+        ) : null}
         {/* DELETE */}
         {previewImageURI || selectedImageURI || media?.imageURI ? (
           <IconButton aria-label="delete" onClick={() => setShowDeleteMediaDialog(true)}>
