@@ -6,15 +6,17 @@ import MUIWrapper from "../../components/wrappers/MUIWrapper";
 import { Typography, useTheme } from "@mui/material";
 import Article from "../../components/primitives/Article";
 import { getJSON } from "../../utils/ssrUtils";
+import { getText } from "../../utils/stringUtils";
 
 const AboutPage = ({ texts }) => {
   const theme = useTheme();
   return (
     <Layout>
       <SteppoHead description="About Steppo" title="About Steppo" image="/images/steppo_box_origami.png"></SteppoHead>
+
       <Article image="/images/steppo_box_origami.png" avatar={"/images/steppo_avatar.png"}>
         <LogoResponsive></LogoResponsive>
-        <Typography>{texts.body["en-global"]}</Typography>
+        <Typography>{getText(texts, "body")}</Typography>
       </Article>
     </Layout>
   );

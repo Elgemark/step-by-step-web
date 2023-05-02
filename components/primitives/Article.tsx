@@ -25,7 +25,7 @@ const Root = styled(Paper)`
 const BackgroundImage = styled.div`
   margin-top: -10px;
   width: 100%;
-  height: calc(100vw * 0.45);
+  height: ${({ src }) => (src ? "calc(100vw * 0.45)" : 0)};
   max-height: 400px;
   background-color: black;
   background-image: ${({ src }) => "url(" + src + ")"};
@@ -40,10 +40,10 @@ const Article: FC<{
   avatar?: string;
   children: React.ReactNode;
   backgroundContent?: React.ReactNode;
-}> = ({ image, avatar, children, backgroundContent }) => {
+}> = ({ image, avatar, children, backgroundContent, ...rest }) => {
   const theme = useTheme();
   return (
-    <Root theme={theme}>
+    <Root theme={theme} {...rest}>
       <BackgroundImage src={image}>{backgroundContent}</BackgroundImage>
       <Avatar className="user-avatar" src={avatar} sx={{ width: 120, height: 120 }} />
       <article className="article-content">{children}</article>

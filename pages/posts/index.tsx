@@ -1,23 +1,22 @@
-import { PostsResponse } from "../../utils/firebase/interface";
-import { getPostsBySearch, getPostsForAnonymousUser } from "../../utils/firebase/api/post";
-import Collection from "../../classes/Collection";
+import { getPostsForAnonymousUser } from "../../utils/firebase/api/post";
 import FirebaseWrapper from "../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../components/wrappers/MUIWrapper";
-import { getCategories } from "../../utils/firebase/api";
 import Layout from "../../components/Layout";
 import FilterBar from "../../components/FilterBar";
 import Posts from "../../components/posts/Posts";
 import { Posts as PostsType } from "../../utils/firebase/type";
-import { Paper, Typography } from "@mui/material";
+import { Button, Paper, Typography, useTheme } from "@mui/material";
 import styled from "styled-components";
-import Accordion from "../../components/primitives/Accordion";
-import { useTheme } from "@emotion/react";
 import LogoResponsive from "../../components/primitives/LogoResponsive";
-import { backgroundBlurMixin } from "../../utils/styleUtils";
 import SteppoHead from "../../components/SteppoHead";
 import { useCollection } from "../../utils/collectionUtils";
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useScrolledToBottom } from "../../utils/scrollUtils";
+import Article from "../../components/primitives/Article";
+import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import Link from "next/link";
+import { getJSON } from "../../utils/ssrUtils";
+import { getText } from "../../utils/stringUtils";
 
 const LIMIT = 5;
 
@@ -26,58 +25,47 @@ type FetchResponse = {
   posts: PostsType;
 };
 
-const HeadingRoot = styled(Paper)`
-  ${backgroundBlurMixin}
-  padding: ${({ theme }) => theme.spacing(1)};
+const StyledArticle = styled(Article)`
   margin-top: ${({ theme }) => theme.spacing(4)};
   margin-bottom: ${({ theme }) => theme.spacing(2)};
 
-  @media (min-width: 600px) {
-    margin-top: ${({ theme }) => theme.spacing(12)};
-  }
-
-  .header-container {
+  .article-content {
     width: 100%;
-    position: relative;
-  }
-  .header {
-    width: 90%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
   }
 
-  .ingresse {
-    margin-bottom: 32px;
+  .link {
+    flex-grow: 0;
+    align-self: flex-end;
+    margin: ${({ theme }) => `${theme.spacing(2)} 0`};
   }
 `;
 
-const Heading = () => {
+const Header: FC<{ body: string }> = ({ body }) => {
   const theme = useTheme();
-
   return (
-    <HeadingRoot theme={theme}>
-      <Accordion
-        summary={
-          <div className="header-container">
-            <Typography className="header" variant="h6">
-              Welcome to Steppo! The step-by-step instructions app where you can easily create and share your DIY
-              projects and tutorials!
-            </Typography>
-          </div>
-        }
-        elevation={0}
-      >
-        {
-          <Typography variant="body2">
-            Creating Guides: Start by signing up and creating a profile. Click on "Create Guide" and begin adding your
-            steps. You can include text and images to make it easy for others to follow. Add a list of prerequisites for
-            completing the steps. This will help other users know what they need before starting the project. Once your
-            guide is complete, hit "Publish" and it will be available for other users to view and use.
-          </Typography>
-        }
-      </Accordion>
-    </HeadingRoot>
+    <StyledArticle avatar={"/images/steppo_avatar.png"} theme={theme}>
+      <LogoResponsive></LogoResponsive>
+      <Typography className="header">{body}</Typography>
+      <Link className="link" href="/about">
+        <Button variant="outlined" startIcon={<ArrowRightIcon />}>
+          Read more
+        </Button>
+      </Link>
+    </StyledArticle>
   );
 };
-export default () => {
+
+export async function getStaticProps() {
+  const jsonData = await getJSON("hosting/public/texts/pages/home.json");
+  return {
+    props: { texts: jsonData },
+  };
+}
+
+export default ({ texts }) => {
   const isBottom = useScrolledToBottom(100);
   const [isFetching, setIsFetching] = useState(false);
   const { collection: posts, addItems: addPosts } = useCollection();
@@ -129,9 +117,8 @@ export default () => {
           image="/images/steppo_landing_page.jpg"
         />
         <Layout>
-          <LogoResponsive />
+          <Header body={getText(texts, "body")} />
           <FilterBar enableRate={false} />
-          <Heading></Heading>
           <Posts enableLink={true} posts={posts as PostsType} />
         </Layout>
       </FirebaseWrapper>
