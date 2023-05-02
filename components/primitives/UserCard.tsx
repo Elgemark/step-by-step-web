@@ -231,7 +231,7 @@ export const UserCardBig: FC<{
           <SelectChips
             items={categoryValues}
             selectedItems={selectedCategories}
-            onSelect={(category) => onCategorySelect({ category })}
+            onSelect={(category) => (edit ? onCategorySelect({ category }) : false)}
           />
         </BorderBox>
         {editable ? (
