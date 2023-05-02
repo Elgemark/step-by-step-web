@@ -30,3 +30,7 @@ export const shortUUID = () => {
   secondPart = ("000" + secondPart).slice(-3);
   return firstPart + secondPart;
 };
+
+export const useGetText = (json: object, path: string, language = "en-global") => {
+  return _.get(json, path + "." + language);
+};
