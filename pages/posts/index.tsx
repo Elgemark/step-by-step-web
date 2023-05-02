@@ -16,7 +16,7 @@ import Article from "../../components/primitives/Article";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import Link from "next/link";
 import { getJSON } from "../../utils/ssrUtils";
-import { getText } from "../../utils/stringUtils";
+import { getText, useGetText } from "../../utils/stringUtils";
 
 const LIMIT = 5;
 
@@ -43,15 +43,17 @@ const StyledArticle = styled(Article)`
   }
 `;
 
-const Header: FC<{ body: string }> = ({ body }) => {
+const Header: FC<{ texts: object; readMoreLabel: string }> = ({ texts, readMoreLabel }) => {
   const theme = useTheme();
+  const textReadMore = useGetText(texts, "read-more");
+  const textBody = useGetText(texts, "body");
   return (
     <StyledArticle avatar={"/images/steppo_avatar.png"} theme={theme}>
       <LogoResponsive></LogoResponsive>
-      <Typography className="header">{body}</Typography>
+      <Typography className="header">{textBody}</Typography>
       <Link className="link" href="/about">
         <Button variant="outlined" startIcon={<ArrowRightIcon />}>
-          Read more
+          {textReadMore}
         </Button>
       </Link>
     </StyledArticle>
@@ -117,7 +119,7 @@ export default ({ texts }) => {
           image="/images/steppo_landing_page.jpg"
         />
         <Layout>
-          <Header body={getText(texts, "body")} />
+          <Header texts={texts} />
           <FilterBar enableRate={false} />
           <Posts enableLink={true} posts={posts as PostsType} />
         </Layout>
