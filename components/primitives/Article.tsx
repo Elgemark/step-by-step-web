@@ -25,13 +25,20 @@ const Root = styled(Paper)`
 const BackgroundImage = styled.div`
   margin-top: -10px;
   width: 100%;
-  min-height: ${({ src }) => (src ? "400px" : "200px")};
+
+  min-height: ${({ src }) => (src ? "200px" : "100px")};
   background-color: black;
   background-image: ${({ src }) => "url(" + src + ")"};
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
   border-radius: 10px 10px 10px 10px;
+  @media (min-width: 480px) {
+    min-height: ${({ src }) => (src ? "300px" : "150px")};
+  }
+  @media (min-width: 600px) {
+    min-height: ${({ src }) => (src ? "400px" : "200px")};
+  }
 `;
 
 const Article: FC<{
