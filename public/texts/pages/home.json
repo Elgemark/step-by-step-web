@@ -3,8 +3,16 @@
     "en-global": "Welcome to Steppo! The step-by-step instructions app where you can easily create and share your DIY projects and tutorials!",
     "sv": "Välkommen till Steppo! Steppo är appen där du hittar eller skapar dina egnas steg för steg instruktioner."
   },
-  "read-more": {
+  "readMore": {
     "en-global": "Read more",
     "sv": "Läs mer"
+  },
+  "termsOfService": {
+    "en-global": "Terms of servie",
+    "sv": "Användarvillkor"
+  },
+  "privacyPolicy": {
+    "en-global": "Privacy police",
+    "sv": "Integritetspolicy"
   }
 }

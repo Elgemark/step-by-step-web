@@ -43,7 +43,6 @@ const Posts: FC<{
     if (user?.uid) {
       setReport({ postId, userId: user.uid });
     } else {
-      debugger;
       addMessage({ id: "alert", message: "Please sign in to use the report function!" });
     }
   };

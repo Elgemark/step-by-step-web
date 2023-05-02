@@ -1,7 +1,7 @@
-import { getAuth } from "firebase/auth";
 import _ from "lodash";
 import { useEffect, useState } from "react";
 import { useUser } from "./firebase/api/user";
+import { useGetLanguage } from "./localizationUtils";
 
 export const toSanitizedArray = (str: string, tags = [], maxLength = 5) => {
   if (!str) {
@@ -32,17 +32,4 @@ export const shortUUID = () => {
   firstPart = ("000" + firstPart).slice(-3);
   secondPart = ("000" + secondPart).slice(-3);
   return firstPart + secondPart;
-};
-
-export const getText = (json: object, path: string, language: string) => {
-  return _.get(json, path + "." + language) || _.get(json, path + "." + "en-global");
-};
-
-export const useGetText = (texts: object, path: string) => {
-  const { data: user } = useUser();
-  const [text, setText] = useState("");
-  useEffect(() => {
-    setText(getText(texts, path, user.language || window?.navigator?.language));
-  }, [user.language]);
-  return text;
 };

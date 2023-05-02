@@ -1,6 +1,5 @@
 import { getFollows, getBookmarkedPosts, useUser as fbUseUser } from "../../utils/firebase/api";
 import { useTheme } from "@mui/material";
-import Head from "next/head";
 import Layout from "../../components/Layout";
 import { useRouter } from "next/router";
 import Posts from "../../components/posts/Posts";

@@ -5,7 +5,7 @@ import Layout from "../../components/Layout";
 import FilterBar from "../../components/FilterBar";
 import Posts from "../../components/posts/Posts";
 import { Posts as PostsType } from "../../utils/firebase/type";
-import { Button, Paper, Typography, useTheme } from "@mui/material";
+import { Button, ButtonGroup, Paper, Typography, useTheme } from "@mui/material";
 import styled from "styled-components";
 import LogoResponsive from "../../components/primitives/LogoResponsive";
 import SteppoHead from "../../components/SteppoHead";
@@ -16,7 +16,7 @@ import Article from "../../components/primitives/Article";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import Link from "next/link";
 import { getJSON } from "../../utils/ssrUtils";
-import { getText, useGetText } from "../../utils/stringUtils";
+import { getText, useGetText, useGetTexts } from "../../utils/localizationUtils";
 
 const LIMIT = 5;
 
@@ -33,29 +33,27 @@ const StyledArticle = styled(Article)`
     width: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
   }
 
-  .link {
-    flex-grow: 0;
-    align-self: flex-end;
+  .MuiButtonGroup-root {
+    align-self: center;
     margin: ${({ theme }) => `${theme.spacing(2)} 0`};
   }
 `;
 
-const Header: FC<{ texts: object; readMoreLabel: string }> = ({ texts, readMoreLabel }) => {
+const Header: FC<{ texts: object }> = ({ texts }) => {
   const theme = useTheme();
-  const textReadMore = useGetText(texts, "read-more");
-  const textBody = useGetText(texts, "body");
+  const { texts: locTexts } = useGetTexts(texts);
+
   return (
     <StyledArticle avatar={"/images/steppo_avatar.png"} theme={theme}>
       <LogoResponsive></LogoResponsive>
-      <Typography className="header">{textBody}</Typography>
-      <Link className="link" href="/about">
-        <Button variant="outlined" startIcon={<ArrowRightIcon />}>
-          {textReadMore}
-        </Button>
-      </Link>
+      <Typography className="header">{locTexts.body}</Typography>
+      <ButtonGroup variant="text">
+        <Button href="/about">{locTexts.readMore}</Button>
+        <Button href="/about/terms-of-service">{locTexts.termsOfService}</Button>
+        <Button href="/about/privacy-policy">{locTexts.privacyPolicy}</Button>
+      </ButtonGroup>
     </StyledArticle>
   );
 };

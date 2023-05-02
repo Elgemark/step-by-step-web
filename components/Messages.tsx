@@ -48,7 +48,6 @@ const Messages = () => {
         <Alert
           onClose={() => {
             removeMessage("alert");
-            messages.alert?.onRemove();
           }}
           severity="success"
           sx={{ width: "100%" }}
