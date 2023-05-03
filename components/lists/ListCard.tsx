@@ -5,6 +5,7 @@ import { ListItems, Lists } from "../../utils/firebase/api/list";
 import { backgroundBlurMixin } from "../../utils/styleUtils";
 import { useCollection } from "../../utils/firebase/hooks/collections";
 import { Progress } from "../../utils/firebase/api/progress";
+import _ from "lodash";
 import List from "./List";
 
 const Root = styled(Card)`

@@ -32,10 +32,11 @@ const List: FC<{
   title: string;
   items: Array<ListItem>;
   pinnable?: boolean;
-}> = ({ title, items = [], pinnable = true, ...rest }) => {
+  collapsed?: boolean;
+}> = ({ title, items = [], pinnable = true, collapsed = true, ...rest }) => {
   const theme = useTheme();
   const [pin, setPin] = useState(false);
-  const [collapse, setCollapse] = useState(false);
+  const [collapse, setCollapse] = useState(collapsed);
   const [doc, setDoc] = useState(null);
 
   const foundItemWithBadge = items.find((item) => item.badgeContent);
@@ -77,7 +78,7 @@ const List: FC<{
               <PushPinIcon sx={{ color: foundItemWithBadge ? "#FF5733" : "white" }} fontSize="small" />
             </IconButton>
           ) : (
-            <ListIcon />
+            <ListIcon sx={{ color: foundItemWithBadge ? "#FF5733" : "white" }} />
           )}
 
           <Typography variant="button">{title}</Typography>
