@@ -13,10 +13,8 @@ import { useCollection } from "../../utils/collectionUtils";
 import { FC, useEffect, useState } from "react";
 import { useScrolledToBottom } from "../../utils/scrollUtils";
 import Article from "../../components/primitives/Article";
-import ArrowRightIcon from "@mui/icons-material/ArrowRight";
-import Link from "next/link";
 import { getJSON } from "../../utils/ssrUtils";
-import { getText, useGetText, useGetTexts } from "../../utils/localizationUtils";
+import { useGetTexts } from "../../utils/localizationUtils";
 
 const LIMIT = 5;
 
@@ -51,8 +49,6 @@ const Header: FC<{ texts: object }> = ({ texts }) => {
       <Typography className="header">{locTexts.body}</Typography>
       <ButtonGroup variant="text">
         <Button href="/about">{locTexts.readMore}</Button>
-        <Button href="/about/terms-of-service">{locTexts.termsOfService}</Button>
-        <Button href="/about/privacy-policy">{locTexts.privacyPolicy}</Button>
       </ButtonGroup>
     </StyledArticle>
   );

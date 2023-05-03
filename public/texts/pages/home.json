@@ -6,13 +6,5 @@
   "readMore": {
     "en-global": "Read more",
     "sv": "Läs mer"
-  },
-  "termsOfService": {
-    "en-global": "Terms of servie",
-    "sv": "Användarvillkor"
-  },
-  "privacyPolicy": {
-    "en-global": "Privacy police",
-    "sv": "Integritetspolicy"
   }
 }
