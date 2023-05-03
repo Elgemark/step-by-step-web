@@ -8,12 +8,16 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { ListItem } from "../../utils/firebase/api/list";
 import ListTableItem from "../primitives/ListTableItem";
 import ListTable from "../primitives/ListTable";
+import ListIcon from "@mui/icons-material/List";
 
 const StyledAccordion = styled(Accordion)`
   position: relative;
   top: ${({ pin }) => (pin ? "0" : "auto")};
   left: ${({ pin }) => (pin ? "0" : "auto")};
   background-color: ${({ theme, pin }) => (pin ? alpha(theme.palette.background.paper, 0.35) : "transparent")};
+  .MuiAccordionSummary-content .MuiSvgIcon-root {
+    margin-right: ${({ theme }) => theme.spacing(1)};
+  }
   .button-pin {
     transform: rotate(-45deg);
     margin: 3px 5px 0 -5px;
@@ -72,9 +76,11 @@ const List: FC<{
             >
               <PushPinIcon sx={{ color: foundItemWithBadge ? "#FF5733" : "white" }} fontSize="small" />
             </IconButton>
-          ) : null}
+          ) : (
+            <ListIcon />
+          )}
 
-          <Typography variant="h6">{title}</Typography>
+          <Typography variant="button">{title}</Typography>
         </AccordionSummary>
 
         <AccordionDetails>
