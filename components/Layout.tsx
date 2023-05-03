@@ -6,7 +6,6 @@ import Messages from "./Messages";
 import { Alert, Drawer, Stack } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import SideMenu from "./primitives/SideMenu";
-import { useRouter } from "next/router";
 import { useUser } from "../utils/firebase/api/user";
 import { useSigninCheck } from "reactfire";
 
@@ -41,11 +40,8 @@ const Layout: FC<{
 }> = ({ children, propsTopbar, propsContent, ...props }) => {
   const { data: user } = useUser();
   const { data: signInCheckResult } = useSigninCheck();
-
-  const router = useRouter();
   const theme = useTheme();
   const [showSideMenu, setShowSideMenu] = useState(false);
-
   const isSignedId = signInCheckResult?.signedIn && user;
 
   return (
