@@ -13,6 +13,7 @@ const Root = styled(Paper)`
 
   .article-content {
     padding: ${({ theme }) => `0 ${theme.spacing(4)} ${theme.spacing(4)}`};
+    max-width: 800px;
   }
 
   .user-avatar {
