@@ -3,21 +3,39 @@ import LogoResponsive from "../../components/primitives/LogoResponsive";
 import SteppoHead from "../../components/SteppoHead";
 import FirebaseWrapper from "../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../components/wrappers/MUIWrapper";
-import { Typography, useTheme } from "@mui/material";
+import { Button, ButtonGroup, Typography, useTheme } from "@mui/material";
 import Article from "../../components/primitives/Article";
 import { getJSON } from "../../utils/ssrUtils";
-import { useGetText } from "../../utils/localizationUtils";
+import { useGetTexts } from "../../utils/localizationUtils";
+import styled from "styled-components";
+
+const StyledArticle = styled(Article)`
+  .article-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .MuiButtonGroup-root {
+    align-self: center;
+    margin: ${({ theme }) => `${theme.spacing(2)} 0`};
+  }
+`;
 
 const AboutPage = ({ texts }) => {
   const theme = useTheme();
-  const body = useGetText(texts, "body");
+  const { texts: locTexts } = useGetTexts(texts);
   return (
     <Layout>
       <SteppoHead description="About Steppo" title="About Steppo" image="/images/steppo_box_origami.png"></SteppoHead>
-      <Article image="/images/steppo_box_origami.png" avatar={"/images/steppo_avatar.png"}>
+      <StyledArticle theme={theme} image="/images/steppo_box_origami.png" avatar={"/images/steppo_avatar.png"}>
         <LogoResponsive></LogoResponsive>
-        <Typography>{body}</Typography>
-      </Article>
+        <Typography>{locTexts.body}</Typography>
+        <ButtonGroup variant="text">
+          <Button href="/about/terms-of-service">{locTexts.termsOfService}</Button>
+          <Button href="/about/privacy-policy">{locTexts.privacyPolicy}</Button>
+        </ButtonGroup>
+      </StyledArticle>
     </Layout>
   );
 };
