@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useUser } from "./firebase/api/user";
 import { useGetLanguage } from "./localizationUtils";
 
-export const toSanitizedArray = (str: string, tags = [], maxLength = 5) => {
+export const toSanitizedArray = (str: string, tags = [], maxLength = 5, charMaxLength = 24) => {
   if (!str) {
     return [];
   }
@@ -15,6 +15,8 @@ export const toSanitizedArray = (str: string, tags = [], maxLength = 5) => {
   newTags = newTags.filter((tag: string) => tag.length > 1);
   // Union with tags
   newTags = _.union(tags, newTags);
+  // Chop tags to max chars
+  newTags = newTags.map((tag: string) => tag.slice(0, charMaxLength));
   // Trim to max length
   return newTags.slice(0, maxLength);
 };

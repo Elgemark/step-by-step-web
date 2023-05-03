@@ -1,7 +1,7 @@
 import { Button, CardActions, Chip, Collapse, useTheme } from "@mui/material";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
-import TextField from "@mui/material/TextField";
+// import TextField from "@mui/material/TextField";
 import Fab from "@mui/material/Fab";
 import Stack from "@mui/material/Stack";
 import AddIcon from "@mui/icons-material/Add";
@@ -21,6 +21,7 @@ import { addCollectionItem, useCollection } from "../../utils/firebase/hooks/col
 import { v4 as uuid } from "uuid";
 import { useMessages } from "../Messages";
 import Card from "../primitives/Card";
+import TextField from "../primitives/TextField";
 
 const Root = styled(Stack)`
   .card-actions {
@@ -148,6 +149,7 @@ const PostEditable: FC<{
             avatar={<UserAvatar size={48} />}
             title={
               <TextField
+                maxLength={48}
                 fullWidth
                 label="Title"
                 value={data.title}
@@ -170,6 +172,7 @@ const PostEditable: FC<{
                 fullWidth
                 multiline
                 label="Description"
+                maxLength={256}
                 value={data.descr}
                 onChange={(e) => updateData("descr", e.target.value)}
                 size="small"

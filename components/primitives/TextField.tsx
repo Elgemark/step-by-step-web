@@ -20,6 +20,7 @@ const TextField: FC<{
   fullWidth?: boolean;
   rest?: TextFieldProps;
   maxLengthTextProps?: TypographyProps;
+  [key: string]: any;
 }> = ({
   maxLength,
   maxLengthTextProps,

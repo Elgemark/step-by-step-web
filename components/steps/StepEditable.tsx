@@ -2,7 +2,6 @@ import { Card, Collapse, IconButton, useTheme } from "@mui/material";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import Avatar from "@mui/material/Avatar";
-import TextField from "@mui/material/TextField";
 import { useRef, useEffect, FC, useState } from "react";
 import StepEditableMoreMenu from "../StepEditableMoreMenu";
 import { Step } from "../../utils/firebase/interface";
@@ -13,6 +12,7 @@ import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import styled from "styled-components";
 import { CollectionItems } from "../../utils/firebase/hooks/collections";
 import { backgroundBlurMixin } from "../../utils/styleUtils";
+import TextField from "../primitives/TextField";
 
 const StyledCard = styled(Card)`
   ${backgroundBlurMixin}
@@ -103,6 +103,7 @@ const StepEditable: FC<{
         <TextField
           fullWidth
           multiline
+          maxLength={512}
           label="body"
           value={data.body}
           placeholder="Body"
