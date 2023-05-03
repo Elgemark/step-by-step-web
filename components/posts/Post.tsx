@@ -180,7 +180,6 @@ const Post: FC<{
       {lists.length && progress ? (
         <CardContent>
           {lists.map((list) => (
-            // <List {...list} />
             <ListController postId={id} listId={list.id} listTitle={list.title} progress={progress as Progress} />
           ))}
         </CardContent>

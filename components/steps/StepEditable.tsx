@@ -64,6 +64,7 @@ const StepEditable: FC<{
         action={<StepEditableMoreMenu postId={postId} stepId={step.id} onDelete={onDelete} onAddStep={onAddStep} />}
         title={
           <TextField
+            maxLength={48}
             fullWidth
             label="Title"
             placeholder="Title"

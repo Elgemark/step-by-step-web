@@ -25,6 +25,7 @@ import { getPostBySlug } from "../../utils/firebase/api/post";
 import { backgroundBlurMixin } from "../../utils/styleUtils";
 import { getCategory } from "../../utils/firebase/api/categories";
 import SteppoHead from "../../components/SteppoHead";
+import ListCard from "../../components/lists/ListCard";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -179,9 +180,11 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps; me
           }
           enableLink={false}
           currentUserId={user?.uid}
-          lists={lists}
+          // lists={lists}
           onClickAvatar={onClickAvatarHandler}
         />
+        {/* LIST */}
+        <ListCard postId={post.id} lists={lists} progress={progress as Progress}></ListCard>
         {/* START BUTTON */}
         <RevealNext
           open

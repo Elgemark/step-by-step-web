@@ -6,7 +6,6 @@ import Portal from "../primitives/Portal";
 import { alpha } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { ListItem } from "../../utils/firebase/api/list";
-import { red } from "@mui/material/colors";
 import ListTableItem from "../primitives/ListTableItem";
 import ListTable from "../primitives/ListTable";
 
@@ -28,7 +27,8 @@ const StyledAccordion = styled(Accordion)`
 const List: FC<{
   title: string;
   items: Array<ListItem>;
-}> = ({ title, items = [], ...rest }) => {
+  pinnable?: boolean;
+}> = ({ title, items = [], pinnable = true, ...rest }) => {
   const theme = useTheme();
   const [pin, setPin] = useState(false);
   const [collapse, setCollapse] = useState(false);
@@ -61,16 +61,18 @@ const List: FC<{
         {...rest}
       >
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <IconButton
-            size="small"
-            className="button-pin"
-            onClick={(e) => {
-              onClickPinHandler();
-              e.stopPropagation();
-            }}
-          >
-            <PushPinIcon sx={{ color: foundItemWithBadge ? "#FF5733" : "white" }} fontSize="small" />
-          </IconButton>
+          {pinnable ? (
+            <IconButton
+              size="small"
+              className="button-pin"
+              onClick={(e) => {
+                onClickPinHandler();
+                e.stopPropagation();
+              }}
+            >
+              <PushPinIcon sx={{ color: foundItemWithBadge ? "#FF5733" : "white" }} fontSize="small" />
+            </IconButton>
+          ) : null}
 
           <Typography variant="h6">{title}</Typography>
         </AccordionSummary>
