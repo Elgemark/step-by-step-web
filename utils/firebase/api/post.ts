@@ -313,7 +313,6 @@ export const getPostsBySearch = async (
   lastDoc = null
 ) => {
   const tags = toSanitizedArray(search as string);
-  console.log("tags", tags);
   // Build query...
   let postsQuery: Array<any> = [fsLimit(limit)];
   postsQuery = [];
