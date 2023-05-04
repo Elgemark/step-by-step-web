@@ -9,6 +9,7 @@ import IconSteppoCheckColor from "./primitives/IconCheck";
 
 const Root = styled(Box)`
   position: relative;
+  margin-top: 3px;
   .icon-done {
     margin-top: 3px;
   }
@@ -38,8 +39,8 @@ const Root = styled(Box)`
     }
   }
   .MuiLinearProgress-root {
-    height: 32px;
-    border-radius: 16px;
+    height: 28px;
+    border-radius: 14px;
     background-color: rgba(255, 255, 255, 0.1);
   }
 `;
