@@ -3,6 +3,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { alpha, useTheme } from "@mui/material/styles";
 import styled from "styled-components";
 import { FC } from "react";
+import { IconButton } from "@mui/material";
 
 const Root = styled.div`
   border-radius: ${({ theme }) => theme.shape.borderRadius + "px"};
@@ -38,9 +39,16 @@ const Search: FC<{
     }
   };
 
+  const onClickHandler = () => {
+    onEnter && onEnter();
+  };
+
   return (
     <Root theme={theme} {...rest}>
-      <SearchIcon />
+      <IconButton onClick={onClickHandler}>
+        <SearchIcon />
+      </IconButton>
+
       <InputBase
         type="search"
         value={value}

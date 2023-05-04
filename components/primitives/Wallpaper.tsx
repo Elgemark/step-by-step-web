@@ -40,7 +40,6 @@ const Wallpaper = () => {
     setIsLoaded(true);
   };
 
-  console.log("isLoaded", isLoaded);
   return (
     <Root>
       <Container isLoaded={isLoaded} style={{ visibility: isLoaded ? "visible" : "hidden" }}>

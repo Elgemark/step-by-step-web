@@ -17,6 +17,7 @@ export default () => {
   const { collection: posts, addItems: addPosts, replaceItems: replacePosts } = useCollection();
   const [lastDoc, setLastDoc] = useState();
   const [isFetching, setIsFetching] = useState(false);
+  const [hasMoreData, setHasMoreData] = useState(true);
   const isBottom = useScrolledToBottom(100);
 
   useEffect(() => {
@@ -24,21 +25,24 @@ export default () => {
   }, [router.query]);
 
   useEffect(() => {
-    fetchBySearch(false);
+    if (hasMoreData) {
+      fetchBySearch(false);
+    }
   }, [isBottom]);
 
   const fetchBySearch = async (replace = false) => {
     setIsFetching(true);
     const { search, category, rated } = router.query;
-    const response = await getPostsBySearch(search, { category, rated }, 10, lastDoc);
+    const response = await getPostsBySearch(search, { category, rated }, 10, replace ? undefined : lastDoc);
+
     if (replace) {
       replacePosts(response.data);
     } else {
       addPosts(response.data);
     }
 
+    setHasMoreData(Boolean(response.data.length));
     setLastDoc(response.lastDoc);
-
     setIsFetching(false);
   };
 
