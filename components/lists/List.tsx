@@ -1,9 +1,6 @@
-import { Accordion, AccordionDetails, AccordionSummary, IconButton, Typography, useTheme } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Typography, useTheme } from "@mui/material";
 import styled from "styled-components";
 import { FC, useEffect, useState } from "react";
-import PushPinIcon from "@mui/icons-material/PushPin";
-import Portal from "../primitives/Portal";
-import { alpha } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { ListItem } from "../../utils/firebase/api/list";
 import ListTableItem from "../primitives/ListTableItem";
@@ -12,15 +9,9 @@ import ListIcon from "@mui/icons-material/List";
 
 const StyledAccordion = styled(Accordion)`
   position: relative;
-  top: ${({ pin }) => (pin ? "0" : "auto")};
-  left: ${({ pin }) => (pin ? "0" : "auto")};
-  background-color: ${({ theme, pin }) => (pin ? alpha(theme.palette.background.paper, 0.35) : "transparent")};
+  background-color: transparent;
   .MuiAccordionSummary-content .MuiSvgIcon-root {
     margin-right: ${({ theme }) => theme.spacing(1)};
-  }
-  .button-pin {
-    transform: rotate(-45deg);
-    margin: 3px 5px 0 -5px;
   }
   h6,
   p {
@@ -31,74 +22,57 @@ const StyledAccordion = styled(Accordion)`
 const List: FC<{
   title: string;
   items: Array<ListItem>;
-  pinnable?: boolean;
   collapsed?: boolean;
-}> = ({ title, items = [], pinnable = true, collapsed = true, ...rest }) => {
+}> = ({ title, items = [], collapsed = false, ...rest }) => {
   const theme = useTheme();
-  const [pin, setPin] = useState(false);
   const [collapse, setCollapse] = useState(collapsed);
   const [doc, setDoc] = useState(null);
 
   const foundItemWithBadge = items.find((item) => item.badgeContent);
 
   useEffect(() => {
+    if (collapsed) {
+      setCollapse(true);
+    }
+  }, [collapsed]);
+
+  useEffect(() => {
     setDoc(document);
   }, []);
-
-  const onClickPinHandler = () => {
-    setPin(!pin);
-  };
 
   if (!doc) {
     return null;
   }
 
   return (
-    <Portal show={pin} target={doc.getElementById("pinned-lists")}>
-      <StyledAccordion
-        disableGutters
-        expanded={!collapse}
-        onChange={() => setCollapse(!collapse)}
-        elevation={3}
-        theme={theme}
-        pin={pin}
-        className="list"
-        {...rest}
-      >
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          {pinnable ? (
-            <IconButton
-              size="small"
-              className="button-pin"
-              onClick={(e) => {
-                onClickPinHandler();
-                e.stopPropagation();
-              }}
-            >
-              <PushPinIcon sx={{ color: foundItemWithBadge ? "#FF5733" : "white" }} fontSize="small" />
-            </IconButton>
-          ) : (
-            <ListIcon sx={{ color: foundItemWithBadge ? "#FF5733" : "white" }} />
-          )}
+    <StyledAccordion
+      disableGutters
+      expanded={!collapse}
+      onChange={() => setCollapse(!collapse)}
+      elevation={3}
+      theme={theme}
+      className="list"
+      {...rest}
+    >
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        <ListIcon sx={{ color: foundItemWithBadge ? "#FF5733" : "white" }} />
+        <Typography variant="button">{title}</Typography>
+      </AccordionSummary>
 
-          <Typography variant="button">{title}</Typography>
-        </AccordionSummary>
-
-        <AccordionDetails>
-          <ListTable>
-            {items.map((item: ListItem) => (
-              <ListTableItem
-                consumed={item.consumed}
-                highlight={item.highlight}
-                text={item.text}
-                value={item.value}
-                badgeContent={item.badgeContent}
-              />
-            ))}
-          </ListTable>
-        </AccordionDetails>
-      </StyledAccordion>
-    </Portal>
+      <AccordionDetails>
+        <ListTable>
+          {items.map((item: ListItem) => (
+            <ListTableItem
+              consumed={item.consumed}
+              highlight={item.highlight}
+              text={item.text}
+              value={item.value}
+              badgeContent={item.badgeContent}
+            />
+          ))}
+        </ListTable>
+      </AccordionDetails>
+    </StyledAccordion>
   );
 };
 

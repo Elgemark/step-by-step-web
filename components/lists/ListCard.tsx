@@ -11,8 +11,8 @@ import List from "./List";
 const Root = styled(Card)`
   ${backgroundBlurMixin}
   margin-top: ${({ theme }) => theme.spacing(1)};
-  position: sticky;
-  top: 70px;
+  position: ${({ sticky }) => (sticky ? "sticky" : "relative")};
+  top: ${({ sticky }) => (sticky ? "70px" : "auto")};
   z-index: 999;
 `;
 
@@ -33,7 +33,10 @@ const ListController: FC<{ postId: string; listId: string; listTitle: string; pr
       badgeContent: (item.stepId && item.stepId === currentStep && progress.stepsCompleted.length) || null,
     };
   });
-  return <List pinnable={false} title={listTitle} items={calculatedListItems as ListItems} />;
+
+  return (
+    <List collapsed={progress.stepsCompleted.length != 0} title={listTitle} items={calculatedListItems as ListItems} />
+  );
 };
 
 const ListCard: FC<{
@@ -43,6 +46,7 @@ const ListCard: FC<{
 }> = ({ lists = [], progress, postId }) => {
   const [doc, setDoc] = useState(null);
   const theme = useTheme();
+  const started = progress.stepsCompleted.length > 0;
 
   useEffect(() => {
     setDoc(document);
@@ -53,7 +57,7 @@ const ListCard: FC<{
   }
 
   return (
-    <Root theme={theme}>
+    <Root theme={theme} sticky={started}>
       {lists.length && progress ? (
         <CardContent>
           {lists.map((list) => (
