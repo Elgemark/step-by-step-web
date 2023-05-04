@@ -6,24 +6,6 @@ import styled from "styled-components";
 import Wallpaper from "../primitives/Wallpaper";
 export const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
-const WallpaperContainer = styled.div`
-  z-index: -1;
-  position: fixed;
-  width: 100%;
-  height: auto;
-  /* opacity: 0.5; */
-  display: flex;
-  justify-content: center;
-`;
-
-const StyledWallpaper = styled(Wallpaper)`
-  position: absolute;
-  width: 140%;
-  height: auto;
-  max-width: 1100px;
-  /* min-width: 540px; */
-`;
-
 const MUIWrapper: FC<{
   children?: ReactNode;
 }> = ({ children }) => {
@@ -68,12 +50,10 @@ const MUIWrapper: FC<{
         <CssBaseline />
         <GlobalStyles
           styles={{
-            body: { backgroundColor: mode === "light" ? "white" : "dark", transition: "1s background-color" },
+            body: { backgroundColor: "black" },
           }}
         />
-        <WallpaperContainer>
-          <StyledWallpaper />
-        </WallpaperContainer>
+        <Wallpaper />
         {children}
       </ThemeProvider>
     </ColorModeContext.Provider>

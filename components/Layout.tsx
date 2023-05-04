@@ -8,6 +8,7 @@ import { useTheme } from "@emotion/react";
 import SideMenu from "./primitives/SideMenu";
 import { useUser } from "../utils/firebase/api/user";
 import { useSigninCheck } from "reactfire";
+import Wallpaper from "./primitives/Wallpaper";
 
 export const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
