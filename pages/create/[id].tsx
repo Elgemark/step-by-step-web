@@ -33,6 +33,7 @@ import BottomBar from "../../components/primitives/BottomBar";
 import { saveAll as saveAllLists } from "../../utils/firebase/hooks/collections";
 import { createSlug } from "../../utils/queryUtils";
 import SteppoHead from "../../components/SteppoHead";
+import { useGetLanguage } from "../../utils/localizationUtils";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -67,6 +68,7 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
   const { isLoading: isLoadingUser, data: user } = useUser();
   const [openPublishDialog, setOpenPublishDialog] = useState(false);
   const refresh = useRefresh();
+  const lang = useGetLanguage();
 
   useEffect(() => {
     if (prevId != id) {
@@ -136,7 +138,7 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
     const slug = createSlug({ ...post, ...saveData.post });
     // Save post...
     if (saveData.post) {
-      await setPost(id, { ...saveData.post, slug: _.kebabCase(slug), uid: userId });
+      await setPost(id, { ...saveData.post, slug: _.kebabCase(slug), uid: userId, lang });
     }
     // Uploas steps images
     const imageUploads: ImageUploads = [];
