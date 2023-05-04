@@ -33,13 +33,12 @@ const TextField: FC<{
   onChange,
   ...rest
 }) => {
-  const [textValue, setTextValue] = useState(value);
+  // const [textValue, setTextValue] = useState(value);
 
   const onChangeHandler = (e) => {
     if (maxLength > 0 && e.currentTarget.value.length > maxLength) {
       return;
     }
-    setTextValue(e.currentTarget.value);
     onChange(e);
   };
 
@@ -47,17 +46,17 @@ const TextField: FC<{
     <Root>
       <MUITextField
         {...rest}
+        value={value}
         className={className}
         variant={variant}
         fullWidth={fullWidth}
         multiline={multiline}
-        value={textValue}
         label={label}
         onChange={onChangeHandler}
       />
       {maxLength > 0 && (
         <Typography variant="body2" {...maxLengthTextProps}>
-          {`${textValue.length}/${maxLength}`}
+          {`${value.length}/${maxLength}`}
         </Typography>
       )}
     </Root>

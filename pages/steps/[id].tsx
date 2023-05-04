@@ -54,7 +54,6 @@ const StyledStep = styled(Step)`
 `;
 
 const StyledStepsProgress = styled(StepsProgress)`
-  margin: 0, 40px;
   flex-grow: 1;
 `;
 

@@ -134,11 +134,13 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
       _.unset(saveData, "post.blob");
     }
     // Create slug
-    //const slug = `${saveData.post.category}-${saveData.post.title}-${saveData.post.tags.join("-")}`;
-    const slug = createSlug({ ...post, ...saveData.post });
+    if (post.visibility != "public") {
+      const slug = createSlug({ ...post, ...saveData.post });
+      saveData.post = { ...saveData.post, slug };
+    }
     // Save post...
     if (saveData.post) {
-      await setPost(id, { ...saveData.post, slug: _.kebabCase(slug), uid: userId, lang });
+      await setPost(id, { ...saveData.post, uid: userId, lang });
     }
     // Uploas steps images
     const imageUploads: ImageUploads = [];
