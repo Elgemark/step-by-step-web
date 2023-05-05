@@ -1,18 +1,16 @@
-import { useRouter } from "next/router";
 import { FC } from "react";
 import { deletePost } from "../utils/firebase/api";
 import Dialog from "./primitives/Dialog";
 
-const DialogDeletePost: FC<{ open: string; onClose: () => void; content?: string }> = ({
+const DialogDeletePost: FC<{ open: string; onClose: () => void; onDelete: (id: string) => void; content?: string }> = ({
   open,
   onClose,
+  onDelete,
   content = "Are you sure you want to delete this post?",
 }) => {
-  const router = useRouter();
-
   const onDeleteHandler = ({ id }) => {
     deletePost(id).then(() => {
-      router.replace(router.asPath);
+      onDelete(id);
     });
   };
 

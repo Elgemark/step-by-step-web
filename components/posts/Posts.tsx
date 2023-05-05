@@ -19,6 +19,7 @@ const Posts: FC<{
   const router = useRouter();
   const [report, setReport] = useState<ReportData>();
   const [deletePost, setDeletePost] = useState<string>();
+  const [deletedPosts, setDeletedPosts] = useState([]);
   const { addMessage } = useMessages();
 
   const { data: user } = useUser();
@@ -29,6 +30,12 @@ const Posts: FC<{
 
   const onEditHandler = ({ id }) => {
     router.push("/create/" + id);
+  };
+
+  const onDeletePostHandler = (id) => {
+    const newDeletedPosts = [...deletedPosts];
+    newDeletedPosts.push(id);
+    setDeletedPosts(newDeletedPosts);
   };
 
   const onClickAvatarHandler = ({ uid }) => {
@@ -50,39 +57,41 @@ const Posts: FC<{
   return (
     <div style={{ width: "100%" }}>
       <Masonry component="nav" aria-label="posts">
-        {posts.map((data, index) => (
-          <Post
-            key={index}
-            currentUserId={user?.uid}
-            enableLink={enableLink}
-            action={
-              <PostMoreMenu
-                onEdit={
-                  user?.uid === data.uid
-                    ? () => {
-                        onEditHandler(data);
-                      }
-                    : undefined
-                }
-                onDelete={
-                  user?.uid === data.uid
-                    ? () => {
-                        setDeletePost(data.id);
-                      }
-                    : undefined
-                }
-                onReport={() => onReportHandler(data.id)}
-              />
-            }
-            onClickAvatar={({ uid }) => {
-              onClickAvatarHandler({ uid });
-            }}
-            {...data}
-          />
-        ))}
+        {posts
+          .filter((post) => !deletedPosts.includes(post.id))
+          .map((data, index) => (
+            <Post
+              key={index}
+              currentUserId={user?.uid}
+              enableLink={enableLink}
+              action={
+                <PostMoreMenu
+                  onEdit={
+                    user?.uid === data.uid
+                      ? () => {
+                          onEditHandler(data);
+                        }
+                      : undefined
+                  }
+                  onDelete={
+                    user?.uid === data.uid
+                      ? () => {
+                          setDeletePost(data.id);
+                        }
+                      : undefined
+                  }
+                  onReport={() => onReportHandler(data.id)}
+                />
+              }
+              onClickAvatar={({ uid }) => {
+                onClickAvatarHandler({ uid });
+              }}
+              {...data}
+            />
+          ))}
       </Masonry>
       {/* DELETE DIALOG */}
-      <DialogDeletePost open={deletePost} onClose={() => setDeletePost(null)} />
+      <DialogDeletePost onDelete={onDeletePostHandler} open={deletePost} onClose={() => setDeletePost(null)} />
       {/* REPORT DIALOG */}
       <DialogReport open={report} onClose={() => setReport(null)} />
     </div>

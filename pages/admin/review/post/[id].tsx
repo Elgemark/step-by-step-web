@@ -18,6 +18,7 @@ import Loader from "../../../../components/Loader";
 import DoneIcon from "@mui/icons-material/Done";
 import { Lists, ListsResponse } from "../../../../utils/firebase/api/list";
 import SteppoHead from "../../../../components/SteppoHead";
+import { useRouter } from "next/router";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -43,6 +44,7 @@ const ReviewPostPage: FC<{ id: string; lists: Lists; steps: Steps }> = ({ id, st
   const [isLoading, setIsLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
   const { data: post, isLoading: isLoadingPost } = useGetPost(id);
+  const router = useRouter();
 
   const changeVisibility = async (visibility: PostVisibility) => {
     setIsLoading(true);
@@ -56,6 +58,10 @@ const ReviewPostPage: FC<{ id: string; lists: Lists; steps: Steps }> = ({ id, st
   if (isLoadingPost) {
     return <Loader></Loader>;
   }
+
+  const onDeleteHandler = () => {
+    router.back();
+  };
 
   return (
     <>
@@ -92,7 +98,7 @@ const ReviewPostPage: FC<{ id: string; lists: Lists; steps: Steps }> = ({ id, st
         </BottomBar>
       </StyledLayout>
       {/* DELETE DIALOG */}
-      <DialogDeletePost open={showDeleteDialog} onClose={() => setShowDeleteDialog(null)} />
+      <DialogDeletePost onDelete={onDeleteHandler} open={showDeleteDialog} onClose={() => setShowDeleteDialog(null)} />
       {/* SNACKBAR */}
       <Snackbar open={successMessage != null} autoHideDuration={6000} onClose={() => setSuccessMessage(null)}>
         <Alert onClose={() => setSuccessMessage(null)} severity="success" sx={{ width: "100%" }}>

@@ -7,6 +7,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  deleteDoc,
   orderBy,
   limit as fsLimit,
   startAfter,
@@ -200,10 +201,8 @@ export const getPostBySlug = async (slug: string) => {
 
 export const deletePost = async (id: string) => {
   const firebase = getFirestore();
-  const batch = writeBatch(firebase);
-  batch.delete(doc(firebase, "posts", id));
-  batch.delete(doc(firebase, "posts", id, "steps", id));
-  return await batch.commit();
+  const docRef = doc(firebase, "posts", id);
+  return await deleteDoc(docRef);
 };
 
 export const useGetPost = (id: string) => {

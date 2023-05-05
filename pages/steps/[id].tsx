@@ -91,8 +91,8 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps; me
     router.push("/create/" + id);
   };
 
-  const onDeleteHandler = ({ id }) => {
-    setShowDeleteDialog(id);
+  const onDeleteHandler = () => {
+    router.back();
   };
 
   const onStartOverHandler = async () => {
@@ -168,7 +168,7 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps; me
               onDelete={
                 user?.uid === post.uid
                   ? () => {
-                      onDeleteHandler(post);
+                      setShowDeleteDialog(post.id);
                     }
                   : undefined
               }
@@ -219,7 +219,7 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps; me
         />
       </StyledLayout>
       {/* DELETE DIALOG */}
-      <DialogDeletePost open={showDeleteDialog} onClose={() => setShowDeleteDialog(null)} />
+      <DialogDeletePost onDelete={onDeleteHandler} open={showDeleteDialog} onClose={() => setShowDeleteDialog(null)} />
       {/* REPORT DIALOG */}
       <DialogReport open={report} onClose={() => setReport(null)} />
     </>
