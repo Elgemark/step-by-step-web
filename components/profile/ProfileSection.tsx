@@ -52,7 +52,7 @@ const ProfileSctionEditable: FC<{
     const update = _.pick(user, ["biography", "alias", "categories", "background", "avatar"]);
     // Avatar...
     if (avatarData.file) {
-      const avatarResp: UploadResponse = await uploadImage(avatarData.file, "1024x1024", ["users", userId, "avatar"]);
+      const avatarResp: UploadResponse = await uploadImage(avatarData.file, "256x256", ["users", userId, "avatar"]);
       update.avatar = avatarResp.url;
     }
     // Background...
