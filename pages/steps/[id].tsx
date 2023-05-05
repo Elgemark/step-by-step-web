@@ -73,7 +73,7 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps; me
         <Box className="content" component="main">
           <Stack direction={"row"} justifyContent="center">
             <Alert className="info" severity="info" color="warning">
-              Sorry... Steppo are not able to find this post anymore!
+              Sorry... Steppo can't find this post anymore!
             </Alert>
           </Stack>
         </Box>
@@ -151,8 +151,6 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps; me
           ),
         }}
       >
-        {/* This div is the portal target for pinned lists */}
-        <div id="pinned-lists"></div>
         <Post
           {...post}
           progress={progress as Progress}

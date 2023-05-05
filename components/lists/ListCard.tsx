@@ -9,11 +9,19 @@ import _ from "lodash";
 import List from "./List";
 
 const Root = styled(Card)`
-  ${backgroundBlurMixin}
+  /* ${backgroundBlurMixin} */
+  background-color: transparent;
   margin-top: ${({ theme }) => theme.spacing(1)};
   position: ${({ sticky }) => (sticky ? "sticky" : "relative")};
   top: ${({ sticky }) => (sticky ? "70px" : "auto")};
   z-index: 999;
+  .MuiCardContent-root {
+    padding: 0px;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
 `;
 
 const ListController: FC<{ postId: string; listId: string; listTitle: string; progress: Progress }> = ({

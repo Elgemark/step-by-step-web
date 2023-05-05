@@ -6,10 +6,11 @@ import { ListItem } from "../../utils/firebase/api/list";
 import ListTableItem from "../primitives/ListTableItem";
 import ListTable from "../primitives/ListTable";
 import ListIcon from "@mui/icons-material/List";
+import { backgroundBlurMixin } from "../../utils/styleUtils";
 
 const StyledAccordion = styled(Accordion)`
   position: relative;
-  background-color: transparent;
+  ${backgroundBlurMixin}
   .MuiAccordionSummary-content .MuiSvgIcon-root {
     margin-right: ${({ theme }) => theme.spacing(1)};
   }
