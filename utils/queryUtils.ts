@@ -13,7 +13,7 @@ export const getBasePath = () => {
 };
 
 export const createSlug = (post: any) => {
-  let slugArray = _.flatten([[post?.category], post?.title.split(" "), post?.tags, [shortUUID()]]);
+  let slugArray = _.flatten([post?.title.split(" "), [post?.category], post?.tags, [shortUUID()]]);
   slugArray = slugArray.map((fraction) => _.lowerCase(fraction));
   slugArray = _.compact(slugArray);
   slugArray = _.uniq(slugArray);
