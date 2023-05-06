@@ -140,7 +140,8 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
     }
     // Save post...
     if (saveData.post) {
-      await setPost(id, { ...saveData.post, uid: userId, lang });
+      const postResp = await setPost(id, { ...saveData.post, uid: userId, lang });
+      console.log("postResp", postResp);
     }
     // Uploas steps images
     const imageUploads: ImageUploads = [];

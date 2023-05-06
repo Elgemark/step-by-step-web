@@ -31,7 +31,7 @@ const Root = styled(Card)`
     margin-left: auto;
   }
   .list {
-    margin-bottom: ${({ theme }) => theme.spacing(1)};
+    /* margin-bottom: ${({ theme }) => theme.spacing(1)}; */
   }
   .rate-container {
     flex-grow: 1;
@@ -39,7 +39,7 @@ const Root = styled(Card)`
     justify-content: center;
   }
   .MuiCardContent-root {
-    margin-top: ${({ theme }) => theme.spacing(-2)};
+    /* margin-top: ${({ theme }) => theme.spacing(-2)}; */
   }
 `;
 

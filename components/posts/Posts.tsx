@@ -10,6 +10,7 @@ import PostMoreMenu from "../PostMoreMenu";
 import DialogReport, { ReportData } from "../DialogReport";
 import DialogDeletePost from "../DialogDeletePost";
 import { useMessages } from "../Messages";
+import PostAd from "../ads/PostAd";
 
 const Posts: FC<{
   posts: Posts;
@@ -60,34 +61,37 @@ const Posts: FC<{
         {posts
           .filter((post) => !deletedPosts.includes(post.id))
           .map((data, index) => (
-            <Post
-              key={index}
-              currentUserId={user?.uid}
-              enableLink={enableLink}
-              action={
-                <PostMoreMenu
-                  onEdit={
-                    user?.uid === data.uid
-                      ? () => {
-                          onEditHandler(data);
-                        }
-                      : undefined
-                  }
-                  onDelete={
-                    user?.uid === data.uid
-                      ? () => {
-                          setDeletePost(data.id);
-                        }
-                      : undefined
-                  }
-                  onReport={() => onReportHandler(data.id)}
-                />
-              }
-              onClickAvatar={({ uid }) => {
-                onClickAvatarHandler({ uid });
-              }}
-              {...data}
-            />
+            <>
+              <PostAd index={index} occurrence={2} />
+              <Post
+                key={index}
+                currentUserId={user?.uid}
+                enableLink={enableLink}
+                action={
+                  <PostMoreMenu
+                    onEdit={
+                      user?.uid === data.uid
+                        ? () => {
+                            onEditHandler(data);
+                          }
+                        : undefined
+                    }
+                    onDelete={
+                      user?.uid === data.uid
+                        ? () => {
+                            setDeletePost(data.id);
+                          }
+                        : undefined
+                    }
+                    onReport={() => onReportHandler(data.id)}
+                  />
+                }
+                onClickAvatar={({ uid }) => {
+                  onClickAvatarHandler({ uid });
+                }}
+                {...data}
+              />
+            </>
           ))}
       </Masonry>
       {/* DELETE DIALOG */}

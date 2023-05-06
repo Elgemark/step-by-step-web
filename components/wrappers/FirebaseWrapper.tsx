@@ -7,6 +7,7 @@ import styled from "styled-components";
 
 import { FirebaseAppProvider, DatabaseProvider, AuthProvider, useFirebaseApp, useSigninCheck } from "reactfire";
 import Loader from "../Loader";
+import Script from "next/script";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_PUBLIC_API_KEY,
@@ -77,6 +78,13 @@ export default function FirebaseWrapper({ children }) {
   return (
     <FirebaseAppProviderWrapper>
       <AuthAndDatabaseProviderWrapper>
+        <Script
+          id="Adsense-id"
+          data-ad-client="ca-pub-4233698082965305"
+          async
+          strategy="beforeInteractive"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+        />
         <LoginCheck enable={false}>{children}</LoginCheck>
       </AuthAndDatabaseProviderWrapper>
     </FirebaseAppProviderWrapper>

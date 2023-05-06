@@ -22,10 +22,10 @@ import _ from "lodash";
 import StepsDone from "../../components/StepsDone";
 import { ratePost, useRatesForPostAndUser } from "../../utils/firebase/api/rate";
 import { getPostBySlug } from "../../utils/firebase/api/post";
-import { backgroundBlurMixin } from "../../utils/styleUtils";
 import { getCategory } from "../../utils/firebase/api/categories";
 import SteppoHead from "../../components/SteppoHead";
 import ListCard from "../../components/lists/ListCard";
+import PostAd from "../../components/ads/PostAd";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -40,12 +40,9 @@ const StyledLayout = styled(Layout)`
     display: flex;
     justify-content: center;
   }
-  #pinned-lists {
-    position: sticky;
-    top: 60px;
-    z-index: 999;
-    ${backgroundBlurMixin}
-    margin-bottom: 1rem;
+
+  .post-ad {
+    margin-bottom: ${({ theme }) => theme.spacing(1)};
   }
 `;
 
@@ -151,6 +148,8 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps; me
           ),
         }}
       >
+        {/* AD */}
+        <PostAd />
         <Post
           {...post}
           progress={progress as Progress}
@@ -182,6 +181,7 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps; me
         />
         {/* LIST */}
         <ListCard postId={post.id} lists={lists} progress={progress as Progress}></ListCard>
+
         {/* START BUTTON */}
         <RevealNext
           open
@@ -204,7 +204,10 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps; me
                 onRevelNextClickHandler({ index });
               }}
             >
-              <StyledStep postId={id} {...step} index={index} onRollBack={onRollBackHandler} />
+              <>
+                <PostAd index={index} occurrence={3} skip={[0]} />
+                <StyledStep postId={id} {...step} index={index} onRollBack={onRollBackHandler} />
+              </>
             </RevealNext>
           );
         })}
