@@ -1,4 +1,4 @@
-import { Card, useTheme } from "@mui/material";
+import { Avatar, Card, useTheme } from "@mui/material";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
@@ -11,6 +11,7 @@ import Badge from "@mui/material/Badge";
 import { useLikes, useBookmarks } from "../../utils/firebase/api";
 import styled from "styled-components";
 import { FC } from "react";
+import { red } from "@mui/material/colors";
 import { backgroundBlurMixin } from "../../utils/styleUtils";
 import Script from "next/script";
 
@@ -34,7 +35,14 @@ const PostAd: FC<{ index?: number; occurrence?: number; skip?: Array<number> }> 
 
   return (
     <Root theme={theme} className="post-ad">
-      <CardHeader avatar={"AD"} title={<Typography>Advertising</Typography>} />
+      <CardHeader
+        avatar={
+          <Avatar sx={{ bgcolor: red[400], width: 32, height: 32 }} aria-label="ads">
+            <Typography variant="body2">AD</Typography>
+          </Avatar>
+        }
+        // title={<Typography>Advertising</Typography>}
+      />
       <CardContent>
         <Script
           async
