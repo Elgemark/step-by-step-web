@@ -4,25 +4,19 @@ import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
-import BookmarkIcon from "@mui/icons-material/Bookmark";
 import UserAvatar from "../UserAvatar";
 import Badge from "@mui/material/Badge";
-import { useLikes, useBookmarks } from "../../utils/firebase/api";
 import styled from "styled-components";
-import { useState, FC, ReactNode } from "react";
+import { FC, ReactNode } from "react";
 import { CardActionArea } from "@mui/material";
-import List from "../lists/List";
 import { Media } from "../../utils/firebase/interface";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
-import { useCollection } from "../../utils/firebase/hooks/collections";
-import { ListItems, Lists } from "../../utils/firebase/api/list";
-import { Progress } from "../../utils/firebase/api/progress";
 import _ from "lodash";
 import CardImage from "../CardImage";
 import Rate from "../primitives/Rate";
 import { backgroundBlurMixin } from "../../utils/styleUtils";
+import BookmarkButton from "../client/BookmarkButton";
 
 const Root = styled(Card)`
   ${backgroundBlurMixin}
@@ -30,16 +24,10 @@ const Root = styled(Card)`
   .button-link {
     margin-left: auto;
   }
-  .list {
-    /* margin-bottom: ${({ theme }) => theme.spacing(1)}; */
-  }
   .rate-container {
     flex-grow: 1;
     display: flex;
     justify-content: center;
-  }
-  .MuiCardContent-root {
-    /* margin-top: ${({ theme }) => theme.spacing(-2)}; */
   }
 `;
 
@@ -61,26 +49,6 @@ const MediaContainer = ({ children, hrefBasePath, slug, enableLink, title }) => 
   }
 };
 
-const ListController: FC<{ postId: string; listId: string; listTitle: string; progress: Progress }> = ({
-  postId,
-  listId,
-  listTitle,
-  progress,
-}) => {
-  const { data: listItems } = useCollection(["posts", postId, "lists", listId, "items"]);
-  const calculatedListItems = listItems.map((item) => {
-    const currentStep = _.last(progress.stepsCompleted);
-    const previousSteps = _.slice(progress.stepsCompleted, 0, progress.stepsCompleted.length - 1);
-    return {
-      ...item,
-      highlight: item.stepId && item.stepId === currentStep,
-      consumed: previousSteps.includes(item.stepId),
-      badgeContent: (item.stepId && item.stepId === currentStep && progress.stepsCompleted.length) || null,
-    };
-  });
-  return <List title={listTitle} items={calculatedListItems as ListItems} />;
-};
-
 const Post: FC<{
   uid: string;
   id: string;
@@ -89,14 +57,11 @@ const Post: FC<{
   descr?: string;
   enableLink: boolean;
   hrefBasePath?: string;
-  lists?: Lists;
-  progress?: Progress;
   media: Media;
   ratesNum?: number;
   ratesTotal?: number;
   currentUserId?: string;
   action?: ReactNode | ReactJSXElement;
-  onBookmark?: Function;
   onClickAvatar?: ({ uid }) => void;
 }> = ({
   uid,
@@ -107,8 +72,6 @@ const Post: FC<{
   slug,
   enableLink,
   hrefBasePath = "/steps/",
-  lists = [],
-  progress,
   media = { imageURI: "" },
   action,
   ratesNum = 0,
@@ -116,11 +79,6 @@ const Post: FC<{
   onClickAvatar,
 }) => {
   const theme = useTheme();
-  const { isBookmarked, toggle: toogleBookmark } = useBookmarks(id);
-
-  const onBookmarkHandler = () => {
-    toogleBookmark(id);
-  };
 
   return (
     <Root theme={theme}>
@@ -139,25 +97,8 @@ const Post: FC<{
       </MediaContainer>
 
       <CardActions disableSpacing>
-        {/* LIKE */}
-        {/* {onLike && (
-          <IconButton aria-label="like" onClick={onLikeHandler}>
-            <Badge badgeContent={numLikes} color="success">
-              {isLiked ? <FavoriteIcon color="warning" /> : <FavoriteBorderIcon />}
-            </Badge>
-          </IconButton>
-        )} */}
-
-        {/* SHARE */}
-        {/* <IconButton aria-label="share">
-          <ShareIcon />
-        </IconButton> */}
         {/* BOOKMARK */}
-        {currentUserId && (
-          <IconButton aria-label="bookmark" onClick={onBookmarkHandler}>
-            {isBookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
-          </IconButton>
-        )}
+        {currentUserId && <BookmarkButton postId={id} />}
         {/* RATE */}
         {ratesNum > 0 ? (
           <div className="rate-container">
@@ -177,13 +118,6 @@ const Post: FC<{
           {descr}
         </Typography>
       </CardContent>
-      {lists.length && progress ? (
-        <CardContent>
-          {lists.map((list) => (
-            <ListController postId={id} listId={list.id} listTitle={list.title} progress={progress as Progress} />
-          ))}
-        </CardContent>
-      ) : null}
     </Root>
   );
 };

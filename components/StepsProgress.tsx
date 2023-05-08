@@ -1,7 +1,8 @@
+"use client";
+
 import LinearProgress from "@mui/material/LinearProgress";
 import Typography from "@mui/material/Typography";
 import Box, { BoxTypeMap } from "@mui/material/Box";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { FC } from "react";
 import styled from "styled-components";
 import { Grow } from "@mui/material";

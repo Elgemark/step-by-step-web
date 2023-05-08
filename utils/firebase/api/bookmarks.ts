@@ -99,16 +99,18 @@ export const geBookmarksForUser = async (uid, limit = 100) => {
 export const useBookmarks = (postId) => {
   const { data: user } = useUser();
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     if (postId && user) {
       isBookmarkedByUser(postId)
         .then((resp) => {
           setIsBookmarked(resp.isBookmarked);
+          setIsLoading(false);
         })
-        .catch((e) => {
-          debugger;
-        })
-        .catch((error) => {});
+        .catch(() => {
+          setIsLoading(false);
+        });
     }
   }, [postId, user]);
 
@@ -122,5 +124,5 @@ export const useBookmarks = (postId) => {
     }
     return !isBookmarked;
   };
-  return { isBookmarked, toggle };
+  return { isBookmarked, isLoading, toggle };
 };

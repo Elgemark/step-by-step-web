@@ -25,7 +25,7 @@ import { getPostBySlug } from "../../utils/firebase/api/post";
 import { getCategory } from "../../utils/firebase/api/categories";
 import SteppoHead from "../../components/SteppoHead";
 import ListCard from "../../components/lists/ListCard";
-import PostAd from "../../components/ads/PostAd";
+import PostAd from "../../components/client/ads/PostAd";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -81,7 +81,7 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps; me
   const [showDeleteDialog, setShowDeleteDialog] = useState<string>();
   const router = useRouter();
   const { user, progress, updateProgress, isLoading } = useProgress(id, true);
-  const { value: userRateValue, isLoading: isUserRateLoading } = useRatesForPostAndUser(id, user?.uid);
+  const { value: userRateValue } = useRatesForPostAndUser(id, user?.uid);
   const [report, setReport] = useState<ReportData>();
 
   const onEditHandler = ({ id }) => {
@@ -181,7 +181,6 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps; me
         />
         {/* LIST */}
         <ListCard postId={post.id} lists={lists} progress={progress as Progress}></ListCard>
-
         {/* START BUTTON */}
         <RevealNext
           open

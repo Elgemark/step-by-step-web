@@ -1,9 +1,7 @@
-import { Button, Collapse, Divider } from "@mui/material";
+import { Collapse, Divider } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { ReactNode, useRef } from "react";
 import { FC } from "react";
-import IconSteppoCheckColor from "./primitives/IconCheck";
 
 const RevealNext: FC<{
   open: boolean;

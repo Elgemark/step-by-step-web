@@ -14,6 +14,8 @@ https://www.npmjs.com/package/react-easy-crop
 https://markerjs.com/
 https://github.com/manishboro/image-crop-and-zoom
 
+https://pagespeed.web.dev/
+
 ### Logo
 
 Merienda One

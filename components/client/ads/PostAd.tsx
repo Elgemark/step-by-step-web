@@ -1,18 +1,13 @@
+"use client";
+
 import { Avatar, Card, useTheme } from "@mui/material";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
-import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
-import BookmarkIcon from "@mui/icons-material/Bookmark";
-import UserAvatar from "../UserAvatar";
-import Badge from "@mui/material/Badge";
-import { useLikes, useBookmarks } from "../../utils/firebase/api";
 import styled from "styled-components";
 import { FC } from "react";
 import { red } from "@mui/material/colors";
-import { backgroundBlurMixin } from "../../utils/styleUtils";
+import { backgroundBlurMixin } from "../../../utils/styleUtils";
 import Script from "next/script";
 
 const Root = styled(Card)`

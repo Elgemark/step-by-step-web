@@ -1,3 +1,5 @@
+"use client";
+
 import { Card, CardContent, useTheme } from "@mui/material";
 import styled from "styled-components";
 import { FC, useEffect, useState } from "react";

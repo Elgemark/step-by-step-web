@@ -1,7 +1,6 @@
 import Post from "./Post";
 import { useState } from "react";
 import { FC } from "react";
-import { likePost } from "../../utils/firebase/api";
 import Masonry from "../primitives/Masonry";
 import { useRouter } from "next/router";
 import { Posts } from "../../utils/firebase/type";
@@ -10,7 +9,7 @@ import PostMoreMenu from "../PostMoreMenu";
 import DialogReport, { ReportData } from "../DialogReport";
 import DialogDeletePost from "../DialogDeletePost";
 import { useMessages } from "../Messages";
-import PostAd from "../ads/PostAd";
+import PostAd from "../client/ads/PostAd";
 
 const Posts: FC<{
   posts: Posts;
