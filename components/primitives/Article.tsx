@@ -38,15 +38,29 @@ const BackgroundImage = styled.div`
 
 const Article: FC<{
   image?: string;
+  imageAlt?: string;
   avatar?: string;
+  avatarAlt?: string;
   children: React.ReactNode;
   backgroundContent?: React.ReactNode;
-}> = ({ image, avatar, children, backgroundContent, ...rest }) => {
+}> = ({
+  image,
+  avatar,
+  imageAlt = "Article background image",
+  avatarAlt = "Avatar",
+  children,
+  backgroundContent,
+  ...rest
+}) => {
   const theme = useTheme();
   return (
     <Root theme={theme} {...rest}>
-      <BackgroundImage src={image}>{backgroundContent}</BackgroundImage>
-      <Avatar className="user-avatar" src={avatar} sx={{ width: 120, height: 120 }} />
+      {image ? (
+        <BackgroundImage src={image} aria-label={imageAlt}>
+          {backgroundContent}
+        </BackgroundImage>
+      ) : null}
+      <Avatar className="user-avatar" src={avatar} alt={avatarAlt} sx={{ width: 120, height: 120 }} />
       <article className="article-content">{children}</article>
     </Root>
   );
