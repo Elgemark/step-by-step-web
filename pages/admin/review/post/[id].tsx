@@ -69,7 +69,7 @@ const ReviewPostPage: FC<{ id: string; lists: Lists; steps: Steps }> = ({ id, st
         <meta content="noindex, nofollow, initial-scale=1, width=device-width" name="robots" />
       </SteppoHead>
       <StyledLayout>
-        <Post {...post} enableLink={false} lists={lists} />
+        <Post {...post} enableLink={false} />
         {/* STEPS */}
         {steps.map((step, index) => (
           <StyledStep key={`step-${index}`} {...step} index={index} />

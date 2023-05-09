@@ -1,50 +1,45 @@
-import { getAuth } from "firebase/auth";
-import { useAuthState } from "react-firebase-hooks/auth";
+import LogoResponsive from "../../components/primitives/LogoResponsive";
+import SteppoHead from "../../components/SteppoHead";
+import FirebaseWrapper from "../../components/wrappers/FirebaseWrapper";
 import MUIWrapper from "../../components/wrappers/MUIWrapper";
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
+import { Button, ButtonGroup, Typography, useTheme } from "@mui/material";
+import Article from "../../components/primitives/Article";
 import styled from "styled-components";
 
-const Root = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+const StyledArticle = styled(Article)`
+  .article-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .MuiButtonGroup-root {
+    align-self: center;
+    margin: ${({ theme }) => `${theme.spacing(2)} 0`};
+  }
 `;
 
 const TestPage = () => {
-  const [user, isLoading] = useAuthState(getAuth());
-  console.log("user", isLoading);
+  const theme = useTheme();
   return (
-    <Root>
-      <Card sx={{ minWidth: 275 }}>
-        <CardContent>
-          <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-            ---
-          </Typography>
-          <Typography variant="h5" component="div">
-            This is a test page!
-          </Typography>
-          <Typography sx={{ mb: 1.5 }} color="text.secondary">
-            ---
-          </Typography>
-          <Typography variant="body2">---</Typography>
-        </CardContent>
-      </Card>
-    </Root>
+    <div>
+      <SteppoHead description="About Steppo" title="About Steppo" image="/images/steppo_box_origami.png"></SteppoHead>
+      <StyledArticle theme={theme} image="/images/steppo_box_origami.png" avatar={"/images/steppo_avatar.png"}>
+        <LogoResponsive></LogoResponsive>
+        <Typography>{"body"}</Typography>
+        <ButtonGroup variant="text">
+          <Button href="/about/terms-of-service">{"Link A"}</Button>
+          <Button href="/about/privacy-policy">{"Link B"}</Button>
+        </ButtonGroup>
+      </StyledArticle>
+    </div>
   );
 };
 
-export async function getServerSideProps() {
-  return { props: {} };
-}
-
 export default (props) => (
   <MUIWrapper>
-    <TestPage />
+    <FirebaseWrapper>
+      <TestPage {...props} />
+    </FirebaseWrapper>
   </MUIWrapper>
 );

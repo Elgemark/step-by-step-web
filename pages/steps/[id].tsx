@@ -152,7 +152,6 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps; me
         <PostAd />
         <Post
           {...post}
-          progress={progress as Progress}
           action={
             <PostMoreMenu
               onEdit={
@@ -176,7 +175,6 @@ const StepsPage: FC<{ id: string; post: PostType; lists: Lists; steps: Steps; me
           }
           enableLink={false}
           currentUserId={user?.uid}
-          // lists={lists}
           onClickAvatar={onClickAvatarHandler}
         />
         {/* LIST */}
