@@ -1,9 +1,12 @@
 import { getApp } from "firebase/app";
 import { getAuth } from "firebase/auth"; // Firebase v9+
 import { getDatabase } from "firebase/database"; // Firebase v9+
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { getFirestore } from "firebase/firestore";
-import { FirebaseAppProvider, FirestoreProvider, DatabaseProvider, AuthProvider, useFirebaseApp } from "reactfire";
+import styled from "styled-components";
+
+import { FirebaseAppProvider, DatabaseProvider, AuthProvider, useFirebaseApp, useSigninCheck } from "reactfire";
+import Loader from "../Loader";
 import Script from "next/script";
 
 const firebaseConfig = {
@@ -17,18 +20,21 @@ const firebaseConfig = {
 };
 
 const FirebaseAppProviderWrapper = ({ children }) => {
-  const [app, setApp] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  // Check if app already initialized...
+  let app;
 
   useEffect(() => {
     try {
-      const _app = getApp();
-      setApp(_app);
+      app = getApp();
+      setIsLoading(false);
     } catch (error) {
-      setApp(undefined);
+      console.log("No app found...");
+      setIsLoading(false);
     }
   }, []);
 
-  if (app === null) {
+  if (isLoading) {
     return <>Loading...</>;
   }
 
@@ -37,11 +43,6 @@ const FirebaseAppProviderWrapper = ({ children }) => {
       {children}
     </FirebaseAppProvider>
   );
-};
-
-const App = ({ children }) => {
-  const firestoreInstance = getFirestore(useFirebaseApp());
-  return <FirestoreProvider sdk={firestoreInstance}>{children}</FirestoreProvider>;
 };
 
 const AuthAndDatabaseProviderWrapper = ({ children }) => {
@@ -54,6 +55,32 @@ const AuthAndDatabaseProviderWrapper = ({ children }) => {
     <AuthProvider sdk={auth}>
       <DatabaseProvider sdk={database}>{children}</DatabaseProvider>
     </AuthProvider>
+  );
+};
+
+const Root = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const LoginCheck = ({ children, enable = false }) => {
+  const { status, data: signInCheckResult } = useSigninCheck();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (enable && status !== "loading" && !signInCheckResult.signedIn) {
+      router.replace("/login");
+    }
+  }, [status, enable, signInCheckResult]);
+
+  return status === "loading" && enable ? (
+    <Root>
+      <Loader message="Checking login status..." />
+    </Root>
+  ) : (
+    children
   );
 };
 

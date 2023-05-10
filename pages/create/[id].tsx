@@ -34,6 +34,7 @@ import { saveAll as saveAllLists } from "../../utils/firebase/hooks/collections"
 import { createSlug } from "../../utils/queryUtils";
 import SteppoHead from "../../components/SteppoHead";
 import { useGetLanguage } from "../../utils/localizationUtils";
+import PostAdminSection from "../../components/PostAdminSection";
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -244,6 +245,20 @@ const CreatePage: FC<{ id: string; post: Post }> = ({ id, post }) => {
             onListChange={onListChangeHandler}
           />
           <StyledDivider />
+          {/* ADMIN SECTION */}
+          {user.roles.includes("admin") ? (
+            <PostAdminSection
+              post={{ ...post, ...saveData.post }}
+              steps={steps}
+              onOpen={(data) => {
+                setSaveData("post", data?.post);
+                setSaveData("steps", data?.steps);
+                onClickSaveHandler().then(() => {
+                  router.reload();
+                });
+              }}
+            />
+          ) : null}
           {/* STEPS */}
           {steps.map((dataStep, index) => (
             <div key={"step-" + index + "-" + dataStep.id}>
